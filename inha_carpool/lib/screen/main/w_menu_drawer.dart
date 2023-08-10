@@ -1,4 +1,5 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:fast_app_base/screen/login/s_login.dart';
 import 'package:fast_app_base/screen/opensource/s_opensource.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import '../../common/common.dart';
 import '../../common/language/language.dart';
 import '../../common/theme/theme_util.dart';
 import '../../common/widget/w_mode_switch.dart';
+import '../dialog/d_logout.dart';
 
 class MenuDrawer extends StatefulWidget {
   static const minHeightForScrollView = 380;
@@ -24,6 +26,7 @@ class MenuDrawer extends StatefulWidget {
 }
 
 class _MenuDrawerState extends State<MenuDrawer> {
+  
   @override
   void initState() {
     super.initState();
@@ -89,6 +92,13 @@ class _MenuDrawerState extends State<MenuDrawer> {
           const Height(10),
           const Line(),
           _MenuWidget(
+            'LogOut'.tr(),
+            onTap: () async {
+              await showLogoutDialog(context);
+            },
+          ),
+          const Line(),
+          _MenuWidget(
             'opensource'.tr(),
             onTap: () async {
               Nav.push(const OpensourceScreen());
@@ -132,6 +142,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                       height: 30,
                       width: 100,
                       padding: const EdgeInsets.only(left: 15),
+                      child: '© 2023. INHAtc 전공 동아리  Object.'
                       child: '© 2023. Bansook Nam. all rights reserved.'
                           .selectableText
                           .size(10)
@@ -228,6 +239,36 @@ class _MenuDrawerState extends State<MenuDrawer> {
       ),
     );
   }
+
+  Future<void> showLogoutDialog(BuildContext context) async {
+    final result = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('로그아웃'),
+          content: Text('로그아웃 하시겠습니까?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text('네'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text('아니오'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (result == true) {
+      Nav.push(LoginPage());
+      // 로그아웃 로직 실행
+      // 예를 들어, 로그아웃 버튼을 눌렀을 때 수행할 동작을 여기에 추가
+    }
+  }
+
+
 }
 
 class _MenuWidget extends StatelessWidget {
@@ -258,4 +299,5 @@ class _MenuWidget extends StatelessWidget {
       ),
     );
   }
+
 }

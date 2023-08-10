@@ -3,6 +3,7 @@ import 'package:fast_app_base/screen/main/tab/tab_navigator.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/common.dart';
+import '../../fragment/f_notification.dart';
 import 'w_menu_drawer.dart';
 
 class MainScreen extends StatefulWidget {
@@ -12,6 +13,11 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => MainScreenState();
 }
 
+class MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
+
+  TabItem _currentTab = TabItem.home;
+  final tabs = [TabItem.carpool, TabItem.home, TabItem.myPage, TabItem.popmenu, TabItem.map];
 class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
   TabItem _currentTab = TabItem.home;
   final tabs = [TabItem.home,];
@@ -19,6 +25,8 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
   int get _currentIndex => tabs.indexOf(_currentTab);
 
+  GlobalKey<NavigatorState> get _currentTabNavigationKey =>
+      navigatorKeys[_currentIndex];
   GlobalKey<NavigatorState> get _currentTabNavigationKey => navigatorKeys[_currentIndex];
 
   bool get extendBody => true;
@@ -36,6 +44,36 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     return WillPopScope(
       onWillPop: _handleBackPressed,
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blue.shade200,
+          title: 'INHA Carpool'.text.bold.size(20).make(),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.notifications_none,
+                size: 35,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationList()),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings, size: 35),
+              onPressed: () {
+                print("설정");
+              },
+            ),
+          ],
+        ),
+        extendBody: extendBody,
+        //bottomNavigationBar 아래 영역 까지 그림
+        drawer: const MenuDrawer(),
+        body: Padding(
+          padding: EdgeInsets.only(
+              bottom: extendBody ? 60 - bottomNavigationBarBorderRadius : 0),
         extendBody: extendBody, //bottomNavigationBar 아래 영역 까지 그림
         drawer: const MenuDrawer(),
         body: Padding(
@@ -118,12 +156,17 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
     });
   }
 
+  BottomNavigationBarItem bottomItem(bool activate, IconData iconData,
+      IconData inActivateIconData, String label) {
   BottomNavigationBarItem bottomItem(
       bool activate, IconData iconData, IconData inActivateIconData, String label) {
     return BottomNavigationBarItem(
         icon: Icon(
           key: ValueKey(label),
           activate ? iconData : inActivateIconData,
+          color: activate
+              ? context.appColors.iconButton
+              : context.appColors.iconButtonInactivate,
           color: activate ? context.appColors.iconButton : context.appColors.iconButtonInactivate,
         ),
         label: label);

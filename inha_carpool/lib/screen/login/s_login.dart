@@ -4,6 +4,7 @@ import 'package:after_layout/after_layout.dart';
 import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:nav/nav.dart';
 
 import '../register/s_register.dart';
 
