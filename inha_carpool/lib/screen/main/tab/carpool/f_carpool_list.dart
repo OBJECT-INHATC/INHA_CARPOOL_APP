@@ -1,3 +1,4 @@
+import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class CarpoolList extends StatelessWidget {
                       child: Row(
                         children: <Widget>[
                           CircleAvatar(
-                            backgroundImage: Image.asset("assets/image/objectlogo.png",).image,
+                            backgroundImage: Image.asset("${basePath}/splash/logo600.png",).image,
                             backgroundColor: Colors.grey.shade200,
                             maxRadius: 35,
                           ),
@@ -39,11 +40,11 @@ class CarpoolList extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children:[
-                                  Text("07.26/16:00 주안역-인하공전", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,)),
-                                  SizedBox(height: 6,),
+                                  const Text("07.26/16:00 주안역-인하공전", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,)),
+                                  const SizedBox(height: 6,),
                                   Text("다들 잘 오시고 계시죠?",style: TextStyle(fontSize: 12,color: Colors.grey.shade600, fontWeight:FontWeight.bold),),
-                                  SizedBox(height: 6,),
-                                  Text("2023.07.26.13:01",style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal),),
+                                  const SizedBox(height: 6,),
+                                  const Text("2023.07.26.13:01",style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal),),
                                 ],
                               ),
                             ),
@@ -51,7 +52,7 @@ class CarpoolList extends StatelessWidget {
                         ],
                       ),
                     ),
-                    Column(children:
+                    const Column(children:
                     [
                       Text("15분전",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
                       SizedBox(height: 20,),
