@@ -18,12 +18,16 @@ class MainScreenState extends State<MainScreen>
 
   TabItem _currentTab = TabItem.home;
   final tabs = [TabItem.carpool, TabItem.home, TabItem.myPage, TabItem.popmenu, TabItem.map];
+class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMixin {
+  TabItem _currentTab = TabItem.home;
+  final tabs = [TabItem.home,];
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
 
   int get _currentIndex => tabs.indexOf(_currentTab);
 
   GlobalKey<NavigatorState> get _currentTabNavigationKey =>
       navigatorKeys[_currentIndex];
+  GlobalKey<NavigatorState> get _currentTabNavigationKey => navigatorKeys[_currentIndex];
 
   bool get extendBody => true;
 
@@ -70,6 +74,10 @@ class MainScreenState extends State<MainScreen>
         body: Padding(
           padding: EdgeInsets.only(
               bottom: extendBody ? 60 - bottomNavigationBarBorderRadius : 0),
+        extendBody: extendBody, //bottomNavigationBar 아래 영역 까지 그림
+        drawer: const MenuDrawer(),
+        body: Padding(
+          padding: EdgeInsets.only(bottom: extendBody ? 60 - bottomNavigationBarBorderRadius : 0),
           child: SafeArea(
             bottom: !extendBody,
             child: pages,
@@ -150,6 +158,8 @@ class MainScreenState extends State<MainScreen>
 
   BottomNavigationBarItem bottomItem(bool activate, IconData iconData,
       IconData inActivateIconData, String label) {
+  BottomNavigationBarItem bottomItem(
+      bool activate, IconData iconData, IconData inActivateIconData, String label) {
     return BottomNavigationBarItem(
         icon: Icon(
           key: ValueKey(label),
@@ -157,6 +167,7 @@ class MainScreenState extends State<MainScreen>
           color: activate
               ? context.appColors.iconButton
               : context.appColors.iconButtonInactivate,
+          color: activate ? context.appColors.iconButton : context.appColors.iconButtonInactivate,
         ),
         label: label);
   }
