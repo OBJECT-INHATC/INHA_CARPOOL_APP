@@ -1,6 +1,7 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CarpoolList extends StatelessWidget {
   const CarpoolList({super.key});
@@ -11,9 +12,9 @@ class CarpoolList extends StatelessWidget {
       alignment: Alignment.center,
       child: ListView.builder(
         itemCount: 3,
-        itemBuilder: (c, i){
+        itemBuilder: (c, i) {
           return GestureDetector(
-            onTap: (){
+            onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const ChatroomPage()),
@@ -21,30 +22,54 @@ class CarpoolList extends StatelessWidget {
             },
             child: Card(
               child: Container(
-                margin: EdgeInsets.only(left: 0,right: 0,top: 0,bottom: 0),
-                padding: EdgeInsets.only(left: 12,right: 12,top: 20,bottom: 20),
+                margin: EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
+                padding:
+                    EdgeInsets.only(left: 12, right: 12, top: 20, bottom: 20),
                 child: Row(
                   children: <Widget>[
                     Expanded(
                       child: Row(
                         children: <Widget>[
                           CircleAvatar(
-                            backgroundImage: Image.asset("${basePath}/splash/logo600.png",).image,
+                            backgroundImage: Image.asset(
+                              "${basePath}/splash/logo600.png",
+                            ).image,
                             backgroundColor: Colors.grey.shade200,
                             maxRadius: 35,
                           ),
-                          SizedBox(width: 20,),
+                          SizedBox(
+                            width: 20,
+                          ),
                           Expanded(
                             child: Container(
                               color: Colors.transparent,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children:[
-                                  const Text("07.26/16:00 주안역-인하공전", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,)),
-                                  const SizedBox(height: 6,),
-                                  Text("다들 잘 오시고 계시죠?",style: TextStyle(fontSize: 12,color: Colors.grey.shade600, fontWeight:FontWeight.bold),),
-                                  const SizedBox(height: 6,),
-                                  const Text("2023.07.26.13:01",style: TextStyle(fontSize: 12,fontWeight: FontWeight.normal),),
+                                children: [
+                                  const Text("07.26/16:00 주안역-인하공전",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      )),
+                                  const SizedBox(
+                                    height: 6,
+                                  ),
+                                  Text(
+                                    "다들 잘 오시고 계시죠?",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey.shade600,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(
+                                    height: 6,
+                                  ),
+                                  const Text(
+                                    "2023.07.26.13:01",
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.normal),
+                                  ),
                                 ],
                               ),
                             ),
@@ -52,12 +77,21 @@ class CarpoolList extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Column(children:
-                    [
-                      Text("15분전",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold),),
-                      SizedBox(height: 20,),
-                      Icon(Icons.arrow_forward_ios_rounded,size: 20,),
+                    const Column(children: [
+                      Text(
+                        "15분전",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        size: 20,
+                      ),
                     ]),
+                   
                   ],
                 ),
               ),

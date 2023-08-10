@@ -15,8 +15,9 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
+
   TabItem _currentTab = TabItem.home;
-  final tabs = [TabItem.carpool, TabItem.home, TabItem.myPage, TabItem.popmenu];
+  final tabs = [TabItem.carpool, TabItem.home, TabItem.myPage, TabItem.popmenu, TabItem.map];
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
 
   int get _currentIndex => tabs.indexOf(_currentTab);

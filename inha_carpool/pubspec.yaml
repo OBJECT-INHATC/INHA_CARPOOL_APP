@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+
   #splash creator
   flutter_native_splash: ^2.3.0
 
@@ -78,6 +79,7 @@ dependencies:
   provider: ^6.0.1
   logger: # 로그 출력 패키지
   google_maps_flutter: ^2.4.0 # 구글 맵
+  geolocator: 9.0.2 #구글 맵 플러그인 ( 사용자의 디테일한/ 덜 디테일한 위치 정보 접근 권한 )
 
 dev_dependencies:
   flutter_test:
