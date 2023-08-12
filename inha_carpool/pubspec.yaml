@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+
   #splash creator
   flutter_native_splash: ^2.3.0
 
