@@ -71,7 +71,7 @@ class _GoogleMapsState extends State<GoogleMaps> {
 
     // 현재 위치로 카메라 이동
     mapController.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: _currentPosition!, zoom: 13.0),
+      CameraPosition(target: _currentPosition!, zoom: 16.0),
     ));
   }
 
@@ -107,7 +107,7 @@ class _GoogleMapsState extends State<GoogleMaps> {
                 onMapCreated: _onMapCreated,
                 initialCameraPosition: CameraPosition(
                   target: _jooanStation, // 초기 지도 위치는 주안역
-                  zoom: 13.0,
+                  zoom: 16.0,
                 ),
                 markers: _markers,
               ),
