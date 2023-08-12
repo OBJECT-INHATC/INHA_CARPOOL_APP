@@ -91,10 +91,7 @@ class _LoginPageState extends State<LoginPage> with AfterLayoutMixin {
                             color: Colors.white,
                             fontWeight: FontWeight.bold)),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MainScreen()),
-                      );
+                      Nav.push(MainScreen());
                     }),
               ),
               Container(

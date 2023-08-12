@@ -12,14 +12,6 @@ enum TabItem {
   myPage(Icons.person, 'My', Placeholder()),
   popmenu(Icons.menu, '메뉴', PopUpFragment()),
   map(Icons.map, '지도', GoogleMaps());
-import 'package:fast_app_base/screen/main/tab/home/f_home.dart';
-import 'package:flutter/material.dart';
-
-enum TabItem {
-  home(Icons.home, '홈', HomeFragment()),
-  ttosspay(Icons.payment, '토스페이', TtospayFragment()),
-  stock(Icons.candlestick_chart, '주식', StockFragment()),
-  all(Icons.menu, '전체', AllFragment());
 
   final IconData activeIcon;
   final IconData inActiveIcon;
@@ -36,7 +28,6 @@ enum TabItem {
           isActivated ? activeIcon : inActiveIcon,
           color:
               isActivated ? context.appColors.iconButton : context.appColors.iconButtonInactivate,
-          isActivated ? context.appColors.iconButton : context.appColors.iconButtonInactivate,
         ),
         label: tabName);
   }

@@ -26,7 +26,7 @@ class MenuDrawer extends StatefulWidget {
 }
 
 class _MenuDrawerState extends State<MenuDrawer> {
-  
+
   @override
   void initState() {
     super.initState();
@@ -143,7 +143,6 @@ class _MenuDrawerState extends State<MenuDrawer> {
                       width: 100,
                       padding: const EdgeInsets.only(left: 15),
                       child: '© 2023. INHAtc 전공 동아리  Object.'
-                      child: '© 2023. Bansook Nam. all rights reserved.'
                           .selectableText
                           .size(10)
                           .makeWithDefaultFont()),
@@ -299,5 +298,6 @@ class _MenuWidget extends StatelessWidget {
       ),
     );
   }
+
 
 }
