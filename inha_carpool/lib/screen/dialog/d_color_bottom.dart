@@ -1,8 +1,8 @@
-import 'package:fast_app_base/data/simple_result.dart';
 import 'package:flutter/material.dart';
 import 'package:nav/bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../common/common.dart';
+import '../../data/simple_result.dart';
 
 class ColorBottomSheet extends ModalBottomSheet<SimpleResult> {
   final String message;

@@ -1,5 +1,5 @@
-import 'package:fast_app_base/common/common.dart';
 import 'package:flutter/material.dart';
+import 'package:nav/nav.dart';
 
 import '../../../../common/widget/round_button_theme.dart';
 import '../../../../common/widget/w_round_button.dart';

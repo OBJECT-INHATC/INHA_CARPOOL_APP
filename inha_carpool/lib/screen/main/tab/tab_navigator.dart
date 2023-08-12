@@ -1,5 +1,5 @@
-import 'package:fast_app_base/screen/main/tab/tab_item.dart';
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 
 class TabNavigator extends StatelessWidget {
   const TabNavigator({

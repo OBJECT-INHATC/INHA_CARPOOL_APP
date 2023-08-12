@@ -1,6 +1,6 @@
-import 'package:fast_app_base/screen/main/tab/tab_item.dart';
-import 'package:fast_app_base/screen/main/tab/tab_navigator.dart';
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
+import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
 
 import '../../common/common.dart';
 import '../../fragment/f_notification.dart';
