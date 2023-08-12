@@ -1,8 +1,8 @@
-import 'package:fast_app_base/data/simple_result.dart';
 import 'package:flutter/material.dart';
 import 'package:nav/dialog/dialog.dart';
 
 import '../../common/common.dart';
+import '../../data/simple_result.dart';
 
 class ConfirmDialog extends DialogWidget<SimpleResult> {
   final String? message;

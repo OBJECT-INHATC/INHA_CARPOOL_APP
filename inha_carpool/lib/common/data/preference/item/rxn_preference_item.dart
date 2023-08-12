@@ -1,6 +1,6 @@
-import 'package:fast_app_base/common/data/preference/item/nullable_preference_item.dart';
 
 import '../app_preferences.dart';
+import 'nullable_preference_item.dart';
 
 class RxnPreferenceItem<T, R extends Rxn<T>> extends NullablePreferenceItem<T> {
   final R _rxnValue;

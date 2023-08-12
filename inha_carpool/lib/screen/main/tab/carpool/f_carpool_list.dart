@@ -1,7 +1,7 @@
-import 'package:fast_app_base/common/common.dart';
-import 'package:fast_app_base/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
+
+import '../../../../common/constants.dart';
 
 class CarpoolList extends StatelessWidget {
   const CarpoolList({super.key});

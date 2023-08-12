@@ -1,8 +1,10 @@
-import 'package:fast_app_base/common/common.dart';
-import 'package:fast_app_base/common/util/local_json.dart';
-import 'package:fast_app_base/screen/opensource/vo_package.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/screen/opensource/vo_package.dart';
+import 'package:velocity_x/velocity_x.dart';
 
+import '../../common/util/local_json.dart';
+import '../../common/widget/w_line.dart';
 import 'w_opensource_item.dart';
 
 /// 아래의 명령어를 통해서, 주기적으로 라이센스 json을 최신화 해주세요.
