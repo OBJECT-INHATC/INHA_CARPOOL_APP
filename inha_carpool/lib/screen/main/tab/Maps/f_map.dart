@@ -21,7 +21,7 @@ class _GoogleMapsState extends State<GoogleMaps> {
 
   LatLng? _currentPosition; // 현재 위치 좌표
   String? _currentAddress; // 현재 주소
-  String? _distanceToJooan; // 현재 위치와 주안역 간 거리
+  String? _distanceToLocation; // 현재 위치와 주안역 간 거리
 
   Set<Marker> _markers = {}; // 마커들 저장
 
@@ -66,7 +66,7 @@ class _GoogleMapsState extends State<GoogleMaps> {
         _jooanStation.longitude,
       );
 
-      _distanceToJooan = (distanceInMeters / 1000).toStringAsFixed(2); // 거리를 킬로미터 단위로 변환
+      _distanceToLocation = (distanceInMeters / 1000).toStringAsFixed(2); // 거리를 킬로미터 단위로 변환
     });
 
     // 현재 위치로 카메라 이동
@@ -119,8 +119,8 @@ class _GoogleMapsState extends State<GoogleMaps> {
                 : SizedBox(),
 
             // 주안역까지 거리 표시
-            _distanceToJooan != null
-                ? "주안역까지 거리: $_distanceToJooan km".text.make()
+            _distanceToLocation != null
+                ? "주안역까지 거리: $_distanceToLocation km".text.make()
                 : SizedBox(),
 
             // 내 위치 버튼
