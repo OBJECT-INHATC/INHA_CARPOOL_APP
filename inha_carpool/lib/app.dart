@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
+import 'package:inha_Carpool/screen/main/s_main.dart';
 
 import 'common/theme/custom_theme_app.dart';
 
@@ -41,8 +42,8 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
           locale: context.locale,
           title: 'Image Finder',
           theme: context.themeType.themeData,
-          home: const LoginPage(),
-          //home: const MainPage(),
+        //  home: const LoginPage(),
+          home: const MainScreen(),
         );
       }),
     );
