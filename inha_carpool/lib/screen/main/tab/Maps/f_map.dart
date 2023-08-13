@@ -103,7 +103,7 @@ class _GoogleMapsState extends State<GoogleMaps> {
 
       setState(() {
         _currentAddress =
-        "${place.street}, ${place.subLocality}, ${place.locality}, ${place.country}";
+        "출발지 주소 : ${place.street}, ${place.subLocality}, ${place.locality}, ${place.country}";
       });
     } catch (e) {
       print(e);
@@ -157,15 +157,23 @@ class _GoogleMapsState extends State<GoogleMaps> {
             _distanceToLocation != null
                 ? "출발지와의 거리: $_distanceToLocation km".text.make()
                 : SizedBox(),
+            
+            "현재인원 2/4명".text.make(),
 
             // 내 위치로 이동 버튼
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue, // 원하는 색상으로 변경
+              ),
               onPressed: _moveToMyLocation,
               child: Text('내 위치로 이동'),
             ),
 
             // 출발지로 이동 버튼
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: Colors.red, // 원하는 색상으로 변경
+              ),
               onPressed: _moveToStartingPoint,
               child: Text('출발지로 이동'),
             ),
