@@ -23,8 +23,14 @@ extension IntExt on int {
   }
 }
 
+//숫자 값의 3자리 씩 ','(콤마) 적용
 extension DoubleExt on double {
   String toComma() {
     return decimalFormat.format(this);
   }
+
+ /* double number = 1234567.89;
+
+  String formatted = number.toComma();
+  print(formatted); // 출력: 1,234,567.89*/
 }

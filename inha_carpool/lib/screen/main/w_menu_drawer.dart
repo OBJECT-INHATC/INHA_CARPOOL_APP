@@ -26,7 +26,6 @@ class MenuDrawer extends StatefulWidget {
 }
 
 class _MenuDrawerState extends State<MenuDrawer> {
-
   @override
   void initState() {
     super.initState();
@@ -48,7 +47,8 @@ class _MenuDrawerState extends State<MenuDrawer> {
               padding: const EdgeInsets.only(top: 10),
               decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(5), bottomRight: Radius.circular(5)),
+                      topRight: Radius.circular(5),
+                      bottomRight: Radius.circular(5)),
                   color: context.colors.background),
               child: isSmallScreen(context)
                   ? SingleChildScrollView(
@@ -184,13 +184,16 @@ class _MenuDrawerState extends State<MenuDrawer> {
                     DropdownButton<String>(
                       items: [
                         menu(currentLanguage),
-                        menu(Language.values.where((element) => element != currentLanguage).first),
+                        menu(Language.values
+                            .where((element) => element != currentLanguage)
+                            .first),
                       ],
                       onChanged: (value) async {
                         if (value == null) {
                           return;
                         }
-                        await context.setLocale(Language.find(value.toLowerCase()).locale);
+                        await context.setLocale(
+                            Language.find(value.toLowerCase()).locale);
                       },
                       value: describeEnum(currentLanguage).capitalizeFirst,
                       underline: const SizedBox.shrink(),
@@ -266,15 +269,14 @@ class _MenuDrawerState extends State<MenuDrawer> {
       // 예를 들어, 로그아웃 버튼을 눌렀을 때 수행할 동작을 여기에 추가
     }
   }
-
-
 }
 
 class _MenuWidget extends StatelessWidget {
   final String text;
   final Function() onTap;
 
-  const _MenuWidget(this.text, {Key? key, required this.onTap}) : super(key: key);
+  const _MenuWidget(this.text, {Key? key, required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -298,6 +300,4 @@ class _MenuWidget extends StatelessWidget {
       ),
     );
   }
-
-
 }

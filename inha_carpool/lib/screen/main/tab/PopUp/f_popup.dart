@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
-
 import '../../../../common/widget/round_button_theme.dart';
+import '../../../../common/widget/w_arrow.dart';
 import '../../../../common/widget/w_round_button.dart';
+import '../../../../common/widget/w_text_badge.dart';
+import '../../../../common/widget/w_text_field_with_delete.dart';
 import '../../../dialog/d_color_bottom.dart';
 import '../../../dialog/d_confirm.dart';
 import '../../../dialog/d_message.dart';
@@ -52,12 +54,70 @@ class PopUpFragment extends StatelessWidget {
             onTap: () => openDrawer(context),
             theme: RoundButtonTheme.blink,
           ),
-          const EmptyExpanded()
+          const Height(20),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("Arrow 위젯 - 아래 화살표"), // 위젯 이름 표시
+              Arrow(size: 30,),
+            ],
+          ),
+          SizedBox(height: 8), // 간격 8 추가
+
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blue), // 파란색 테두리 추가
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text("TextFieldWithDelete 위젯"), // 위젯 이름 표시
+                TextFieldWithDelete(
+                  controller: TextEditingController(),
+                  texthint: "Enter text...",
+                  onTapDelete: () {
+                    print("Delete button tapped!");
+                  },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 8), // 간격 8 추가
+          // TextBadge 위젯
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blue), // 파란색 테두리 추가
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("TextBadge 위젯"), // 위젯 이름 표시
+                TextBadge(
+                  text: "텍스트벳지",
+                  backgroundColor: AppColors.blue,
+                  textColor: AppColors.veryDarkGrey,
+                  fontSize: 16,
+                  borderRadius: 10,
+                  verticalPadding: 8,
+                  horizontalPadding: 12,
+                  rightWidget: Icon(Icons.star),
+                  onTap: () {
+                    print("텍스트벳지 클릭!");
+                  },
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 8), // 간격 8 추가
+
+          // ... 나머지 위젯들 ...
+
+          const EmptyExpanded(),
         ],
       ),
     );
   }
-
   void showSnackbar(BuildContext context) {
     context.showSnackbar('snackbar 입니다.',
         extraButton: Tap(
@@ -101,4 +161,5 @@ class PopUpFragment extends StatelessWidget {
   void openDrawer(BuildContext context) {
     Scaffold.of(context).openDrawer();
   }
+
 }
