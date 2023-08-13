@@ -11,7 +11,7 @@ enum TabItem {
   home(Icons.home, 'Home', Home()),
   myPage(Icons.person, 'My', Placeholder()),
   popmenu(Icons.menu, '메뉴', PopUpFragment()),
-  map(Icons.map, '지도', GoogleMaps());
+  map(Icons.map, '지도', GoogleMapsApp());
 
   final IconData activeIcon;
   final IconData inActiveIcon;
