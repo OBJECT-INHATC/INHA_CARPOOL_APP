@@ -74,9 +74,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _distanceToLocation = (distanceInMeters / 1000).toStringAsFixed(2);
     });
 
- /*   mapController.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: _currentPosition!, zoom: 16.0),
-    ));*/
+      _moveCameraTo(_currentPosition!);
   }
 
   void _getAddressFromLatLng() async {
