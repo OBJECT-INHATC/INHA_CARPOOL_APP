@@ -48,7 +48,7 @@ class MainScreenState extends State<MainScreen>
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blue.shade200,
-          title: 'INHA Carpool'.text.bold.size(20).make(),
+          title: 'titleSTR'.tr().text.make(),
           actions: [
             IconButton(
               icon: const Icon(

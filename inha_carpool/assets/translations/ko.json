@@ -4,5 +4,7 @@
   "clear_cache_done": "캐시가 삭제되었습니다.",
   "close": "닫기",
   "done": "완료",
-  "cancel": "취소"
+  "cancel": "취소",
+  "LogOut": "로그아웃",
+  "titleSTR": "인하카풀"
 }
