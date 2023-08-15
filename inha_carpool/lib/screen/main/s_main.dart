@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/fragment/setting/f_setting.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
 
@@ -65,7 +66,11 @@ class MainScreenState extends State<MainScreen>
             IconButton(
               icon: const Icon(Icons.settings, size: 35),
               onPressed: () {
-                print("설정");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingPage()),
+                );
+
               },
             ),
           ],
