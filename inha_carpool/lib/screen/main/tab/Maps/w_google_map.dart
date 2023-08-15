@@ -25,9 +25,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   final LatLng _startingPoint = const LatLng(37.4645862, 126.6803935);
 
   LatLng? _currentPosition;
+  LatLng? searchedPosition;
   String? _currentAddress;
   String? _distanceToLocation;
-
+  bool firstStep = false;
+  String search = "검색";
   Set<Marker> _markers = {};
 
   @override
@@ -98,9 +100,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
               SizedBox(width: 5), // 오른쪽 여백
               ElevatedButton(
                 onPressed: () {
-                  _searchLocation();
+                  _LocationInfo();
                 },
-                child: Text('검색'),
+                child: Text('$search'),
               ),
             ],
           ),
@@ -122,22 +124,43 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
                 top: 16,
                 left: 16,
                 right: 16,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
                   children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                      ),
-                      onPressed: () => _moveCameraTo(_currentPosition!),
-                      child: Text('내 위치로 이동'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                          ),
+                          onPressed: () => _moveCameraTo(_currentPosition!),
+                          child: Text('내 위치로 이동'),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          onPressed: () => _moveCameraTo(_startingPoint),
+                          child: Text('출발지로 이동'),
+                        ),
+                      ],
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                      ),
-                      onPressed: () => _moveCameraTo(_startingPoint),
-                      child: Text('출발지로 이동'),
+                    SizedBox(
+                      height: 180,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        if (firstStep)
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                            ),
+                            onPressed: () => _moveCameraTo(searchedPosition!),
+                            child: Text('검색 지역'),
+                          ),
+
+                      ],
                     ),
                   ],
                 ),
@@ -148,7 +171,14 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         Expanded(
           child: ListView.separated(
             itemBuilder: (context, index) {
-              return Text('${list[index]['roadAddr']}');
+              final roadAddr = '${list[index]['roadAddr']}';
+              return GestureDetector(
+                onTap: () {
+                  _searchController.text = roadAddr;
+                  _searchLocation(roadAddr);
+                },
+                child: roadAddr.text.size(14).make(),
+              );
             },
             separatorBuilder: (context, index) {
               return Divider();
@@ -167,7 +197,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _currentAddress != null ? _currentAddress!.text.make() : SizedBox(),
+              _currentAddress != null
+                  ? _currentAddress!.text.make()
+                  : SizedBox(),
               _distanceToLocation != null
                   ? "출발지와의 거리: $_distanceToLocation km".text.make()
                   : SizedBox(),
@@ -190,7 +222,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
       setState(() {
         _currentAddress =
-        "출발지 주소: ${place.street}, ${place.subLocality}, ${place.locality}, ${place.country}";
+            "출발지 주소: ${place.street}, ${place.subLocality}, ${place.locality}, ${place.country}";
       });
     } catch (e) {
       print(e);
@@ -216,7 +248,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     ));
   }
 
-  void _searchLocation() async {
+  void _LocationInfo() async {
     String query = _searchController.text;
     if (query.isNotEmpty) {
       try {
@@ -236,6 +268,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           var json = jsonDecode(response.body);
           setState(() {
             list = json['results']['juso'];
+            if (list.length == 1) {
+              _searchLocation('${list[0]['roadAddr']}');
+            }
           });
         }).catchError((a, stackTrace) {
           log(a.toString()); // 로그찍기
@@ -245,11 +280,35 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('상세 주소를 입력해 주세요.')),
         );
+        list.clear();
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('주소를 입력해 주세요.')),
       );
+      list.clear();
     }
+  }
+
+  void _searchLocation(String query) async {
+    if (query.isNotEmpty) {
+      List<Location> locations = await locationFromAddress(query);
+      if (locations.isNotEmpty) {
+        firstStep = true;
+        Location location = locations.first;
+        searchedPosition = LatLng(location.latitude!, location.longitude!);
+        setState(() {
+          _addMarker(
+            searchedPosition!,
+            query,
+            query,
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+          );
+        });
+
+        _moveCameraTo(searchedPosition!);
+      }
+    }
+    return;
   }
 }
