@@ -26,16 +26,19 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   @override
   void initState() {
     super.initState();
-    _addRedMarker(_startingPoint, "출발지");
+    _addtMarker(
+        _startingPoint, "출발지", "RedMarker", BitmapDescriptor.defaultMarker);
     _getCurrentLocation();
   }
 
-  void _addRedMarker(LatLng startPoint, String markerText) {
+  // 출발지 마커
+  void _addtMarker(
+      LatLng Point, String infoText, String markerName, BitmapDescriptor icon) {
     _markers.add(Marker(
-      markerId: MarkerId('redMarker'),
-      position: startPoint,
-      icon: BitmapDescriptor.defaultMarker,
-      infoWindow: InfoWindow(title: markerText),
+      markerId: MarkerId(markerName),
+      position: Point,
+      icon: icon,
+      infoWindow: InfoWindow(title: infoText),
     ));
   }
 
@@ -54,14 +57,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
     setState(() {
       _currentPosition = LatLng(position.latitude, position.longitude);
-
-      _markers.add(Marker(
-        markerId: const MarkerId('myCurrentLocation'),
-        position: _currentPosition!,
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-        infoWindow: const InfoWindow(title: "내 위치"),
-      ));
-
+      _addtMarker(_currentPosition!, "내 위치", "BlueMarker",
+          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue));
       _getAddressFromLatLng();
 
       double distanceInMeters = Geolocator.distanceBetween(
@@ -74,7 +71,47 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _distanceToLocation = (distanceInMeters / 1000).toStringAsFixed(2);
     });
 
-      _moveCameraTo(_currentPosition!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height / 2,
+          child: GoogleMap(
+            onMapCreated: (controller) => mapController = controller,
+            initialCameraPosition: CameraPosition(
+              target: _startingPoint,
+              zoom: 16.0,
+            ),
+            markers: _markers,
+          ),
+        ),
+
+        //---------------지도 end ---------------------
+        _currentAddress != null ? _currentAddress!.text.make() : SizedBox(),
+        _distanceToLocation != null
+            ? "출발지와의 거리: $_distanceToLocation km".text.make()
+            : SizedBox(),
+        "현재인원 2/4명".text.make(),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.blue,
+          ),
+          onPressed: () => _moveCameraTo(_currentPosition!),
+          child: Text('내 위치로 이동'),
+        ),
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+          ),
+          onPressed: () => _moveCameraTo(_startingPoint),
+          child: Text('출발지로 이동'),
+        ),
+      ],
+    );
   }
 
   void _getAddressFromLatLng() async {
@@ -112,44 +149,5 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     mapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(target: target, zoom: 16.0),
     ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height / 2,
-          child: GoogleMap(
-            onMapCreated: (controller) => mapController = controller,
-            initialCameraPosition: CameraPosition(
-              target: _startingPoint,
-              zoom: 16.0,
-            ),
-            markers: _markers,
-          ),
-        ),
-        _currentAddress != null ? _currentAddress!.text.make() : SizedBox(),
-        _distanceToLocation != null
-            ? "출발지와의 거리: $_distanceToLocation km".text.make()
-            : SizedBox(),
-        "현재인원 2/4명".text.make(),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
-          ),
-          onPressed: _getCurrentLocation,
-          child: Text('내 위치로 이동'),
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-          ),
-          onPressed: () => _moveCameraTo(_startingPoint),
-          child: Text('출발지로 이동'),
-        ),
-      ],
-    );
   }
 }
