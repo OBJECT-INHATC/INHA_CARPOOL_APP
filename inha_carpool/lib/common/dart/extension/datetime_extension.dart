@@ -7,6 +7,9 @@ extension DateTimeExtension on DateTime {
   // 날짜를 'dd/MM/yyyy' 형식으로 포맷한 문자열 반환
   String get formattedDate => DateFormat('dd/MM/yyyy').format(this);
 
+  String get formattedDateKo => DateFormat('yyyy년 mm월 dd일').format(this);
+
+
   // 시간을 'HH:mm' 형식으로 포맷한 문자열 반환
   String get formattedTime => DateFormat('HH:mm').format(this);
 
