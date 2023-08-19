@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../common.dart';
-import '../../theme/custom_theme.dart';
-import '../../theme/custom_theme_holder.dart';
+import '../theme/color/abs_theme_colors.dart';
+import '../theme/custom_theme.dart';
+import '../theme/custom_theme_holder.dart';
+
+
 //BuildContext => 위젯 트리에서 빌드하고 있는 위치 및 환경에 대한 정보를 제공하는 객체
 //UI 구축 과정에서 반복적으로 사용되는 코드를 간소화하고, 환경 및 테마와 관련된 정보에 쉽게 접근
 
@@ -54,7 +56,6 @@ extension ContextExtension on BuildContext {
   AbstractThemeColors get appColors => CustomThemeHolder.of(this).appColors;
 
   //현재 앱 테마의 그림자 정보 반환.
-  AbsThemeShadows get appShadows => CustomThemeHolder.of(this).appShadows;
 
   //현재 사용 중인 커스텀 테마 정보 반환.
   CustomTheme get themeType => CustomThemeHolder.of(this).theme;

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'app.dart';
 import 'common/data/preference/app_preferences.dart';
@@ -13,6 +14,7 @@ void main() async {
 
   //애플리케이션의 환경설정을 초기화 과정
   await AppPreferences.init();
+  await dotenv.load(fileName: 'assets/config/.env');
 
   runApp(EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ko')],

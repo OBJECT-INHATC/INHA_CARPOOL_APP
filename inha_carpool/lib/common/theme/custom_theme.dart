@@ -5,6 +5,8 @@ import 'package:inha_Carpool/common/theme/shadows/dart_app_shadows.dart';
 import 'package:inha_Carpool/common/theme/shadows/light_app_shadows.dart';
 import 'package:flutter/material.dart';
 
+import '../Colors/app_colors.dart';
+
 enum CustomTheme {
   dark(
     DarkAppColors(),

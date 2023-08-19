@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:geocoding/geocoding.dart';
@@ -50,6 +51,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     ));
   }
 
+  //현재 기기 위치 정보 가져오기 및 권한 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
 
@@ -249,11 +251,12 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void _LocationInfo() async {
+    String? josuUrl = dotenv.env['JUSO_API_KEY'];
     String query = _searchController.text;
     if (query.isNotEmpty) {
       try {
         Map<String, String> params = {
-          'confmKey': 'devU01TX0FVVEgyMDIzMDgxNTIzMDYzNDExNDAxNzI=',
+          'confmKey': josuUrl!,
           'keyword': query,
           'resultType': 'json',
         };

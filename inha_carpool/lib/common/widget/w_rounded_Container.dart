@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 
 class RoundedContainer extends StatelessWidget {
   final Widget child;

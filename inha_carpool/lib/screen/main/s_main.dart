@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/fragment/setting/f_setting.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
@@ -20,8 +21,7 @@ class MainScreenState extends State<MainScreen>
   TabItem _currentTab = TabItem.home;
 
   //사용 가능한 화면 리스트
-  final tabs = [TabItem.carpool, TabItem.home, TabItem.myPage,
-    TabItem.popmenu, TabItem.map];
+  final tabs = [TabItem.carpool, TabItem.home, TabItem.myPage];
 
   //각 화면별 네비게이터 키 리스트
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];

@@ -42,6 +42,7 @@ dependencies:
 
   #util
   velocity_x: ^4.1.1
+  flutter_dotenv: ^5.1.0
 
   #data
   shared_preferences: ^2.0.15
@@ -83,7 +84,7 @@ dependencies:
   geocoding: ^2.1.0 # 위치정보
   permission_handler: ^10.4.3 #권한 핸들러
   app_settings: ^5.0.0 #어플 설정 열기
-  http: ^1.1.0
+  http: ^1.1.0 #주소기반 서비스 api http 호출
 
 dev_dependencies:
   flutter_test:
@@ -124,6 +125,7 @@ flutter:
     - assets/translations/
     - assets/
     - assets/image/splash/
+    - assets/config/.env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

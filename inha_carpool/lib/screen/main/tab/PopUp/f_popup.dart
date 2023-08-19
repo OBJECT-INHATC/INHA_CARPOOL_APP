@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import '../../../../common/widget/round_button_theme.dart';
 import '../../../../common/widget/w_arrow.dart';
 import '../../../../common/widget/w_round_button.dart';
 import '../../../../common/widget/w_text_badge.dart';
-import '../../../../common/widget/w_text_field_with_delete.dart';
 import '../../../dialog/d_color_bottom.dart';
 import '../../../dialog/d_confirm.dart';
 import '../../../dialog/d_message.dart';
@@ -73,13 +73,7 @@ class PopUpFragment extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("TextFieldWithDelete 위젯"), // 위젯 이름 표시
-                TextFieldWithDelete(
-                  controller: TextEditingController(),
-                  texthint: "Enter text...",
-                  onTapDelete: () {
-                    print("Delete button tapped!");
-                  },
-                ),
+
               ],
             ),
           ),

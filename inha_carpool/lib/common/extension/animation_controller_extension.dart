@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:inha_Carpool/common/dart/extension/num_duration_extension.dart';
+import 'package:inha_Carpool/common/extension/num_duration_extension.dart';
 
 extension AnimationControllerExtension on AnimationController {
   void animateToTheEnd() {

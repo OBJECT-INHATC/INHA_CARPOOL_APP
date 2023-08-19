@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 
-import '../../common.dart';
-import '../../constant/app_colors.dart';
+import '../Colors/app_colors.dart';
+import '../widget/w_tap.dart';
+
 
 extension SnackbarContextExtension on BuildContext {
   ///Scaffold안에 Snackbar를 보여줍니다.
