@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:nav/dialog/dialog.dart';
 
 import '../../common/common.dart';
-import '../../data/simple_result.dart';
+import '../../screen/dialog/simple_result.dart';
+
 
 class ConfirmDialog extends DialogWidget<SimpleResult> {
   final String? message;

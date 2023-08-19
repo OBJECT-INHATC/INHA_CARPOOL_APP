@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
+import 'package:inha_Carpool/common/extension/velocityx_extension.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
 import '../../../screen/dialog/d_message.dart';
@@ -10,7 +12,6 @@ import '../../common/common.dart';
 import '../../common/language/language.dart';
 import '../../common/theme/theme_util.dart';
 import '../../common/widget/w_mode_switch.dart';
-import '../dialog/d_logout.dart';
 import '../login/s_login.dart';
 import '../opensource/s_opensource.dart';
 
@@ -176,8 +177,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
                 decoration: BoxDecoration(
                     border: Border.all(color: context.appColors.veryBrightGrey),
                     borderRadius: BorderRadius.circular(10),
-                    color: context.appColors.drawerBg,
-                    boxShadow: [context.appShadows.buttonShadowSmall]),
+                    color: context.appColors.drawerBg,),
                 child: Row(
                   children: [
                     const Width(10),

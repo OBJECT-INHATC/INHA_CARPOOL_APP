@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/extension/velocityx_extension.dart';
 
 import '../common.dart';
 import 'theme_text_badge.dart';

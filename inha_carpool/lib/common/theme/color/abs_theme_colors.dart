@@ -1,7 +1,7 @@
-import 'package:inha_Carpool/common/constant/app_colors.dart';
 import 'package:flutter/material.dart';
 
-export 'package:inha_Carpool/common/constant/app_colors.dart';
+import '../../Colors/app_colors.dart';
+
 
 typedef ColorProvider = Color Function();
 

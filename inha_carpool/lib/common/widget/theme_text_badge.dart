@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 
-import '../common.dart';
 
 class TextBadgeTheme {
   factory TextBadgeTheme.basic(BuildContext context) {

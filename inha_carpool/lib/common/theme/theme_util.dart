@@ -1,4 +1,5 @@
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/theme/custom_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
