@@ -28,5 +28,5 @@ MySQL : 데이터베이스 저장소로 사용<P> </br>
 
 ### 참고 자료
 파이어베이스 공식 문서: https://firebase.flutter.dev/docs/overview<P>
-스프링 부트 공식 문서: https://spring.io/projects/spring-boot
-다트 패키지 공식 문서: https://pub.dev/
+스프링 부트 공식 문서: https://spring.io/projects/spring-boot<P>
+다트 패키지 공식 문서: https://pub.dev/<P>
