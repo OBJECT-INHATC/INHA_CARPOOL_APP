@@ -35,6 +35,12 @@ class DarkAppColors extends AbstractThemeColors {
   Color get text => Colors.white;
 
   @override
+  Color get subText => Colors.white70;
+
+  @override
+  Color get cardBackground => Colors.white10;
+
+  @override
   Color get focusedBorder => AppColors.darkGrey;
 
   @override

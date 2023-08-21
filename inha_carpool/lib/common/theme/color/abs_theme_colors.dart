@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../Colors/app_colors.dart';
-
+/// 사용자 정의 색상
+///  사용예시 => Color get appBar => const Color.fromARGB(255, 144, 202, 249); //앱바 색상 정의
+///  색상적용 =>  color: context.appColors.appBar,  //앱바 색상 적용 예시
 
 typedef ColorProvider = Color Function();
 
@@ -32,6 +34,10 @@ abstract class AbstractThemeColors {
 
   Color get text => AppColors.darkGrey;
 
+  Color get subText => AppColors.darkGrey;
+
+  Color get cardBackground => Colors.white;
+
   Color get hintText => AppColors.middleGrey;
 
   Color get focusedBorder => AppColors.darkGrey;
@@ -39,6 +45,8 @@ abstract class AbstractThemeColors {
   Color get confirmText => AppColors.blue;
 
   Color get drawerText => text;
+
+  Color get appBar => const Color.fromARGB(255, 144, 202, 249);
 
   Color get snackbarBgColor => AppColors.mediumBlue;
 
