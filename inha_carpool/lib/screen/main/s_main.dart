@@ -48,7 +48,7 @@ class MainScreenState extends State<MainScreen>
       onWillPop: _handleBackPressed,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue.shade200,
+          backgroundColor:  context.appColors.appBar,
           title: 'titleSTR'.tr().text.make(),
           actions: [
             IconButton(

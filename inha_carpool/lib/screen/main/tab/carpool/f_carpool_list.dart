@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/Colors/app_colors.dart';
+import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 
 import '../../../../common/constants.dart';
@@ -22,6 +25,7 @@ class CarpoolList extends StatelessWidget {
             },
             child: Card(
               child: Container(
+                color: context.appColors.cardBackground,
                 margin: EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
                 padding:
                     EdgeInsets.only(left: 12, right: 12, top: 20, bottom: 20),
@@ -46,30 +50,29 @@ class CarpoolList extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text("07.26/16:00 주안역-인하공전",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      )),
+                                  '07.26/16:00 주안역-인하공전'
+                                      .text
+                                      .size(16)
+                                      .bold
+                                      .make(),
                                   const SizedBox(
                                     height: 6,
                                   ),
-                                  Text(
-                                    "다들 잘 오시고 계시죠?",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey.shade600,
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                                  '다들 잘 오시고 계시죠?'
+                                      .text
+                                      .size(12)
+                                      .bold
+                                      .color(context.appColors.subText)
+                                      .make(),
                                   const SizedBox(
                                     height: 6,
                                   ),
-                                  const Text(
-                                    "2023.07.26.13:01",
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.normal),
-                                  ),
+                                  '2023.07.26.13:01'
+                                      .text
+                                      .size(12)
+                                      .normal
+                                      .color(context.appColors.subText)
+                                      .make(),
                                 ],
                               ),
                             ),
@@ -77,21 +80,21 @@ class CarpoolList extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const Column(children: [
-                      Text(
-                        "15분전",
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
+                    Column(children: [
+                      '15분전'
+                          .text
+                          .size(12)
+                          .bold
+                          .color(context.appColors.text)
+                          .make(),
+                      const SizedBox(
                         height: 20,
                       ),
-                      Icon(
+                      const Icon(
                         Icons.arrow_forward_ios_rounded,
                         size: 20,
                       ),
                     ]),
-                   
                   ],
                 ),
               ),
