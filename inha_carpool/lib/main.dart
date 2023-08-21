@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:inha_Carpool/providers/dto_registerstore.dart';
+import 'package:provider/provider.dart';
 
 import 'app.dart';
 import 'common/data/preference/app_preferences.dart';
@@ -16,13 +18,17 @@ void main() async {
   await AppPreferences.init();
   await dotenv.load(fileName: 'assets/config/.env');
 
-  runApp(EasyLocalization(
-      supportedLocales: const [Locale('en'), Locale('ko')],
-      //지원하지 않는 언어인 경우 한국어로 설정
-      fallbackLocale: const Locale('ko'),
-      //번역 파일들이 위치하는 경로를 설정
-      path: 'assets/translations',
-      //언어 코드만 사용하여 번역 파일 설 ex)en_US 대신 en만 사용
-      useOnlyLangCode: true,
-      child: const App()));
+  runApp(
+      ChangeNotifierProvider(
+        create: (c) => infostore(),
+        child: EasyLocalization(
+        supportedLocales: const [Locale('en'), Locale('ko')],
+        //지원하지 않는 언어인 경우 한국어로 설정
+        fallbackLocale: const Locale('ko'),
+        //번역 파일들이 위치하는 경로를 설정
+        path: 'assets/translations',
+        //언어 코드만 사용하여 번역 파일 설 ex)en_US 대신 en만 사용
+        useOnlyLangCode: true,
+        child: const App()),
+      ));
 }
