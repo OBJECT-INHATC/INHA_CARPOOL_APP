@@ -3,9 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../../providers/dto_registerstore.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   RegisterPage({super.key});
 
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
   // 미디어 쿼리 사용을 위한 함수
   double mediaHeight(BuildContext context, double scale) =>
       MediaQuery.of(context).size.height * scale;
@@ -13,8 +18,7 @@ class RegisterPage extends StatelessWidget {
   double mediaWidth(BuildContext context, double scale) =>
       MediaQuery.of(context).size.width * scale;
 
-  String? gender;
-
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +30,7 @@ class RegisterPage extends StatelessWidget {
         : SafeArea(
             child: Scaffold(
               body: Form(
-                key: context.watch<infostore>().formKey,
+                key: formKey,
                 child: SingleChildScrollView(
                   child: Center(
                     child: Column(
@@ -36,72 +40,88 @@ class RegisterPage extends StatelessWidget {
                         // SizedBox(height: mediaHeight(context, 0.2)),
                         Container(
                           padding: const EdgeInsets.fromLTRB(15, 20, 40, 0),
-                          child: Column(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              RadioListTile(
-                                title: Text("인하공전"),
-                                value: "@itc.ac.kr",
-                                groupValue: gender,
-                                onChanged: (value) {
-                                  context.read<infostore>().chagneAcademy(value.toString());
-                                },
-                                fillColor: MaterialStateProperty.all(Colors.blue[900]),
-                              ),
-                              RadioListTile(
-                                title: Text("인하대"),
-                                value: "@inha.ac.kr",
-                                groupValue: gender,
-                                onChanged: (value) {
-                                  context.read<infostore>().chagneAcademy(value.toString());
-                                },
-                                fillColor: MaterialStateProperty.all(Colors.blue[400]),
-                              ),
-                            ],
-                          ),
-                          ),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                          child: Stack(
-                            children: [
-                              TextFormField(
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.blue),
-                                  ),
-                                  labelText: '이메일',
-                                  suffixText: '${context.watch<infostore>().academy}',
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.blue[900]
                                 ),
-                                onChanged: (text) {
-                                  // 텍스트 필드 값 변경 시 실행할 코드 작성
-                                  context.watch<infostore>().email = text;
-                                },
-
-
-                              ),
-                              Positioned(
-                                right: 2,
-                                child: ElevatedButton(
-
+                                  onPressed: () {
+                                    context
+                                        .read<infostore>()
+                                        .chagneAcademy("@itc.ac.kr");
+                                  },
+                                  child: Text("인하공전")),
+                              ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    minimumSize: Size(60, 30),
-
-                                    backgroundColor: Colors.grey[200],
+                                      primary: Colors.blue[300]
                                   ),
-                                  onPressed: () {},
-                                  child: Text('인증번호 전송',
-                                      style: TextStyle(
-                                          fontSize: 8,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
+                                  onPressed: () {
+                                    context
+                                        .read<infostore>()
+                                        .chagneAcademy("@inha.ac.kr");
+                                  },
+                                  child: Text("인하대")),
+
+                              // RadioListTile(
+                              //   title: Text("인하공전"),
+                              //   value: "@itc.ac.kr",
+                              //   groupValue: context.watch<infostore>().academy,
+                              //   onChanged: (value) {
+                              //     context.read<infostore>().chagneAcademy(value.toString());
+                              //   },
+                              //   fillColor: MaterialStateProperty.all(Colors.blue[900]),
+                              // ),
+                              // RadioListTile(
+                              //   title: Text("인하대"),
+                              //   value: "@inha.ac.kr",
+                              //   groupValue: context.watch<infostore>().academy,
+                              //   onChanged: (value) {
+                              //     context.read<infostore>().chagneAcademy(value.toString());
+                              //   },
+                              //   fillColor: MaterialStateProperty.all(Colors.blue[400]),
+                              // ),
                             ],
                           ),
                         ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                          child: TextFormField(
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue),
+                              ),
+                              labelText: '이메일',
+                              suffixText:
+                                  '${context.watch<infostore>().academy}',
+                            ),
+                            onChanged: (text) {
+                              // 텍스트 필드 값 변경 시 실행할 코드 작성
+                              context.watch<infostore>().email = text;
+                            },
+                          ),
+                        ),
+                        Container(
+                          height: 40,
+                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size.fromHeight(50),
+                                backgroundColor: Colors.grey[200],
+                              ),
+                              child: const Text('인증번호 전송',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.bold)),
+                              onPressed: () {}),
+                        ),
+
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: TextFormField(
@@ -176,29 +196,31 @@ class RegisterPage extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.fromLTRB(15, 20, 40, 0),
+                          padding: const EdgeInsets.fromLTRB(15, 10, 40, 0),
                           child: Column(
                             children: [
                               RadioListTile(
                                 title: Text("남성"),
                                 value: "남성",
-                                groupValue: gender,
+                                groupValue: context.watch<infostore>().gender,
                                 onChanged: (value) {},
-                                fillColor: MaterialStateProperty.all(Colors.blue),
+                                fillColor:
+                                    MaterialStateProperty.all(Colors.blue),
                               ),
                               RadioListTile(
                                 title: Text("여성"),
                                 value: "여성",
-                                groupValue: gender,
+                                groupValue: context.watch<infostore>().gender,
                                 onChanged: (value) {},
-                                fillColor: MaterialStateProperty.all(Colors.red),
+                                fillColor:
+                                    MaterialStateProperty.all(Colors.red),
                               ),
                             ],
                           ),
                         ),
-                        SizedBox(height: mediaHeight(context, 0.1)),
+                        // SizedBox(height: mediaHeight(context, 0.1)),
                         Container(
-                          padding: const EdgeInsets.fromLTRB(40, 0, 40, 20),
+                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 20),
                           child: Stack(
                             children: [
                               TextField(
