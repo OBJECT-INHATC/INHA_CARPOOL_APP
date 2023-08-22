@@ -7,7 +7,9 @@ class infostore extends ChangeNotifier {
   String username = "";
   String academy = "";
   bool isLoading= false;
-  final formKey = GlobalKey<FormState>();
+  String? gender;
+
+
 
   chagneAcademy(String academyName){
     academy = academyName;
