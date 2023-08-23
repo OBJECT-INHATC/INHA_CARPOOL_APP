@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/screen/recruit/s_map.dart';
 
-
+import '../main/tab/carpool/s_masterroom.dart';
 
 class RecruitPage extends StatefulWidget {
   RecruitPage({super.key});
@@ -41,28 +42,46 @@ class _RecruitPageState extends State<RecruitPage> {
               child: Column(
                 children: [
                   Expanded(
-                      child: Container(
-                        margin: EdgeInsets.fromLTRB(30, 30, 30, 10),
-                        child : TextField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey[200],
-                            labelText: '출발지',
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MapPage()),
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(30, 30, 30, 10),
+                          child : TextField(
+                            enabled: false,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              labelText: '출발지',
+                            ),
                           ),
                         ),
                       )
                   ),
                   Expanded(
-                    child: Container(
-                        margin: EdgeInsets.fromLTRB(30, 10, 30, 30),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.grey[200],
-                            labelText: '도착지',
+                      child: GestureDetector(
+                        onTap: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => MapPage()),
+                          );
+                        },
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(30, 10, 30, 10),
+                          child : TextField(
+                            enabled: false,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.grey[200],
+                              labelText: '도착지',
+                            ),
                           ),
-                        )
-                    ),
+                        ),
+                      )
                   ),
                 ],
               ),
@@ -137,7 +156,7 @@ class _RecruitPageState extends State<RecruitPage> {
                                     ),
                                     Text(
                                       "${selectedDate.month.toString().padLeft(2, '0')}." // 월
-                                      "${selectedDate.day.toString().padLeft(2, '0')}", // 일
+                                          "${selectedDate.day.toString().padLeft(2, '0')}", // 일
                                       style: TextStyle(
                                         fontSize: 40,
                                       ),
@@ -200,7 +219,7 @@ class _RecruitPageState extends State<RecruitPage> {
                                   ),
                                   Text(
                                     "${selectedTime.hour > 12 ? (selectedTime.hour - 12).toString().padLeft(2, '0') : selectedTime.hour.toString().padLeft(2, '0')}:"
-                                    "${selectedTime.minute.toString().padLeft(2, '0')}", // 선택한 시간 표시
+                                        "${selectedTime.minute.toString().padLeft(2, '0')}", // 선택한 시간 표시
                                     style: TextStyle(
                                       fontSize: 40,
                                     ),
@@ -360,6 +379,7 @@ class _RecruitPageState extends State<RecruitPage> {
                     child: TextButton(
                       onPressed: (){
                         Navigator.pop(context);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => MasterChatroomPage()));
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.lightBlue,

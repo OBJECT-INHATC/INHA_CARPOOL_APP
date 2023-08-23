@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:app_settings/app_settings.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -41,17 +42,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     _getCurrentLocation();
   }
 
-  void _addMarker(
-      LatLng point, String infoText, String markerName, BitmapDescriptor icon) {
-    _markers.add(Marker(
-      markerId: MarkerId(markerName),
-      position: point,
-      icon: icon,
-      infoWindow: InfoWindow(title: infoText),
-    ));
-  }
 
-  //현재 기기 위치 정보 가져오기 및 권한 
+
+  //현재 기기 위치 정보 가져오기 및 권한
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
 
@@ -87,24 +80,25 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     return Column(
       children: [
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             children: [
-              SizedBox(width: 5),
+              const SizedBox(width: 5),
               Expanded(
                 child: TextField(
                   controller: _searchController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: '장소 검색',
                   ),
                 ),
               ),
-              SizedBox(width: 5), // 오른쪽 여백
+              const SizedBox(width: 5), // 오른쪽 여백
               ElevatedButton(
                 onPressed: () {
                   _LocationInfo();
                 },
-                child: Text('$search'),
+
+                child: 'Search'.tr().text.make(),
               ),
             ],
           ),
@@ -161,7 +155,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
                             onPressed: () => _moveCameraTo(searchedPosition!),
                             child: Text('검색 지역'),
                           ),
-
                       ],
                     ),
                   ],
@@ -313,5 +306,15 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       }
     }
     return;
+  }
+
+  void _addMarker(
+      LatLng point, String infoText, String markerName, BitmapDescriptor icon) {
+    _markers.add(Marker(
+      markerId: MarkerId(markerName),
+      position: point,
+      icon: icon,
+      infoWindow: InfoWindow(title: infoText),
+    ));
   }
 }

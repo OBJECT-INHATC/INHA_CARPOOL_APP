@@ -7,12 +7,12 @@ class ChatStore extends ChangeNotifier {
   List<ChatMessage> chatMessages = [
     ChatMessage(
       content: '안녕하세요!',
-      sender: '사용자1',
+      sender: '홀란드',
       timestamp: DateTime.now(),
     ),
     ChatMessage(
       content: '안녕하세요! 반갑습니다.',
-      sender: '사용자2',
+      sender: '카리나',
       timestamp: DateTime.now(),
     ),
     // 추가적인 메시지들을 나열할 수 있습니다.
@@ -27,4 +27,15 @@ class ChatStore extends ChangeNotifier {
     }
     notifyListeners();
   }
+  var member = false;
+
+  getMember(){
+    member = true;
+    notifyListeners();
+  }
+  exitMember(){
+    member = false;
+    notifyListeners();
+  }
 }
+
