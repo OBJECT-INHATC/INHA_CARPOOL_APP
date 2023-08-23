@@ -78,7 +78,7 @@ class _RecruitPageState extends State<RecruitPage> {
                 setState(() {
                   startPointName = getStringBetweenUnderscores(value);
                   startPoint = LatLng(parseDoubleBeforeUnderscore(value), getDoubleAfterSecondUnderscore(value));
-                  print("출발지 주소 : ${value}");
+                  print("출발지 주소 : ${startPointName}");
                   print("출발지 위도경도 : ${startPoint}");
                 });
             },
@@ -90,7 +90,7 @@ class _RecruitPageState extends State<RecruitPage> {
               setState(() {
                 endPointName = getStringBetweenUnderscores(value);
                 endPoint = LatLng(parseDoubleBeforeUnderscore(value), getDoubleAfterSecondUnderscore(value));
-                print("도착지 주소 : ${value}");
+                print("도착지 주소 : ${endPointName}");
                 print("도착지 위도경도 : ${endPoint}");
               });
             },
