@@ -34,8 +34,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           enabled: false,
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.grey[200],
+            fillColor: Colors.grey.shade300,
             labelText: widget.labelText, // 생성자에서 받아온 문자열 사용
+            labelStyle: TextStyle(color: Colors.black), // labelText의 색상 설정
           ),
           controller: TextEditingController(text: selectedLocation),
         ),

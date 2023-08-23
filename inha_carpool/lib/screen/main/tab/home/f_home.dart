@@ -16,10 +16,7 @@ class Home extends StatelessWidget {
           child: '+'.text.white.make(),
           backgroundColor: Colors.black,
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => RecruitPage()),
-            );
+           Nav.push(RecruitPage());
           },
         ),
         body : Container(
