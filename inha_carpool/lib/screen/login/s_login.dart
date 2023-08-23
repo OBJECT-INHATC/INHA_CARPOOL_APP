@@ -1,9 +1,7 @@
 import 'dart:async';
 
-import 'package:after_layout/after_layout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:inha_Carpool/providers/dto_registerstore.dart';
 import 'package:nav/nav.dart';
 import 'package:provider/provider.dart';
@@ -12,6 +10,7 @@ import '../main/s_main.dart';
 import '../register/s_findregister.dart';
 import '../register/s_register.dart';
 
+/// TODO : 0824 서은율 수정 => 로그인을 통한 로컬 데이터 저장 및 로그인 처리
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -126,6 +125,8 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold)),
                             onPressed: () {
+                              /// TODO : 로그인 처리 및 로컬 데이터 저장
+
                               Nav.push(MainScreen());
                             }),
                       ),

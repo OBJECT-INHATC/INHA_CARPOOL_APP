@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 
 import '../../providers/dto_registerstore.dart';
 
+/// TODO : 0824 서은율 수정 => 회원가입 처리 + 렌더링 최적화 시간이 될때
 class RegisterPage extends StatefulWidget {
-  RegisterPage({super.key});
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
