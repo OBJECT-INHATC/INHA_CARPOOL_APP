@@ -1,10 +1,6 @@
-import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:inha_Carpool/providers/dto_registerstore.dart';
 import 'package:nav/nav.dart';
-import 'package:provider/provider.dart';
 
 import '../main/s_main.dart';
 import '../register/s_findregister.dart';
@@ -19,18 +15,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
+  String email = "";
+  String password = "";
+  bool isLoading = false;
 
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    return context.watch<infostore>().isLoading
+    return isLoading
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).primaryColor),
@@ -72,11 +65,10 @@ class _LoginPageState extends State<LoginPage> {
                                 : "올바른 이메일을 입력해주세요";
                           },
                           onChanged: (text) {
-                            context.watch<infostore>().email = text;
+                            email = text;
                           },
                         ),
                       ),
-
                       Container(
                         padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                         child: TextFormField(
@@ -100,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           },
                           onChanged: (text) {
-                            context.watch<infostore>().password = text;
+                            password = text;
                           },
                         ),
                       ),

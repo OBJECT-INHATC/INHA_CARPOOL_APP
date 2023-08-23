@@ -3,7 +3,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:inha_Carpool/firebase_options.dart';
-import 'package:inha_Carpool/providers/dto_registerstore.dart';
 import 'package:provider/provider.dart';
 
 import 'app.dart';
@@ -27,9 +26,7 @@ void main() async {
   );
 
   runApp(
-      ChangeNotifierProvider(
-        create: (c) => infostore(),
-        child: EasyLocalization(
+      EasyLocalization(
         supportedLocales: const [Locale('en'), Locale('ko')],
         //지원하지 않는 언어인 경우 한국어로 설정
         fallbackLocale: const Locale('ko'),
@@ -38,5 +35,5 @@ void main() async {
         //언어 코드만 사용하여 번역 파일 설 ex)en_US 대신 en만 사용
         useOnlyLangCode: true,
         child: const App()),
-      ));
+      );
 }

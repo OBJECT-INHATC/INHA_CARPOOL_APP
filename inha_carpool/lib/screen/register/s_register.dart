@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/dto_registerstore.dart';
-
 /// TODO : 0824 서은율 수정 => 회원가입 처리 + 렌더링 최적화 시간이 될때
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -25,14 +23,12 @@ class _RegisterPageState extends State<RegisterPage> {
   String checkPassword = "";
   String username = "";
   String academy = "";
-  bool isLoading= false;
+  bool isLoading = false;
   String? gender;
-
-
 
   @override
   Widget build(BuildContext context) {
-    return context.watch<infostore>().isLoading
+    return isLoading
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).primaryColor),
@@ -53,24 +49,23 @@ class _RegisterPageState extends State<RegisterPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue[900]
-                                ),
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue[900]),
                                   onPressed: () {
-
-                                    academy ="@itc.ac.kr";
+                                    setState(() {
+                                      academy = "@itc.ac.kr";
+                                    });
                                   },
                                   child: const Text("인하공전")),
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue[300]
-                                  ),
+                                      backgroundColor: Colors.blue[300]),
                                   onPressed: () {
-                                    academy ="@inha.ac.kr";
+                                    setState(() {
+                                      academy = "@inha.ac.kr";
+                                    });
                                   },
                                   child: const Text("인하대")),
-
-
                             ],
                           ),
                         ),
@@ -86,8 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderSide: BorderSide(color: Colors.blue),
                               ),
                               labelText: '이메일',
-                              suffixText:
-                                  academy,
+                              suffixText: academy,
                             ),
                             onChanged: (text) {
                               // 텍스트 필드 값 변경 시 실행할 코드 작성
@@ -133,7 +127,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               }
                             },
                             onChanged: (text) {
-                              context.watch<infostore>().username = text;
+                              username = text;
                             },
                           ),
                         ),
