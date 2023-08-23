@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+// 지도 api 연결 예정
 class LocationInputPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
