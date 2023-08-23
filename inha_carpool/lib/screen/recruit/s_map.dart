@@ -9,7 +9,7 @@ class MapPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text(
+        title: const Text(
           '위치 검색',
           style: TextStyle(
             color: Colors.black,
@@ -31,7 +31,7 @@ class MapPage extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(20),
               color: Colors.white, // 검색 창의 배경색
-              child: TextField(
+              child: const TextField(
                 decoration: InputDecoration(
                   hintText: '장소 또는 주소 검색',
                   suffixIcon: Icon(Icons.search),

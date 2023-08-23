@@ -74,12 +74,26 @@ class _RecruitPageState extends State<RecruitPage> {
             LocationInputWidget(
               labelText: startPointName,
               Point: startPoint,
-              pointText: '출발지',
+              pointText: '출발지', onLocationSelected: (String value) {
+                setState(() {
+                  startPointName = getStringBetweenUnderscores(value);
+                  startPoint = LatLng(parseDoubleBeforeUnderscore(value), getDoubleAfterSecondUnderscore(value));
+                  print("출발지 주소 : ${value}");
+                  print("출발지 위도경도 : ${startPoint}");
+                });
+            },
             ),
             LocationInputWidget(
               labelText: endPointName,
               Point: endPoint,
-              pointText: '도착지',
+              pointText: '도착지', onLocationSelected: (String value) {
+              setState(() {
+                endPointName = getStringBetweenUnderscores(value);
+                endPoint = LatLng(parseDoubleBeforeUnderscore(value), getDoubleAfterSecondUnderscore(value));
+                print("도착지 주소 : ${value}");
+                print("도착지 위도경도 : ${endPoint}");
+              });
+            },
             ),
             Row(
               children: [
@@ -187,8 +201,6 @@ class _RecruitPageState extends State<RecruitPage> {
 
     setState(() {
       startPoint = LatLng(position.latitude, position.longitude);
-      print(startPoint.latitude);
-      print(startPoint.longitude);
     });
   }
 
@@ -203,5 +215,41 @@ class _RecruitPageState extends State<RecruitPage> {
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+
+  double parseDoubleBeforeUnderscore(String input) {
+    final indexOfUnderscore = input.indexOf('_');
+    if (indexOfUnderscore >= 0) {
+      final doublePart = input.substring(0, indexOfUnderscore);
+      return double.tryParse(doublePart) ?? 0.0; // 문자열을 더블로 파싱하고 실패하면 0.0을 리턴
+    }
+    return 0.0; // '_'가 없을 경우에는 0.0을 리턴
+  }
+
+  double getDoubleAfterSecondUnderscore(String input) {
+    final firstUnderscoreIndex = input.indexOf('_');
+    if (firstUnderscoreIndex >= 0) {
+      final remainingString = input.substring(firstUnderscoreIndex + 1); // 첫 번째 '_' 이후의 문자열을 가져옴
+      final secondUnderscoreIndex = remainingString.indexOf('_');
+      if (secondUnderscoreIndex >= 0) {
+        final doubleString = remainingString.substring(secondUnderscoreIndex + 1); // 두 번째 '_' 이후의 문자열을 가져옴
+        return double.tryParse(doubleString) ?? 0.0; // 문자열을 더블로 변환하고 실패할 경우 0.0을 리턴
+      }
+    }
+    return 0.0; // 어떤 '_'도 찾지 못하거나 두 번째 '_' 이후에 문자열이 없을 경우 0.0을 리턴
+  }
+
+  String getStringBetweenUnderscores(String input) {
+    final firstUnderscoreIndex = input.indexOf('_');
+    if (firstUnderscoreIndex >= 0) {
+      final remainingString = input.substring(firstUnderscoreIndex + 1); // 첫 번째 '_' 이후의 문자열을 가져옴
+      final secondUnderscoreIndex = remainingString.indexOf('_');
+      if (secondUnderscoreIndex >= 0) {
+        final stringBetweenUnderscores = remainingString.substring(0, secondUnderscoreIndex); // 첫 번째 '_'와 두 번째 '_' 사이의 문자열을 가져옴
+        return stringBetweenUnderscores;
+      }
+    }
+    return ''; // 어떤 '_'도 찾지 못하거나 두 번째 '_' 이후에 문자열이 없을 경우 빈 문자열을 리턴
   }
 }
