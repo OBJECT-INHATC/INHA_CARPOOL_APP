@@ -22,14 +22,9 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    testFireStore();
     super.initState();
   }
 
-  testFireStore() async {
-    var test = await FirebaseFirestore.instance.collection('product').doc('nesxx8JpR39tcNEek6zp').get();
-    print(test['aa']);
-  }
 
   final formKey = GlobalKey<FormState>();
 

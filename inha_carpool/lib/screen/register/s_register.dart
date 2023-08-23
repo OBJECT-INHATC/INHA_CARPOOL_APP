@@ -20,6 +20,15 @@ class _RegisterPageState extends State<RegisterPage> {
       MediaQuery.of(context).size.width * scale;
 
   final formKey = GlobalKey<FormState>();
+  String email = "";
+  String password = "";
+  String checkPassword = "";
+  String username = "";
+  String academy = "";
+  bool isLoading= false;
+  String? gender;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +47,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        // SizedBox(height: mediaHeight(context, 0.2)),
                         Container(
                           padding: const EdgeInsets.fromLTRB(15, 20, 40, 0),
                           child: Row(
@@ -46,43 +54,23 @@ class _RegisterPageState extends State<RegisterPage> {
                             children: [
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  primary: Colors.blue[900]
+                                  backgroundColor: Colors.blue[900]
                                 ),
                                   onPressed: () {
-                                    context
-                                        .read<infostore>()
-                                        .chagneAcademy("@itc.ac.kr");
+
+                                    academy ="@itc.ac.kr";
                                   },
-                                  child: Text("인하공전")),
+                                  child: const Text("인하공전")),
                               ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                      primary: Colors.blue[300]
+                                      backgroundColor: Colors.blue[300]
                                   ),
                                   onPressed: () {
-                                    context
-                                        .read<infostore>()
-                                        .chagneAcademy("@inha.ac.kr");
+                                    academy ="@inha.ac.kr";
                                   },
-                                  child: Text("인하대")),
+                                  child: const Text("인하대")),
 
-                              // RadioListTile(
-                              //   title: Text("인하공전"),
-                              //   value: "@itc.ac.kr",
-                              //   groupValue: context.watch<infostore>().academy,
-                              //   onChanged: (value) {
-                              //     context.read<infostore>().chagneAcademy(value.toString());
-                              //   },
-                              //   fillColor: MaterialStateProperty.all(Colors.blue[900]),
-                              // ),
-                              // RadioListTile(
-                              //   title: Text("인하대"),
-                              //   value: "@inha.ac.kr",
-                              //   groupValue: context.watch<infostore>().academy,
-                              //   onChanged: (value) {
-                              //     context.read<infostore>().chagneAcademy(value.toString());
-                              //   },
-                              //   fillColor: MaterialStateProperty.all(Colors.blue[400]),
-                              // ),
+
                             ],
                           ),
                         ),
@@ -91,19 +79,19 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: TextFormField(
                             obscureText: true,
                             decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
+                              enabledBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
-                              focusedBorder: UnderlineInputBorder(
+                              focusedBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.blue),
                               ),
                               labelText: '이메일',
                               suffixText:
-                                  '${context.watch<infostore>().academy}',
+                                  academy,
                             ),
                             onChanged: (text) {
                               // 텍스트 필드 값 변경 시 실행할 코드 작성
-                              context.watch<infostore>().email = text;
+                              email = text;
                             },
                           ),
                         ),
@@ -126,7 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.black), // 밑줄 색상 설정
@@ -153,7 +141,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: TextFormField(
                             obscureText: true,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.black), // 밑줄 색상 설정
@@ -165,7 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               labelText: '비밀번호',
                             ),
                             onChanged: (text) {
-                              context.watch<infostore>().password = text;
+                              password = text;
                             },
                           ),
                         ),
@@ -173,7 +161,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: TextFormField(
                             obscureText: true,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.black), // 밑줄 색상 설정
@@ -185,10 +173,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               labelText: '비밀번호 확인',
                             ),
                             onChanged: (text) {
-                              context.watch<infostore>().checkPassword = text;
+                              checkPassword = text;
                             },
                             validator: (val) {
-                              if (val != context.watch<infostore>().password) {
+                              if (val != password) {
                                 return "비밀번호가 일치하지 않습니다.";
                               } else {
                                 return null;
@@ -201,17 +189,17 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Column(
                             children: [
                               RadioListTile(
-                                title: Text("남성"),
+                                title: const Text("남성"),
                                 value: "남성",
-                                groupValue: context.watch<infostore>().gender,
+                                groupValue: gender,
                                 onChanged: (value) {},
                                 fillColor:
                                     MaterialStateProperty.all(Colors.blue),
                               ),
                               RadioListTile(
-                                title: Text("여성"),
+                                title: const Text("여성"),
                                 value: "여성",
-                                groupValue: context.watch<infostore>().gender,
+                                groupValue: gender,
                                 onChanged: (value) {},
                                 fillColor:
                                     MaterialStateProperty.all(Colors.red),
@@ -226,7 +214,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             children: [
                               TextField(
                                 obscureText: true,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(color: Colors.black),
                                   ),
@@ -246,7 +234,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     backgroundColor: Colors.grey[200],
                                   ),
                                   onPressed: () {},
-                                  child: Text('확인',
+                                  child: const Text('확인',
                                       style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey,
