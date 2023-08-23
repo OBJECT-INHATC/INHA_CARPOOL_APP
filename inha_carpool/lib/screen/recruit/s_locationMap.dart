@@ -9,7 +9,6 @@ import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 
-
 class LocationInputPage extends StatefulWidget {
   final LatLng Point;
 
@@ -20,7 +19,6 @@ class LocationInputPage extends StatefulWidget {
 }
 
 class _LocationInputPageState extends State<LocationInputPage> {
-
   bool isMove = false;
   late GoogleMapController mapController;
   TextEditingController _searchController = TextEditingController();
@@ -34,8 +32,7 @@ class _LocationInputPageState extends State<LocationInputPage> {
   @override
   void initState() {
     super.initState();
-    _addMarker(
-        widget.Point, "내 위치", "RedMarker",
+    _addMarker(widget.Point, "내 위치", "RedMarker",
         BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue));
   }
 
@@ -67,10 +64,7 @@ class _LocationInputPageState extends State<LocationInputPage> {
                   onPressed: () {
                     _LocationInfo();
                   },
-                  child: 'Search'
-                      .tr()
-                      .text
-                      .make(),
+                  child: 'Search'.tr().text.make(),
                 ),
               ],
             ),
@@ -95,8 +89,6 @@ class _LocationInputPageState extends State<LocationInputPage> {
                   onCameraMoveStarted: () {
                     isMove = true;
                   },
-
-
                 ),
                 Positioned(
                   top: 16,
@@ -161,7 +153,8 @@ class _LocationInputPageState extends State<LocationInputPage> {
           Center(
             child: ElevatedButton(
               onPressed: () {
-                Navigator.pop(context, _searchController.text);
+                Navigator.pop(context,
+                    "${searchedPosition!.latitude}_${_searchController.text}_${searchedPosition!.longitude}");
               },
               child: Text('위치 선택 완료'),
             ),
@@ -172,11 +165,10 @@ class _LocationInputPageState extends State<LocationInputPage> {
   }
 
   void _moveCameraTo(LatLng target) {
-      mapController.animateCamera(CameraUpdate.newCameraPosition(
-        CameraPosition(target: target, zoom: 16.0),
-      ));
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(target: target, zoom: 16.0),
+    ));
   }
-
 
   void _LocationInfo() async {
     String? josuUrl = dotenv.env['JUSO_API_KEY'];
@@ -199,9 +191,8 @@ class _LocationInputPageState extends State<LocationInputPage> {
           var json = jsonDecode(response.body);
           setState(() {
             list = json['results']['juso'];
-            if(list.count() == 0){
+            if (list.count() == 0) {
               ScffoldMsgAndListClear(context, "검색결과가 없습니다");
-
             }
             if (list.length == 1) {
               _searchLocation('${list[0]['roadAddr']}');
@@ -216,9 +207,7 @@ class _LocationInputPageState extends State<LocationInputPage> {
       }
     } else {
       ScffoldMsgAndListClear(context, "주소를 입력해 주세요");
-
     }
-
   }
 
   //스낵바 알림 후 리스트 비우기
@@ -228,7 +217,6 @@ class _LocationInputPageState extends State<LocationInputPage> {
     );
     list.clear();
   }
-
 
   void _searchLocation(String query) async {
     if (query.isNotEmpty) {
@@ -254,8 +242,8 @@ class _LocationInputPageState extends State<LocationInputPage> {
   }
 
 //마커추가
-  void _addMarker(LatLng point, String infoText, String markerName,
-      BitmapDescriptor icon) {
+  void _addMarker(
+      LatLng point, String infoText, String markerName, BitmapDescriptor icon) {
     // 기존에 같은 MarkerId가 존재하는 마커를 제거합니다.
     _markers.removeWhere((marker) => marker.markerId.value == markerName);
 
@@ -265,17 +253,7 @@ class _LocationInputPageState extends State<LocationInputPage> {
       icon: icon,
       infoWindow: InfoWindow(title: infoText),
     ));
-    printMarkersInfo();
   }
 
-  void printMarkersInfo() {
-    for (Marker marker in _markers) {
-      print("MarkerId: ${marker.markerId.value}");
-      print("Position: ${marker.position.latitude}, ${marker.position
-          .longitude}");
-      print("Icon: ${marker.icon}");
-      print("InfoWindow Title: ${marker.infoWindow.title}");
-      print("---------end---------");
-    }
-  }
+
 }
