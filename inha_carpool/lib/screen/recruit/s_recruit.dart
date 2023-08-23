@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/screen/recruit/s_map.dart';
 import 'package:inha_Carpool/screen/recruit/w_dateTimePic.dart';
 import 'package:inha_Carpool/screen/recruit/w_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_nop.dart';
 
-import '../main/tab/carpool/s_masterroom.dart';
 
 class RecruitPage extends StatefulWidget {
   RecruitPage({super.key});
@@ -113,6 +111,20 @@ class _RecruitPageState extends State<RecruitPage> {
                     ]),
                   ),
                 ],
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 20),
+              child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(Colors.lightBlue),
+                  // 버튼 배경색
+                  fixedSize: MaterialStateProperty.all(Size(200, 30)), // 버튼 크기
+                ),
+                onPressed: () {
+                  // TODO: 카풀 시작하기 버튼을 눌렀을 때의 동작 추가
+                },
+                child: '카풀 시작하기'.text.size(20).white.make(),
               ),
             ),
           ],
