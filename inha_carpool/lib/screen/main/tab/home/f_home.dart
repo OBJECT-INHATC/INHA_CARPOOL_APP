@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/common.dart';
 
 import '../../../recruit/s_recruit.dart';
 import '../carpool/s_chatroom.dart';
@@ -9,12 +10,10 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          child: Text('+'),
+          child: '+'.text.white.make(),
           backgroundColor: Colors.black,
           onPressed: () {
             Navigator.push(
