@@ -1,10 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/recruit/w_dateTimePic.dart';
 import 'package:inha_Carpool/screen/recruit/w_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_nop.dart';
+
+import '../../fragment/f_notification.dart';
+import '../../fragment/setting/f_setting.dart';
 
 
 class RecruitPage extends StatefulWidget {
@@ -25,6 +28,34 @@ class _RecruitPageState extends State<RecruitPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar:AppBar(
+          backgroundColor:  context.appColors.appBar,
+          title: 'recruit'.tr().text.make(),
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.notifications_none,
+                size: 35,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationList()),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.settings, size: 35),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingPage()),
+                );
+
+              },
+            ),
+          ],
+        ),
         body: Column(
           children: [
             Expanded(
@@ -113,6 +144,8 @@ class _RecruitPageState extends State<RecruitPage> {
                 ],
               ),
             ),
+
+            /// 카풀 시작하기 -- 파베 기능 추가하기
             Container(
               margin: EdgeInsets.symmetric(vertical: 20),
               child: ElevatedButton(
