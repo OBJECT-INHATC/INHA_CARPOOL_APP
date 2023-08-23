@@ -247,7 +247,7 @@ class _MenuDrawerState extends State<MenuDrawer> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('로그아웃'),
+          title: 'LogOut'.tr().text.make(),
           content: Text('로그아웃 하시겠습니까?'),
           actions: <Widget>[
             TextButton(
