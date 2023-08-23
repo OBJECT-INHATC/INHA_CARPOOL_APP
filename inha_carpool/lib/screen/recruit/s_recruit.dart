@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/recruit/s_map.dart';
 import 'package:inha_Carpool/screen/recruit/w_dateTimePic.dart';
+import 'package:inha_Carpool/screen/recruit/w_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
+import 'package:inha_Carpool/screen/recruit/w_select_nop.dart';
 
 import '../main/tab/carpool/s_masterroom.dart';
 
@@ -27,7 +30,7 @@ class _RecruitPageState extends State<RecruitPage> {
         body: Column(
           children: [
             Expanded(
-              // 출발지, 도착지 영역
+              /// 출발지, 도착지 영역
               child: Column(
                 children: [
                   Expanded(
@@ -39,9 +42,8 @@ class _RecruitPageState extends State<RecruitPage> {
                 ],
               ),
             ),
-            
 
-            //날짜, 시간 영역
+            ///날짜, 시간 영역
             Expanded(
               child: Row(
                 children: [
@@ -51,25 +53,23 @@ class _RecruitPageState extends State<RecruitPage> {
                     onDateTimeChanged: (newDate) {
                       setState(() {
                         _selectedDate = newDate;
+                        print("선택된 날짜: $_selectedDate");
                       });
                     },
                   ),
-
                   DateTimePickerWidget(
                     label: '시간',
                     selectedDateTime: _selectedTime,
                     onDateTimeChanged: (newTime) {
                       setState(() {
                         _selectedTime = newTime;
+                        print("선택된 시간: $_selectedTime");
                       });
                     },
                   ),
-
                 ],
               ),
             ),
-
-
 
             ///  제한인원
             Expanded(
@@ -83,159 +83,36 @@ class _RecruitPageState extends State<RecruitPage> {
                         width: double.infinity,
                         margin: EdgeInsets.all(15),
                         padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                        child: Text(
-                          '제한인원',
-                          style: TextStyle(fontSize: 25.0),
-                          textAlign: TextAlign.left,
-                        ),
+                        child: '인원'.text.size(25).align(TextAlign.left).make(),
                       ),
-                      // 제한인원 선택 버튼
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedLimit = '2인';
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: selectedLimit == '2인'
-                                ? Colors.lightBlue
-                                : Colors.grey,
-                          ),
-                          child: Text(
-                            '2인',
-                            style: TextStyle(color: Colors.white, fontSize: 17),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedLimit = '3인';
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: selectedLimit == '3인'
-                                ? Colors.lightBlue
-                                : Colors.grey,
-                          ),
-                          child: Text(
-                            '3인',
-                            style: TextStyle(color: Colors.white, fontSize: 17),
-                          ),
-                        ),
+                      LimitSelectorWidget(
+                        options: ['2인', '3인'],
+                        selectedValue: selectedLimit,
+                        onOptionSelected: (value) {
+                          setState(() {
+                            selectedLimit = value;
+                            print("선택된 인원: $selectedLimit");
+                          });
+                        },
                       ),
                     ]),
                   ),
                   Expanded(
                     child: Column(// 성별 영역
                         children: [
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.all(15),
-                        padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                        child: Text(
-                          '성별',
-                          style: TextStyle(fontSize: 25.0),
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
                       // 성별 선택 버튼
-                      Row(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(30, 0, 12, 0),
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedGender = '남자';
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: selectedGender == '남자'
-                                    ? Colors.lightBlue
-                                    : Colors.grey,
-                              ),
-                              child: Text(
-                                '남자',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.fromLTRB(13, 0, 30, 0),
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  selectedGender = '여자';
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: selectedGender == '여자'
-                                    ? Colors.lightBlue
-                                    : Colors.grey,
-                              ),
-                              child: Text(
-                                '여자',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 17),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedGender = '무관';
-                            });
-                          },
-                          style: TextButton.styleFrom(
-                            backgroundColor: selectedGender == '무관'
-                                ? Colors.lightBlue
-                                : Colors.grey,
-                          ),
-                          child: Text(
-                            '무관',
-                            style: TextStyle(color: Colors.white, fontSize: 17),
-                          ),
-                        ),
+                      GenderSelectorWidget(
+                        selectedGender: selectedGender,
+                        onGenderSelected: (value) {
+                          setState(() {
+                            selectedGender = value;
+                            print("선택된 성별: $selectedGender");
+                          });
+                        },
                       ),
                     ]),
                   ),
                 ],
-              ),
-            ),
-            Expanded(
-              // 작성 완료 버튼 영역
-              child: Container(
-                width: double.infinity,
-                margin: EdgeInsets.fromLTRB(30, 75, 30, 75),
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MasterChatroomPage()));
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.lightBlue,
-                  ),
-                  child: Text(
-                    '작성완료',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
-                ),
               ),
             ),
           ],
