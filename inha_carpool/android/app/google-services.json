@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "1068670035033",
+    "project_id": "inhacarpool-b190f",
+    "storage_bucket": "inhacarpool-b190f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068670035033:android:ecfb92931069c6e72cbd48",
+        "android_client_info": {
+          "package_name": "com.example.inha_carpool"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068670035033-seb6787iop375c130sti2lpnq9f2boju.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsgLP8__VXvjDs4yadzLjRN7UfExsQmqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068670035033-seb6787iop375c130sti2lpnq9f2boju.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1068670035033-2es4dqka3b5uofkqfjv80cqa6kjq9knc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fastAppBase"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068670035033:android:30fbc48892f5569d2cbd48",
+        "android_client_info": {
+          "package_name": "com.objects.inha_carpool"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068670035033-seb6787iop375c130sti2lpnq9f2boju.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsgLP8__VXvjDs4yadzLjRN7UfExsQmqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1068670035033-seb6787iop375c130sti2lpnq9f2boju.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1068670035033-2es4dqka3b5uofkqfjv80cqa6kjq9knc.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fastAppBase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
