@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 
 import '../../../recruit/s_recruit.dart';
-import '../carpool/s_chatroom.dart';
 
 
 class Home extends StatelessWidget {
@@ -13,12 +13,15 @@ class Home extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
-          child: '+'.text.white.make(),
-          backgroundColor: Colors.black,
+          child: '+'.text.white.size(350).make(),
+          backgroundColor: context.appColors.appBar,
           onPressed: () {
            Nav.push(RecruitPage());
           },
         ),
+
+
+
         body : Container(
           child: ListView.builder(
             itemCount: 6,
@@ -39,7 +42,8 @@ class Home extends StatelessWidget {
               } else {
                 return GestureDetector(
                   onTap:(){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChatroomPage()));
+                  //  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatroomPage()));
+
                   },
                   behavior: HitTestBehavior.opaque,
                   child: Container(
@@ -56,17 +60,21 @@ class Home extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Icon(Icons.gps_fixed),
-                            Text("주안역 "),
-                            Text("  08.03 14:52")
+                            Icon(Icons.person),
+                            "출발지".text.black.make(),
+                            EmptyExpanded(flex: 1),
+                            Text("  08.03 14:52"),
+
                           ],
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Icon(Icons.gps_fixed),
-                            Text("인하공전"),
+                            Icon(Icons.flag_circle),
+                            "도착지".text.black.make(),
+                            EmptyExpanded(flex: 1),
+                            Text('현재 인원'),
                           ],
                         ),
                       ],
