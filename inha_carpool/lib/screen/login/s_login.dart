@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 import 'package:nav/nav.dart';
 
@@ -48,6 +50,7 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
   }
 
+  /// 0825 한승완 TODO : 로그인 화면 비율 구성
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -66,14 +69,15 @@ class _LoginPageState extends State<LoginPage> {
                     children: <Widget>[
                       Container(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
-                        child: const FlutterLogo(
-                          size: 100,
+                        child: FlutterLogo(
+                          size: context.height(0.2),
                         ),
                       ),
                       Container(
                         padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                         child: TextFormField(
                           decoration: const InputDecoration(
+
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
                                   BorderSide(color: Colors.black), // 밑줄 색상 설정
@@ -111,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       Container(
                         height: 80,
-                        padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
+                        padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               minimumSize: const Size.fromHeight(50),
@@ -130,11 +134,8 @@ class _LoginPageState extends State<LoginPage> {
                                   .loginWithUserNameandPassword(email, password)
                                   .then((value) async {
                                 if (value == true) {
-                                  QuerySnapshot snapshot =
-                                      await FireStoreService()
-                                          .gettingUserData(email);
-                                  // await storage.write(
-                                  //     key: "uid", value: snapshot.docs[0].id);
+                                  QuerySnapshot snapshot = await FireStoreService().gettingUserData(email);
+
                                   storage.write(
                                       key: "nickName",
                                       value: snapshot.docs[0].get("nickName"));
@@ -153,6 +154,8 @@ class _LoginPageState extends State<LoginPage> {
                                               const MainScreen()),
                                     );
                                   }
+                                }else{
+                                  context.showErrorSnackbar(value);
                                 }
                               });
                             }),

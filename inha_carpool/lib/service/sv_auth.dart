@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 /// Auth Service
@@ -16,15 +17,18 @@ class AuthService {
   /// 0824 서은율, 한승완
   Future loginWithUserNameandPassword(String email, String password) async {
     try {
+
       User user = (await firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password))
           .user!;
 
-      if (user != null) {
+      if (user != null && user.emailVerified) {
         return true;
+      } else if (user != null && !user.emailVerified) {
+        return "이메일 인증이 완료되지 않은 사용자 입니다.";
       }
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      return "이메일 또는 비밀번호가 일치하지 않습니다.";
     }
   }
 

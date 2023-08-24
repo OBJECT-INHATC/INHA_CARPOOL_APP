@@ -17,6 +17,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final formKey = GlobalKey<FormState>();
 
+  /// 0825 서은율 TODO : 화면 비율 + 유효성 확인 + Alert 창 수정
+
   // 이메일
   String email = "";
 
@@ -86,24 +88,33 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                          child: TextFormField(
-                            decoration: InputDecoration(
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
+                          child: Stack(
+                            alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
+                            children: [
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  enabledBorder: const UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.black),
+                                  ),
+                                  focusedBorder: const UnderlineInputBorder(
+                                    borderSide: BorderSide(color: Colors.blue),
+                                  ),
+                                  labelText: '학번',
+                                ),
+                                onChanged: (text) {
+                                  // 텍스트 필드 값 변경 시 실행할 코드 작성
+                                  email = text + academy;
+                                  print(email);
+                                },
                               ),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
+                              Positioned( // 중간 텍스트를 겹쳐서 배치
+                                right: 10,
+                                child: Text(academy),
                               ),
-                              labelText: '학번',
-                              suffixText: academy,
-                            ),
-                            onChanged: (text) {
-                              // 텍스트 필드 값 변경 시 실행할 코드 작성
-                              email = text+academy;
-                              print(email);
-                            },
+                            ],
                           ),
                         ),
+
 
 
                         Container(
@@ -300,9 +311,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       fontWeight: FontWeight.bold)),
                               onPressed: () async{
                                 await FirebaseAuth.instance.currentUser!.sendEmailVerification();
-                                Nav.push(const auth_verificationDialog());
-
-                                /// TODO : 0825 서은율 추가 -> 인증 메일 전송
+                                Nav.push(const VerificationDialog());
                               }),
                         ),
 

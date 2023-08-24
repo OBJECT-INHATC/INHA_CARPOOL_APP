@@ -4,8 +4,8 @@ import 'package:nav/nav.dart';
 
 
 
-class auth_verificationDialog extends StatelessWidget {
-  const auth_verificationDialog({super.key});
+class VerificationDialog extends StatelessWidget {
+  const VerificationDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +78,12 @@ class auth_verificationDialog extends StatelessWidget {
               ),
               onPressed: () {
                 Navigator.pop(context);
-                Nav.push(LoginPage());
+                Navigator.pop(context);
               },
               child: const Text('OK')),
         )
       ],
-    );;
+    );
   }
 }
 
