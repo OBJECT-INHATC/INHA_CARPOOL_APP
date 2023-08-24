@@ -9,7 +9,8 @@ import '../main/s_main.dart';
 import '../register/s_findregister.dart';
 import '../register/s_register.dart';
 
-/// TODO : 0824 서은율 수정 => 로그인을 통한 로컬 데이터 저장 및 로그인 처리
+/// 0824 서은율, 한승완
+/// 로그인 페이지
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -18,12 +19,34 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  void checkLogin() async{
+    var result = await AuthService().checkUserAvailable();
+    if(result){
+      if(!mounted) return;
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()),);
+    }
+
+  }
+
+  // 이메일
   String email = "";
+
+  // 비밀번호
   String password = "";
+
+  // 로딩 여부
   bool isLoading = false;
 
   final formKey = GlobalKey<FormState>();
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
+
+  @override
+  void initState() {
+    // 로그인 여부 확인
+    checkLogin();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold)),
                             onPressed: () {
-                              /// TODO : 로그인 처리 -완 및 로컬 데이터 저장
+                              /// 로그인 + 로컬 데이터 저장
                               AuthService()
                                   .loginWithUserNameandPassword(email, password)
                                   .then((value) async {
@@ -112,15 +135,23 @@ class _LoginPageState extends State<LoginPage> {
                                           .gettingUserData(email);
                                   // await storage.write(
                                   //     key: "uid", value: snapshot.docs[0].id);
-                                  await storage.write(
+                                  storage.write(
                                       key: "nickName",
                                       value: snapshot.docs[0].get("nickName"));
-                                  await storage.write(
+                                  storage.write(
                                       key: "email",
                                       value: snapshot.docs[0].get("email"));
+                                  storage.write(
+                                      key: "gender",
+                                      value: snapshot.docs[0].get('gender'));
 
                                   if (context.mounted) {
-                                    Nav.push(MainScreen());
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MainScreen()),
+                                    );
                                   }
                                 }
                               });
@@ -134,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                           children: [
                             TextButton(
                               onPressed: () {
-                                Nav.push(FindRegisterPage());
+                                Nav.push(const FindRegisterPage());
                               },
                               child: Text(
                                 '아이디 / 비밀번호 찾기',
@@ -163,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => RegisterPage()),
+                                    builder: (context) => const RegisterPage()),
                               );
                             },
                           ),

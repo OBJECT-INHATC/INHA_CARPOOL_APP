@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../service/sv_auth.dart';
 
-/// TODO : 0824 서은율 수정 => 회원가입 처리 + 렌더링 최적화 시간이 될때 -완
+/// 0824 서은율 한승완
+/// 회원 가입 페이지
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -12,20 +11,28 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // 미디어 쿼리 사용을 위한 함수
-  double mediaHeight(BuildContext context, double scale) =>
-      MediaQuery.of(context).size.height * scale;
-
-  double mediaWidth(BuildContext context, double scale) =>
-      MediaQuery.of(context).size.width * scale;
 
   final formKey = GlobalKey<FormState>();
+
+  // 이메일
   String email = "";
+
+  // 비밀번호
   String password = "";
+
+  // 비밀번호 비교
   String checkPassword = "";
+
+  // 이름
   String username = "";
+
+  // 학교
   String academy = "";
+
+  // 로딩 여부
   bool isLoading = false;
+
+  // 성별
   String? gender;
 
   @override
@@ -104,7 +111,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                       fontSize: 15,
                                       color: Colors.grey,
                                       fontWeight: FontWeight.bold)),
-                              onPressed: () {}),
+                              onPressed: () {
+                                /// TODO : 0825 서은율 추가 -> 인증 메일 전송
+                              }),
                         ),
 
                         Container(
@@ -264,8 +273,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         email, password, "dummy", gender!)
                                     .then((value) async{
                                   if (value == true) {
-
-
+                                    showSnackbar(context, Colors.green, "회원가입이 완료되었습니다. \n 메일에서 인증을 완료해주세요.");
                                     Navigator.pop(context);
                                   }
                                   else {

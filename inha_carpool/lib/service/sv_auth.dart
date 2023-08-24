@@ -13,7 +13,7 @@ class AuthService {
   final storage = const FlutterSecureStorage();
 
   /// 로그인 메서드
-  /// TODO : 0824 서은율 수정 + 적용
+  /// 0824 서은율, 한승완
   Future loginWithUserNameandPassword(String email, String password) async {
     try {
       User user = (await firebaseAuth.signInWithEmailAndPassword(
@@ -21,7 +21,6 @@ class AuthService {
           .user!;
 
       if (user != null) {
-
         return true;
       }
     } on FirebaseAuthException catch (e) {
@@ -30,7 +29,7 @@ class AuthService {
   }
 
   /// 회원 가입 메서드
-  /// TODO : 0824 서은율 수정 + 적용
+  /// 0824 서은율 한승완
   Future registerUserWithEmailandPassword(
       String nickName, String email, String password, String fcmToken, String gender,) async {
     try {
@@ -51,18 +50,21 @@ class AuthService {
   }
 
   /// 로그 아웃 메서드
-  /// TODO : 0824 서은율 수정 + 적용
+  /// 0824 서은율, 한승완
   Future signOut() async {
     try {
-      await storage.deleteAll();
+      await storage.delete(key: 'email');
+      await storage.delete(key: 'nickName');
+      await storage.delete(key: 'gender');
       await firebaseAuth.signOut();
+      print('로그아웃');
     } catch (e) {
       return null;
     }
   }
 
   /// 로그인 여부 확인
-  /// TODO : 0824 서은율 수정 + 적용
+  /// 0824 서은율, 한승완
   Future<bool> checkUserAvailable() async{
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -72,9 +74,6 @@ class AuthService {
       return false;
     }
 
-  }
-  Future<void> saveSS(String key ,String value) async{
-    await storage.write(key: key, value: value);
   }
 
 }

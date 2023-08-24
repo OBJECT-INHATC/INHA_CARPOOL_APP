@@ -16,8 +16,8 @@ class FireStoreService {
 
   final User? user = FirebaseAuth.instance.currentUser;
 
-  /// TODO : 0824 서은율 수정 -완
-
+  /// 0824 서은율
+  /// 사용자 정보 저장
   Future savingUserData(String nickName, String email, String fcmToken, String gender) async {
     return await userCollection.doc(uid).set({
       "nickName": nickName,
@@ -29,12 +29,14 @@ class FireStoreService {
     });
   }
 
-  /// TODO : 0824 서은율 수정
+  /// 0824 서은율
+  /// 이메일로 사용자 정보 가져오기
   Future gettingUserData(String email) async {
 
     QuerySnapshot snapshot =
     await userCollection.where("email", isEqualTo: email).get();
     return snapshot;
+
   }
 
 

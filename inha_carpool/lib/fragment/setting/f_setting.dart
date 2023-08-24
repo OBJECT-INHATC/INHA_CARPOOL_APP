@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/fragment/setting/w_switch_menu.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
+import 'package:inha_Carpool/service/sv_auth.dart';
 import 'package:nav/nav.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../common/widget/w_big_button.dart';
@@ -87,14 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 builder: (BuildContext context) {
                   return LogoutConfirmationDialog(
                     onConfirm: () {
-                      Navigator.pop(context); // 닫기 버튼 클릭
-                      // 로그아웃 처리
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                        // LoginPage로 이동
-                        (Route<dynamic> route) => false, // 이전 화면들을 모두 제거
-                      );
+                      /// LogoutConfirmationDialog 내부 로직 존재
                     },
                   );
                 },
