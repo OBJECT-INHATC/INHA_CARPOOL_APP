@@ -125,6 +125,7 @@ class _LocationInputPageState extends State<LocationInputPage> {
             ),
           ),
 
+          SizedBox(height: 10,),
           ///주소 Api
           Expanded(
             child: ListView.separated(
@@ -135,15 +136,26 @@ class _LocationInputPageState extends State<LocationInputPage> {
                     _searchController.text = roadAddr;
                     _searchLocation(roadAddr);
                   },
-                  child: roadAddr.text.size(14).make(),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 16),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        roadAddr,
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ),
+                  ),
                 );
               },
               separatorBuilder: (context, index) {
-                return Divider();
+                return SizedBox(height: 14);
               },
               itemCount: list.length,
             ),
           ),
+
+
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
