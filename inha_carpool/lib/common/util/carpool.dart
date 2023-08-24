@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class FirebaseCarpool {
@@ -31,12 +30,14 @@ class FirebaseCarpool {
       GeoPoint geoEnd = GeoPoint(endPoint.latitude, endPoint.longitude);
       List<String> hobbies = [myID];
 
+      print(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''));
+
       DocumentReference carpoolDocRef = await users.add({
         'admin': myID,
-        'endPointName': endPointName,
-        'endPoint': geoEnd,
         'startPointName': startPointName,
         'startPoint': geoStart,
+        'endPointName': endPointName,
+        'endPoint': geoEnd,
         'maxMember': selectedLimit.replaceAll(RegExp(r'[^\d]'), ''),
         'gender': selectedGender,
         'startTime': dateAsInt,

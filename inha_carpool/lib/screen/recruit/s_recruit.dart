@@ -1,7 +1,4 @@
-import 'package:app_settings/app_settings.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
@@ -25,7 +22,6 @@ class RecruitPage extends StatefulWidget {
 }
 
 class _RecruitPageState extends State<RecruitPage> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String myID = "hoon";
   var _selectedDate = DateTime.now(); // 날짜 값 초기화
   var _selectedTime = DateTime.now(); // 시간 값 초기화
@@ -43,7 +39,7 @@ class _RecruitPageState extends State<RecruitPage> {
   }
 
   String selectedLimit = '2인'; // 선택된 제한인원 초기값
-  String selectedGender = '남자'; // 선택된 성별 초기값
+  String selectedGender = '무관'; // 선택된 성별 초기값
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +170,6 @@ class _RecruitPageState extends State<RecruitPage> {
 
             /// 카풀 시작하기 -- 파베 기능 추가하기
             Container(
-              margin: EdgeInsets.symmetric(vertical: 20),
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.lightBlue),
@@ -205,7 +200,7 @@ class _RecruitPageState extends State<RecruitPage> {
 
                 },
                 child: '카풀 시작하기'.text.size(20).white.make(),
-              ),
+              ).p(60),
             ),
           ],
         ),
@@ -213,38 +208,13 @@ class _RecruitPageState extends State<RecruitPage> {
     );
   }
 
-
   Future<void> _getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
-
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      _showLocationPermissionSnackBar();
-      return;
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    setState(() {
-      startPoint = LatLng(position.latitude, position.longitude);
+    location_handler.getCurrentLocation(context, (LatLng location) {
+      setState(() {
+        startPoint = location;
+      });
     });
   }
-
-  void _showLocationPermissionSnackBar() {
-    SnackBar snackBar = SnackBar(
-      content: Text("위치 권한이 필요한 서비스입니다."),
-      action: SnackBarAction(
-        label: "설정으로 이동",
-        onPressed: () {
-          AppSettings.openAppSettings();
-        },
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
 
 
 

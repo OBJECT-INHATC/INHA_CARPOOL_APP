@@ -1,3 +1,8 @@
+import 'package:app_settings/app_settings.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class location_handler {
   // 위도 경도를 제외한 주소의 값을 가져옴
   static String getStringBetweenUnderscores(String input) {
@@ -39,4 +44,40 @@ class location_handler {
     }
     return 0.0; // 어떤 '_'도 찾지 못하거나 두 번째 '_' 이후에 문자열이 없을 경우 0.0을 리턴
   }
+
+
+  static Future<void> getCurrentLocation(
+      BuildContext context,
+      Function(LatLng) onLocationReceived,
+      ) async {
+    LocationPermission permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      showLocationPermissionSnackBar(context);
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    onLocationReceived(LatLng(position.latitude, position.longitude));
+  }
+
+  static void showLocationPermissionSnackBar(BuildContext context) {
+    SnackBar snackBar = SnackBar(
+      content: Text("위치 권한이 필요한 서비스입니다."),
+      action: SnackBarAction(
+        label: "설정으로 이동",
+        onPressed: () {
+          AppSettings.openAppSettings();
+        },
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+
+
 }
