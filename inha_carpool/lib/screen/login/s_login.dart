@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
                               borderSide: BorderSide(
                                   color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
                             ),
-                            labelText: '이메일',
+                            labelText: '학번',
                           ),
                           onChanged: (text) {
                             email = text;
