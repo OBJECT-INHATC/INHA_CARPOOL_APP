@@ -33,7 +33,7 @@ class _LocationInputPageState extends State<LocationInputPage> {
   void initState() {
     super.initState();
     _addMarker(widget.Point, "내 위치", "RedMarker",
-        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue));
+        BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure));
   }
 
   @override
@@ -41,6 +41,7 @@ class _LocationInputPageState extends State<LocationInputPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('위치 선택'),
+        backgroundColor: Colors.blue,
       ),
       body: Column(
         children: [
@@ -61,6 +62,8 @@ class _LocationInputPageState extends State<LocationInputPage> {
 
                 /// 검색 버튼
                 ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue, ),
                   onPressed: () {
                     _LocationInfo();
                   },
@@ -91,13 +94,11 @@ class _LocationInputPageState extends State<LocationInputPage> {
                   },
                 ),
                 Positioned(
-                  top: 16,
+                  bottom: 16,
                   left: 16,
-                  right: 16,
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -108,24 +109,17 @@ class _LocationInputPageState extends State<LocationInputPage> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 180,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          if (firstStep)
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.green,
-                              ),
-                              onPressed: () => _moveCameraTo(searchedPosition!),
-                              child: Text('검색 지역'),
-                            ),
-                        ],
-                      ),
+                      if (firstStep)
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.redAccent,
+                          ),
+                          onPressed: () => _moveCameraTo(searchedPosition!),
+                          child: Text('검색 지역 이동'),
+                        ),
                     ],
                   ),
+
                 ),
               ],
             ),
@@ -150,15 +144,25 @@ class _LocationInputPageState extends State<LocationInputPage> {
               itemCount: list.length,
             ),
           ),
-          Center(
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context,
-                    "${searchedPosition!.latitude}_${_searchController.text}_${searchedPosition!.longitude}");
-              },
-              child: Text('위치 선택 완료'),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  // 원하는 높이와 너비 지정
+                  minimumSize: Size(150, 50), // 너비와 높이를 변경하려면 이 부분을 조정하세요
+                  // 추가로 버튼의 배경색 등의 스타일을 지정할 수 있습니다.
+                  backgroundColor: Colors.blue, // 원하는 배경색으로 변경
+                  // 필요한 다른 스타일을 지정할 수 있습니다.
+                ),
+                onPressed: () {
+                  Navigator.pop(context,
+                      "${searchedPosition!.latitude}_${_searchController.text}_${searchedPosition!.longitude}");
+                },
+                child: Text('위치 선택 완료'),
+              ),
             ),
-          ),
+          ).p(30),
         ],
       ),
     );
@@ -232,7 +236,7 @@ class _LocationInputPageState extends State<LocationInputPage> {
             searchedPosition!,
             query,
             "searchPosition",
-            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen),
+            BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           );
         });
 
