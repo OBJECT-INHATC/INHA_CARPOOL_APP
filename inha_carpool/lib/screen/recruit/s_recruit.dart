@@ -4,10 +4,10 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
-import 'package:inha_Carpool/screen/recruit/w_dateTimePic.dart';
-import 'package:inha_Carpool/screen/recruit/w_gender.dart';
+import 'package:inha_Carpool/screen/recruit/w_select_dateTime.dart';
+import 'package:inha_Carpool/screen/recruit/w_select_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
-import 'package:inha_Carpool/screen/recruit/w_select_nop.dart';
+import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
 import '../../fragment/f_notification.dart';
 import '../../fragment/setting/f_setting.dart';
