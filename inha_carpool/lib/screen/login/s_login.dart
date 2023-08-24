@@ -1,7 +1,10 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inha_Carpool/service/sv_auth.dart';
 import 'package:nav/nav.dart';
 
+import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
 import '../register/s_findregister.dart';
 import '../register/s_register.dart';
@@ -20,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   bool isLoading = false;
 
   final formKey = GlobalKey<FormState>();
+  final storage = FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +61,6 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             labelText: '이메일',
                           ),
-                          validator: (val) {
-                            return RegExp(
-                                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                    .hasMatch(val!)
-                                ? null
-                                : "올바른 이메일을 입력해주세요";
-                          },
                           onChanged: (text) {
                             email = text;
                           },
@@ -84,13 +81,6 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             labelText: '비밀번호',
                           ),
-                          validator: (val) {
-                            if (val!.length < 8) {
-                              return "비밀번호가 틀렸습니다.";
-                            } else {
-                              return null;
-                            }
-                          },
                           onChanged: (text) {
                             password = text;
                           },
@@ -112,9 +102,28 @@ class _LoginPageState extends State<LoginPage> {
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold)),
                             onPressed: () {
-                              /// TODO : 로그인 처리 및 로컬 데이터 저장
+                              /// TODO : 로그인 처리 -완 및 로컬 데이터 저장
+                              AuthService()
+                                  .loginWithUserNameandPassword(email, password)
+                                  .then((value) async {
+                                if (value == true) {
+                                  QuerySnapshot snapshot =
+                                      await FireStoreService()
+                                          .gettingUserData(email);
+                                  // await storage.write(
+                                  //     key: "uid", value: snapshot.docs[0].id);
+                                  await storage.write(
+                                      key: "nickName",
+                                      value: snapshot.docs[0].get("nickName"));
+                                  await storage.write(
+                                      key: "email",
+                                      value: snapshot.docs[0].get("email"));
 
-                              Nav.push(MainScreen());
+                                  if (context.mounted) {
+                                    Nav.push(MainScreen());
+                                  }
+                                }
+                              });
                             }),
                       ),
                       Container(

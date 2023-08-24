@@ -21,6 +21,7 @@ class AuthService {
           .user!;
 
       if (user != null) {
+
         return true;
       }
     } on FirebaseAuthException catch (e) {
@@ -31,17 +32,17 @@ class AuthService {
   /// 회원 가입 메서드
   /// TODO : 0824 서은율 수정 + 적용
   Future registerUserWithEmailandPassword(
-      String fullName, String email, String password, String fcmToken) async {
+      String nickName, String email, String password, String fcmToken, String gender,) async {
     try {
       User user = (await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password))
           .user!;
 
-      print("user data saved");
+      print("유저 데이터 저장");
 
       if (user != null) {
         /// Fire Store 사용자 정보 저장
-        await FireStoreService(uid: user.uid).savingUserData(fullName, email, "dummy");
+        await FireStoreService(uid: user.uid).savingUserData(nickName, email, "dummy", gender);
         return true;
       }
     } on FirebaseAuthException catch (e) {
@@ -71,6 +72,9 @@ class AuthService {
       return false;
     }
 
+  }
+  Future<void> saveSS(String key ,String value) async{
+    await storage.write(key: key, value: value);
   }
 
 }

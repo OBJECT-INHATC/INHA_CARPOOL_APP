@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-/// TODO : 0824 서은율 수정 => 회원가입 처리 + 렌더링 최적화 시간이 될때
+import '../../service/sv_auth.dart';
+
+/// TODO : 0824 서은율 수정 => 회원가입 처리 + 렌더링 최적화 시간이 될때 -완
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
@@ -72,7 +74,6 @@ class _RegisterPageState extends State<RegisterPage> {
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: TextFormField(
-                            obscureText: true,
                             decoration: InputDecoration(
                               enabledBorder: const UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
@@ -85,7 +86,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             onChanged: (text) {
                               // 텍스트 필드 값 변경 시 실행할 코드 작성
-                              email = text;
+                              email = text+academy;
+                              print(email);
                             },
                           ),
                         ),
@@ -186,7 +188,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                 title: const Text("남성"),
                                 value: "남성",
                                 groupValue: gender,
-                                onChanged: (value) {},
+                                onChanged: (value) {
+                                  gender = value.toString();
+                                },
                                 fillColor:
                                     MaterialStateProperty.all(Colors.blue),
                               ),
@@ -194,7 +198,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                 title: const Text("여성"),
                                 value: "여성",
                                 groupValue: gender,
-                                onChanged: (value) {},
+                                onChanged: (value) {
+                                  gender = value.toString();
+                                },
                                 fillColor:
                                     MaterialStateProperty.all(Colors.red),
                               ),
@@ -252,7 +258,23 @@ class _RegisterPageState extends State<RegisterPage> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)),
                               onPressed: () {
-                                Navigator.pop(context);
+
+                                AuthService()
+                                    .registerUserWithEmailandPassword(username,
+                                        email, password, "dummy", gender!)
+                                    .then((value) async{
+                                  if (value == true) {
+
+
+                                    Navigator.pop(context);
+                                  }
+                                  else {
+                                    showSnackbar(context, Colors.red, value);
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  }});
+
                               }),
                         ),
                       ],
@@ -263,4 +285,23 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           );
   }
+
+  void showSnackbar(context, color, message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(fontSize: 14),
+        ),
+        backgroundColor: color,
+        duration: const Duration(seconds: 2),
+        action: SnackBarAction(
+          label: "OK",
+          onPressed: () {},
+          textColor: Colors.white,
+        ),
+      ),
+    );
+  }
+
 }
