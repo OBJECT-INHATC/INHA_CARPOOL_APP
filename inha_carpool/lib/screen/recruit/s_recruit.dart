@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
+import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_dateTime.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
@@ -76,8 +77,8 @@ class _RecruitPageState extends State<RecruitPage> {
               Point: startPoint,
               pointText: '출발지', onLocationSelected: (String value) {
                 setState(() {
-                  startPointName = getStringBetweenUnderscores(value);
-                  startPoint = LatLng(parseDoubleBeforeUnderscore(value), getDoubleAfterSecondUnderscore(value));
+                  startPointName = location_handler.getStringBetweenUnderscores(value);
+                  startPoint = LatLng(location_handler.parseDoubleBeforeUnderscore(value), location_handler.getDoubleAfterSecondUnderscore(value));
                   print("출발지 주소 : ${startPointName}");
                   print("출발지 위도경도 : ${startPoint}");
                 });
@@ -88,8 +89,8 @@ class _RecruitPageState extends State<RecruitPage> {
               Point: endPoint,
               pointText: '도착지', onLocationSelected: (String value) {
               setState(() {
-                endPointName = getStringBetweenUnderscores(value);
-                endPoint = LatLng(parseDoubleBeforeUnderscore(value), getDoubleAfterSecondUnderscore(value));
+                endPointName = location_handler.getStringBetweenUnderscores(value);
+                endPoint = LatLng( location_handler.parseDoubleBeforeUnderscore(value), location_handler.getDoubleAfterSecondUnderscore(value));
                 print("도착지 주소 : ${endPointName}");
                 print("도착지 위도경도 : ${endPoint}");
               });
@@ -176,6 +177,10 @@ class _RecruitPageState extends State<RecruitPage> {
                 ),
                 onPressed: () {
                   // TODO: 카풀 시작하기 버튼을 눌렀을 때의 동작 추가
+                  // TODO: 1. 카풀 생성 2. 전체 카풀 조회(리스트)
+                  // TODO: 3. 카풀 참여하기 4. 내가 참여한 카풀 조회
+
+
                 },
                 child: '카풀 시작하기'.text.size(20).white.make(),
               ),
@@ -218,38 +223,7 @@ class _RecruitPageState extends State<RecruitPage> {
   }
 
 
-  double parseDoubleBeforeUnderscore(String input) {
-    final indexOfUnderscore = input.indexOf('_');
-    if (indexOfUnderscore >= 0) {
-      final doublePart = input.substring(0, indexOfUnderscore);
-      return double.tryParse(doublePart) ?? 0.0; // 문자열을 더블로 파싱하고 실패하면 0.0을 리턴
-    }
-    return 0.0; // '_'가 없을 경우에는 0.0을 리턴
-  }
 
-  double getDoubleAfterSecondUnderscore(String input) {
-    final firstUnderscoreIndex = input.indexOf('_');
-    if (firstUnderscoreIndex >= 0) {
-      final remainingString = input.substring(firstUnderscoreIndex + 1); // 첫 번째 '_' 이후의 문자열을 가져옴
-      final secondUnderscoreIndex = remainingString.indexOf('_');
-      if (secondUnderscoreIndex >= 0) {
-        final doubleString = remainingString.substring(secondUnderscoreIndex + 1); // 두 번째 '_' 이후의 문자열을 가져옴
-        return double.tryParse(doubleString) ?? 0.0; // 문자열을 더블로 변환하고 실패할 경우 0.0을 리턴
-      }
-    }
-    return 0.0; // 어떤 '_'도 찾지 못하거나 두 번째 '_' 이후에 문자열이 없을 경우 0.0을 리턴
-  }
 
-  String getStringBetweenUnderscores(String input) {
-    final firstUnderscoreIndex = input.indexOf('_');
-    if (firstUnderscoreIndex >= 0) {
-      final remainingString = input.substring(firstUnderscoreIndex + 1); // 첫 번째 '_' 이후의 문자열을 가져옴
-      final secondUnderscoreIndex = remainingString.indexOf('_');
-      if (secondUnderscoreIndex >= 0) {
-        final stringBetweenUnderscores = remainingString.substring(0, secondUnderscoreIndex); // 첫 번째 '_'와 두 번째 '_' 사이의 문자열을 가져옴
-        return stringBetweenUnderscores;
-      }
-    }
-    return ''; // 어떤 '_'도 찾지 못하거나 두 번째 '_' 이후에 문자열이 없을 경우 빈 문자열을 리턴
-  }
+
 }
