@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/recruit/s_select_location.dart';
 
 class LocationInputWidget extends StatefulWidget {
@@ -29,6 +30,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     selectedLocation = widget.labelText;
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -40,7 +44,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
         if (result != null) {
           setState(() {
-            selectedLocation = getStringBetweenUnderscores(result);
+            selectedLocation = location_handler.getStringBetweenUnderscores(result);
             isGestureEnabled = false; // Tap 이벤트 비활성화
           });
           widget.onLocationSelected(result);
@@ -73,17 +77,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
 
 
-  String getStringBetweenUnderscores(String input) {
-    final firstUnderscoreIndex = input.indexOf('_');
-    if (firstUnderscoreIndex >= 0) {
-      final remainingString = input.substring(firstUnderscoreIndex + 1); // 첫 번째 '_' 이후의 문자열을 가져옴
-      final secondUnderscoreIndex = remainingString.indexOf('_');
-      if (secondUnderscoreIndex >= 0) {
-        final stringBetweenUnderscores = remainingString.substring(0, secondUnderscoreIndex); // 첫 번째 '_'와 두 번째 '_' 사이의 문자열을 가져옴
-        return stringBetweenUnderscores;
-      }
-    }
-    return ''; // 어떤 '_'도 찾지 못하거나 두 번째 '_' 이후에 문자열이 없을 경우 빈 문자열을 리턴
-  }
+
 
 }
