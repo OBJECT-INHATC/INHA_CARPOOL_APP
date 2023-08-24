@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
+import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_dateTime.dart';
@@ -183,10 +184,20 @@ class _RecruitPageState extends State<RecruitPage> {
                 onPressed: () async {
                   // TODO: 카풀 시작하기 버튼을 눌렀을 때의 동작 추가
                   // TODO: 1. 카풀 생성
-                   await addDataToFirestore();
                   // Todo: 2. 전체 카풀 조회(리스트)
                   // TODO: 3. 카풀 참여하기
                   // Todo: 4. 내가 참여한 카풀 조회
+                   await FirebaseCarpool.addDataToFirestore(
+                     selectedDate: _selectedDate,
+                     selectedTime: _selectedTime,
+                     startPoint: startPoint,
+                     endPoint: endPoint,
+                     endPointName: endPointName,
+                     startPointName: startPointName,
+                     selectedLimit: selectedLimit,
+                     selectedGender: selectedGender,
+                     myID: myID,
+                   );
                    Navigator.push(
                      context,
                      MaterialPageRoute(builder: (context) => MainScreen()),
@@ -202,57 +213,6 @@ class _RecruitPageState extends State<RecruitPage> {
     );
   }
 
-  Future<void> addDataToFirestore() async {
-
-    DateTime combinedDateTime = DateTime(
-      _selectedDate.year,
-      _selectedDate.month,
-      _selectedDate.day,
-      _selectedTime.hour,
-      _selectedTime.minute,
-    );
-    int dateAsInt = combinedDateTime.millisecondsSinceEpoch;
-    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(dateAsInt);
-
-    print("출발 시작 int : ${dateAsInt}");
-    print("출발 시작 date : ${dateTime}");
-
-    try {
-      // 데이터를 추가할 컬렉션의 참조를 가져옵니다.
-
-
-      CollectionReference users = _firestore.collection('carpool');
-      GeoPoint geoStart = GeoPoint(startPoint.latitude, startPoint.longitude);
-      GeoPoint geoEnd = GeoPoint(endPoint.latitude, endPoint.longitude);
-      List<String> hobbies = [myID];
-
-      // 데이터를 추가합니다.
-      DocumentReference carpoolDocRef = await users.add({
-        'admin': myID,
-        'endPointName': endPointName,
-        'endPoint': geoEnd,
-        'startPointName':startPointName,
-        'startPoint':geoStart,
-        'maxMember':selectedLimit..replaceAll(RegExp(r'[^\d]'), ''),
-        'gender':selectedGender,
-        'startTime': dateAsInt,
-        'nowMember':1,
-        'status':false,
-        'members':hobbies
-
-      });
-
-      CollectionReference membersCollection = carpoolDocRef.collection('messages');
-      await membersCollection.add({
-        'memberID': myID,
-        'joinedDate': DateTime.now(),
-      });
-
-      print('Data added to Firestore.');
-    } catch (e) {
-      print('Error adding data to Firestore: $e');
-    }
-  }
 
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
