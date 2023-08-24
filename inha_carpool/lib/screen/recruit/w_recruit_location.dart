@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/screen/recruit/s_locationMap.dart';
+import 'package:inha_Carpool/screen/recruit/s_select_location.dart';
 
 class LocationInputWidget extends StatefulWidget {
   String labelText; // 생성자에서 받아온 문자열을 저장할 변수
@@ -47,12 +47,12 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         }
       } : null, // isGestureEnabled가 false일 때는 onTap 이벤트 비활성화
       child: Container(
-        margin: EdgeInsets.fromLTRB(30, 30, 30, 10),
+        margin: const EdgeInsets.fromLTRB(30, 30, 30, 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              margin: EdgeInsets.only(bottom: 13),
+              margin: const EdgeInsets.only(bottom: 13),
               child: widget.pointText.text.size(16).bold.black.make(),
             ),
             TextField(
@@ -60,9 +60,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: Colors.grey.shade300,
-                labelStyle: TextStyle(color: Colors.black),
+                labelStyle: const TextStyle(color: Colors.black),
               ),
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
               controller: TextEditingController(text: selectedLocation),
             ),
           ],
