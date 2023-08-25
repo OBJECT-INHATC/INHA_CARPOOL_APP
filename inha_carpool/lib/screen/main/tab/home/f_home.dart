@@ -17,16 +17,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late LatLng myPoint = LatLng(0, 0);
-   late Future<List<DocumentSnapshot>> nearbyCarpoolsl;
+  late Future<List<DocumentSnapshot>> nearbyCarpoolsl;
 
   @override
   void initState() {
     super.initState();
     nearbyCarpoolsl = someFunction();
   } // Null 허용
-
-
-
 
   //내 위치 받아오기
   Future<void> initMyPoint() async {
@@ -36,8 +33,7 @@ class _HomeState extends State<Home> {
 
   // 시간순 정렬
   Future<List<DocumentSnapshot>> someFunction() async {
-    List<DocumentSnapshot> carpools = await FirebaseCarpool.getCarpoolsTimeby(
-    );
+    List<DocumentSnapshot> carpools = await FirebaseCarpool.getCarpoolsTimeby();
     return carpools;
   }
 
@@ -83,17 +79,42 @@ class _HomeState extends State<Home> {
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
                         DocumentSnapshot carpool = snapshot.data![index];
+                        Map<String, dynamic> carpoolData =
+                            carpool.data() as Map<String, dynamic>;
+
+                        DateTime startTime = DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
+                        DateTime currentTime = DateTime.now();
+                        Duration difference = startTime.difference(currentTime);
+
+                        String formattedTime;
+                        if (difference.inDays >= 365) {
+                          formattedTime = '${difference.inDays ~/ 365}년 후';
+                        } else if (difference.inDays >= 30) {
+                          formattedTime = '${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 이후';
+                        } else if (difference.inDays >= 1) {
+                          formattedTime = '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 이후';
+                        } else if (difference.inHours >= 1) {
+                          formattedTime = '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 이후';
+                        } else {
+                          formattedTime = '${difference.inMinutes}분 후';
+                        }
+
                         // 각 아이템을 빌드하는 로직
                         return GestureDetector(
                           onTap: () {
                             // 아이템 클릭 시 동작
-                            someFunction();
+                            print('Start Point: ${carpoolData['startDetailPoint']}');
+                            print('End Point: ${carpoolData['endDetailPoint']}');
+                            print('Start Time: ${formattedTime}');
+                            print('Now Member / Max Member: ${carpoolData['nowMember']}/${carpoolData['maxMember']}');
                           },
                           child: Card(
                             elevation: 5,
-                            margin: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                            margin: EdgeInsets.symmetric(
+                                vertical: 15, horizontal: 20),
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(width: 1, color: context.appColors.appBar),
+                              side: BorderSide(
+                                  width: 1, color: context.appColors.appBar),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -101,28 +122,44 @@ class _HomeState extends State<Home> {
                               children: [
                                 SizedBox(height: 10),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     CircleAvatar(
                                       radius: 40,
                                       backgroundColor: context.appColors.appBar,
-                                      child: FittedBox(child: Text('출발지', style: TextStyle(color: Colors.white, fontSize: 20))),
+                                      child: FittedBox(
+                                          child: Text(
+                                              '${carpoolData['startDetailPoint']}',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20))),
                                     ),
                                     Column(
                                       children: [
-                                        Text('출발시간', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                        Text('${formattedTime}',
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey)),
                                         CircleAvatar(
                                           radius: 30,
                                           backgroundColor: Colors.white,
-                                          child: FittedBox(child: Icon(Icons.arrow_forward, color: Colors.black)),
+                                          child: FittedBox(
+                                              child: Icon(Icons.arrow_forward,
+                                                  color: Colors.black)),
                                         ),
-                                        Text('현재인원', style: TextStyle(fontSize: 16)),
+                                        Text('${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
+                                            style: TextStyle(fontSize: 16)),
                                       ],
                                     ),
                                     CircleAvatar(
                                       radius: 40,
                                       backgroundColor: context.appColors.appBar,
-                                      child: FittedBox(child: Text('도착지', style: TextStyle(color: Colors.white))),
+                                      child: FittedBox(
+                                          child: Text(
+                                              '${carpoolData['endDetailPoint']}',
+                                              style: TextStyle(
+                                                  color: Colors.white))),
                                     ),
                                   ],
                                 ),
