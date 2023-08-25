@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/fragment/setting/f_setting.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
@@ -55,7 +56,7 @@ class MainScreenState extends State<MainScreen>
               icon: const Icon(
                 Icons.notifications_none,
                 size: 35,
-              ),
+              ).animate().shake(duration: 10000.ms, hz: 3),
               onPressed: () {
                 Navigator.push(
                   context,
