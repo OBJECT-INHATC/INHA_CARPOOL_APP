@@ -61,69 +61,79 @@ class _HomeState extends State<Home> {
           },
         ),
 
+
         ///검색
         body: Container(
-          child: ListView.builder(
-            itemCount: 6,
-            itemBuilder: (c, i) {
-              if (i == 0) {
-                return Container(
-                  margin: EdgeInsets.all(5),
-                  height: 30,
-                  child: TextField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.grey[400],
-                      border: OutlineInputBorder(),
-                      labelText: '검색',
-                    ),
-                  ),
-                );
-              } else {
-                return GestureDetector(
-                  onTap: () {
-                    someFunction();
-                    //  Navigator.push(context, MaterialPageRoute(builder: (context) => ChatroomPage()));
-                  },
-                  behavior: HitTestBehavior.opaque,
-                  child: Container(
-                    width: 700,
-                    height: 100,
-                    margin: EdgeInsets.all(5),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30), //모서리를 둥글게
-                        border: Border.all(color: Colors.black12, width: 3)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.person),
-                            "출발지".text.black.make(),
-                            EmptyExpanded(flex: 1),
-                            Text("  08.03 14:52"),
-                          ],
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Icon(Icons.flag_circle),
-                            "도착지".text.black.make(),
-                            EmptyExpanded(flex: 1),
-                            Text('현재 인원'),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-            },
+      child: Column(
+        children: [
+          Container(
+            height: 60,
+            width: double.infinity, // 가로 길이를 화면 전체 너비로 설정
+            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+          child: TextField(
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(),
+              labelText: '검색',
+            ),
           ),
         ),
+          Expanded(
+            child: ListView.builder(
+            itemCount: 6,
+              itemBuilder: (context, index) {
+                return Card(
+                  elevation: 5,
+                  margin: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                shape: RoundedRectangleBorder( // 보더를 설정하는 부분
+                side: BorderSide(width: 1, color: context.appColors.appBar), // 전체를 감싸는 보더
+                borderRadius: BorderRadius.circular(10),
+                ),//
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundColor: context.appColors.appBar,
+                            child: FittedBox(child: Text('출발지', style: TextStyle(color: Colors.white, fontSize: 20))),
+                          ),
+                          Column(
+
+                            children: [
+                              Text('출발시간', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundColor: Colors.white,
+                                child: FittedBox(child: Icon(Icons.arrow_forward, color: Colors.black)),
+                              ),
+                              Text('현재인원', style: TextStyle(fontSize: 16)),
+
+                            ],
+                          ),
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundColor: context.appColors.appBar,
+                            child: FittedBox(child: Text('도착지', style: TextStyle(color: Colors.white))),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10,)
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      ),
+
+
       ),
     );
   }
