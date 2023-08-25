@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class location_handler {
+class Location_handler {
   // 위도 경도를 제외한 주소의 값을 가져옴
   static String getStringBetweenUnderscores(String input) {
     final firstUnderscoreIndex = input.indexOf('_');
@@ -76,6 +76,23 @@ class location_handler {
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+
+  static Future<LatLng?> getCurrentLatLng(BuildContext context) async {
+    LocationPermission permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      showLocationPermissionSnackBar(context);
+      return null;
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+    );
+
+    return LatLng(position.latitude, position.longitude);
   }
 
 
