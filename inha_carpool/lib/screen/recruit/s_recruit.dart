@@ -79,8 +79,8 @@ class _RecruitPageState extends State<RecruitPage> {
               Point: startPoint,
               pointText: '출발지', onLocationSelected: (String value) {
                 setState(() {
-                  startPointName = location_handler.getStringBetweenUnderscores(value);
-                  startPoint = LatLng(location_handler.parseDoubleBeforeUnderscore(value), location_handler.getDoubleAfterSecondUnderscore(value));
+                  startPointName = Location_handler.getStringBetweenUnderscores(value);
+                  startPoint = LatLng(Location_handler.parseDoubleBeforeUnderscore(value), Location_handler.getDoubleAfterSecondUnderscore(value));
                   print("출발지 주소 : ${startPointName}");
                   print("출발지 위도경도 : ${startPoint}");
                 });
@@ -91,8 +91,8 @@ class _RecruitPageState extends State<RecruitPage> {
               Point: endPoint,
               pointText: '도착지', onLocationSelected: (String value) {
               setState(() {
-                endPointName = location_handler.getStringBetweenUnderscores(value);
-                endPoint = LatLng( location_handler.parseDoubleBeforeUnderscore(value), location_handler.getDoubleAfterSecondUnderscore(value));
+                endPointName = Location_handler.getStringBetweenUnderscores(value);
+                endPoint = LatLng( Location_handler.parseDoubleBeforeUnderscore(value), Location_handler.getDoubleAfterSecondUnderscore(value));
                 print("도착지 주소 : ${endPointName}");
                 print("도착지 위도경도 : ${endPoint}");
               });
@@ -209,7 +209,7 @@ class _RecruitPageState extends State<RecruitPage> {
   }
 
   Future<void> _getCurrentLocation() async {
-    location_handler.getCurrentLocation(context, (LatLng location) {
+    Location_handler.getCurrentLocation(context, (LatLng location) {
       setState(() {
         startPoint = location;
       });
