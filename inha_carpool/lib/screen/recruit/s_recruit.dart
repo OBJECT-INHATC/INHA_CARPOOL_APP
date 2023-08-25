@@ -22,6 +22,8 @@ class RecruitPage extends StatefulWidget {
 }
 
 class _RecruitPageState extends State<RecruitPage> {
+
+
   final String myID = "hoon";
   var _selectedDate = DateTime.now(); // 날짜 값 초기화
   var _selectedTime = DateTime.now(); // 시간 값 초기화
@@ -31,6 +33,7 @@ class _RecruitPageState extends State<RecruitPage> {
   LatLng startPoint = LatLng(37.4645862, 126.6803935);
   String startPointName = "주안역 택시 승강장";
   String endPointName = "인하대 후문 CU";
+
 
   @override
   void initState() {
@@ -43,6 +46,8 @@ class _RecruitPageState extends State<RecruitPage> {
 
   @override
   Widget build(BuildContext context) {
+    LocationInputWidget startPointInput;
+    LocationInputWidget endPointInput;
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -74,7 +79,7 @@ class _RecruitPageState extends State<RecruitPage> {
         ),
         body: Column(
           children: [
-            LocationInputWidget(
+            startPointInput = LocationInputWidget(
               labelText: startPointName,
               Point: startPoint,
               pointText: '출발지', onLocationSelected: (String value) {
@@ -85,8 +90,9 @@ class _RecruitPageState extends State<RecruitPage> {
                   print("출발지 위도경도 : ${startPoint}");
                 });
             },
+              detailPoint: '요약 주소 (ex 주안역)',
             ),
-            LocationInputWidget(
+          endPointInput =  LocationInputWidget(
               labelText: endPointName,
               Point: endPoint,
               pointText: '도착지', onLocationSelected: (String value) {
@@ -97,6 +103,8 @@ class _RecruitPageState extends State<RecruitPage> {
                 print("도착지 위도경도 : ${endPoint}");
               });
             },
+              detailPoint: '요약 주소 (ex 인하대 후문)',
+
             ),
             Row(
               children: [
@@ -192,6 +200,8 @@ class _RecruitPageState extends State<RecruitPage> {
                      selectedLimit: selectedLimit,
                      selectedGender: selectedGender,
                      myID: myID,
+                     startDetailPoint: startPointInput.detailController.text,
+                     endDetailPoint: endPointInput.detailController.text,
                    );
                    Navigator.push(
                      context,
