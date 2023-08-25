@@ -8,10 +8,7 @@ class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   //출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
-  static Future<List<DocumentSnapshot>> getCarpoolsTimeby({
-    required double myLatitude,
-    required double myLongitude,
-  }) async {
+  static Future<List<DocumentSnapshot>> getCarpoolsTimeby() async {
     CollectionReference carpoolCollection = _firestore.collection('carpool');
     QuerySnapshot querySnapshot = await carpoolCollection.get();
 
