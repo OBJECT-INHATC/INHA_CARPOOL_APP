@@ -5,22 +5,27 @@ import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/recruit/s_select_location.dart';
 
 class LocationInputWidget extends StatefulWidget {
+  TextEditingController detailController = TextEditingController();
+
   String labelText; // 생성자에서 받아온 문자열을 저장할 변수
   String pointText;
   final LatLng Point; // 출발지인지 도착지인지
+  final String detailPoint; // 출발지인지 도착지인지
   final ValueChanged<String> onLocationSelected;
   bool isGestureEnabled = true;
 
   LocationInputWidget(
       {super.key, required this.labelText,
       required this.Point,
-      required this.pointText, required this.onLocationSelected}); // 생성자 추가
+      required this.pointText, required this.onLocationSelected, required this.detailPoint}); // 생성자 추가
 
   @override
   _LocationInputWidgetState createState() => _LocationInputWidgetState();
 }
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
+  String get detailControllerText => widget.detailController.text; // 변수에 접근 가능한 메서드 추가
+
   String selectedLocation = '';
   bool isGestureEnabled = true;
 
@@ -82,11 +87,12 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.grey.shade300,
+              hintText: widget.detailPoint,
               labelStyle: const TextStyle(color: Colors.black),
               border: InputBorder.none,
             ),
             style: const TextStyle(color: Colors.black),
-            controller: TextEditingController(text: ''),
+            controller: widget.detailController,
           ),
         )
       ],
