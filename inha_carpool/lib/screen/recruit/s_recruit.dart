@@ -200,7 +200,7 @@ class _RecruitPageState extends State<RecruitPage> {
 
                 },
                 child: '카풀 시작하기'.text.size(20).white.make(),
-              ).p(60),
+              ).p(30),
             ),
           ],
         ),
