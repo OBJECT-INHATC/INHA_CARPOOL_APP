@@ -22,12 +22,13 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    someFunction(); // 데이터 초기화 함수 호출]
+    initMyPoint(); // 데이터 초기화 함수 호출]
   }
 
   //내 위치 받아오기
   Future<void> initMyPoint() async {
     myPoint = (await Location_handler.getCurrentLatLng(context))!;
+    print(myPoint);
   }
 
   // 가까운 순 정렬
@@ -83,47 +84,53 @@ class _HomeState extends State<Home> {
             child: ListView.builder(
             itemCount: 6,
               itemBuilder: (context, index) {
-                return Card(
-                  elevation: 5,
-                  margin: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                shape: RoundedRectangleBorder( // 보더를 설정하는 부분
-                side: BorderSide(width: 1, color: context.appColors.appBar), // 전체를 감싸는 보더
-                borderRadius: BorderRadius.circular(10),
-                ),//
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          CircleAvatar(
-                            radius: 40,
-                            backgroundColor: context.appColors.appBar,
-                            child: FittedBox(child: Text('출발지', style: TextStyle(color: Colors.white, fontSize: 20))),
-                          ),
-                          Column(
+                return GestureDetector(
 
-                            children: [
-                              Text('출발시간', style: TextStyle(fontSize: 14, color: Colors.grey)),
-                              CircleAvatar(
-                                radius: 30,
-                                backgroundColor: Colors.white,
-                                child: FittedBox(child: Icon(Icons.arrow_forward, color: Colors.black)),
-                              ),
-                              Text('현재인원', style: TextStyle(fontSize: 16)),
+                  onTap:  (){
+                    someFunction();
+                  },
+                  child: Card(
+                    elevation: 5,
+                    margin: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                  shape: RoundedRectangleBorder( // 보더를 설정하는 부분
+                  side: BorderSide(width: 1, color: context.appColors.appBar), // 전체를 감싸는 보더
+                  borderRadius: BorderRadius.circular(10),
+                  ),//
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundColor: context.appColors.appBar,
+                              child: FittedBox(child: Text('출발지', style: TextStyle(color: Colors.white, fontSize: 20))),
+                            ),
+                            Column(
 
-                            ],
-                          ),
-                          CircleAvatar(
-                            radius: 40,
-                            backgroundColor: context.appColors.appBar,
-                            child: FittedBox(child: Text('도착지', style: TextStyle(color: Colors.white))),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10,)
-                    ],
+                              children: [
+                                Text('출발시간', style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Colors.white,
+                                  child: FittedBox(child: Icon(Icons.arrow_forward, color: Colors.black)),
+                                ),
+                                Text('현재인원', style: TextStyle(fontSize: 16)),
+
+                              ],
+                            ),
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundColor: context.appColors.appBar,
+                              child: FittedBox(child: Text('도착지', style: TextStyle(color: Colors.white))),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10,)
+                      ],
+                    ),
                   ),
                 );
               },
