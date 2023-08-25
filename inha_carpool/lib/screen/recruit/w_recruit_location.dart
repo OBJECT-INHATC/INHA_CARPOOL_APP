@@ -35,43 +35,61 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: isGestureEnabled ? () async {
-        final result = await Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LocationInputPage(widget.Point)),
-        );
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: isGestureEnabled ? () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LocationInputPage(widget.Point)),
+            );
 
-        if (result != null) {
-          setState(() {
-            selectedLocation = Location_handler.getStringBetweenUnderscores(result);
-            isGestureEnabled = false; // Tap 이벤트 비활성화
-          });
-          widget.onLocationSelected(result);
-        }
-      } : null, // isGestureEnabled가 false일 때는 onTap 이벤트 비활성화
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(30, 30, 30, 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: const EdgeInsets.only(bottom: 13),
-              child: widget.pointText.text.size(16).bold.black.make(),
+            if (result != null) {
+              setState(() {
+                selectedLocation = Location_handler.getStringBetweenUnderscores(result);
+                isGestureEnabled = false; // Tap 이벤트 비활성화
+              });
+              widget.onLocationSelected(result);
+            }
+          } : null, // isGestureEnabled가 false일 때는 onTap 이벤트 비활성화
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(30, 15, 30, 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(bottom: 10),
+                  child: widget.pointText.text.size(14).bold.black.make(),
+                ),
+                TextField(
+                  enabled: false,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade300,
+                    labelStyle: const TextStyle(color: Colors.black),
+                  ),
+                  style: const TextStyle(color: Colors.black),
+                  controller: TextEditingController(text: selectedLocation),
+                ),
+              ],
             ),
-            TextField(
-              enabled: false,
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Colors.grey.shade300,
-                labelStyle: const TextStyle(color: Colors.black),
-              ),
-              style: const TextStyle(color: Colors.black),
-              controller: TextEditingController(text: selectedLocation),
-            ),
-          ],
+          ),
         ),
-      ),
+        Container(
+          margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+
+          child: TextField(
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey.shade300,
+              labelStyle: const TextStyle(color: Colors.black),
+              border: InputBorder.none,
+            ),
+            style: const TextStyle(color: Colors.black),
+            controller: TextEditingController(text: ''),
+          ),
+        )
+      ],
     );
   }
 
