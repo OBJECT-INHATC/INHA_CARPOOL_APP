@@ -59,6 +59,8 @@ class FirebaseCarpool {
     required String selectedLimit,
     required String selectedGender,
     required String myID,
+    required String startDetailPoint,
+    required String endDetailPoint,
   }) async {
     DateTime combinedDateTime = DateTime(
       selectedDate.year,
@@ -89,6 +91,8 @@ class FirebaseCarpool {
         'nowMember': 1,
         'status': false,
         'members': hobbies,
+        'startDetailPoint': startDetailPoint,
+        'endDetailPoint': endDetailPoint,
       });
 
       CollectionReference membersCollection =
