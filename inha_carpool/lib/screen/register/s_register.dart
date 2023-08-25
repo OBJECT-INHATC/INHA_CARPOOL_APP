@@ -18,7 +18,6 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final formKey = GlobalKey<FormState>();
 
-  /// 0825 서은율 TODO : 화면 비율 + 유효성 확인 + Alert 창 수정
 
   // 이메일
   String email = "";
@@ -121,9 +120,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                 // 중간 텍스트를 겹쳐서 배치
                                 right: 0,
                                 child: FlutterToggleTab(
-                                  width: context.width(0.08),
+                                  width: 30,
                                   borderRadius: 30,
-                                  height: context.height(0.03),
+                                  height: 40,
                                   // initialIndex: 0,
                                   selectedTextStyle: const TextStyle(
                                       color: Colors.white,
@@ -367,4 +366,4 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 }
 
-/// TODO: 0824 서은율 : 비율 맞추기,
+
