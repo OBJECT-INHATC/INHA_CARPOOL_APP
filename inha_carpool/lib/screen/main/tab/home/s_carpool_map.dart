@@ -3,7 +3,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 
-import '../../s_main.dart';
 
 class CarpoolMap extends StatefulWidget {
   final LatLng startPoint;

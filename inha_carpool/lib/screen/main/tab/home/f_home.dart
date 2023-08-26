@@ -7,7 +7,8 @@ import 'package:inha_Carpool/common/util/location_handler.dart';
 
 import '../../../../common/util/carpool.dart';
 import '../../../recruit/s_recruit.dart';
-import 'w_carpool_map.dart';
+import 'carpoolFilter.dart';
+import 's_carpool_map.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -24,7 +25,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     initMyPoint();
-    timeByCarpoolsl = _someFunction();
+    timeByCarpoolsl = _timeByFunction();
   } // Null 허용
 
   //내 위치 받아오기
@@ -34,8 +35,15 @@ class _HomeState extends State<Home> {
   }
 
   // 시간순 정렬
-  Future<List<DocumentSnapshot>> _someFunction() async {
+  Future<List<DocumentSnapshot>> _timeByFunction() async {
     List<DocumentSnapshot> carpools = await FirebaseCarpool.getCarpoolsTimeby();
+    return carpools;
+  }
+
+  //거리순
+  Future<List<DocumentSnapshot>> _nearByFunction() async {
+    await initMyPoint();
+    List<DocumentSnapshot> carpools = await FirebaseCarpool.nearByCarpool(myPoint.latitude, myPoint.longitude);
     return carpools;
   }
 
@@ -52,23 +60,30 @@ class _HomeState extends State<Home> {
         ),
         body: Column(
           children: [
-            Container(
-              height: 60,
-              width: double.infinity, // 가로 길이를 화면 전체 너비로 설정
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-              child: TextField(
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(),
-                  labelText: '검색',
-                ),
-              ),
+            DropdownButton<FilteringOption>(
+              value: selectedFilter,
+              onChanged: (newValue) {
+                setState(() {
+                  selectedFilter = newValue!;
+                  print('필터링 '+ selectedFilter.toString());
+                  if(selectedFilter.toString() == 'FilteringOption.Time'){
+                    timeByCarpoolsl = _timeByFunction();
+                  }else{
+                  timeByCarpoolsl = _nearByFunction();
+                  }
+                });
+              },
+              items: FilteringOption.values.map((option) {
+                return DropdownMenuItem<FilteringOption>(
+                  value: option,
+                  child: Text(option == FilteringOption.Time ? '시간순' : '거리순'),
+                );
+              }).toList(),
             ),
             Expanded(
               child: FutureBuilder<List<DocumentSnapshot>>(
                 future:
-                    timeByCarpoolsl == null ? _someFunction() : timeByCarpoolsl,
+                    timeByCarpoolsl == null ? _timeByFunction() : timeByCarpoolsl,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     print("로딩중");
@@ -121,12 +136,6 @@ class _HomeState extends State<Home> {
                               ),
                             );
 
-                            print('Start Time: ${formattedTime}');
-                            print('myPoint Time: ${myPoint.longitude}');
-                            print('myPoint Time: ${myPoint.latitude}');
-                            print('carpoolData[startPoint].latitude: ${carpoolData['startPoint'].latitude}');
-                            print('Start Time: ${myPoint.latitude}');
-                            print('Now Member / Max Member: ${carpoolData['nowMember']}/${carpoolData['maxMember']}');
                           },
                           child: Card(
                             elevation: 5,
