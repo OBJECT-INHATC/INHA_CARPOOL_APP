@@ -91,6 +91,7 @@ class FirebaseCarpool {
         'startDetailPoint': startDetailPoint,
         'endDetailPoint': endDetailPoint,
       });
+      await carpoolDocRef.update({'carId': carpoolDocRef.id});
 
       CollectionReference membersCollection =
           carpoolDocRef.collection('messages');

@@ -8,7 +8,7 @@ import 'home/f_home.dart';
 enum TabItem {
   carpool(Icons.directions_car, '카풀', CarpoolList()),
   home(Icons.home, 'Home', Home()),
-  myPage(Icons.person, 'My', GoogleMapsApp());
+  myPage(Icons.person, 'My', GoogleMapsApp(admin: 'admin',));
 
   final IconData activeIcon;
   final IconData inActiveIcon;
