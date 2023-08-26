@@ -17,25 +17,27 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late LatLng myPoint = LatLng(0, 0);
-  late Future<List<DocumentSnapshot>> nearbyCarpoolsl;
+  late Future<List<DocumentSnapshot>> timeByCarpoolsl =Future.value([]);
 
   @override
   void initState() {
     super.initState();
-    nearbyCarpoolsl = someFunction();
+    timeByCarpoolsl = _someFunction();
   } // Null 허용
 
   //내 위치 받아오기
-  Future<void> initMyPoint() async {
+ /* Future<void> initMyPoint() async {
     myPoint = (await Location_handler.getCurrentLatLng(context))!;
     print(myPoint);
-  }
+  }*/
 
   // 시간순 정렬
-  Future<List<DocumentSnapshot>> someFunction() async {
+  Future<List<DocumentSnapshot>> _someFunction() async {
     List<DocumentSnapshot> carpools = await FirebaseCarpool.getCarpoolsTimeby();
     return carpools;
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,7 @@ class _HomeState extends State<Home> {
             ),
             Expanded(
               child: FutureBuilder<List<DocumentSnapshot>>(
-                future: someFunction(),
+                future: timeByCarpoolsl == null ? _someFunction() : timeByCarpoolsl,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     print("로딩중");
