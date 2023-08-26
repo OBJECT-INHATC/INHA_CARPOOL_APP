@@ -26,22 +26,19 @@ class _RecruitPageState extends State<RecruitPage> {
   var _selectedTime = DateTime.now(); // 시간 값 초기화
   //인하대 후문 cu
   LatLng endPoint = LatLng(37.4514982, 126.6570261);
-
   // 주안역
   LatLng startPoint = LatLng(37.4645862, 126.6803935);
   String startPointName = "주안역 택시 승강장";
   String endPointName = "인하대 후문 CU";
 
-  late TextEditingController _startPointDetailController;
-  late TextEditingController _endPointDetailController;
+  late TextEditingController _startPointDetailController = TextEditingController();
+  late TextEditingController _endPointDetailController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
 
-    _startPointDetailController = TextEditingController();
-    _endPointDetailController = TextEditingController();
   }
 
   String selectedLimit = '2인'; // 선택된 제한인원 초기값
@@ -156,7 +153,7 @@ class _RecruitPageState extends State<RecruitPage> {
                         width: double.infinity,
                         margin: EdgeInsets.all(15),
                         padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                        child: '인원'.text.size(25).align(TextAlign.left).make(),
+                        child: '인원'.text.size(20).bold.align(TextAlign.left).make(),
                       ),
                       LimitSelectorWidget(
                         options: ['2인', '3인'],
@@ -222,7 +219,7 @@ class _RecruitPageState extends State<RecruitPage> {
                   );
                 },
                 child: '카풀 시작하기'.text.size(20).white.make(),
-              ).p(30),
+              ).p(20),
             ),
           ],
         ),

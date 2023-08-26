@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
           onPressed: () {
             Nav.push(RecruitPage());
           },
-          child: '+'.text.color(context.appColors.appBar).size(350).make(),
+          child: '+'.text.color(Colors.lightBlue).size(350).make(),
         ),
         body: Column(
           children: [

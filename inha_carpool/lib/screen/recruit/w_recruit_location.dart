@@ -72,6 +72,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade300,
+                    border: InputBorder.none,
                     labelStyle: const TextStyle(color: Colors.black),
                   ),
                   style: const TextStyle(color: Colors.black),
