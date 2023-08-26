@@ -10,7 +10,7 @@ class LocationInputWidget extends StatefulWidget {
   String labelText; // 생성자에서 받아온 문자열을 저장할 변수
   String pointText;
   final LatLng Point; // 출발지인지 도착지인지
-  final String detailPoint; // 출발지인지 도착지인지
+  final String detailPoint; // 요약 주소
   final ValueChanged<String> onLocationSelected;
   bool isGestureEnabled = true;
 
@@ -47,7 +47,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           onTap: isGestureEnabled ? () async {
             final result = await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LocationInputPage(widget.Point)),
+              MaterialPageRoute(builder: (context) => LocationInput(widget.Point)),
             );
 
             if (result != null) {

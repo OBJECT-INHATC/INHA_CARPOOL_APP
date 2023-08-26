@@ -7,6 +7,7 @@ import 'package:inha_Carpool/common/util/location_handler.dart';
 
 import '../../../../common/util/carpool.dart';
 import '../../../recruit/s_recruit.dart';
+import 'w_carpool_map.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -17,27 +18,26 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late LatLng myPoint = LatLng(0, 0);
-  late Future<List<DocumentSnapshot>> timeByCarpoolsl =Future.value([]);
+  late Future<List<DocumentSnapshot>> timeByCarpoolsl = Future.value([]);
 
   @override
   void initState() {
     super.initState();
+    initMyPoint();
     timeByCarpoolsl = _someFunction();
   } // Null 허용
 
   //내 위치 받아오기
- /* Future<void> initMyPoint() async {
+  Future<void> initMyPoint() async {
     myPoint = (await Location_handler.getCurrentLatLng(context))!;
     print(myPoint);
-  }*/
+  }
 
   // 시간순 정렬
   Future<List<DocumentSnapshot>> _someFunction() async {
     List<DocumentSnapshot> carpools = await FirebaseCarpool.getCarpoolsTimeby();
     return carpools;
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,8 @@ class _HomeState extends State<Home> {
             ),
             Expanded(
               child: FutureBuilder<List<DocumentSnapshot>>(
-                future: timeByCarpoolsl == null ? _someFunction() : timeByCarpoolsl,
+                future:
+                    timeByCarpoolsl == null ? _someFunction() : timeByCarpoolsl,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     print("로딩중");
@@ -84,7 +85,9 @@ class _HomeState extends State<Home> {
                         Map<String, dynamic> carpoolData =
                             carpool.data() as Map<String, dynamic>;
 
-                        DateTime startTime = DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
+                        DateTime startTime =
+                            DateTime.fromMillisecondsSinceEpoch(
+                                carpoolData['startTime']);
                         DateTime currentTime = DateTime.now();
                         Duration difference = startTime.difference(currentTime);
 
@@ -92,22 +95,37 @@ class _HomeState extends State<Home> {
                         if (difference.inDays >= 365) {
                           formattedTime = '${difference.inDays ~/ 365}년 후';
                         } else if (difference.inDays >= 30) {
-                          formattedTime = '${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 이후';
+                          formattedTime =
+                              '${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 이후';
                         } else if (difference.inDays >= 1) {
-                          formattedTime = '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 이후';
+                          formattedTime =
+                              '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 이후';
                         } else if (difference.inHours >= 1) {
-                          formattedTime = '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 이후';
+                          formattedTime =
+                              '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 이후';
                         } else {
                           formattedTime = '${difference.inMinutes}분 후';
                         }
-
                         // 각 아이템을 빌드하는 로직
                         return GestureDetector(
                           onTap: () {
-                            // 아이템 클릭 시 동작
-                            print('Start Point: ${carpoolData['startDetailPoint']}');
-                            print('End Point: ${carpoolData['endDetailPoint']}');
+                            Nav.push(
+                              CarpoolMap(
+                                startPoint: LatLng(
+                                    carpoolData['startPoint'].latitude,
+                                    carpoolData['startPoint'].longitude),
+                                startPointName: carpoolData['startPointName'],
+                                startTime: formattedTime,
+                                carId: carpoolData['carId'],
+                                admin: carpoolData['admin'],
+                              ),
+                            );
+
                             print('Start Time: ${formattedTime}');
+                            print('myPoint Time: ${myPoint.longitude}');
+                            print('myPoint Time: ${myPoint.latitude}');
+                            print('carpoolData[startPoint].latitude: ${carpoolData['startPoint'].latitude}');
+                            print('Start Time: ${myPoint.latitude}');
                             print('Now Member / Max Member: ${carpoolData['nowMember']}/${carpoolData['maxMember']}');
                           },
                           child: Card(
@@ -150,7 +168,8 @@ class _HomeState extends State<Home> {
                                               child: Icon(Icons.arrow_forward,
                                                   color: Colors.black)),
                                         ),
-                                        Text('${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
+                                        Text(
+                                            '${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
                                             style: TextStyle(fontSize: 16)),
                                       ],
                                     ),
