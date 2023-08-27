@@ -26,6 +26,7 @@ class _HomeState extends State<Home> {
   late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
   late String gender = "";
+  late String email = "";
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class _HomeState extends State<Home> {
     nickName = await storage.read(key: "nickName") ?? "";
     uid = await storage.read(key: "uid") ?? "";
     gender = await storage.read(key: "gender") ?? "";
+    email = await storage.read(key: "email") ?? "";
     setState(() {
       // nickName, email, gender를 업데이트했으므로 화면을 갱신합니다.
     });
@@ -169,7 +171,7 @@ class _HomeState extends State<Home> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text('닉네임: $nickName임'),
-                                Text('이메일: $uid'),
+                                Text('이메일: $email'),
                                 Text('성별: $gender'),
                                 SizedBox(height: 10),
                                 Row(
