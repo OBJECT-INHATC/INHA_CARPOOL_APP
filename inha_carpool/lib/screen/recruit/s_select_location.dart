@@ -9,16 +9,17 @@ import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 
-class LocationInputPage extends StatefulWidget {
+class LocationInput extends StatefulWidget {
   final LatLng Point;
 
-  LocationInputPage(this.Point);
+  LocationInput(this.Point);
 
   @override
-  State<LocationInputPage> createState() => _LocationInputPageState();
+  State<LocationInput> createState() => _LocationInputState();
 }
 
-class _LocationInputPageState extends State<LocationInputPage> {
+class _LocationInputState extends State<LocationInput> {
+  int flex = 50;
   bool isMove = false;
   late GoogleMapController mapController;
   TextEditingController _searchController = TextEditingController();
@@ -26,7 +27,6 @@ class _LocationInputPageState extends State<LocationInputPage> {
 
   LatLng? searchedPosition;
   bool firstStep = false;
-  String search = "검색";
   Set<Marker> _markers = {};
 
   @override
@@ -40,7 +40,10 @@ class _LocationInputPageState extends State<LocationInputPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('위치 선택'),
+        title: Text(
+          '위치 선택',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.blue,
       ),
       body: Column(
@@ -63,17 +66,18 @@ class _LocationInputPageState extends State<LocationInputPage> {
                 /// 검색 버튼
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, ),
+                    backgroundColor: Colors.blue,
+                  ),
                   onPressed: () {
                     _LocationInfo();
                   },
-                  child: 'Search'.tr().text.make(),
+                  child: 'Search'.tr().text.white.make(),
                 ),
               ],
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: flex,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -105,7 +109,10 @@ class _LocationInputPageState extends State<LocationInputPage> {
                               backgroundColor: context.appColors.blueMarker,
                             ),
                             onPressed: () => _moveCameraTo(widget.Point),
-                            child: Text('내 위치로 이동'),
+                            child: Text(
+                              '내 위치로 이동',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ],
                       ),
@@ -115,17 +122,22 @@ class _LocationInputPageState extends State<LocationInputPage> {
                             backgroundColor: Colors.redAccent,
                           ),
                           onPressed: () => _moveCameraTo(searchedPosition!),
-                          child: Text('검색 지역 이동'),
+                          child: Text(
+                            '검색 지역 이동',
+                            style: TextStyle(color: Colors.white),
+                          ),
                         ),
                     ],
                   ),
-
                 ),
               ],
             ),
           ),
 
-          SizedBox(height: 10,),
+          SizedBox(
+            height: 10,
+          ),
+
           ///주소 Api
           Expanded(
             child: ListView.separated(
@@ -154,27 +166,34 @@ class _LocationInputPageState extends State<LocationInputPage> {
               itemCount: list.length,
             ),
           ),
+          Container(
+            margin: EdgeInsets.symmetric(vertical: 0),
 
-
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  // 원하는 높이와 너비 지정
-                  minimumSize: Size(150, 50), // 너비와 높이를 변경하려면 이 부분을 조정하세요
-                  // 추가로 버튼의 배경색 등의 스타일을 지정할 수 있습니다.
-                  backgroundColor: Colors.blue, // 원하는 배경색으로 변경
-                  // 필요한 다른 스타일을 지정할 수 있습니다.
-                ),
-                onPressed: () {
-                  Navigator.pop(context,
-                      "${searchedPosition!.latitude}_${_searchController.text}_${searchedPosition!.longitude}");
-                },
-                child: Text('위치 선택 완료'),
-              ),
+            decoration: BoxDecoration(
+              border: Border.all(width: 1, color: Colors.blue),
+              borderRadius:
+                  BorderRadius.circular(40),
             ),
-          ).p(30),
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: Size(150, 50),
+                    backgroundColor: Colors.blue,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context,
+                        "${searchedPosition!.latitude}_${_searchController.text}_${searchedPosition!.longitude}");
+                  },
+                  child: Text(
+                    '위치 선택 완료',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ).p(20),
+          ),
         ],
       ),
     );
@@ -203,7 +222,7 @@ class _LocationInputPageState extends State<LocationInputPage> {
             'content-type': 'application/x-www-form-urlencoded',
           },
         ).then((response) {
-          log(response.body);
+          //   log(response.body);
           var json = jsonDecode(response.body);
           setState(() {
             list = json['results']['juso'];
@@ -212,6 +231,8 @@ class _LocationInputPageState extends State<LocationInputPage> {
             }
             if (list.length == 1) {
               _searchLocation('${list[0]['roadAddr']}');
+            } else if (list.length >= 1) {
+              flex = 3;
             }
           });
         }).catchError((a, stackTrace) {
@@ -270,6 +291,4 @@ class _LocationInputPageState extends State<LocationInputPage> {
       infoWindow: InfoWindow(title: infoText),
     ));
   }
-
-
 }

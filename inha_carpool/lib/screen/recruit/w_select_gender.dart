@@ -23,7 +23,7 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
           width: double.infinity,
           margin: EdgeInsets.all(15),
           padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-          child: '성별'.text.size(25).align(TextAlign.left).make(),
+          child: '성별'.text.size(20).bold.align(TextAlign.left).make(),
         ),
         Row(
           children: [

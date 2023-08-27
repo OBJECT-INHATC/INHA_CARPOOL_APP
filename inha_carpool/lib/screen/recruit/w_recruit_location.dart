@@ -5,19 +5,19 @@ import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/recruit/s_select_location.dart';
 
 class LocationInputWidget extends StatefulWidget {
-  TextEditingController detailController = TextEditingController();
+  late TextEditingController detailController;
 
   String labelText; // 생성자에서 받아온 문자열을 저장할 변수
   String pointText;
   final LatLng Point; // 출발지인지 도착지인지
-  final String detailPoint; // 출발지인지 도착지인지
+  final String detailPoint; // 요약 주소
   final ValueChanged<String> onLocationSelected;
   bool isGestureEnabled = true;
 
   LocationInputWidget(
       {super.key, required this.labelText,
       required this.Point,
-      required this.pointText, required this.onLocationSelected, required this.detailPoint}); // 생성자 추가
+      required this.pointText, required this.onLocationSelected, required this.detailPoint, required this.detailController}); // 생성자 추가
 
   @override
   _LocationInputWidgetState createState() => _LocationInputWidgetState();
@@ -25,6 +25,7 @@ class LocationInputWidget extends StatefulWidget {
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
   String get detailControllerText => widget.detailController.text; // 변수에 접근 가능한 메서드 추가
+
 
   String selectedLocation = '';
   bool isGestureEnabled = true;
@@ -46,7 +47,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           onTap: isGestureEnabled ? () async {
             final result = await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LocationInputPage(widget.Point)),
+              MaterialPageRoute(builder: (context) => LocationInput(widget.Point)),
             );
 
             if (result != null) {
@@ -71,6 +72,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade300,
+                    border: InputBorder.none,
                     labelStyle: const TextStyle(color: Colors.black),
                   ),
                   style: const TextStyle(color: Colors.black),

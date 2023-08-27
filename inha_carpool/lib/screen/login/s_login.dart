@@ -47,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // 로그인 여부 확인
     checkLogin();
+
     super.initState();
   }
 

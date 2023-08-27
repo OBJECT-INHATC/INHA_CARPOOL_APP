@@ -14,7 +14,6 @@ import '../../fragment/f_notification.dart';
 import '../../fragment/setting/f_setting.dart';
 
 class RecruitPage extends StatefulWidget {
-
   RecruitPage({super.key});
 
   @override
@@ -22,8 +21,6 @@ class RecruitPage extends StatefulWidget {
 }
 
 class _RecruitPageState extends State<RecruitPage> {
-
-
   final String myID = "hoon";
   var _selectedDate = DateTime.now(); // 날짜 값 초기화
   var _selectedTime = DateTime.now(); // 시간 값 초기화
@@ -34,11 +31,14 @@ class _RecruitPageState extends State<RecruitPage> {
   String startPointName = "주안역 택시 승강장";
   String endPointName = "인하대 후문 CU";
 
+  late TextEditingController _startPointDetailController = TextEditingController();
+  late TextEditingController _endPointDetailController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
+
   }
 
   String selectedLimit = '2인'; // 선택된 제한인원 초기값
@@ -82,28 +82,38 @@ class _RecruitPageState extends State<RecruitPage> {
             startPointInput = LocationInputWidget(
               labelText: startPointName,
               Point: startPoint,
-              pointText: '출발지', onLocationSelected: (String value) {
+              pointText: '출발지',
+              onLocationSelected: (String value) {
                 setState(() {
-                  startPointName = Location_handler.getStringBetweenUnderscores(value);
-                  startPoint = LatLng(Location_handler.parseDoubleBeforeUnderscore(value), Location_handler.getDoubleAfterSecondUnderscore(value));
+                  startPointName =
+                      Location_handler.getStringBetweenUnderscores(value);
+                  startPoint = LatLng(
+                      Location_handler.parseDoubleBeforeUnderscore(value),
+                      Location_handler.getDoubleAfterSecondUnderscore(value));
                   print("출발지 주소 : ${startPointName}");
                   print("출발지 위도경도 : ${startPoint}");
                 });
-            },
+              },
               detailPoint: '요약 주소 (ex 주안역)',
+              detailController: _startPointDetailController,
             ),
-          endPointInput =  LocationInputWidget(
+            endPointInput = LocationInputWidget(
               labelText: endPointName,
               Point: endPoint,
-              pointText: '도착지', onLocationSelected: (String value) {
-              setState(() {
-                endPointName = Location_handler.getStringBetweenUnderscores(value);
-                endPoint = LatLng( Location_handler.parseDoubleBeforeUnderscore(value), Location_handler.getDoubleAfterSecondUnderscore(value));
-                print("도착지 주소 : ${endPointName}");
-                print("도착지 위도경도 : ${endPoint}");
-              });
-            },
+              pointText: '도착지',
+              onLocationSelected: (String value) {
+                setState(() {
+                  endPointName =
+                      Location_handler.getStringBetweenUnderscores(value);
+                  endPoint = LatLng(
+                      Location_handler.parseDoubleBeforeUnderscore(value),
+                      Location_handler.getDoubleAfterSecondUnderscore(value));
+                  print("도착지 주소 : ${endPointName}");
+                  print("도착지 위도경도 : ${endPoint}");
+                });
+              },
               detailPoint: '요약 주소 (ex 인하대 후문)',
+              detailController: _endPointDetailController,
 
             ),
             Row(
@@ -143,7 +153,7 @@ class _RecruitPageState extends State<RecruitPage> {
                         width: double.infinity,
                         margin: EdgeInsets.all(15),
                         padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                        child: '인원'.text.size(25).align(TextAlign.left).make(),
+                        child: '인원'.text.size(20).bold.align(TextAlign.left).make(),
                       ),
                       LimitSelectorWidget(
                         options: ['2인', '3인'],
@@ -190,27 +200,26 @@ class _RecruitPageState extends State<RecruitPage> {
                   // Todo: 2. 전체 카풀 조회(리스트)
                   // TODO: 3. 카풀 참여하기
                   // Todo: 4. 내가 참여한 카풀 조회
-                   await FirebaseCarpool.addDataToFirestore(
-                     selectedDate: _selectedDate,
-                     selectedTime: _selectedTime,
-                     startPoint: startPoint,
-                     endPoint: endPoint,
-                     endPointName: endPointName,
-                     startPointName: startPointName,
-                     selectedLimit: selectedLimit,
-                     selectedGender: selectedGender,
-                     myID: myID,
-                     startDetailPoint: startPointInput.detailController.text,
-                     endDetailPoint: endPointInput.detailController.text,
-                   );
-                   Navigator.push(
-                     context,
-                     MaterialPageRoute(builder: (context) => MainScreen()),
-                   );
-
+                  await FirebaseCarpool.addDataToFirestore(
+                    selectedDate: _selectedDate,
+                    selectedTime: _selectedTime,
+                    startPoint: startPoint,
+                    endPoint: endPoint,
+                    endPointName: endPointName,
+                    startPointName: startPointName,
+                    selectedLimit: selectedLimit,
+                    selectedGender: selectedGender,
+                    myID: myID,
+                    startDetailPoint: startPointInput.detailController.text,
+                    endDetailPoint: endPointInput.detailController.text,
+                  );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MainScreen()),
+                  );
                 },
                 child: '카풀 시작하기'.text.size(20).white.make(),
-              ).p(30),
+              ).p(20),
             ),
           ],
         ),
@@ -225,8 +234,4 @@ class _RecruitPageState extends State<RecruitPage> {
       });
     });
   }
-
-
-
-
 }

@@ -1,17 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:math';
 
-
+import 'package:inha_Carpool/common/common.dart';
 
 class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  //출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
-  static Future<List<DocumentSnapshot>> getCarpoolsTimeby({
-    required double myLatitude,
-    required double myLongitude,
-  }) async {
+  ///출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
+  static Future<List<DocumentSnapshot>> getCarpoolsTimeby() async {
     CollectionReference carpoolCollection = _firestore.collection('carpool');
     QuerySnapshot querySnapshot = await carpoolCollection.get();
 
@@ -22,18 +19,14 @@ class FirebaseCarpool {
     DateTime currentTime = DateTime.now();
 
     querySnapshot.docs.forEach((doc) {
-      DateTime startTime = DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
-
-      print("///-------------------------------------------------------------///");
-      print("출발 위치: ${doc['startPointName']}, 출발시간: $startTime");
-      print("도착 위치: ${doc['endPointName']},  방장: ${doc['admin']}");
+      DateTime startTime =
+          DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
 
       // 현재 시간보다 미래의 시간인 경우만 추가
       if (startTime.isAfter(currentTime)) {
         sortedCarpools.add(doc);
       }
     });
-    print("///-------------------------------------------------------------///");
 
     sortedCarpools.sort((a, b) {
       DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
@@ -45,10 +38,7 @@ class FirebaseCarpool {
     return sortedCarpools;
   }
 
-
-
-
-  /// 카풀 시작하기 method
+  /// 카풀 저장
   static Future<void> addDataToFirestore({
     required DateTime selectedDate,
     required DateTime selectedTime,
@@ -94,6 +84,7 @@ class FirebaseCarpool {
         'startDetailPoint': startDetailPoint,
         'endDetailPoint': endDetailPoint,
       });
+      await carpoolDocRef.update({'carId': carpoolDocRef.id});
 
       CollectionReference membersCollection =
           carpoolDocRef.collection('messages');
@@ -108,30 +99,97 @@ class FirebaseCarpool {
     }
   }
 
+  ///거리순 조회
+  static Future<List<DocumentSnapshot>> nearByCarpool(
+      double myLat, double myLon) async {
+    QuerySnapshot querySnapshot = await _firestore.collection('carpool').get();
 
-  //거리 계산
+    List<Map<String, dynamic>> sortedCarpools = [];
+    print("조회된 카풀 수: ${querySnapshot.docs.length}");
+
+    // 현재 시간을 가져옵니다.
+    DateTime currentTime = DateTime.now();
+
+    querySnapshot.docs.forEach((doc) {
+      DateTime startTime = DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+
+      // 현재 시간보다 미래의 시간인 경우만 추가
+      if (startTime.isAfter(currentTime)) {
+        double startLat = doc['startPoint'].latitude;
+        double startLon = doc['startPoint'].longitude;
+
+        double distance = calculateDistance(myLat, myLon, startLat, startLon);
+        sortedCarpools.add({
+          'doc': doc,
+          'distance': distance,
+        });
+      }
+    });
+
+    sortedCarpools.sort((a, b) {
+      double distanceA = a['distance'];
+      double distanceB = b['distance'];
+
+      // 거리를 오름차순으로 정렬합니다.
+      return distanceA.compareTo(distanceB);
+    });
+
+    // 정렬된 카풀 리스트를 반환합니다.
+    return sortedCarpools.map((entry) {
+      double distance = entry['distance'];
+      print('거리: $distance'); // 거리 출력
+      return entry['doc'] as DocumentSnapshot;
+    }).toList();
+  }
+
+
+  ///거리 계산
   static double calculateDistance(
-      double myLat,
-      double myLon,
-      double startLat,
-      double startLon,
-      ) {
-    const int earthRadius = 6371000; // 지구 반지름 (미터)
+    double myLat,
+    double myLon,
+    double startLat,
+    double startLon,
+  ) {
+    double distanceInMeters = Geolocator.distanceBetween(
+      myLat,
+      myLon,
+      startLat,
+      startLon,
+    );
 
-    double degToRad(double deg) {
-      return deg * (pi / 180);
-    }
+    return distanceInMeters / 1000;
+  }
 
-    double dLat = degToRad(startLat - myLat);
-    double dLon = degToRad(startLon - myLon);
+ /// 내가 참여한 카풀
+  static Future<List<DocumentSnapshot>> getCarpoolsWithMember(String memberName) async {
+    QuerySnapshot querySnapshot = await _firestore.collection('carpool')
+        .where('members', arrayContains: memberName)
+        .get();
 
-    double a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(degToRad(myLat)) * cos(degToRad(startLat)) * sin(dLon / 2) * sin(dLon / 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    List<DocumentSnapshot> sortedCarpools = [];
+    print("조회된 카풀 수: ${querySnapshot.docs.length}");
 
-    double distance = earthRadius * c;
+    // 현재 시간을 가져옵니다.
+    DateTime currentTime = DateTime.now();
 
-    return distance;
+    querySnapshot.docs.forEach((doc) {
+      DateTime startTime =
+      DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+
+      // 현재 시간보다 미래의 시간인 경우만 추가
+      if (startTime.isAfter(currentTime)) {
+        sortedCarpools.add(doc);
+      }
+    });
+
+    sortedCarpools.sort((a, b) {
+      DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
+      DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b['startTime']);
+
+      return startTimeA.compareTo(startTimeB);
+    });
+
+    return sortedCarpools;
   }
 
 }
