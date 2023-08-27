@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
@@ -38,7 +37,6 @@ class _RecruitPageState extends State<RecruitPage> {
   void initState() {
     super.initState();
     _getCurrentLocation();
-
   }
 
   String selectedLimit = '2인'; // 선택된 제한인원 초기값

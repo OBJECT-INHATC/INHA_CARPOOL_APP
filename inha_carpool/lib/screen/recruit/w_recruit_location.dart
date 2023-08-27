@@ -12,7 +12,6 @@ class LocationInputWidget extends StatefulWidget {
   final LatLng Point; // 출발지인지 도착지인지
   final String detailPoint; // 요약 주소
   final ValueChanged<String> onLocationSelected;
-  bool isGestureEnabled = true;
 
   LocationInputWidget(
       {super.key, required this.labelText,

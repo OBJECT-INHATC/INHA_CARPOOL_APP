@@ -143,8 +143,8 @@ class _LoginPageState extends State<LoginPage> {
                                       key: "nickName",
                                       value: snapshot.docs[0].get("nickName"));
                                   storage.write(
-                                      key: "email",
-                                      value: snapshot.docs[0].get("email"));
+                                      key: "uid",
+                                      value: snapshot.docs[0].get("uid"));
                                   storage.write(
                                       key: "gender",
                                       value: snapshot.docs[0].get('gender'));
