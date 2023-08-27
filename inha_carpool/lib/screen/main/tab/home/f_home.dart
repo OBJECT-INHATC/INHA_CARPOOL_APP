@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
@@ -11,6 +12,7 @@ import 'carpoolFilter.dart';
 import 's_carpool_map.dart';
 
 class Home extends StatefulWidget {
+  //내 정보
   const Home({super.key});
 
   @override
@@ -18,16 +20,31 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final storage = FlutterSecureStorage();
+
   late LatLng myPoint = LatLng(0, 0);
   late Future<List<DocumentSnapshot>> carPoolList = Future.value([]);
+  late String nickName = ""; // 기본값으로 초기화
+  late String email = "";
+  late String gender = "";
 
   @override
   void initState() {
     super.initState();
     initMyPoint();
     carPoolList = _timeByFunction();
-  //  carPoolList = FirebaseCarpool.getCarpoolsWithMember("hoon");
+    _loadUserData();
+    //  carPoolList = FirebaseCarpool.getCarpoolsWithMember("hoon");
   } // Null 허용
+
+  Future<void> _loadUserData() async {
+    nickName = await storage.read(key: "nickName") ?? "";
+    email = await storage.read(key: "email") ?? "";
+    gender = await storage.read(key: "gender") ?? "";
+    setState(() {
+      // nickName, email, gender를 업데이트했으므로 화면을 갱신합니다.
+    });
+  }
 
   //내 위치 받아오기
   Future<void> initMyPoint() async {
@@ -67,6 +84,7 @@ class _HomeState extends State<Home> {
                 setState(() {
                   selectedFilter = newValue!;
                   print('현재 필터링 $selectedFilter');
+
                   if(selectedFilter.toString() == 'FilteringOption.Time'){
                     carPoolList = _timeByFunction();
                   }else{
@@ -151,6 +169,9 @@ class _HomeState extends State<Home> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Text('닉네임: $nickName'),
+                                Text('이메일: $email'),
+                                Text('성별: $gender'),
                                 SizedBox(height: 10),
                                 Row(
                                   mainAxisAlignment:
