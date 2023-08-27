@@ -25,8 +25,8 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     initMyPoint();
-    //carPoolList = _timeByFunction();
-    carPoolList = FirebaseCarpool.getCarpoolsWithMember("hoon");
+    carPoolList = _timeByFunction();
+  //  carPoolList = FirebaseCarpool.getCarpoolsWithMember("hoon");
   } // Null 허용
 
   //내 위치 받아오기
@@ -41,7 +41,7 @@ class _HomeState extends State<Home> {
     return carpools;
   }
 
-  //거리순
+  //거리순 정렬
   Future<List<DocumentSnapshot>> _nearByFunction() async {
     await initMyPoint();
     List<DocumentSnapshot> carpools = await FirebaseCarpool.nearByCarpool(myPoint.latitude, myPoint.longitude);
@@ -66,7 +66,7 @@ class _HomeState extends State<Home> {
               onChanged: (newValue) {
                 setState(() {
                   selectedFilter = newValue!;
-                  print('필터링 '+ selectedFilter.toString());
+                  print('현재 필터링 $selectedFilter');
                   if(selectedFilter.toString() == 'FilteringOption.Time'){
                     carPoolList = _timeByFunction();
                   }else{
@@ -84,8 +84,8 @@ class _HomeState extends State<Home> {
             Expanded(
               child: FutureBuilder<List<DocumentSnapshot>>(
                 future:
-                  //  carPoolList == null ? _timeByFunction() : carPoolList,
-                    carPoolList == null ? FirebaseCarpool.getCarpoolsWithMember("hoon") : carPoolList,
+                    carPoolList ?? _timeByFunction(),
+                   // carPoolList == null ? FirebaseCarpool.getCarpoolsWithMember("hoon") : carPoolList,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     print("로딩중");
