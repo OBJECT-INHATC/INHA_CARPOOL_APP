@@ -61,7 +61,8 @@ class _HomeState extends State<Home> {
   //거리순 정렬
   Future<List<DocumentSnapshot>> _nearByFunction() async {
     await initMyPoint();
-    List<DocumentSnapshot> carpools = await FirebaseCarpool.nearByCarpool(myPoint.latitude, myPoint.longitude);
+    List<DocumentSnapshot> carpools = await FirebaseCarpool.nearByCarpool(
+        myPoint.latitude, myPoint.longitude);
     return carpools;
   }
 
@@ -85,10 +86,10 @@ class _HomeState extends State<Home> {
                   selectedFilter = newValue!;
                   print('현재 필터링 $selectedFilter');
 
-                  if(selectedFilter.toString() == 'FilteringOption.Time'){
+                  if (selectedFilter.toString() == 'FilteringOption.Time') {
                     carPoolList = _timeByFunction();
-                  }else{
-                  carPoolList = _nearByFunction();
+                  } else {
+                    carPoolList = _nearByFunction();
                   }
                 });
               },
@@ -101,9 +102,8 @@ class _HomeState extends State<Home> {
             ),
             Expanded(
               child: FutureBuilder<List<DocumentSnapshot>>(
-                future:
-                    carPoolList ?? _timeByFunction(),
-                   // carPoolList == null ? FirebaseCarpool.getCarpoolsWithMember("hoon") : carPoolList,
+                future: carPoolList ?? _timeByFunction(),
+                // carPoolList == null ? FirebaseCarpool.getCarpoolsWithMember("hoon") : carPoolList,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     print("로딩중");
@@ -144,19 +144,41 @@ class _HomeState extends State<Home> {
                         // 각 아이템을 빌드하는 로직
                         return GestureDetector(
                           onTap: () {
-                            if(carpoolData['startPoint'].toString() == uid)
-                            Nav.push(
-                              CarpoolMap(
-                                startPoint: LatLng(
-                                    carpoolData['startPoint'].latitude,
-                                    carpoolData['startPoint'].longitude),
-                                startPointName: carpoolData['startPointName'],
-                                startTime: formattedTime,
-                                carId: carpoolData['carId'],
-                                admin: carpoolData['admin'],
-                              ),
-                            );
+                            int nowMember = carpoolData['nowMember'];
+                            int maxMember = carpoolData['maxMember'];
 
+                            if (nowMember < maxMember) {
+                              Nav.push(
+                                CarpoolMap(
+                                  startPoint: LatLng(
+                                      carpoolData['startPoint'].latitude,
+                                      carpoolData['startPoint'].longitude),
+                                  startPointName: carpoolData['startPointName'],
+                                  startTime: formattedTime,
+                                  carId: carpoolData['carId'],
+                                  admin: carpoolData['admin'],
+                                ),
+                              );
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('카풀참가 실패'),
+                                    content: const Text(
+                                        '자리가 마감되었습니다!\n다른 카풀을 이용해주세요.'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('확인'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
                           },
                           child: Card(
                             elevation: 5,

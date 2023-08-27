@@ -30,7 +30,6 @@ class _CarpoolListState extends State<CarpoolList> {
     super.initState();
     _loadUserData();
     loadCarpools();
-
   }
   //유저 데이터 조회
   Future<void> _loadUserData() async {
@@ -45,7 +44,7 @@ class _CarpoolListState extends State<CarpoolList> {
 
   //내가 참여한 카풀 목록 조회
   Future<void> loadCarpools() async {
-    String myID = uid; // 내 아이디
+    String myID = 'subari'; // 내 아이디
 
     List<DocumentSnapshot> carpools =
         await FirebaseCarpool.getCarpoolsWithMember(myID);

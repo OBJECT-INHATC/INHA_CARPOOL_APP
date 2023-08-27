@@ -99,6 +99,32 @@ class FirebaseCarpool {
     }
   }
 
+  ///카풀 참가
+  static Future<void> addMemberToCarpool(String carpoolID, String memberID) async {
+    try {
+      CollectionReference carpoolCollection = _firestore.collection('carpool');
+      DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
+      //멤버 업데이트 (멤버 추가)
+      await carpoolDocRef.update({
+        'members': FieldValue.arrayUnion([memberID]),
+        'nowMember': FieldValue.increment(1), // nowMember 값을 1 증가
+
+      });
+
+      //채팅방 참여
+      CollectionReference membersCollection =
+      carpoolDocRef.collection('messages');
+      await membersCollection.add({
+        'memberID': memberID,
+        'joinedDate': DateTime.now(),
+      });
+
+      print('카풀에 유저가 추가되었습니다 -> ${memberID}');
+    } catch (e) {
+      print('카풀에 유저 추가 실패');
+    }
+  }
+
   ///거리순 조회
   static Future<List<DocumentSnapshot>> nearByCarpool(
       double myLat, double myLon) async {
