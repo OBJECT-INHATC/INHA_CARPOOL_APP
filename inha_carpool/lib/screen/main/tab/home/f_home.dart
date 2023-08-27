@@ -19,13 +19,14 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late LatLng myPoint = LatLng(0, 0);
-  late Future<List<DocumentSnapshot>> timeByCarpoolsl = Future.value([]);
+  late Future<List<DocumentSnapshot>> carPoolList = Future.value([]);
 
   @override
   void initState() {
     super.initState();
     initMyPoint();
-    timeByCarpoolsl = _timeByFunction();
+    //carPoolList = _timeByFunction();
+    carPoolList = FirebaseCarpool.getCarpoolsWithMember("hoon");
   } // Null 허용
 
   //내 위치 받아오기
@@ -67,9 +68,9 @@ class _HomeState extends State<Home> {
                   selectedFilter = newValue!;
                   print('필터링 '+ selectedFilter.toString());
                   if(selectedFilter.toString() == 'FilteringOption.Time'){
-                    timeByCarpoolsl = _timeByFunction();
+                    carPoolList = _timeByFunction();
                   }else{
-                  timeByCarpoolsl = _nearByFunction();
+                  carPoolList = _nearByFunction();
                   }
                 });
               },
@@ -83,7 +84,8 @@ class _HomeState extends State<Home> {
             Expanded(
               child: FutureBuilder<List<DocumentSnapshot>>(
                 future:
-                    timeByCarpoolsl == null ? _timeByFunction() : timeByCarpoolsl,
+                  //  carPoolList == null ? _timeByFunction() : carPoolList,
+                    carPoolList == null ? FirebaseCarpool.getCarpoolsWithMember("hoon") : carPoolList,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     print("로딩중");

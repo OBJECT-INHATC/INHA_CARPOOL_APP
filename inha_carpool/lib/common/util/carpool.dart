@@ -7,7 +7,7 @@ import 'package:inha_Carpool/common/common.dart';
 class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  //출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
+  ///출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
   static Future<List<DocumentSnapshot>> getCarpoolsTimeby() async {
     CollectionReference carpoolCollection = _firestore.collection('carpool');
     QuerySnapshot querySnapshot = await carpoolCollection.get();
@@ -38,7 +38,7 @@ class FirebaseCarpool {
     return sortedCarpools;
   }
 
-  /// 카풀 시작하기 method
+  /// 카풀 저장
   static Future<void> addDataToFirestore({
     required DateTime selectedDate,
     required DateTime selectedTime,
@@ -99,7 +99,7 @@ class FirebaseCarpool {
     }
   }
 
-  ///거리순 필터
+  ///거리순 조회
   static Future<List<DocumentSnapshot>> nearByCarpool(
       double myLat, double myLon) async {
     QuerySnapshot querySnapshot = await _firestore.collection('carpool').get();
@@ -159,4 +159,37 @@ class FirebaseCarpool {
 
     return distanceInMeters / 1000;
   }
+
+ /// 내가 참여한 카풀
+  static Future<List<DocumentSnapshot>> getCarpoolsWithMember(String memberName) async {
+    QuerySnapshot querySnapshot = await _firestore.collection('carpool')
+        .where('members', arrayContains: memberName)
+        .get();
+
+    List<DocumentSnapshot> sortedCarpools = [];
+    print("조회된 카풀 수: ${querySnapshot.docs.length}");
+
+    // 현재 시간을 가져옵니다.
+    DateTime currentTime = DateTime.now();
+
+    querySnapshot.docs.forEach((doc) {
+      DateTime startTime =
+      DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+
+      // 현재 시간보다 미래의 시간인 경우만 추가
+      if (startTime.isAfter(currentTime)) {
+        sortedCarpools.add(doc);
+      }
+    });
+
+    sortedCarpools.sort((a, b) {
+      DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
+      DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b['startTime']);
+
+      return startTimeA.compareTo(startTimeB);
+    });
+
+    return sortedCarpools;
+  }
+
 }
