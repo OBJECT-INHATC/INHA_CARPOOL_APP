@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 
+import '../../../../common/util/carpool.dart';
+import '../../s_main.dart';
 
 class CarpoolMap extends StatefulWidget {
   final LatLng startPoint;
@@ -115,8 +118,42 @@ class _CarpoolMapState extends State<CarpoolMap> {
               ),
               SizedBox(height: 30), // 간격 추가
               GestureDetector(
-                onTap: () {
-                  // 클릭 이벤트 처리
+                onTap: () async {
+                  DocumentSnapshot carpoolSnapshot = await FirebaseFirestore
+                      .instance
+                      .collection('carpool')
+                      .doc(widget.carId)
+                      .get();
+                  int nowMember = carpoolSnapshot['nowMember'];
+                  int maxMember = carpoolSnapshot['maxMember'];
+
+                  String carId = widget.carId;
+                  String memberID = 'subari';
+                  if (nowMember < maxMember) {
+                    await FirebaseCarpool.addMemberToCarpool(carId, memberID);
+                    Navigator.pop(context);
+                    //메인스크린으로 리스트 새로고침
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => MainScreen()));
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('카풀참가 실패'),
+                          content: Text('자리가 마감되었습니다!\n다른 카풀을 이용해주세요.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text('확인'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
                 child: Container(
                   height: screenHeight * 0.07,
@@ -129,7 +166,10 @@ class _CarpoolMapState extends State<CarpoolMap> {
                   child: const Center(
                     child: Text(
                       '카풀 참가하기',
-                      style: TextStyle(color: Colors.blue, fontSize: 23, fontWeight: FontWeight.w100),
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontSize: 23,
+                          fontWeight: FontWeight.w100),
                     ),
                   ),
                 ),
