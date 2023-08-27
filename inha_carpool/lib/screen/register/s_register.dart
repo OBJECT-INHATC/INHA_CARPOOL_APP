@@ -1,28 +1,68 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:nav/nav.dart';
+import '../../service/sv_auth.dart';
+import '../dialog/d_auth_verification.dart';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 
-import '../../providers/dto_registerstore.dart';
-
+/// 0824 서은율 한승완
+/// 회원 가입 페이지
 class RegisterPage extends StatefulWidget {
-  RegisterPage({super.key});
+  const RegisterPage({super.key});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // 미디어 쿼리 사용을 위한 함수
-  double mediaHeight(BuildContext context, double scale) =>
-      MediaQuery.of(context).size.height * scale;
-
-  double mediaWidth(BuildContext context, double scale) =>
-      MediaQuery.of(context).size.width * scale;
-
   final formKey = GlobalKey<FormState>();
+
+
+  // 이메일
+  String email = "";
+
+  // 비밀번호
+  String password = "";
+
+  // 비밀번호 비교
+  String checkPassword = "";
+
+  // 이름
+  String username = "";
+
+  // 학교
+  String academy = "@itc.ac.kr";
+
+  // 로딩 여부
+  bool isLoading = false;
+
+  // 성별
+  String? gender;
+  var genders;
+
+  String passwordCheck = "";
+
+  var selectedIndex = 0;
+
+  List<Color> selectedBackgroundColors = [Colors.blue, Colors.green];
+  List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
+
+  void updateBackgroundColors() {
+    // 선택된 토글의 배경색을 변경
+    selectedBackgroundColors = selectedIndex == 0
+        ? [Colors.blue, Colors.white]
+        : [Colors.white, Colors.green];
+
+    // 선택되지 않은 토글의 배경색을 변경
+    unSelectedBackgroundColors = selectedIndex == 0
+        ? [Colors.white, Colors.green]
+        : [Colors.blue, Colors.white];
+  }
 
   @override
   Widget build(BuildContext context) {
-    return context.watch<infostore>().isLoading
+    return isLoading
         ? Center(
             child: CircularProgressIndicator(
                 color: Theme.of(context).primaryColor),
@@ -33,99 +73,99 @@ class _RegisterPageState extends State<RegisterPage> {
                 key: formKey,
                 child: SingleChildScrollView(
                   child: Center(
+
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // SizedBox(height: mediaHeight(context, 0.2)),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(15, 20, 40, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  primary: Colors.blue[900]
-                                ),
-                                  onPressed: () {
-                                    context
-                                        .read<infostore>()
-                                        .chagneAcademy("@itc.ac.kr");
-                                  },
-                                  child: Text("인하공전")),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      primary: Colors.blue[300]
-                                  ),
-                                  onPressed: () {
-                                    context
-                                        .read<infostore>()
-                                        .chagneAcademy("@inha.ac.kr");
-                                  },
-                                  child: Text("인하대")),
 
-                              // RadioListTile(
-                              //   title: Text("인하공전"),
-                              //   value: "@itc.ac.kr",
-                              //   groupValue: context.watch<infostore>().academy,
-                              //   onChanged: (value) {
-                              //     context.read<infostore>().chagneAcademy(value.toString());
-                              //   },
-                              //   fillColor: MaterialStateProperty.all(Colors.blue[900]),
-                              // ),
-                              // RadioListTile(
-                              //   title: Text("인하대"),
-                              //   value: "@inha.ac.kr",
-                              //   groupValue: context.watch<infostore>().academy,
-                              //   onChanged: (value) {
-                              //     context.read<infostore>().chagneAcademy(value.toString());
-                              //   },
-                              //   fillColor: MaterialStateProperty.all(Colors.blue[400]),
-                              // ),
+
+                      children: [
+                        const SizedBox(
+                          height: 180,
+                        ),
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                          child: Stack(
+                            alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
+                            children: [
+                              TextFormField(
+                                  decoration: InputDecoration(
+                                    enabledBorder: const UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black),
+                                    ),
+                                    focusedBorder: const UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.blue),
+                                    ),
+                                    labelText: '학번',
+                                  ),
+                                  onChanged: (text) {
+                                    // 텍스트 필드 값 변경 시 실행할 코드 작성
+                                    email = text + academy;
+                                  },
+                                  validator: (val) {
+                                    if (val!.isNotEmpty) {
+                                      return null;
+                                    } else {
+                                      return "학번이 비어있습니다.";
+                                    }
+                                  }),
+                              Positioned(
+                                // 중간 텍스트를 겹쳐서 배치
+                                right: 140,
+                                child: Text(academy),
+                              ),
+                              Positioned(
+                                // 중간 텍스트를 겹쳐서 배치
+                                right: 0,
+                                child: FlutterToggleTab(
+                                  width: 30,
+                                  borderRadius: 30,
+                                  height: 40,
+                                  // initialIndex: 0,
+                                  selectedTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700),
+                                  unSelectedTextStyle: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500),
+                                  labels: const ["인하공전", "인하대"],
+                                  selectedLabelIndex: (index) {
+                                    setState(() {
+                                      if (index == 0) {
+                                        academy = "@itc.ac.kr";
+                                      } else {
+                                        academy = "@inha.ac.kr";
+                                      }
+                                      selectedIndex = index;
+                                      updateBackgroundColors();
+                                    });
+                                  },
+                                  selectedBackgroundColors: const [
+                                    Colors.blue,
+                                    Colors.green
+                                  ],
+                                  unSelectedBackgroundColors: const [
+                                    Colors.white,
+                                    Colors.white
+                                  ],
+                                  isScroll: false,
+                                  selectedIndex: selectedIndex,
+                                ),
+                              ),
                             ],
                           ),
                         ),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: TextFormField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                              ),
-                              labelText: '이메일',
-                              suffixText:
-                                  '${context.watch<infostore>().academy}',
-                            ),
-                            onChanged: (text) {
-                              // 텍스트 필드 값 변경 시 실행할 코드 작성
-                              context.watch<infostore>().email = text;
-                            },
-                          ),
-                        ),
-                        Container(
-                          height: 40,
-                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size.fromHeight(50),
-                                backgroundColor: Colors.grey[200],
-                              ),
-                              child: const Text('인증번호 전송',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold)),
-                              onPressed: () {}),
-                        ),
-
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                          child: TextFormField(
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.black), // 밑줄 색상 설정
@@ -144,15 +184,18 @@ class _RegisterPageState extends State<RegisterPage> {
                               }
                             },
                             onChanged: (text) {
-                              context.watch<infostore>().username = text;
+                              username = text;
                             },
                           ),
+                        ),
+                        const SizedBox(
+                          height: 15,
                         ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: TextFormField(
                             obscureText: true,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.black), // 밑줄 색상 설정
@@ -164,9 +207,12 @@ class _RegisterPageState extends State<RegisterPage> {
                               labelText: '비밀번호',
                             ),
                             onChanged: (text) {
-                              context.watch<infostore>().password = text;
+                              password = text;
                             },
                           ),
+                        ),
+                        const SizedBox(
+                          height: 15,
                         ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
@@ -182,94 +228,114 @@ class _RegisterPageState extends State<RegisterPage> {
                                     color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
                               ),
                               labelText: '비밀번호 확인',
+                              suffix: Text(passwordCheck,
+                                  style: (passwordCheck == "비밀번호가 일치하지 않습니다.")
+                                      ? TextStyle(color: Colors.red)
+                                      : TextStyle(color: Colors.green)),
                             ),
                             onChanged: (text) {
-                              context.watch<infostore>().checkPassword = text;
-                            },
-                            validator: (val) {
-                              if (val != context.watch<infostore>().password) {
-                                return "비밀번호가 일치하지 않습니다.";
+                              checkPassword = text;
+                              if (password == checkPassword) {
+                                setState(() {
+                                  passwordCheck = "비밀번호가 일치합니다!";
+                                });
                               } else {
-                                return null;
+                                setState(() {
+                                  passwordCheck = "비밀번호가 일치하지 않습니다.";
+                                });
                               }
                             },
                           ),
+                        ),
+                        const SizedBox(
+                          height: 15,
                         ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(15, 10, 40, 0),
                           child: Column(
                             children: [
                               RadioListTile(
-                                title: Text("남성"),
+                                title: const Text("남성"),
                                 value: "남성",
-                                groupValue: context.watch<infostore>().gender,
-                                onChanged: (value) {},
+                                groupValue: genders,
+                                onChanged: (value) {
+                                  setState(() {
+                                    genders = value;
+                                    gender = value.toString();
+                                  });
+                                },
                                 fillColor:
                                     MaterialStateProperty.all(Colors.blue),
                               ),
                               RadioListTile(
-                                title: Text("여성"),
+                                title: const Text("여성"),
                                 value: "여성",
-                                groupValue: context.watch<infostore>().gender,
-                                onChanged: (value) {},
+                                groupValue: genders,
+                                onChanged: (value) {
+                                  setState(() {
+                                    genders = value;
+                                    gender = value.toString();
+                                  });
+                                },
                                 fillColor:
                                     MaterialStateProperty.all(Colors.red),
                               ),
                             ],
                           ),
                         ),
-                        // SizedBox(height: mediaHeight(context, 0.1)),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 20),
-                          child: Stack(
-                            children: [
-                              TextField(
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.blue),
-                                  ),
-                                  labelText: '인증 번호',
-                                ),
-                                onChanged: (text) {
-                                  // 텍스트 필드 값 변경 시 실행할 코드 작성
-                                },
-                              ),
-                              Positioned(
-                                right: 2,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey[200],
-                                  ),
-                                  onPressed: () {},
-                                  child: Text('확인',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                          fontWeight: FontWeight.bold)),
-                                ),
-                              ),
-                            ],
-                          ),
+                        const SizedBox(
+                          height: 50,
                         ),
                         Container(
-                          height: 80,
+                          height: context.height(0.09),
                           padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 minimumSize: const Size.fromHeight(50),
-                                backgroundColor: Colors.grey[700],
+                                backgroundColor: Colors.blue[300],
                               ),
                               child: const Text('가입완료',
                                   style: TextStyle(
                                       fontSize: 20,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)),
-                              onPressed: () {
-                                Navigator.pop(context);
+                              onPressed: () async {
+                                if (passwordCheck != "비밀번호가 일치합니다!" ||
+                                    username == "" ||
+                                    email == "" ||
+                                    password == "" ||
+                                    gender == "") {
+                                  showSnackbar(context, Colors.red,
+                                      "정보가 올바르지 않습니다. 다시 확인해주세요.");
+                                } else {
+                                  AuthService()
+                                      .registerUserWithEmailandPassword(
+                                          username,
+                                          email,
+                                          password,
+                                          "dummy",
+                                          gender!)
+                                      .then((value) async {
+                                    if (value == true) {
+                                      await FirebaseAuth.instance.currentUser!
+                                          .sendEmailVerification();
+                                      Navigator.pop(context);
+                                      if (!mounted) return;
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) {
+                                          return VerificationDialog();
+                                        },
+                                      );
+                                    } else {
+                                      showSnackbar(context, Colors.red, value);
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                    }
+                                  });
+                                }
                               }),
                         ),
                       ],
@@ -280,4 +346,24 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           );
   }
+
+  void showSnackbar(context, color, message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(fontSize: 14),
+        ),
+        backgroundColor: color,
+        duration: const Duration(seconds: 2),
+        action: SnackBarAction(
+          label: "OK",
+          onPressed: () {},
+          textColor: Colors.white,
+        ),
+      ),
+    );
+  }
 }
+
+

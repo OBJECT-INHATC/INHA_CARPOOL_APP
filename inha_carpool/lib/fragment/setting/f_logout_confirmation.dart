@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/service/sv_auth.dart';
 
 import '../../screen/login/s_login.dart';
 
@@ -21,12 +22,15 @@ class LogoutConfirmationDialog extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
+            AuthService().signOut().then(
+                  (value){
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                          (Route<dynamic> route) => false,
+                    );
+                  }); // 로그아웃
             onConfirm();
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => LoginPage()),
-                  (Route<dynamic> route) => false,
-            );
           },
           child: Text('예'),
         ),
