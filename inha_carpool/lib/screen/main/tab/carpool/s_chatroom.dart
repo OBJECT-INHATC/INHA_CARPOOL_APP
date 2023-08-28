@@ -7,6 +7,8 @@ import '../../../../providers/p_carpoolstore.dart';
 class ChatroomPage extends StatelessWidget {
   const ChatroomPage({super.key});
 
+  /// 0828 한승완 TODO : 생성자를 통해 각각 다른 채팅을 추가 하도록 수정
+
   @override
   Widget build(BuildContext context) {
     final chatStore = Provider.of<ChatStore>(context);
@@ -191,6 +193,7 @@ class ChatroomPage extends StatelessWidget {
                 ),
               ],
             ),
+            /// 0828 한승완 TODO : 채팅 불러서 표시
             Expanded(
               // 2. 채팅 창
               child:chatStore.checkJoin
@@ -231,7 +234,7 @@ class ChatroomPage extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      // 메시지 전송 버튼 동작
+                      /// 0828 한승완 TODO : 채팅 전송 버튼 동작
                     },
                     icon: Icon(Icons.send),
                   ),

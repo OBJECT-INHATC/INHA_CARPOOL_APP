@@ -40,4 +40,7 @@ class FireStoreService {
   }
 
 
+  /// 0828 한승완 TODO : 채팅 관련 함수 추가
+
+
 }

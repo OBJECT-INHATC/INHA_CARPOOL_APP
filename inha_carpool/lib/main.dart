@@ -10,6 +10,8 @@ import 'common/data/preference/app_preferences.dart';
 
 void main() async {
 
+  /// 0828 한승완 TODO : FCM 기본 설정 추가
+
   //태 변화와 렌더링을 관리하는 바인딩 초기화 => 추 후 백그라운드 및 포어그라운드 상태관리에 따라 기능 리팩토링
   WidgetsFlutterBinding.ensureInitialized();
 
