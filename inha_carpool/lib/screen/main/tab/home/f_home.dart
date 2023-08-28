@@ -142,6 +142,16 @@ class _HomeState extends State<Home> {
                         } else {
                           formattedTime = '${difference.inMinutes}분 후';
                         }
+
+                        Color borderColor;
+                        if (carpoolData['gender'] == '남자') {
+                          borderColor = context.appColors.appBar; // 남자일 때 보더 색
+                        } else if (carpoolData['gender'] == '여자') {
+                          borderColor = Colors.red; // 여자일 때 보더 색
+                        } else {
+                          borderColor = Colors.grey; // 무관일 때 보더 색
+                        }
+
                         // 각 아이템을 빌드하는 로직
                         return GestureDetector(
                           onTap: () {
@@ -174,15 +184,12 @@ class _HomeState extends State<Home> {
                                 vertical: 15, horizontal: 20),
                             shape: RoundedRectangleBorder(
                               side: BorderSide(
-                                  width: 1, color: context.appColors.appBar),
+                                  width: 2, color: borderColor),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('닉네임: $nickName임'),
-                                Text('이메일: $email'),
-                                Text('성별: $gender'),
                                 SizedBox(height: 10),
                                 Row(
                                   mainAxisAlignment:

@@ -57,7 +57,7 @@ class MainScreenState extends State<MainScreen>
                 Icons.notifications_none,
                 size: 35,
                 color: Colors.white,
-              ).animate().shake(duration: 100000.ms, hz: 5),
+              ).animate().shake(duration: 1000.ms, hz: 5),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -77,7 +77,7 @@ class MainScreenState extends State<MainScreen>
                   MaterialPageRoute(builder: (context) => SettingPage()),
                 );
               },
-            ).animate().shake(duration: 100000.ms, hz: 10),
+            ).animate().shake(duration: 1000.ms, hz: 10),
           ],
         ),
         //바디를 하단 네비게이션 바 아래까지 확장
