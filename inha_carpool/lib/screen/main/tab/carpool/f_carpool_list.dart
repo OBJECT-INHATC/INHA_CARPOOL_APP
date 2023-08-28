@@ -110,7 +110,6 @@ class _CarpoolListState extends State<CarpoolList> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        /// 0828 한승완 TODO : 올바른 채팅방으로 이동하도록 수정
                           builder: (context) => ChatroomPage(
                               carId: carpool['carId'],
                               groupName: '카풀네임',

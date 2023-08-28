@@ -43,6 +43,8 @@ class FireStoreService {
 
   }
 
+  /// 0828 한승완
+  /// 특정 시점 이후의 채팅 메시지 스트림 가져오기
   getChatsAfterSpecTime(String carId, int time) async {
     return carpoolCollection
         .doc(carId)
@@ -52,7 +54,8 @@ class FireStoreService {
         .snapshots();
   }
 
-  /// 채팅 메시지 스트림 메서드
+  /// 0828 한승완
+  /// 채팅 메시지 스트림 가져오기
   getChats(String carId) async {
     return carpoolCollection
         .doc(carId)
@@ -61,12 +64,16 @@ class FireStoreService {
         .snapshots();
   }
 
+  /// 0828 한승완
+  /// 그룹 관리자 가져오기
   Future getGroupAdmin(String carId) async {
     DocumentReference d = carpoolCollection.doc(carId);
     DocumentSnapshot documentSnapshot = await d.get();
     return documentSnapshot['admin'];
   }
 
+  /// 0828 한승완
+  /// 메시지 전송
   sendMessage(String carId, Map<String, dynamic> chatMessageData) async {
     carpoolCollection.doc(carId).collection("messages").add(chatMessageData);
 

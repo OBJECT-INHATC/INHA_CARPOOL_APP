@@ -2,6 +2,8 @@ import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:sembast/sembast.dart';
 import 'd_database.dart';
 
+/// 0828 서은율, 한승완
+/// Local Chat DataBase DAO - Sembast
 class ChatDao {
   static const String folderName = "chat";
 

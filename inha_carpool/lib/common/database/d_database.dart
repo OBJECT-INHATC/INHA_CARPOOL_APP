@@ -5,6 +5,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
 import 'package:sembast/sembast_io.dart';
 
+/// 0828 서은율, 한승완
+/// Local Chat DataBase - Sembast Singleton
 class AppDatabase{
 
   static final AppDatabase _singleton = AppDatabase._();

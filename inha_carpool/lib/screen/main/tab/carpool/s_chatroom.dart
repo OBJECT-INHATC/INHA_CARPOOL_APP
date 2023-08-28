@@ -7,7 +7,11 @@ import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
+/// 0828 서은율, 한승완
+/// 채팅방 페이지 - 채팅방 정보 표시, 채팅 메시지 스트림, 메시지 입력, 메시지 전송
 class ChatroomPage extends StatefulWidget {
+
+  /// 0829 서은율 TODO : 채팅방 페이지 최적화 고민 해볼 것
 
   final String carId;
   final String groupName;
@@ -37,6 +41,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   TextEditingController messageController = TextEditingController();
 
   /// 스크롤 컨트롤러
+  /// 0829 서은율 TODO : 채팅 스크롤 컨트롤러를 이용해서 로컬 메시지만 있을때도 스크롤이 하단으로 가지게 설정
   late ScrollController _scrollController;
 
   /// 로컬 저장소 SS
@@ -117,6 +122,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        /// TODO : 김수현, 김영재 - 상단 카풀 내용 불러오기 및 UI 수정
         appBar: AppBar(
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
@@ -292,7 +298,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 ),
               ],
             ),
-            /// 0828 한승완 TODO : 채팅 불러서 표시
             Expanded(
               child: Stack(
                 children: <Widget>[

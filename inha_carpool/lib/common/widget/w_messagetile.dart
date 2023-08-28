@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// 0828 서은율, 한승완
 /// 메시지 타입 ENUM
 enum MessageType {
   me,
@@ -7,7 +8,8 @@ enum MessageType {
   service,
 }
 
-/// MessageTile 위젯
+/// 0828 서은율, 한승완
+/// MessageTile 위젯 - 채팅 메시지 UI 위젯
 class MessageTile extends StatelessWidget {
   final String message;
   final String sender;
@@ -19,6 +21,9 @@ class MessageTile extends StatelessWidget {
     required this.sender,
     required this.messageType,
   }) : super(key: key);
+
+
+  /// 0829 서은율 TODO : 메시지 타일 위젯의 최적화 고민 + 간단한 디자인 수정
 
   @override
   Widget build(BuildContext context) {
