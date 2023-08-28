@@ -84,6 +84,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                   children: [
                     GoogleMap(
                       onMapCreated: (controller) => mapController = controller,
+                      myLocationButtonEnabled: false,
                       initialCameraPosition: CameraPosition(
                         target: widget.startPoint,
                         zoom: 16.0,

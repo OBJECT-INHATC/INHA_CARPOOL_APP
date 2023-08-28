@@ -83,6 +83,7 @@ class _LocationInputState extends State<LocationInput> {
               children: [
                 GoogleMap(
                   onMapCreated: (controller) => mapController = controller,
+                  myLocationButtonEnabled: false,
                   initialCameraPosition: CameraPosition(
                     target: widget.Point,
                     zoom: 16.0,
