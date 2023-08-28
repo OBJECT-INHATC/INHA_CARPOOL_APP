@@ -151,7 +151,6 @@ class _HomeState extends State<Home> {
                             int nowMember = carpoolData['nowMember'];
                             int maxMember = carpoolData['maxMember'];
 
-
                             if (nowMember < maxMember) {
                               Nav.push(
                                 CarpoolMap(

@@ -117,6 +117,7 @@ class FirebaseCarpool {
       await carpoolDocRef.update({
         'members': FieldValue.arrayUnion(['${memberID}_${memberName}']),
         'nowMember': FieldValue.increment(1), // nowMember 값을 1 증가
+
       });
 
       //채팅방 참여
