@@ -144,8 +144,11 @@ class _HomeState extends State<Home> {
                         // 각 아이템을 빌드하는 로직
                         return GestureDetector(
                           onTap: () {
+                            print(carpoolData['maxMember'].toString());
+                            print(carpoolData['nowMember'].toString());
+
                             int nowMember = carpoolData['nowMember'];
-                            int maxMember = carpoolData['maxMember'];
+                            int maxMember = int.parse(carpoolData['maxMember']);
 
                             if (nowMember < maxMember) {
                               Nav.push(
