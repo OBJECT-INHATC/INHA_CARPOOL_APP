@@ -165,17 +165,17 @@ class _HomeState extends State<Home> {
 
                             String currentUser = '${uid}_$nickName';
 
-                            if (nowMember < maxMember) { // 현재 인원이 최대 인원보다 작을 때
-                              if(carpoolData['members'].contains(currentUser)){ // 이미 참여한 경우
-                                if(carpoolData['admin'] == currentUser) { // 방장인 경우
-                                  Nav.push(MasterChatroomPage());
-                                  print('현재 유저: $currentUser');
-                                  print(carpoolData['members']);
-                                } else {
-                                  Nav.push(ChatroomPage());
-                                }
+                            if(carpoolData['members'].contains(currentUser)){ // 이미 참여한 경우
+                              if(carpoolData['admin'] == currentUser) { // 방장인 경우
+                                Nav.push(MasterChatroomPage());
+                                print('현재 유저: $currentUser');
+                                print(carpoolData['members']);
                               } else {
-                                // 참여하기로
+                                Nav.push(ChatroomPage());
+                              }
+                            } else {
+                              // 참여하기로
+                              if (nowMember < maxMember) { // 현재 인원이 최대 인원보다 작을 때
                                 Nav.push(
                                   CarpoolMap(
                                     startPoint: LatLng(
@@ -187,9 +187,9 @@ class _HomeState extends State<Home> {
                                     admin: carpoolData['admin'],
                                   ),
                                 );
+                              } else {
+                                context.showSnackbarMaxmember(context);
                               }
-                            } else {
-                              context.showSnackbarMaxmember(context);
                             }
                           },
                           child: Card(

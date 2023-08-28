@@ -113,26 +113,37 @@ class FirebaseCarpool {
     try {
       CollectionReference carpoolCollection = _firestore.collection('carpool');
       DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
-      //멤버 업데이트 (멤버 추가)
-      await carpoolDocRef.update({
-        'members': FieldValue.arrayUnion(['${memberID}_${memberName}']),
-        'nowMember': FieldValue.increment(1), // nowMember 값을 1 증가
 
+      // 트랜잭션 시작
+      await _firestore.runTransaction((transaction) async {
+        DocumentSnapshot carpoolSnapshot = await transaction.get(carpoolDocRef);
+
+        if (!carpoolSnapshot.exists) {
+          // 카풀 정보가 없는 경우 처리
+          print('해당 카풀이 존재하지 않습니다.');
+          return;
+        }
+        // 최대 인원 초과하지 않는 경우, 멤버 추가 및 nowMember 업데이트
+        transaction.update(carpoolDocRef, {
+          'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
+          'nowMember': FieldValue.increment(1),
+        });
+
+        // 채팅방 참여
+        CollectionReference membersCollection =
+        carpoolDocRef.collection('messages');
+        await membersCollection.add({
+          'memberID': '${memberID}_$memberName',
+          'joinedDate': DateTime.now(),
+        });
       });
 
-      //채팅방 참여
-      CollectionReference membersCollection =
-          carpoolDocRef.collection('messages');
-      await membersCollection.add({
-        'memberID': '${memberID}_${memberName}',
-        'joinedDate': DateTime.now(),
-      });
-
-      print('카풀에 유저가 추가되었습니다 -> ${memberID}_${memberName}');
+      print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');
     } catch (e) {
       print('카풀에 유저 추가 실패');
     }
   }
+
 
   ///거리순 조회
   static Future<List<DocumentSnapshot>> nearByCarpool(
