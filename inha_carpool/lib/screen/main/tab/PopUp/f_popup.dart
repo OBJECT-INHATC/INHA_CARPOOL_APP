@@ -113,13 +113,14 @@ class PopUpFragment extends StatelessWidget {
     );
   }
   void showSnackbar(BuildContext context) {
-    context.showSnackbar('snackbar 입니다.',
-        extraButton: Tap(
-          onTap: () {
-            context.showErrorSnackbar('error');
-          },
-          child: '에러 보여주기 버튼'.text.white.size(13).make().centered().pSymmetric(h: 10, v: 5),
-        ));
+    context.showSnackbar('방이 가득 찼습니다.',
+        // extraButton: Tap(
+        //   onTap: () {
+        //     context.showErrorSnackbar('error');
+        //   },
+        //   child: '에러 보여주기 버튼'.text.white.size(13).make().centered().pSymmetric(h: 10, v: 5),
+        // )
+    );
   }
 
   Future<void> showConfirmDialog(BuildContext context) async {

@@ -75,7 +75,7 @@ class FirebaseCarpool {
         'startPoint': geoStart,
         'endPointName': endPointName,
         'endPoint': geoEnd,
-        'maxMember': selectedLimit.replaceAll(RegExp(r'[^\d]'), ''),
+        'maxMember': int.parse(selectedLimit.replaceAll(RegExp(r'[^\d]'), '')),
         'gender': selectedGender,
         'startTime': dateAsInt,
         'nowMember': 1,
@@ -100,7 +100,8 @@ class FirebaseCarpool {
   }
 
   ///카풀 참가
-  static Future<void> addMemberToCarpool(String carpoolID, String memberID) async {
+  static Future<void> addMemberToCarpool(
+      String carpoolID, String memberID) async {
     try {
       CollectionReference carpoolCollection = _firestore.collection('carpool');
       DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
@@ -108,12 +109,11 @@ class FirebaseCarpool {
       await carpoolDocRef.update({
         'members': FieldValue.arrayUnion([memberID]),
         'nowMember': FieldValue.increment(1), // nowMember 값을 1 증가
-
       });
 
       //채팅방 참여
       CollectionReference membersCollection =
-      carpoolDocRef.collection('messages');
+          carpoolDocRef.collection('messages');
       await membersCollection.add({
         'memberID': memberID,
         'joinedDate': DateTime.now(),
@@ -137,7 +137,8 @@ class FirebaseCarpool {
     DateTime currentTime = DateTime.now();
 
     querySnapshot.docs.forEach((doc) {
-      DateTime startTime = DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+      DateTime startTime =
+          DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
 
       // 현재 시간보다 미래의 시간인 경우만 추가
       if (startTime.isAfter(currentTime)) {
@@ -168,7 +169,6 @@ class FirebaseCarpool {
     }).toList();
   }
 
-
   ///거리 계산
   static double calculateDistance(
     double myLat,
@@ -186,9 +186,11 @@ class FirebaseCarpool {
     return distanceInMeters / 1000;
   }
 
- /// 내가 참여한 카풀
-  static Future<List<DocumentSnapshot>> getCarpoolsWithMember(String memberName) async {
-    QuerySnapshot querySnapshot = await _firestore.collection('carpool')
+  /// 내가 참여한 카풀
+  static Future<List<DocumentSnapshot>> getCarpoolsWithMember(
+      String memberName) async {
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('carpool')
         .where('members', arrayContains: memberName)
         .get();
 
@@ -200,7 +202,7 @@ class FirebaseCarpool {
 
     querySnapshot.docs.forEach((doc) {
       DateTime startTime =
-      DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+          DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
 
       // 현재 시간보다 미래의 시간인 경우만 추가
       if (startTime.isAfter(currentTime)) {
@@ -217,5 +219,4 @@ class FirebaseCarpool {
 
     return sortedCarpools;
   }
-
 }

@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/Colors/app_colors.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
+import 'package:inha_Carpool/common/extension/datetime_extension.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 
@@ -70,7 +71,7 @@ class _CarpoolListState extends State<CarpoolList> {
           Duration difference = startTime.difference(currentTime);
 
           String formattedStartTime =
-              DateFormat('yyyy.MM.dd HH:mm').format(startTime); // 날짜 형식으로 변환
+         startTime.formattedDateMyCarpool; // 날짜 형식으로 변환
 
           String formattedTime;
           if (difference.inDays >= 365) {
@@ -122,7 +123,12 @@ class _CarpoolListState extends State<CarpoolList> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  "${formattedStartTime}  ${carpool['startDetailPoint']} - ${carpool['endDetailPoint']}"
+                                  "${formattedStartTime}"
+                                      .text
+                                      .size(16)
+                                      .bold
+                                      .make(),
+                                  "${carpool['startDetailPoint']} <-> ${carpool['endDetailPoint']}"
                                       .text
                                       .size(16)
                                       .bold
@@ -130,7 +136,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                   const SizedBox(
                                     height: 6,
                                   ),
-                                  '더워 죽겠는데 빨리 와주세요. 젭라'
+                                  '주안역 2번출구로 오세요 ㅃㄹ '
                                       .text
                                       .size(12)
                                       .bold
@@ -163,7 +169,8 @@ class _CarpoolListState extends State<CarpoolList> {
                         height: 20,
                       ),
                       const Icon(
-                        Icons.arrow_forward_ios_rounded,
+                     //   Icons.arrow_forward_ios_rounded,
+                        Icons.map_outlined,
                         size: 20,
                       ),
                     ]),

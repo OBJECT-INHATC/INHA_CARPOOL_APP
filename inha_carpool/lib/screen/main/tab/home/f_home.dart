@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 
 import '../../../../common/util/carpool.dart';
@@ -148,7 +149,8 @@ class _HomeState extends State<Home> {
                             print(carpoolData['nowMember'].toString());
 
                             int nowMember = carpoolData['nowMember'];
-                            int maxMember = int.parse(carpoolData['maxMember']);
+                            int maxMember = carpoolData['maxMember'];
+
 
                             if (nowMember < maxMember) {
                               Nav.push(
@@ -163,24 +165,7 @@ class _HomeState extends State<Home> {
                                 ),
                               );
                             } else {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('카풀참가 실패'),
-                                    content: const Text(
-                                        '자리가 마감되었습니다!\n다른 카풀을 이용해주세요.'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text('확인'),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
+                              context.showSnackbarMaxmember(context);
                             }
                           },
                           child: Card(
