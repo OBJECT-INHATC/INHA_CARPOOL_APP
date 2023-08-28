@@ -14,6 +14,10 @@ class FireStoreService {
   final CollectionReference userCollection =
   FirebaseFirestore.instance.collection("users");
 
+  /// CollectionReference - Carpool Collection
+  final CollectionReference carpoolCollection =
+  FirebaseFirestore.instance.collection("carpool");
+
   final User? user = FirebaseAuth.instance.currentUser;
 
   /// 0824 서은율
@@ -39,8 +43,62 @@ class FireStoreService {
 
   }
 
+  getChatsAfterSpecTime(String carId, int time) async {
+    return carpoolCollection
+        .doc(carId)
+        .collection("messages")
+        .orderBy("time")
+        .startAfter([time])
+        .snapshots();
+  }
 
-  /// 0828 한승완 TODO : 채팅 관련 함수 추가
+  /// 채팅 메시지 스트림 메서드
+  getChats(String carId) async {
+    return carpoolCollection
+        .doc(carId)
+        .collection("messages")
+        .orderBy("time")
+        .snapshots();
+  }
 
+  Future getGroupAdmin(String carId) async {
+    DocumentReference d = carpoolCollection.doc(carId);
+    DocumentSnapshot documentSnapshot = await d.get();
+    return documentSnapshot['admin'];
+  }
+
+  sendMessage(String carId, Map<String, dynamic> chatMessageData) async {
+    carpoolCollection.doc(carId).collection("messages").add(chatMessageData);
+
+    // DocumentSnapshot carpoolSnapshot = await carpoolCollection.doc(groupId).get();
+    // List<dynamic> members = carpoolSnapshot['members'];
+    // List tokenList = [];
+    // String token = '';
+    //
+    // for (var member in members) {
+    //   token = member.substring(member.indexOf('-') + 1);
+    //   if (token != myToken) {
+    //     tokenList.add(token);
+    //   }
+    //   token = '';
+    // }
+    //
+    // for(var token in tokenList) {
+    //   print(token);
+    // }
+    // FcmService().sendMessage(
+    //     groupName: groupName,
+    //     tokenList: tokenList,
+    //     title: "New Message in $groupName",
+    //     body: "${chatMessageData['sender']} : ${chatMessageData['message']}",
+    //     chatMessage: ChatMessage(
+    //       groupId: groupId,
+    //       message: chatMessageData['message'],
+    //       sender: chatMessageData['sender'],
+    //       time: chatMessageData['time'],
+    //     )
+    // );
+
+  }
 
 }

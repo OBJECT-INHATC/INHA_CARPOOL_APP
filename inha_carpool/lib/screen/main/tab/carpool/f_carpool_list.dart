@@ -41,6 +41,11 @@ class _CarpoolListState extends State<CarpoolList> {
     });
   }
 
+  // 카풀 컬렉션 이름 추출
+  String getName(String res) {
+    return res.substring(res.indexOf("_") + 1);
+  }
+
   // Retrieve carpools and apply FutureBuilder
   Future<List<DocumentSnapshot>> _loadCarpools() async {
     String myID = uid;
@@ -106,7 +111,11 @@ class _CarpoolListState extends State<CarpoolList> {
                       context,
                       MaterialPageRoute(
                         /// 0828 한승완 TODO : 올바른 채팅방으로 이동하도록 수정
-                          builder: (context) => const ChatroomPage()),
+                          builder: (context) => ChatroomPage(
+                              carId: carpool['carId'],
+                              groupName: '카풀네임',
+                              userName: nickName
+                          )),
                     );
                   },
                   child: Card(

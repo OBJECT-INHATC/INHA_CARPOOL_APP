@@ -8,7 +8,7 @@ import 'package:inha_Carpool/common/common.dart';
 class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  static final storage = const FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
   late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
   late String gender = "";
@@ -94,12 +94,13 @@ class FirebaseCarpool {
       });
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
 
-      CollectionReference membersCollection =
-          carpoolDocRef.collection('messages');
-      await membersCollection.add({
-        'memberID': '${memberID}_${memberName}',
-        'joinedDate': DateTime.now(),
-      });
+      // 0828 한승완 삭제 : 메시지
+      // CollectionReference membersCollection =
+      //     carpoolDocRef.collection('messages');
+      // await membersCollection.add({
+      //   'memberID': '${memberID}_${memberName}',
+      //   'joinedDate': DateTime.now(),
+      // });
 
       print('Data added to Firestore.');
     } catch (e) {
@@ -120,13 +121,13 @@ class FirebaseCarpool {
 
       });
 
-      //채팅방 참여
-      CollectionReference membersCollection =
-          carpoolDocRef.collection('messages');
-      await membersCollection.add({
-        'memberID': '${memberID}_${memberName}',
-        'joinedDate': DateTime.now(),
-      });
+      // 0828 한승완 삭제 : 메시지
+      // CollectionReference membersCollection =
+      //     carpoolDocRef.collection('messages');
+      // await membersCollection.add({
+      //   'memberID': '${memberID}_${memberName}',
+      //   'joinedDate': DateTime.now(),
+      // });
 
       print('카풀에 유저가 추가되었습니다 -> ${memberID}_${memberName}');
     } catch (e) {

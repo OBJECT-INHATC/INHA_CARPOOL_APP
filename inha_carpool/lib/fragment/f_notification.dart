@@ -33,7 +33,7 @@ class _NotificationListState extends State<NotificationList> {
       ),
       body: GestureDetector(
         onTap:(){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => ChatroomPage()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const Placeholder()));
         },
         child: ListView.builder(itemCount: notificationmap.length,
     itemBuilder: (c, i) {

@@ -1,4 +1,6 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
@@ -19,11 +21,22 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
   @override
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
 
-  //상태관리 옵저버 실행
+  final storage = const FlutterSecureStorage();
+
+  /// 디바이스 토큰을 가져오는 함수
+  void getMyDeviceToken() async {
+    FirebaseMessaging.instance.getToken().then((value){
+      print(value);
+      storage.write(key: 'token', value: value.toString());
+    });
+  }
+
+  //상태관리 옵저버 실행 + 디바이스 토큰 저장
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    getMyDeviceToken();
   }
 
   //클래스가 삭제될 때 옵저버 등록을 해제
