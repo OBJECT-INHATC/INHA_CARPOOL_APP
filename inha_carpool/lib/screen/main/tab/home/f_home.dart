@@ -5,6 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/s_masterroom.dart';
 
 import '../../../../common/util/carpool.dart';
 import '../../../recruit/s_recruit.dart';
@@ -161,18 +163,31 @@ class _HomeState extends State<Home> {
                             int nowMember = carpoolData['nowMember'];
                             int maxMember = carpoolData['maxMember'];
 
-                            if (nowMember < maxMember) {
-                              Nav.push(
-                                CarpoolMap(
-                                  startPoint: LatLng(
-                                      carpoolData['startPoint'].latitude,
-                                      carpoolData['startPoint'].longitude),
-                                  startPointName: carpoolData['startPointName'],
-                                  startTime: formattedTime,
-                                  carId: carpoolData['carId'],
-                                  admin: carpoolData['admin'],
-                                ),
-                              );
+                            String currentUser = '${uid}_$nickName';
+
+                            if (nowMember < maxMember) { // 현재 인원이 최대 인원보다 작을 때
+                              if(carpoolData['members'].contains(currentUser)){ // 이미 참여한 경우
+                                if(carpoolData['admin'] == currentUser) { // 방장인 경우
+                                  Nav.push(MasterChatroomPage());
+                                  print('현재 유저: $currentUser');
+                                  print(carpoolData['members']);
+                                } else {
+                                  Nav.push(ChatroomPage());
+                                }
+                              } else {
+                                // 참여하기로
+                                Nav.push(
+                                  CarpoolMap(
+                                    startPoint: LatLng(
+                                        carpoolData['startPoint'].latitude,
+                                        carpoolData['startPoint'].longitude),
+                                    startPointName: carpoolData['startPointName'],
+                                    startTime: formattedTime,
+                                    carId: carpoolData['carId'],
+                                    admin: carpoolData['admin'],
+                                  ),
+                                );
+                              }
                             } else {
                               context.showSnackbarMaxmember(context);
                             }
