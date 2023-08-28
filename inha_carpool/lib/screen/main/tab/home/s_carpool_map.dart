@@ -166,6 +166,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
                             TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context) => MainScreen()));
                               },
                               child: Text('확인'),
                             ),
