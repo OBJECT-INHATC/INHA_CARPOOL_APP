@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
@@ -20,23 +21,43 @@ class RecruitPage extends StatefulWidget {
 }
 
 class _RecruitPageState extends State<RecruitPage> {
-  final String myID = "hoon";
   var _selectedDate = DateTime.now(); // 날짜 값 초기화
   var _selectedTime = DateTime.now(); // 시간 값 초기화
   //인하대 후문 cu
   LatLng endPoint = LatLng(37.4514982, 126.6570261);
+
   // 주안역
   LatLng startPoint = LatLng(37.4645862, 126.6803935);
   String startPointName = "주안역 택시 승강장";
   String endPointName = "인하대 후문 CU";
 
-  late TextEditingController _startPointDetailController = TextEditingController();
-  late TextEditingController _endPointDetailController = TextEditingController();
+  late TextEditingController _startPointDetailController =
+      TextEditingController();
+  late TextEditingController _endPointDetailController =
+      TextEditingController();
+
+  final storage = FlutterSecureStorage();
+  late String nickName = ""; // 기본값으로 초기화
+  late String uid = "";
+  late String gender = "";
+
+  final String myID = "";
 
   @override
   void initState() {
     super.initState();
     _getCurrentLocation();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    nickName = await storage.read(key: "nickName") ?? "";
+    uid = await storage.read(key: "uid") ?? "";
+    gender = await storage.read(key: "gender") ?? "";
+
+    setState(() {
+      // nickName, email, gender를 업데이트했으므로 화면을 갱신합니다.
+    });
   }
 
   String selectedLimit = '2인'; // 선택된 제한인원 초기값
@@ -112,7 +133,6 @@ class _RecruitPageState extends State<RecruitPage> {
               },
               detailPoint: '요약 주소 (ex 인하대 후문)',
               detailController: _endPointDetailController,
-
             ),
             Row(
               children: [
@@ -151,7 +171,12 @@ class _RecruitPageState extends State<RecruitPage> {
                         width: double.infinity,
                         margin: EdgeInsets.all(15),
                         padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                        child: '인원'.text.size(20).bold.align(TextAlign.left).make(),
+                        child: '인원'
+                            .text
+                            .size(20)
+                            .bold
+                            .align(TextAlign.left)
+                            .make(),
                       ),
                       LimitSelectorWidget(
                         options: ['2인', '3인'],
@@ -207,7 +232,8 @@ class _RecruitPageState extends State<RecruitPage> {
                     startPointName: startPointName,
                     selectedLimit: selectedLimit,
                     selectedGender: selectedGender,
-                    myID: myID,
+                    memberID: uid,
+                    memberName: nickName,
                     startDetailPoint: startPointInput.detailController.text,
                     endDetailPoint: endPointInput.detailController.text,
                   );

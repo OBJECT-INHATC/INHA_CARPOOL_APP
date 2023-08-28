@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
@@ -35,6 +36,11 @@ class _CarpoolMapState extends State<CarpoolMap> {
   late double distanceInMeters;
   LatLng? _myPoint;
 
+  final storage = FlutterSecureStorage();
+  late String nickName = ""; // 기본값으로 초기화
+  late String uid = "";
+  late String gender = "";
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +51,17 @@ class _CarpoolMapState extends State<CarpoolMap> {
       BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
     );
     _getCurrentLocation();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    nickName = await storage.read(key: "nickName") ?? "";
+    uid = await storage.read(key: "uid") ?? "";
+    gender = await storage.read(key: "gender") ?? "";
+
+    setState(() {
+      // nickName, email, gender를 업데이트했으므로 화면을 갱신합니다.
+    });
   }
 
   @override
@@ -129,9 +146,11 @@ class _CarpoolMapState extends State<CarpoolMap> {
                   int maxMember = carpoolSnapshot['maxMember'];
 
                   String carId = widget.carId;
-                  String memberID = 'subari';
+                  String memberID = uid;
+                  String memberName = nickName;
                   if (nowMember < maxMember) {
-                    await FirebaseCarpool.addMemberToCarpool(carId, memberID);
+                    await FirebaseCarpool.addMemberToCarpool(
+                        carId, memberID, memberName);
                     Navigator.pop(context);
                     //메인스크린으로 리스트 새로고침
                     Navigator.pushReplacement(context,

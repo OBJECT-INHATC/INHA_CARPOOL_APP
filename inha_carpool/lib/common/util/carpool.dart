@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -6,6 +7,11 @@ import 'package:inha_Carpool/common/common.dart';
 
 class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  static final storage = const FlutterSecureStorage();
+  late String nickName = ""; // 기본값으로 초기화
+  late String uid = "";
+  late String gender = "";
 
   ///출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
   static Future<List<DocumentSnapshot>> getCarpoolsTimeby() async {
@@ -48,7 +54,8 @@ class FirebaseCarpool {
     required String startPointName,
     required String selectedLimit,
     required String selectedGender,
-    required String myID,
+    required String memberID,
+    required String memberName,
     required String startDetailPoint,
     required String endDetailPoint,
   }) async {
@@ -65,12 +72,13 @@ class FirebaseCarpool {
       CollectionReference users = _firestore.collection('carpool');
       GeoPoint geoStart = GeoPoint(startPoint.latitude, startPoint.longitude);
       GeoPoint geoEnd = GeoPoint(endPoint.latitude, endPoint.longitude);
-      List<String> hobbies = [myID];
+
+      List<String> hobbies = ['${memberID}_$memberName'];
 
       print(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''));
 
       DocumentReference carpoolDocRef = await users.add({
-        'admin': myID,
+        'admin': '${memberID}_$memberName',
         'startPointName': startPointName,
         'startPoint': geoStart,
         'endPointName': endPointName,
@@ -89,7 +97,7 @@ class FirebaseCarpool {
       CollectionReference membersCollection =
           carpoolDocRef.collection('messages');
       await membersCollection.add({
-        'memberID': myID,
+        'memberID': '${memberID}_${memberName}',
         'joinedDate': DateTime.now(),
       });
 
@@ -101,25 +109,26 @@ class FirebaseCarpool {
 
   ///카풀 참가
   static Future<void> addMemberToCarpool(
-      String carpoolID, String memberID) async {
+      String carpoolID, String memberID, String memberName) async {
     try {
       CollectionReference carpoolCollection = _firestore.collection('carpool');
       DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
       //멤버 업데이트 (멤버 추가)
       await carpoolDocRef.update({
-        'members': FieldValue.arrayUnion([memberID]),
+        'members': FieldValue.arrayUnion(['${memberID}_${memberName}']),
         'nowMember': FieldValue.increment(1), // nowMember 값을 1 증가
+
       });
 
       //채팅방 참여
       CollectionReference membersCollection =
           carpoolDocRef.collection('messages');
       await membersCollection.add({
-        'memberID': memberID,
+        'memberID': '${memberID}_${memberName}',
         'joinedDate': DateTime.now(),
       });
 
-      print('카풀에 유저가 추가되었습니다 -> ${memberID}');
+      print('카풀에 유저가 추가되었습니다 -> ${memberID}_${memberName}');
     } catch (e) {
       print('카풀에 유저 추가 실패');
     }
@@ -188,10 +197,10 @@ class FirebaseCarpool {
 
   /// 내가 참여한 카풀
   static Future<List<DocumentSnapshot>> getCarpoolsWithMember(
-      String memberName) async {
+      String memberID, String memberName) async {
     QuerySnapshot querySnapshot = await _firestore
         .collection('carpool')
-        .where('members', arrayContains: memberName)
+        .where('members', arrayContains: '${memberID}_$memberName')
         .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
