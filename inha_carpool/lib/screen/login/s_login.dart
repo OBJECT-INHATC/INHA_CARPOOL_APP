@@ -44,6 +44,15 @@ class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   final storage = const FlutterSecureStorage();
 
+  /// 장치의 Fcm 토큰을 가져와 로컬에 저장 하는 함수
+  void getMyDeviceToken() async {
+    FirebaseMessaging.instance.getToken().then((value){
+      print("token : $value");
+      storage.write(key: 'token', value: value.toString());
+    });
+
+  }
+
   @override
   void initState() {
     // 로그인 여부 확인
