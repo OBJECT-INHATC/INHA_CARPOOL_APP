@@ -217,25 +217,69 @@ class _RecruitPageState extends State<RecruitPage> {
                   // 버튼 배경색
                   fixedSize: MaterialStateProperty.all(Size(200, 30)), // 버튼 크기
                 ),
+
+                ///카풀 시작하기 버튼
                 onPressed: () async {
-                  await FirebaseCarpool.addDataToFirestore(
-                    selectedDate: _selectedDate,
-                    selectedTime: _selectedTime,
-                    startPoint: startPoint,
-                    endPoint: endPoint,
-                    endPointName: endPointName,
-                    startPointName: startPointName,
-                    selectedLimit: selectedLimit,
-                    selectedGender: selectedGender,
-                    memberID: uid,
-                    memberName: nickName,
-                    startDetailPoint: startPointInput.detailController.text,
-                    endDetailPoint: endPointInput.detailController.text,
+                  String startDetailPoint = _startPointDetailController.text;
+                  String endDetailPoint = _endPointDetailController.text;
+
+                  // 현재 시간과 선택된 날짜와 시간의 차이 계산
+                  DateTime currentTime = DateTime.now();
+                  DateTime selectedDateTime = DateTime(
+                    _selectedDate.year,
+                    _selectedDate.month,
+                    _selectedDate.day,
+                    _selectedTime.hour,
+                    _selectedTime.minute,
                   );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainScreen()),
-                  );
+                  Duration difference =
+                      selectedDateTime.difference(currentTime);
+
+                  if (startDetailPoint.length >= 2 &&
+                      startDetailPoint.length <= 10 &&
+                      endDetailPoint.length >= 2 &&
+                      endDetailPoint.length <= 10 &&
+                      difference.inMinutes >= 10) {
+                    await FirebaseCarpool.addDataToFirestore(
+                      selectedDate: _selectedDate,
+                      selectedTime: _selectedTime,
+                      startPoint: startPoint,
+                      endPoint: endPoint,
+                      endPointName: endPointName,
+                      startPointName: startPointName,
+                      selectedLimit: selectedLimit,
+                      selectedGender: selectedGender,
+                      memberID: uid,
+                      memberName: nickName,
+                      startDetailPoint: startPointInput.detailController.text,
+                      endDetailPoint: endPointInput.detailController.text,
+                    );
+
+                    ///TODO 채팅창으로 넘기기
+                    Nav.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainScreen()),
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('카풀 생성 실패'),
+                          content: const Text('요약주소는 2 ~ 10 글자로 작성해주세요.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('확인'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
                 child: '카풀 시작하기'.text.size(20).white.make(),
               ).p(20),

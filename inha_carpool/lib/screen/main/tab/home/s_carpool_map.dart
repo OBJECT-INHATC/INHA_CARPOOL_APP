@@ -137,25 +137,17 @@ class _CarpoolMapState extends State<CarpoolMap> {
               SizedBox(height: 30), // 간격 추가
               GestureDetector(
                 onTap: () async {
-                  DocumentSnapshot carpoolSnapshot = await FirebaseFirestore
-                      .instance
-                      .collection('carpool')
-                      .doc(widget.carId)
-                      .get();
-                  int nowMember = carpoolSnapshot['nowMember'];
-                  int maxMember = carpoolSnapshot['maxMember'];
 
                   String carId = widget.carId;
                   String memberID = uid;
                   String memberName = nickName;
-                  if (nowMember < maxMember) {
-                    await FirebaseCarpool.addMemberToCarpool(
-                        carId, memberID, memberName);
+
+                  await FirebaseCarpool.addMemberToCarpool(carId, memberID, memberName)
+                      .then((value) {
                     Navigator.pop(context);
-                    //메인스크린으로 리스트 새로고침
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => MainScreen()));
-                  } else {
+                    Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (context) => MainScreen()));
+                  }).catchError((error) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -175,7 +167,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                         );
                       },
                     );
-                  }
+                  });
                 },
                 child: Container(
                   height: screenHeight * 0.07,
