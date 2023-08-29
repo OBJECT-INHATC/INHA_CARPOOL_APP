@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:nav/nav.dart';
 import '../../service/sv_auth.dart';
 import '../dialog/d_auth_verification.dart';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 
 /// 0824 서은율 한승완
 /// 회원 가입 페이지
@@ -14,10 +16,8 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-
   final formKey = GlobalKey<FormState>();
 
-  /// 0825 서은율 TODO : 화면 비율 + 유효성 확인 + Alert 창 수정
 
   // 이메일
   String email = "";
@@ -32,7 +32,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String username = "";
 
   // 학교
-  String academy = "";
+  String academy = "@itc.ac.kr";
 
   // 로딩 여부
   bool isLoading = false;
@@ -40,6 +40,25 @@ class _RegisterPageState extends State<RegisterPage> {
   // 성별
   String? gender;
   var genders;
+
+  String passwordCheck = "";
+
+  var selectedIndex = 0;
+
+  List<Color> selectedBackgroundColors = [Colors.blue, Colors.green];
+  List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
+
+  void updateBackgroundColors() {
+    // 선택된 토글의 배경색을 변경
+    selectedBackgroundColors = selectedIndex == 0
+        ? [Colors.blue, Colors.white]
+        : [Colors.white, Colors.green];
+
+    // 선택되지 않은 토글의 배경색을 변경
+    unSelectedBackgroundColors = selectedIndex == 0
+        ? [Colors.white, Colors.green]
+        : [Colors.blue, Colors.white];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,37 +73,15 @@ class _RegisterPageState extends State<RegisterPage> {
                 key: formKey,
                 child: SingleChildScrollView(
                   child: Center(
+
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(15, 20, 40, 0),
-                          width: double.infinity,
 
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue[900]),
-                                  onPressed: () {
-                                    setState(() {
-                                      academy = "@itc.ac.kr";
-                                    });
-                                  },
-                                  child: const Text("인하공전")),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue[300]),
-                                  onPressed: () {
-                                    setState(() {
-                                      academy = "@inha.ac.kr";
-                                    });
-                                  },
-                                  child: const Text("인하대")),
-                            ],
-                          ),
+
+                      children: [
+                        const SizedBox(
+                          height: 180,
                         ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
@@ -92,31 +89,79 @@ class _RegisterPageState extends State<RegisterPage> {
                             alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
                             children: [
                               TextFormField(
-                                decoration: InputDecoration(
-                                  enabledBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black),
+                                  decoration: InputDecoration(
+                                    enabledBorder: const UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.black),
+                                    ),
+                                    focusedBorder: const UnderlineInputBorder(
+                                      borderSide:
+                                          BorderSide(color: Colors.blue),
+                                    ),
+                                    labelText: '학번',
                                   ),
-                                  focusedBorder: const UnderlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.blue),
-                                  ),
-                                  labelText: '학번',
-                                ),
-                                onChanged: (text) {
-                                  // 텍스트 필드 값 변경 시 실행할 코드 작성
-                                  email = text + academy;
-                                  print(email);
-                                },
-                              ),
-                              Positioned( // 중간 텍스트를 겹쳐서 배치
-                                right: 10,
+                                  onChanged: (text) {
+                                    // 텍스트 필드 값 변경 시 실행할 코드 작성
+                                    email = text + academy;
+                                  },
+                                  validator: (val) {
+                                    if (val!.isNotEmpty) {
+                                      return null;
+                                    } else {
+                                      return "학번이 비어있습니다.";
+                                    }
+                                  }),
+                              Positioned(
+                                // 중간 텍스트를 겹쳐서 배치
+                                right: 140,
                                 child: Text(academy),
+                              ),
+                              Positioned(
+                                // 중간 텍스트를 겹쳐서 배치
+                                right: 0,
+                                child: FlutterToggleTab(
+                                  width: 30,
+                                  borderRadius: 30,
+                                  height: 40,
+                                  // initialIndex: 0,
+                                  selectedTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700),
+                                  unSelectedTextStyle: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500),
+                                  labels: const ["인하공전", "인하대"],
+                                  selectedLabelIndex: (index) {
+                                    setState(() {
+                                      if (index == 0) {
+                                        academy = "@itc.ac.kr";
+                                      } else {
+                                        academy = "@inha.ac.kr";
+                                      }
+                                      selectedIndex = index;
+                                      updateBackgroundColors();
+                                    });
+                                  },
+                                  selectedBackgroundColors: const [
+                                    Colors.blue,
+                                    Colors.green
+                                  ],
+                                  unSelectedBackgroundColors: const [
+                                    Colors.white,
+                                    Colors.white
+                                  ],
+                                  isScroll: false,
+                                  selectedIndex: selectedIndex,
+                                ),
                               ),
                             ],
                           ),
                         ),
-
-
-
+                        const SizedBox(
+                          height: 15,
+                        ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: TextFormField(
@@ -143,6 +188,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             },
                           ),
                         ),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: TextFormField(
@@ -163,11 +211,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             },
                           ),
                         ),
+                        const SizedBox(
+                          height: 15,
+                        ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: TextFormField(
                             obscureText: true,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide:
                                     BorderSide(color: Colors.black), // 밑줄 색상 설정
@@ -177,18 +228,27 @@ class _RegisterPageState extends State<RegisterPage> {
                                     color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
                               ),
                               labelText: '비밀번호 확인',
+                              suffix: Text(passwordCheck,
+                                  style: (passwordCheck == "비밀번호가 일치하지 않습니다.")
+                                      ? TextStyle(color: Colors.red)
+                                      : TextStyle(color: Colors.green)),
                             ),
                             onChanged: (text) {
                               checkPassword = text;
-                            },
-                            validator: (val) {
-                              if (val != password) {
-                                return "비밀번호가 일치하지 않습니다.";
+                              if (password == checkPassword) {
+                                setState(() {
+                                  passwordCheck = "비밀번호가 일치합니다!";
+                                });
                               } else {
-                                return null;
+                                setState(() {
+                                  passwordCheck = "비밀번호가 일치하지 않습니다.";
+                                });
                               }
                             },
                           ),
+                        ),
+                        const SizedBox(
+                          height: 15,
                         ),
                         Container(
                           padding: const EdgeInsets.fromLTRB(15, 10, 40, 0),
@@ -203,7 +263,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                     genders = value;
                                     gender = value.toString();
                                   });
-
                                 },
                                 fillColor:
                                     MaterialStateProperty.all(Colors.blue),
@@ -224,97 +283,61 @@ class _RegisterPageState extends State<RegisterPage> {
                             ],
                           ),
                         ),
-                        // SizedBox(height: mediaHeight(context, 0.1)),
-                        // Container(
-                        //   padding: const EdgeInsets.fromLTRB(40, 10, 40, 20),
-                        //   child: Stack(
-                        //     children: [
-                        //       TextField(
-                        //         obscureText: true,
-                        //         decoration: const InputDecoration(
-                        //           enabledBorder: UnderlineInputBorder(
-                        //             borderSide: BorderSide(color: Colors.black),
-                        //           ),
-                        //           focusedBorder: UnderlineInputBorder(
-                        //             borderSide: BorderSide(color: Colors.blue),
-                        //           ),
-                        //           labelText: '인증 번호',
-                        //         ),
-                        //         onChanged: (text)async {
-                        //           // 텍스트 필드 값 변경 시 실행할 코드 작성
-                        //
-                        //
-                        //           print("인증 메일 전송");
-                        //         },
-                        //       ),
-                        //       Positioned(
-                        //         right: 2,
-                        //         child: ElevatedButton(
-                        //           style: ElevatedButton.styleFrom(
-                        //             backgroundColor: Colors.grey[200],
-                        //           ),
-                        //           onPressed: () {},
-                        //           child: const Text('확인',
-                        //               style: TextStyle(
-                        //                   fontSize: 12,
-                        //                   color: Colors.grey,
-                        //                   fontWeight: FontWeight.bold)),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-
+                        const SizedBox(
+                          height: 50,
+                        ),
                         Container(
-                          height: 80,
+                          height: context.height(0.09),
                           padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
                           child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 minimumSize: const Size.fromHeight(50),
-                                backgroundColor: Colors.grey[700],
+                                backgroundColor: Colors.blue[300],
                               ),
                               child: const Text('가입완료',
                                   style: TextStyle(
                                       fontSize: 20,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)),
-                              onPressed: () async{
-
-                                AuthService()
-                                    .registerUserWithEmailandPassword(username,
-                                        email, password, "dummy", gender!)
-                                    .then((value) async{
-                                  if (value == true) {
-                                    showSnackbar(context, Colors.green, "회원가입이 완료되었습니다. \n 메일 인증을 완료해주세요.");
-                                  }
-                                  else {
-                                    showSnackbar(context, Colors.red, value);
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                  }});
-
+                              onPressed: () async {
+                                if (passwordCheck != "비밀번호가 일치합니다!" ||
+                                    username == "" ||
+                                    email == "" ||
+                                    password == "" ||
+                                    gender == "") {
+                                  showSnackbar(context, Colors.red,
+                                      "정보가 올바르지 않습니다. 다시 확인해주세요.");
+                                } else {
+                                  AuthService()
+                                      .registerUserWithEmailandPassword(
+                                          username,
+                                          email,
+                                          password,
+                                          "dummy",
+                                          gender!)
+                                      .then((value) async {
+                                    if (value == true) {
+                                      await FirebaseAuth.instance.currentUser!
+                                          .sendEmailVerification();
+                                      Navigator.pop(context);
+                                      if (!mounted) return;
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (context) {
+                                          return VerificationDialog();
+                                        },
+                                      );
+                                    } else {
+                                      showSnackbar(context, Colors.red, value);
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                    }
+                                  });
+                                }
                               }),
                         ),
-                        Container(
-                          height: 80,
-                          padding: const EdgeInsets.fromLTRB(40, 20, 40, 20),
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                minimumSize: const Size.fromHeight(50),
-                                backgroundColor: Colors.grey[200],
-                              ),
-                              child: const Text('인증번호 전송',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: Colors.grey,
-                                      fontWeight: FontWeight.bold)),
-                              onPressed: () async{
-                                await FirebaseAuth.instance.currentUser!.sendEmailVerification();
-                                Nav.push(const VerificationDialog());
-                              }),
-                        ),
-
                       ],
                     ),
                   ),
@@ -341,6 +364,6 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
-
 }
+
+

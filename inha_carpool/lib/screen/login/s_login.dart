@@ -47,10 +47,10 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // 로그인 여부 확인
     checkLogin();
+
     super.initState();
   }
 
-  /// 0825 한승완 TODO : 로그인 화면 비율 구성
   @override
   Widget build(BuildContext context) {
     return isLoading
@@ -68,13 +68,15 @@ class _LoginPageState extends State<LoginPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Container(
+                        height: context.height(0.2),
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
                         child: FlutterLogo(
                           size: context.height(0.2),
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                        height: context.height(0.08),
+                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
                         child: TextFormField(
                           decoration: const InputDecoration(
 
@@ -94,7 +96,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Container(
-                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                        height: context.height(0.08),
+                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
                         child: TextFormField(
                           obscureText: true,
                           decoration: const InputDecoration(
@@ -114,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Container(
-                        height: 80,
+                        height: context.height(0.09),
                         padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -140,11 +143,12 @@ class _LoginPageState extends State<LoginPage> {
                                       key: "nickName",
                                       value: snapshot.docs[0].get("nickName"));
                                   storage.write(
-                                      key: "email",
-                                      value: snapshot.docs[0].get("email"));
+                                      key: "uid",
+                                      value: snapshot.docs[0].get("uid"));
                                   storage.write(
                                       key: "gender",
                                       value: snapshot.docs[0].get('gender'));
+
 
                                   if (context.mounted) {
                                     Navigator.push(
@@ -161,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                             }),
                       ),
                       Container(
-                        height: 40,
+                        height: context.height(0.04),
                         padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -179,9 +183,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 80),
+                        padding: EdgeInsets.only(top: context.height(0.1)),
                         child: Container(
-                          height: 80,
+                          height: context.height(0.09),
                           padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(

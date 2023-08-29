@@ -12,6 +12,7 @@ class VerificationDialog extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;//화면의 가로길이
 
     return  AlertDialog(//경고창
+        backgroundColor: null,
       insetPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),//경고창의 내부여백
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),//모서리 둥글게
       content: SizedBox(//경고창의 크기
@@ -77,7 +78,7 @@ class VerificationDialog extends StatelessWidget {
                 MaterialStateProperty.all(Colors.green.shade400),
               ),
               onPressed: () {
-                Navigator.pop(context);
+
                 Navigator.pop(context);
               },
               child: const Text('OK')),

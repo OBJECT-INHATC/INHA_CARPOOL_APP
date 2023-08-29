@@ -92,7 +92,12 @@ dependencies:
   permission_handler: ^10.4.3 #권한 핸들러
   app_settings: ^5.0.0 #어플 설정 열기
   http: ^1.1.0 #주소기반 서비스 api http 호출
-
+  flutter_toggle_tab: ^1.4.1
+  flutter_animate: ^4.2.0+1
+  animations: ^2.0.7
+  sembast: ^3.5.0+1 # 로컬 데이터베이스 관련 패키지
+  path_provider: ^2.0.5 # 로컬 데이터베이스 관련 패키지
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -37,9 +37,5 @@ T _tryConverting<T>(dynamic json) {
     default:
       throw Exception("Please check _tryConverting method");
   }
-  // switch (T) {
-  //   case ExampleVO:
-  //   default:
-  //     return ExampleVO.fromJson(json) as T;
-  // }
+
 }

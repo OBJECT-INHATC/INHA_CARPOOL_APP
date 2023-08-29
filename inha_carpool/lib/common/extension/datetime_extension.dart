@@ -9,6 +9,12 @@ extension DateTimeExtension on DateTime {
 
   String get formattedDateKo => DateFormat('yyyy년 mm월 dd일').format(this);
 
+  String get formattedDateCarpool => DateFormat('yyyy-mm-dd').format(this);
+
+  String get formattedDateMyCarpool => DateFormat('MM월 dd일 HH:mm').format(this);
+
+
+
 
   // 시간을 'HH:mm' 형식으로 포맷한 문자열 반환
   String get formattedTime => DateFormat('HH:mm').format(this);

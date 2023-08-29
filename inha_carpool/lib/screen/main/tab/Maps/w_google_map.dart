@@ -26,8 +26,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   final LatLng _startingPoint = const LatLng(37.4645862, 126.6803935);
 
-  LatLng? _currentPosition;
   LatLng? searchedPosition;
+  LatLng? _currentPosition;
   String? _currentAddress;
   String? _distanceToLocation;
   bool firstStep = false;
@@ -205,7 +205,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       ],
     );
   }
-
   void _getAddressFromLatLng() async {
     try {
       List<Placemark> placemarks = await placemarkFromCoordinates(

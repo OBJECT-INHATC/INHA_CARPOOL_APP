@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 
 import '../Colors/app_colors.dart';
@@ -6,6 +7,15 @@ import '../widget/w_tap.dart';
 
 
 extension SnackbarContextExtension on BuildContext {
+
+  void showSnackbarMaxmember(BuildContext context) {
+    _showSnackBarWithContext(
+      context,
+      _SnackbarFactory.createSnackBar(context, '방이 가득 찼습니다.'),
+    );
+  }
+
+
   ///Scaffold안에 Snackbar를 보여줍니다.
   void showSnackbar(String message, {Widget? extraButton}) {
     _showSnackBarWithContext(

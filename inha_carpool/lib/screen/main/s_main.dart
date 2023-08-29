@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/fragment/setting/f_setting.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
@@ -48,14 +49,15 @@ class MainScreenState extends State<MainScreen>
       onWillPop: _handleBackPressed,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor:  context.appColors.appBar,
-          title: 'titleSTR'.tr().text.make(),
+          backgroundColor: context.appColors.appBar,
+          title: 'titleSTR'.tr().text.white.make(),
           actions: [
             IconButton(
               icon: const Icon(
                 Icons.notifications_none,
                 size: 35,
-              ),
+                color: Colors.white,
+              ).animate().shake(duration: 1000.ms, hz: 5),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -64,15 +66,18 @@ class MainScreenState extends State<MainScreen>
               },
             ),
             IconButton(
-              icon: const Icon(Icons.settings, size: 35),
+              icon: const Icon(
+                Icons.settings,
+                size: 35,
+                color: Colors.white,
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => SettingPage()),
                 );
-
               },
-            ),
+            ).animate().shake(duration: 1000.ms, hz: 10),
           ],
         ),
         //바디를 하단 네비게이션 바 아래까지 확장
@@ -81,7 +86,7 @@ class MainScreenState extends State<MainScreen>
         drawer: const MenuDrawer(),
         body: Padding(
           padding: EdgeInsets.only(
-              bottom: extendBody ? 60 - bottomNavigationBarBorderRadius : 0),
+              bottom: extendBody ? 30 - bottomNavigationBarBorderRadius : 0),
           child: SafeArea(
             bottom: !extendBody,
             child: pages,
@@ -107,14 +112,17 @@ class MainScreenState extends State<MainScreen>
   //텝 내의서 뒤로 갈 수 있으면 해당 탭의 네비게이터를 이용, 아니면 홈으로 이동
   Future<bool> _handleBackPressed() async {
     final isFirstRouteInCurrentTab =
-        (await _currentTabNavigationKey.currentState?.maybePop() == false);
+    (await _currentTabNavigationKey.currentState?.maybePop() == false);
+
     if (isFirstRouteInCurrentTab) {
       if (_currentTab != TabItem.home) {
         _changeTab(tabs.indexOf(TabItem.home));
         return false;
+      } else {
+        // 뒤로가기 버튼을 눌렀을 때 로그인으로 이동 여부
+        return false;
       }
     }
-    // maybePop 가능하면 나가지 않는다.
     return isFirstRouteInCurrentTab;
   }
 
@@ -184,7 +192,8 @@ class MainScreenState extends State<MainScreen>
   void _handleOnTapNavigationBarItem(int index) {
     final oldTab = _currentTab;
     final targetTab = tabs[index];
-    if (oldTab == targetTab) { // 같은 탭인 경우
+    if (oldTab == targetTab) {
+      // 같은 탭인 경우
       final navigationKey = _currentTabNavigationKey;
       popAllHistory(navigationKey);
     }

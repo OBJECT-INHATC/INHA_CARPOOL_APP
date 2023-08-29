@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/f_mypage.dart';
 
-import 'Maps/f_map.dart';
 import 'PopUp/f_popup.dart';
 import 'carpool/f_carpool_list.dart';
 import 'home/f_home.dart';
