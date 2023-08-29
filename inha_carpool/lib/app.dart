@@ -1,11 +1,14 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
 
 import 'common/theme/custom_theme_app.dart';
+
+/// 0829 한승완 - FCM 기본 연결 및 알림 설정
 
 class App extends StatefulWidget {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -23,12 +26,15 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
 
   final storage = const FlutterSecureStorage();
 
-  /// 디바이스 토큰을 가져오는 함수
+  /// 장치의 Fcm 토큰을 가져와 로컬에 저장 하는 함수
   void getMyDeviceToken() async {
     FirebaseMessaging.instance.getToken().then((value){
-      print(value);
+      print("token : $value");
       storage.write(key: 'token', value: value.toString());
     });
+
+    /// 0830 한승완 TODO : 토큰을 Firebase 서버에 저장
+
   }
 
   //상태관리 옵저버 실행 + 디바이스 토큰 저장
@@ -37,6 +43,29 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     getMyDeviceToken();
+
+    /// 알림 수신 시 호출되는 콜백 함수
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      RemoteNotification? notification = message.notification;
+
+      if(notification != null){
+        final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+        await flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          const NotificationDetails(
+            android: AndroidNotificationDetails(
+              'high_importance_channel', // 알림 채널 ID
+              'high_importance_notification', // 알림 채널 이름
+              importance: Importance.max,
+              priority: Priority.high,
+            ),
+          ),
+        );
+      }
+    });
+
   }
 
   //클래스가 삭제될 때 옵저버 등록을 해제

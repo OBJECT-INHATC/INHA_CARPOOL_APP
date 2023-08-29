@@ -2,17 +2,79 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:inha_Carpool/firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:provider/provider.dart';
-
 import 'app.dart';
 import 'common/data/preference/app_preferences.dart';
 
+/// 0829 한승완 - FCM 기본 연결 및 알림 설정
+
+
+/// 현재 접속한 플랫폼이 웹인지 확인 => 웹 true, 모바일 false
+import 'package:flutter/foundation.dart'
+    show kIsWeb;
+
+/// 백그라운드 메시지 수신 호출 콜백 함수
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  if (message.notification != null) {
+
+  }
+  return;
+}
+
+/// 앱 실행 시 초기화 - 알림 설정
+void initializeNotification() async {
+
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  // Android용 알림 채널 생성
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(const AndroidNotificationChannel(
+    'high_importance_channel',
+    'high_importance_notification',
+    importance: Importance.max,
+  ));
+
+  DarwinInitializationSettings iosInitializationSettings =
+  const DarwinInitializationSettings(
+    requestAlertPermission: false,
+    requestBadgePermission: false,
+    requestSoundPermission: false,
+  );
+
+  // 플랫폼별 초기화 설정
+   InitializationSettings initializationSettings = InitializationSettings(
+    android: const AndroidInitializationSettings("@mipmap/ic_launcher"),
+    iOS: iosInitializationSettings, // IOS는 추후 아이디 구매해서 연결 해야함
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+
+  // 포그라운드 상태에서 알림을 받을 수 있도록 설정
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  // 알림 권한 요청
+  await FirebaseMessaging.instance.requestPermission(
+    alert: true,
+    announcement: true,
+    badge: true,
+    carPlay: true,
+    criticalAlert: true,
+    provisional: true,
+    sound: true,
+  );
+}
+
+
 void main() async {
-
-  /// 0828 한승완 TODO : FCM 기본 설정 추가
-
   //태 변화와 렌더링을 관리하는 바인딩 초기화 => 추 후 백그라운드 및 포어그라운드 상태관리에 따라 기능 리팩토링
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -28,6 +90,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  // 백그라운드 메시지 수신 호출 콜백 함수
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  // 알림 설정
+  initializeNotification();
+
   runApp(
       EasyLocalization(
         supportedLocales: const [Locale('en'), Locale('ko')],
@@ -40,3 +108,4 @@ void main() async {
         child: const App()),
       );
 }
+
