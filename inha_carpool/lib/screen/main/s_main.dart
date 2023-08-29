@@ -112,14 +112,17 @@ class MainScreenState extends State<MainScreen>
   //텝 내의서 뒤로 갈 수 있으면 해당 탭의 네비게이터를 이용, 아니면 홈으로 이동
   Future<bool> _handleBackPressed() async {
     final isFirstRouteInCurrentTab =
-        (await _currentTabNavigationKey.currentState?.maybePop() == false);
+    (await _currentTabNavigationKey.currentState?.maybePop() == false);
+
     if (isFirstRouteInCurrentTab) {
       if (_currentTab != TabItem.home) {
         _changeTab(tabs.indexOf(TabItem.home));
         return false;
+      } else {
+        // 뒤로가기 버튼을 눌렀을 때 로그인으로 이동 여부
+        return false;
       }
     }
-    // maybePop 가능하면 나가지 않는다.
     return isFirstRouteInCurrentTab;
   }
 

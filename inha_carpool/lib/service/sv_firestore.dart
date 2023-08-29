@@ -14,6 +14,10 @@ class FireStoreService {
   final CollectionReference userCollection =
   FirebaseFirestore.instance.collection("users");
 
+  /// CollectionReference - Carpool Collection
+  final CollectionReference carpoolCollection =
+  FirebaseFirestore.instance.collection("carpool");
+
   final User? user = FirebaseAuth.instance.currentUser;
 
   /// 0824 서은율
@@ -39,5 +43,69 @@ class FireStoreService {
 
   }
 
+  /// 0828 한승완
+  /// 특정 시점 이후의 채팅 메시지 스트림 가져오기
+  getChatsAfterSpecTime(String carId, int time) async {
+    return carpoolCollection
+        .doc(carId)
+        .collection("messages")
+        .orderBy("time")
+        .startAfter([time])
+        .snapshots();
+  }
+
+  /// 0828 한승완
+  /// 채팅 메시지 스트림 가져오기
+  getChats(String carId) async {
+    return carpoolCollection
+        .doc(carId)
+        .collection("messages")
+        .orderBy("time")
+        .snapshots();
+  }
+
+  /// 0828 한승완
+  /// 그룹 관리자 가져오기
+  Future getGroupAdmin(String carId) async {
+    DocumentReference d = carpoolCollection.doc(carId);
+    DocumentSnapshot documentSnapshot = await d.get();
+    return documentSnapshot['admin'];
+  }
+
+  /// 0828 한승완
+  /// 메시지 전송
+  sendMessage(String carId, Map<String, dynamic> chatMessageData) async {
+    carpoolCollection.doc(carId).collection("messages").add(chatMessageData);
+
+    // DocumentSnapshot carpoolSnapshot = await carpoolCollection.doc(groupId).get();
+    // List<dynamic> members = carpoolSnapshot['members'];
+    // List tokenList = [];
+    // String token = '';
+    //
+    // for (var member in members) {
+    //   token = member.substring(member.indexOf('-') + 1);
+    //   if (token != myToken) {
+    //     tokenList.add(token);
+    //   }
+    //   token = '';
+    // }
+    //
+    // for(var token in tokenList) {
+    //   print(token);
+    // }
+    // FcmService().sendMessage(
+    //     groupName: groupName,
+    //     tokenList: tokenList,
+    //     title: "New Message in $groupName",
+    //     body: "${chatMessageData['sender']} : ${chatMessageData['message']}",
+    //     chatMessage: ChatMessage(
+    //       groupId: groupId,
+    //       message: chatMessageData['message'],
+    //       sender: chatMessageData['sender'],
+    //       time: chatMessageData['time'],
+    //     )
+    // );
+
+  }
 
 }

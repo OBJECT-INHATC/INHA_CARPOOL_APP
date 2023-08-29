@@ -218,11 +218,6 @@ class _RecruitPageState extends State<RecruitPage> {
                   fixedSize: MaterialStateProperty.all(Size(200, 30)), // 버튼 크기
                 ),
                 onPressed: () async {
-                  // TODO: 카풀 시작하기 버튼을 눌렀을 때의 동작 추가
-                  // TODO: 1. 카풀 생성
-                  // Todo: 2. 전체 카풀 조회(리스트)
-                  // TODO: 3. 카풀 참여하기
-                  // Todo: 4. 내가 참여한 카풀 조회
                   await FirebaseCarpool.addDataToFirestore(
                     selectedDate: _selectedDate,
                     selectedTime: _selectedTime,

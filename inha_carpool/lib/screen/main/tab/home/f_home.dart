@@ -6,7 +6,6 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/s_masterroom.dart';
 
 import '../../../../common/util/carpool.dart';
 import '../../../recruit/s_recruit.dart';
@@ -167,11 +166,21 @@ class _HomeState extends State<Home> {
 
                             if(carpoolData['members'].contains(currentUser)){ // 이미 참여한 경우
                               if(carpoolData['admin'] == currentUser) { // 방장인 경우
-                                Nav.push(MasterChatroomPage());
+                                Nav.push(
+                                  /// 김영재 TODO : 이거 MasterPage 삭제되어서 로직 변경해야함 일단 같은 채팅으로 이동하게 했음
+                                    ChatroomPage(
+                                  carId: carpoolData['carId'],
+                                  groupName: '카풀 네임',
+                                  userName: nickName,
+                                ));
                                 print('현재 유저: $currentUser');
                                 print(carpoolData['members']);
                               } else {
-                                Nav.push(ChatroomPage());
+                                Nav.push(ChatroomPage(
+                                  carId: carpoolData['carId'],
+                                  groupName: '카풀 네임',
+                                  userName: nickName,
+                                ));
                               }
                             } else {
                               // 참여하기로
