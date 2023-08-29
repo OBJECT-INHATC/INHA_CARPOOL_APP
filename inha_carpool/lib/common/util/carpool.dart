@@ -125,10 +125,14 @@ class FirebaseCarpool {
           return;
         }
         // 최대 인원 초과하지 않는 경우, 멤버 추가 및 nowMember 업데이트
-        transaction.update(carpoolDocRef, {
-          'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
-          'nowMember': FieldValue.increment(1),
-        });
+        int nowMember = carpoolSnapshot['nowMember'];
+        int maxMember = carpoolSnapshot['maxMember'];
+        if(nowMember < maxMember){
+          transaction.update(carpoolDocRef, {
+            'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
+            'nowMember': FieldValue.increment(1),
+          });
+        }
 
       // 0828 한승완 삭제 : 메시지
       // CollectionReference membersCollection =
