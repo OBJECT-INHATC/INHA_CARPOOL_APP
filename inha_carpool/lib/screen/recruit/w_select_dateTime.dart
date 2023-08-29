@@ -17,11 +17,11 @@ class DateTimePickerWidget extends StatefulWidget {
 }
 
 class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
-      bool _isTimePicker = false;
+  bool _isTimePicker = false;
 
   @override
   void initState() {
-    if(widget.label == "시간") _isTimePicker = true;
+    if (widget.label == "시간") _isTimePicker = true;
     super.initState();
   }
 
@@ -30,82 +30,104 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          showCupertinoModalPopup(
+          showModalBottomSheet(
+            backgroundColor: Colors.white,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             context: context,
             builder: (BuildContext context) {
               return SizedBox(
                 height: 300,
                 child: _isTimePicker
-                    ? CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.time,
-                  initialDateTime: widget.selectedDateTime,
-                  onDateTimeChanged: (DateTime newTime) {
-                    setState(() {
-                      widget.onDateTimeChanged(newTime);
-                    });
-                  },
-                )
-                    : CupertinoDatePicker(
-                  mode: CupertinoDatePickerMode.date,
-                  initialDateTime: widget.selectedDateTime,
-                  minimumDate: DateTime(2023),
-                  maximumDate: DateTime(2099),
-                  onDateTimeChanged: (DateTime newDate) {
-                    setState(() {
-                      widget.onDateTimeChanged(newDate);
-                    });
-                  },
-                ),
+                    ? SizedBox(
+                        height: 250,
+                        child: CupertinoTheme(
+                          data: const CupertinoThemeData(
+                            textTheme: CupertinoTextThemeData(
+                              dateTimePickerTextStyle: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                          child: CupertinoDatePicker(
+                            mode: CupertinoDatePickerMode.time,
+                            initialDateTime: widget.selectedDateTime,
+                            onDateTimeChanged: (DateTime newTime) {
+                              setState(() {
+                                widget.onDateTimeChanged(newTime);
+                              });
+                            },
+                          ),
+                        ),
+                      )
+                    : CupertinoTheme(
+                        data: const CupertinoThemeData(
+                          textTheme: CupertinoTextThemeData(
+                            dateTimePickerTextStyle:
+                                TextStyle(color: Colors.black, fontSize: 20),
+                          ),
+                        ),
+                        child: CupertinoDatePicker(
+                          mode: CupertinoDatePickerMode.date,
+                          initialDateTime: widget.selectedDateTime,
+                          minimumYear: DateTime.now().year,
+                          maximumYear: DateTime.now().year,
+                          onDateTimeChanged: (DateTime newDate) {
+                            setState(() {
+                              widget.onDateTimeChanged(newDate);
+                            });
+                          },
+                        )),
               );
             },
           );
         },
         child: Container(
-          margin: EdgeInsets.fromLTRB(0, 15, 0, 15),
-          decoration: BoxDecoration(
-              border: Border(
-                  right: BorderSide(color: Colors.grey, width: 0.5))),
+          margin: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+          decoration: const BoxDecoration(
+              border:
+                  Border(right: BorderSide(color: Colors.grey, width: 0.5))),
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 15),
                 child: Text(
                   widget.label,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 15,
                   ),
                 ),
               ),
               _isTimePicker
                   ? Text(
-                widget.selectedDateTime.hour > 12 ? '오후' : '오전',
-                style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                ),
-              )
+                      widget.selectedDateTime.hour > 12 ? '오후' : '오전',
+                      style: const TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
                   : Text(
-                widget.selectedDateTime.year.toString(),
-                style: TextStyle(
-                  fontSize: 19,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+                      widget.selectedDateTime.year.toString(),
+                      style: const TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
               _isTimePicker
                   ? Text(
-                "${widget.selectedDateTime.hour > 12 ? (widget.selectedDateTime.hour - 12).toString().padLeft(2, '0') : widget.selectedDateTime.hour.toString().padLeft(2, '0')}:"
-                    "${widget.selectedDateTime.minute.toString().padLeft(2, '0')}",
-                style: TextStyle(
-                  fontSize: 40,
-                ),
-              )
+                      "${widget.selectedDateTime.hour > 12 ? (widget.selectedDateTime.hour - 12).toString().padLeft(2, '0') : widget.selectedDateTime.hour.toString().padLeft(2, '0')}:"
+                      "${widget.selectedDateTime.minute.toString().padLeft(2, '0')}",
+                      style: const TextStyle(
+                        fontSize: 40,
+                      ),
+                    )
                   : Text(
-                "${widget.selectedDateTime.month.toString().padLeft(2, '0')}."
-                    "${widget.selectedDateTime.day.toString().padLeft(2, '0')}",
-                style: TextStyle(
-                  fontSize: 40,
-                ),
-              ),
+                      "${widget.selectedDateTime.month.toString().padLeft(2, '0')}."
+                      "${widget.selectedDateTime.day.toString().padLeft(2, '0')}",
+                      style: const TextStyle(
+                        fontSize: 40,
+                      ),
+                    ),
             ],
           ),
         ),
