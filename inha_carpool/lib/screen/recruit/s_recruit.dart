@@ -217,13 +217,29 @@ class _RecruitPageState extends State<RecruitPage> {
                   // 버튼 배경색
                   fixedSize: MaterialStateProperty.all(Size(200, 30)), // 버튼 크기
                 ),
+
+                ///카풀 시작하기 버튼
                 onPressed: () async {
                   String startDetailPoint = _startPointDetailController.text;
                   String endDetailPoint = _endPointDetailController.text;
+
+                  // 현재 시간과 선택된 날짜와 시간의 차이 계산
+                  DateTime currentTime = DateTime.now();
+                  DateTime selectedDateTime = DateTime(
+                    _selectedDate.year,
+                    _selectedDate.month,
+                    _selectedDate.day,
+                    _selectedTime.hour,
+                    _selectedTime.minute,
+                  );
+                  Duration difference =
+                      selectedDateTime.difference(currentTime);
+
                   if (startDetailPoint.length >= 2 &&
                       startDetailPoint.length <= 10 &&
                       endDetailPoint.length >= 2 &&
-                      endDetailPoint.length <= 10) {
+                      endDetailPoint.length <= 10 &&
+                      difference.inMinutes >= 10) {
                     await FirebaseCarpool.addDataToFirestore(
                       selectedDate: _selectedDate,
                       selectedTime: _selectedTime,
@@ -238,7 +254,10 @@ class _RecruitPageState extends State<RecruitPage> {
                       startDetailPoint: startPointInput.detailController.text,
                       endDetailPoint: endPointInput.detailController.text,
                     );
-                    Navigator.push(
+
+                    ///TODO 채팅창으로 넘기기
+                    Nav.pop(context);
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(builder: (context) => MainScreen()),
                     );
