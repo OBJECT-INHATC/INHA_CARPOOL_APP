@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
@@ -138,6 +139,8 @@ class _LoginPageState extends State<LoginPage> {
                                   .then((value) async {
                                 if (value == true) {
                                   QuerySnapshot snapshot = await FireStoreService().gettingUserData(email);
+
+                                  getMyDeviceToken();
 
                                   storage.write(
                                       key: "nickName",

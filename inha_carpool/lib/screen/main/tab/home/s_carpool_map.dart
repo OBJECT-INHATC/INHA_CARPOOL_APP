@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../common/util/carpool.dart';
 import '../../s_main.dart';
@@ -41,6 +42,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
   late String uid = "";
   late String gender = "";
 
+  String? token = "";
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +55,11 @@ class _CarpoolMapState extends State<CarpoolMap> {
     );
     _getCurrentLocation();
     _loadUserData();
+    _getLocalToken();
+  }
+
+  _getLocalToken() async {
+    token = await storage.read(key: "token");
   }
 
   Future<void> _loadUserData() async {
@@ -148,14 +156,13 @@ class _CarpoolMapState extends State<CarpoolMap> {
                   String carId = widget.carId;
                   String memberID = uid;
                   String memberName = nickName;
-                  if (nowMember < maxMember) {
-                    await FirebaseCarpool.addMemberToCarpool(
-                        carId, memberID, memberName);
+
+                  await FirebaseCarpool.addMemberToCarpool(carId, memberID, memberName, token!)
+                      .then((value) {
                     Navigator.pop(context);
-                    //메인스크린으로 리스트 새로고침
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => MainScreen()));
-                  } else {
+                    Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (context) => MainScreen()));
+                  }).catchError((error) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -175,7 +182,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                         );
                       },
                     );
-                  }
+                  });
                 },
                 child: Container(
                   height: screenHeight * 0.07,
