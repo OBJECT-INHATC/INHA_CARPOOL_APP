@@ -10,7 +10,7 @@ import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
 import '../../fragment/f_notification.dart';
-import '../../fragment/setting/f_setting.dart';
+import '../../screen/setting/f_setting.dart';
 
 class RecruitPage extends StatefulWidget {
   RecruitPage({super.key});
