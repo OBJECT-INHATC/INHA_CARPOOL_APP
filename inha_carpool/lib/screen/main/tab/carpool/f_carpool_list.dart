@@ -110,7 +110,8 @@ class _CarpoolListState extends State<CarpoolList> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ChatroomPage(
+                          builder: (context) =>
+                              ChatroomPage(
                               carId: carpool['carId'],
                               groupName: '카풀네임',
                               userName: nickName
