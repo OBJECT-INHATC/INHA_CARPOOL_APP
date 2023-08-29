@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/profile.dart';
-//신고하기 import 'package:inha_Carpool/screen/';
-import 'package:inha_Carpool/screen/login/s_login.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class MyPage extends StatefulWidget {
