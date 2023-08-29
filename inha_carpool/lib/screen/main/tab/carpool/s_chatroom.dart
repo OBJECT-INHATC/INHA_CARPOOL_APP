@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
   TextEditingController messageController = TextEditingController();
 
   /// 스크롤 컨트롤러
-  /// 0829 서은율 TODO : 채팅 스크롤 컨트롤러를 이용해서 로컬 메시지만 있을때도 스크롤이 하단으로 가지게 설정
   late ScrollController _scrollController;
 
   /// 로컬 저장소 SS
@@ -355,6 +355,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
     );
   }
 
+
   /// 채팅 메시지 스트림
   chatMessages() {
     return StreamBuilder(
@@ -373,7 +374,10 @@ class _ChatroomPageState extends State<ChatroomPage> {
           List<ChatMessage> fireStoreChats = snapshot.data!.docs
               .map<ChatMessage>((e) => ChatMessage.fromMap(e.data() as Map<String, dynamic>, widget.carId))
               .toList();
+          if(localChats != null) {
 
+            fireStoreChats.addAll(localChats!);
+          }
           // itemCount가 변경되었을 때 스크롤 위치를 조정
           if (fireStoreChats.length > previousItemCount) {
             previousItemCount = fireStoreChats.length;
@@ -387,9 +391,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
             ChatDao().saveChatMessages(fireStoreChats);
           }
 
-          if(localChats != null) {
-            fireStoreChats.addAll(localChats!);
-          }
+
 
           fireStoreChats.sort((a, b) => a.time.compareTo(b.time));
 
@@ -398,14 +400,45 @@ class _ChatroomPageState extends State<ChatroomPage> {
             controller: _scrollController,
             itemCount: fireStoreChats.length,
             itemBuilder: (context, index) {
-              return MessageTile(
-                message: fireStoreChats[index].message,
-                sender: fireStoreChats[index].sender,
-                messageType: widget.userName == fireStoreChats[index].sender
-                    ? MessageType.me
-                    : (fireStoreChats[index].sender == 'service'
-                    ? MessageType.service
-                    : MessageType.other),
+              final currentChat = fireStoreChats[index]; // 현재 채팅 메시지
+              final previousChat = index > 0 ? fireStoreChats[index - 1] : null; // 이전 채팅 메시지
+
+              // 채팅에 포함된 시간을 DateTime으로 변환
+              final currentDate = DateTime.fromMillisecondsSinceEpoch(currentChat.time);
+              final previousDate =
+              // 이전 채팅 메시지가 있을 경우에만 변환
+              previousChat != null ? DateTime.fromMillisecondsSinceEpoch(previousChat.time) : null;
+
+              // 날짜 변환 체크
+
+              bool isNewDay = false;
+              if (previousDate == null ||
+                  currentDate.day != previousDate.day ||
+                  currentDate.month != previousDate.month ||
+                  currentDate.year != previousDate.year) {
+                isNewDay = true;}
+              return Column(
+                children: [
+                  // 날짜 헤더
+                  if (isNewDay)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "${currentDate.year}-${currentDate.month}-${currentDate.day}",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ),
+                  MessageTile(
+                    message: fireStoreChats[index].message,
+                    sender: fireStoreChats[index].sender,
+                    messageType: widget.userName == fireStoreChats[index].sender
+                        ? MessageType.me
+                        : (fireStoreChats[index].sender == 'service'
+                        ? MessageType.service
+                        : MessageType.other),
+                    time : fireStoreChats[index].time,
+                  ),
+                ],
               );
             },
           );
