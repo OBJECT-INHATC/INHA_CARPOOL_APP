@@ -62,6 +62,7 @@ class MessageTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
       alignment: alignment,
+
       child: Container(
         padding: EdgeInsets.symmetric(vertical: verticalPadding, horizontal: 16),
         decoration: BoxDecoration(

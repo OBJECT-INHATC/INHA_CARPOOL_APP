@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +10,6 @@ import 'package:inha_Carpool/service/sv_firestore.dart';
 /// 0828 서은율, 한승완
 /// 채팅방 페이지 - 채팅방 정보 표시, 채팅 메시지 스트림, 메시지 입력, 메시지 전송
 class ChatroomPage extends StatefulWidget {
-
   /// 0829 서은율 TODO : 채팅방 페이지 최적화 고민 해볼 것
 
   final String carId;
@@ -21,9 +19,9 @@ class ChatroomPage extends StatefulWidget {
   /// 생성자
   const ChatroomPage(
       {Key? key,
-        required this.carId,
-        required this.groupName,
-        required this.userName})
+      required this.carId,
+      required this.groupName,
+      required this.userName})
       : super(key: key);
 
   @override
@@ -31,7 +29,6 @@ class ChatroomPage extends StatefulWidget {
 }
 
 class _ChatroomPageState extends State<ChatroomPage> {
-
   /// 채팅 메시지 스트림
   Stream<QuerySnapshot>? chats;
 
@@ -56,18 +53,20 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
   @override
   void initState() {
+    getChatandAdmin();
 
-    getChatandAdmin(); /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
-    getCurrentUserandToken(); /// 토큰, 사용자 Auth 정보 호출
+    /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
+    getCurrentUserandToken();
+
+    /// 토큰, 사용자 Auth 정보 호출
 
     super.initState();
-    _scrollController = ScrollController(); /// 스크롤 컨트롤러 초기화
+    _scrollController = ScrollController();
 
+    /// 스크롤 컨트롤러 초기화
   }
 
-
   getLocalChat() async {
-
     print(widget.carId);
 
     await ChatDao().getChatbyCarIdSortedByTime(widget.carId).then((val) {
@@ -78,15 +77,16 @@ class _ChatroomPageState extends State<ChatroomPage> {
   }
 
   /// 로컬 채팅 메시지 , 채팅 메시지 스트림, 관리자 이름 호출 메서드
-  getChatandAdmin() async{
-
+  getChatandAdmin() async {
     await getLocalChat();
     print(localChats!.length);
 
     if (localChats != null && localChats!.isNotEmpty) {
       final lastLocalChat = localChats?[localChats!.length - 1];
 
-      FireStoreService().getChatsAfterSpecTime(widget.carId, lastLocalChat!.time).then((val) {
+      FireStoreService()
+          .getChatsAfterSpecTime(widget.carId, lastLocalChat!.time)
+          .then((val) {
         setState(() {
           chats = val;
         });
@@ -110,7 +110,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
   String getName(String res) {
     return res.substring(res.indexOf("_") + 1);
   }
-
 
   /// 토큰, 사용자 Auth 정보 호출 메서드
   getCurrentUserandToken() async {
@@ -139,6 +138,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 // 1. 상단 바: 채팅방 정보 표시
                 Container(
                   decoration: BoxDecoration(
+                    // color: Colors.grey[300],
+
                     border: Border.all(color: Colors.black, width: 1),
                     borderRadius: BorderRadius.all(Radius.circular(20.0)),
                   ),
@@ -264,8 +265,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                   },
                                   style: TextButton.styleFrom(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(0), // 직각 모서리로 설정
+                                      borderRadius: BorderRadius.circular(
+                                          0), // 직각 모서리로 설정
                                     ),
                                     backgroundColor:
                                         Colors.grey[300], // 연한 그레이 색상
@@ -280,8 +281,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                   },
                                   style: TextButton.styleFrom(
                                     shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(0), // 직각 모서리로 설정
+                                      borderRadius: BorderRadius.circular(
+                                          0), // 직각 모서리로 설정
                                     ),
                                     backgroundColor:
                                         Colors.grey[300], // 연한 그레이 색상
@@ -301,27 +302,43 @@ class _ChatroomPageState extends State<ChatroomPage> {
             Expanded(
               child: Stack(
                 children: <Widget>[
-
                   /// 채팅 메시지 스트림
                   chatMessages(),
                   Container(
                     alignment: Alignment.bottomCenter,
                     width: MediaQuery.of(context).size.width,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
                       width: MediaQuery.of(context).size.width,
-                      color: Colors.grey[700],
+                      height: 70,
+                      color: Colors.grey[600],
                       child: Row(children: [
                         Expanded(
                             child: TextFormField(
-                              controller: messageController,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: const InputDecoration(
-                                hintText: "Send a message...",
-                                hintStyle: TextStyle(color: Colors.white, fontSize: 16),
-                                border: InputBorder.none,
-                              ),
-                            )),
+                          cursorColor: Colors.white,
+                          controller: messageController,
+                          style: const TextStyle(color: Colors.white),
+                          decoration: const InputDecoration(
+                            hintText: "메시지 보내기",
+                            hintStyle:
+                                TextStyle(color: Colors.white, fontSize: 16),
+                            filled: true,
+                            fillColor: Colors.grey,
+
+                            border: InputBorder.none,
+                            // fillColor: Colors.white,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30.0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(30.0)),
+                            ),
+                          ),
+                        )),
                         const SizedBox(
                           width: 12,
                         ),
@@ -338,9 +355,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             ),
                             child: const Center(
                                 child: Icon(
-                                  Icons.send,
-                                  color: Colors.white,
-                                )),
+                              Icons.send,
+                              color: Colors.white,
+                            )),
                           ),
                         )
                       ]),
@@ -354,7 +371,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
       ),
     );
   }
-
 
   /// 채팅 메시지 스트림
   chatMessages() {
@@ -370,19 +386,19 @@ class _ChatroomPageState extends State<ChatroomPage> {
         }
 
         if (snapshot.hasData) {
-
           List<ChatMessage> fireStoreChats = snapshot.data!.docs
-              .map<ChatMessage>((e) => ChatMessage.fromMap(e.data() as Map<String, dynamic>, widget.carId))
+              .map<ChatMessage>((e) => ChatMessage.fromMap(
+                  e.data() as Map<String, dynamic>, widget.carId))
               .toList();
-          if(localChats != null) {
-
+          if (localChats != null) {
             fireStoreChats.addAll(localChats!);
           }
           // itemCount가 변경되었을 때 스크롤 위치를 조정
           if (fireStoreChats.length > previousItemCount) {
             previousItemCount = fireStoreChats.length;
             WidgetsBinding.instance?.addPostFrameCallback((_) {
-              _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+              _scrollController
+                  .jumpTo(_scrollController.position.maxScrollExtent);
             });
           }
 
@@ -390,8 +406,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
           if (fireStoreChats.isNotEmpty) {
             ChatDao().saveChatMessages(fireStoreChats);
           }
-
-
 
           fireStoreChats.sort((a, b) => a.time.compareTo(b.time));
 
@@ -401,13 +415,17 @@ class _ChatroomPageState extends State<ChatroomPage> {
             itemCount: fireStoreChats.length,
             itemBuilder: (context, index) {
               final currentChat = fireStoreChats[index]; // 현재 채팅 메시지
-              final previousChat = index > 0 ? fireStoreChats[index - 1] : null; // 이전 채팅 메시지
+              final previousChat =
+                  index > 0 ? fireStoreChats[index - 1] : null; // 이전 채팅 메시지
 
               // 채팅에 포함된 시간을 DateTime으로 변환
-              final currentDate = DateTime.fromMillisecondsSinceEpoch(currentChat.time);
+              final currentDate =
+                  DateTime.fromMillisecondsSinceEpoch(currentChat.time);
               final previousDate =
-              // 이전 채팅 메시지가 있을 경우에만 변환
-              previousChat != null ? DateTime.fromMillisecondsSinceEpoch(previousChat.time) : null;
+                  // 이전 채팅 메시지가 있을 경우에만 변환
+                  previousChat != null
+                      ? DateTime.fromMillisecondsSinceEpoch(previousChat.time)
+                      : null;
 
               // 날짜 변환 체크
 
@@ -416,27 +434,28 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   currentDate.day != previousDate.day ||
                   currentDate.month != previousDate.month ||
                   currentDate.year != previousDate.year) {
-                isNewDay = true;}
+                isNewDay = true;
+              }
               return Column(
                 children: [
                   // 날짜 헤더
                   if (isNewDay)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      "${currentDate.year}-${currentDate.month}-${currentDate.day}",
-                      style: TextStyle(color: Colors.grey),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "${currentDate.year}-${currentDate.month}-${currentDate.day}",
+                        style: TextStyle(color: Colors.grey),
+                      ),
                     ),
-                  ),
                   MessageTile(
                     message: fireStoreChats[index].message,
                     sender: fireStoreChats[index].sender,
                     messageType: widget.userName == fireStoreChats[index].sender
                         ? MessageType.me
                         : (fireStoreChats[index].sender == 'service'
-                        ? MessageType.service
-                        : MessageType.other),
-                    time : fireStoreChats[index].time,
+                            ? MessageType.service
+                            : MessageType.other),
+                    time: fireStoreChats[index].time,
                   ),
                 ],
               );
@@ -474,7 +493,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
       });
     }
   }
-
 }
 
 // 프로필 조회
@@ -506,5 +524,3 @@ void _showProfileModal(BuildContext context, String userName) {
     },
   );
 }
-
-
