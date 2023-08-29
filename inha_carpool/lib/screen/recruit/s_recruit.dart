@@ -218,24 +218,49 @@ class _RecruitPageState extends State<RecruitPage> {
                   fixedSize: MaterialStateProperty.all(Size(200, 30)), // 버튼 크기
                 ),
                 onPressed: () async {
-                  await FirebaseCarpool.addDataToFirestore(
-                    selectedDate: _selectedDate,
-                    selectedTime: _selectedTime,
-                    startPoint: startPoint,
-                    endPoint: endPoint,
-                    endPointName: endPointName,
-                    startPointName: startPointName,
-                    selectedLimit: selectedLimit,
-                    selectedGender: selectedGender,
-                    memberID: uid,
-                    memberName: nickName,
-                    startDetailPoint: startPointInput.detailController.text,
-                    endDetailPoint: endPointInput.detailController.text,
-                  );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => MainScreen()),
-                  );
+                  String startDetailPoint = _startPointDetailController.text;
+                  String endDetailPoint = _endPointDetailController.text;
+                  if (startDetailPoint.length >= 2 &&
+                      startDetailPoint.length <= 10 &&
+                      endDetailPoint.length >= 2 &&
+                      endDetailPoint.length <= 10) {
+                    await FirebaseCarpool.addDataToFirestore(
+                      selectedDate: _selectedDate,
+                      selectedTime: _selectedTime,
+                      startPoint: startPoint,
+                      endPoint: endPoint,
+                      endPointName: endPointName,
+                      startPointName: startPointName,
+                      selectedLimit: selectedLimit,
+                      selectedGender: selectedGender,
+                      memberID: uid,
+                      memberName: nickName,
+                      startDetailPoint: startPointInput.detailController.text,
+                      endDetailPoint: endPointInput.detailController.text,
+                    );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MainScreen()),
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('카풀 생성 실패'),
+                          content: const Text('요약주소는 2 ~ 10 글자로 작성해주세요.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('확인'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
                 child: '카풀 시작하기'.text.size(20).white.make(),
               ).p(20),
