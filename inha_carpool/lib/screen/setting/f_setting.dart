@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:inha_Carpool/fragment/setting/w_switch_menu.dart';
+import 'package:inha_Carpool/screen/setting/w_switch_menu.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 import 'package:nav/nav.dart';
