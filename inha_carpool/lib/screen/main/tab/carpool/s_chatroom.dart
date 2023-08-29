@@ -51,14 +51,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
   int previousItemCount = 0;
 
-  bool canSendMessage = true;
-  int maxMessageCount = 50;
-
-  int messageCount = 0; // 채팅 메시지 카운트 변수 추가
-  DateTime? lastMessageTime;
-
-
-
   @override
   void initState() {
     getChatandAdmin();
@@ -311,15 +303,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
               child: Stack(
                 children: <Widget>[
                   /// 채팅 메시지 스트림
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-
-                    ),
-
-                    child: chatMessages(),
-                  ),
-
+                  chatMessages(),
                   Container(
                     alignment: Alignment.bottomCenter,
                     width: MediaQuery.of(context).size.width,
@@ -334,14 +318,11 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             child: TextFormField(
                           cursorColor: Colors.white,
                           controller: messageController,
-                          style:  TextStyle(color: Colors.white),
-                          enabled: messageCount < maxMessageCount ,
-                          decoration:  InputDecoration(
-                            hintText: messageCount < maxMessageCount ? "메시지를 입력하세요" : "10초 후에 다시 입력 가능합니다.",
-
-
+                          style: const TextStyle(color: Colors.white),
+                          decoration: const InputDecoration(
+                            hintText: "메시지 보내기",
                             hintStyle:
-                            messageCount < maxMessageCount ?TextStyle(color: Colors.white,fontSize: 16):TextStyle(color: Colors.red,fontSize: 16),
+                                TextStyle(color: Colors.white, fontSize: 16),
                             filled: true,
                             fillColor: Colors.grey,
 
@@ -488,7 +469,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   }
 
   sendMessage() {
-    if (messageController.text.isNotEmpty&& canSendMessage) {
+    if (messageController.text.isNotEmpty) {
       /// 전달할 메시지 Map 생성
       Map<String, dynamic> chatMessageMap = {
         "message": messageController.text,
@@ -509,35 +490,10 @@ class _ChatroomPageState extends State<ChatroomPage> {
       setState(() {
         /// 메시지 입력 컨트롤러 초기화
         messageController.clear();
-        lastMessageTime = DateTime.now();
-        messageCount += 1;
-        canSendMessage =false;
-        print(messageCount);
-
-        Future.delayed(Duration(seconds: (messageCount >=maxMessageCount)?10 :0), () {
-          setState(() {
-            canSendMessage = true;
-
-
-
-          });
-        });
-        checkForInactivity();
-      });
-
-    }
-
-  }
-  void checkForInactivity() async {
-    await Future.delayed(Duration(seconds:5));
-    if(DateTime.now().difference(lastMessageTime!).inSeconds >=5){
-      setState((){
-        messageCount=0;
       });
     }
   }
 }
-
 
 // 프로필 조회
 void _showProfileModal(BuildContext context, String userName) {
