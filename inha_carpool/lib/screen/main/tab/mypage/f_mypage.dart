@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/fragment/f_notification.dart';
-import 'package:inha_Carpool/fragment/setting/f_setting.dart';
+import 'package:inha_Carpool/screen/setting/f_setting.dart';
 //신고하기 import 'package:inha_Carpool/screen/';
 import 'package:inha_Carpool/screen/login/s_login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
