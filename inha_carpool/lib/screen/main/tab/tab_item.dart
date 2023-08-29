@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/f_mypage.dart';
 
 import 'Maps/f_map.dart';
 import 'PopUp/f_popup.dart';
@@ -9,7 +10,7 @@ import 'home/f_home.dart';
 enum TabItem {
   carpool(Icons.directions_car, '카풀', CarpoolList()),
   home(Icons.home, 'Home', Home()),
-  myPage(Icons.person, 'My', GoogleMapsApp());
+  myPage(Icons.person, 'My', MyPage());
 
   final IconData activeIcon;
   final IconData inActiveIcon;
