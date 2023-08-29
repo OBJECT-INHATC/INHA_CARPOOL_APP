@@ -11,7 +11,7 @@ enum MessageType {
   service,
 }
 
-/// TODO: 0828 서은율 - 메시지 타일 위젯 디자인,시간 날짜
+
 /// MessageTile 위젯 - 채팅 메시지 UI 위젯
 class MessageTile extends StatelessWidget {
   final String message;
@@ -30,7 +30,7 @@ class MessageTile extends StatelessWidget {
   }) : super(key: key);
 
 
-  /// 0829 서은율 TODO : 메시지 타일 위젯의 최적화 고민 + 간단한 디자인 수정
+  /// 0829 서은율 TODO : 메시지 타일 위젯의 최적화 고민
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +44,12 @@ class MessageTile extends StatelessWidget {
     switch (messageType) {
       case MessageType.me: //내가 보낸 메시지
         alignment = Alignment.centerRight;
-        bubbleColor = Theme.of(context).primaryColor;
+        bubbleColor = Colors.blue[900]!;
         verticalPadding = 10.0; // 기본 패딩 값
         break;
       case MessageType.other: //상대가 보낸 메시지
         alignment = Alignment.centerLeft;
-        bubbleColor = Colors.grey[700]!;
+        bubbleColor = Colors.grey[400]!;
         verticalPadding = 10.0; // 기본 패딩 값
         break;
       case MessageType.service: //서비스가 보낸 메시지
@@ -88,6 +88,7 @@ class MessageTile extends StatelessWidget {
               message,
               style: const TextStyle(fontSize: 16, color: Colors.white),
             ),
+
             Text(
               formattedTime, // 시간 표시
               style: const TextStyle(
