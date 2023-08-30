@@ -11,7 +11,7 @@ import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
 import '../../fragment/f_notification.dart';
-import '../../screen/setting/f_setting.dart';
+import '../../fragment/setting/f_setting.dart';
 
 class RecruitPage extends StatefulWidget {
   RecruitPage({super.key});
@@ -63,19 +63,6 @@ class _RecruitPageState extends State<RecruitPage> {
 
   String selectedLimit = '2인'; // 선택된 제한인원 초기값
   String selectedGender = '무관'; // 선택된 성별 초기값
-
-  /// 주소 입력 오류 확인
-  bool isAddressValid(String detailPoint) {
-    return detailPoint.length >= 2 && detailPoint.length <= 10;
-  }
-
-  /// 시간 입력 오류 확인
-  bool isTimeValid(Duration difference) {
-    return difference.inMinutes >= 10;
-  }
-
-  /// 카풀 시작하기 버튼 활성화 여부
-  bool isButtonDisabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +218,6 @@ class _RecruitPageState extends State<RecruitPage> {
                   // 버튼 배경색
                   fixedSize: MaterialStateProperty.all(Size(200, 30)), // 버튼 크기
                 ),
-
                 //카풀 시작하기 버튼
                 onPressed: isButtonDisabled
                     ? null
@@ -304,7 +290,7 @@ class _RecruitPageState extends State<RecruitPage> {
                         });
                       },
                 child: '카풀 시작하기'.text.size(20).white.make(),
-              ).p(70),
+              ).p(20),
             ),
           ],
         ),
@@ -318,47 +304,5 @@ class _RecruitPageState extends State<RecruitPage> {
         startPoint = location;
       });
     });
-  }
-
-  // 주소 입력 오류 알림창
-  Future<void> _showAddressAlertDialog(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('카풀 생성 실패'),
-          content: const Text('요약주소는 2 ~ 10 글자로 작성해주세요.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('확인'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  // 시간 입력 오류 알림창
-  Future<void> _showTimeAlertDialog(BuildContext context) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('카풀 생성 실패'),
-          content: const Text('카풀을 생성하기 위한 시간은 현재 시간으로부터 10분 이후여야 합니다.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('확인'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }
