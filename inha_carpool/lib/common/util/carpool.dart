@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/service/sv_firestore.dart';
 
 class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -66,6 +68,8 @@ class FirebaseCarpool {
       selectedTime.hour,
       selectedTime.minute,
     );
+
+    String? token = await storage.read(key: "token");
     int dateAsInt = combinedDateTime.millisecondsSinceEpoch;
 
     try {
@@ -93,6 +97,8 @@ class FirebaseCarpool {
         'endDetailPoint': endDetailPoint,
       });
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
+      /// 0830 한승완 추가 : carId의 Token 저장
+      await FireStoreService().saveToken( token! , carpoolDocRef.id);
 
       // 0828 한승완 삭제 : 메시지
       // CollectionReference membersCollection =
@@ -110,40 +116,51 @@ class FirebaseCarpool {
 
   ///카풀 참가
   static Future<void> addMemberToCarpool(
-      String carpoolID, String memberID, String memberName) async {
-    CollectionReference carpoolCollection = _firestore.collection('carpool');
-    DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
+      String carpoolID, String memberID, String memberName, String token) async {
+    try {
+      CollectionReference carpoolCollection = _firestore.collection('carpool');
+      DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
 
-    // 트랜잭션 시작
-    await _firestore.runTransaction((transaction) async {
-      DocumentSnapshot carpoolSnapshot = await transaction.get(carpoolDocRef);
+      // 트랜잭션 시작
+      await _firestore.runTransaction((transaction) async {
+        DocumentSnapshot carpoolSnapshot = await transaction.get(carpoolDocRef);
 
-      if (!carpoolSnapshot.exists) {
-        // 카풀 정보가 없는 경우 처리
-        print('해당 카풀이 존재하지 않습니다.');
-        return;
-      }
-      // 최대 인원 초과하지 않는 경우, 멤버 추가 및 nowMember 업데이트
-      int nowMember = carpoolSnapshot['nowMember'];
-      int maxMember = carpoolSnapshot['maxMember'];
-      if (nowMember < maxMember) {
-        transaction.update(carpoolDocRef, {
-          'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
-          'nowMember': FieldValue.increment(1),
-        });
-        print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');
-      } else {
-        throw Exception('현재멤버 초과');
-      }
-      // 0828 한승완 삭제 : 메시지
-      // CollectionReference membersCollection =
-      //     carpoolDocRef.collection('messages');
-      // await membersCollection.add({
-      //   'memberID': '${memberID}_${memberName}',
-      //   'joinedDate': DateTime.now(),
-      // });
-    });
+        if (!carpoolSnapshot.exists) {
+          // 카풀 정보가 없는 경우 처리
+          print('해당 카풀이 존재하지 않습니다.');
+          return;
+        }
+        // 최대 인원 초과하지 않는 경우, 멤버 추가 및 nowMember 업데이트
+        int nowMember = carpoolSnapshot['nowMember'];
+        int maxMember = carpoolSnapshot['maxMember'];
+        if(nowMember < maxMember){
+          transaction.update(carpoolDocRef, {
+            'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
+            'nowMember': FieldValue.increment(1),
+          });
+          /// 0830 한승완 추가 : carId + Token 저장
+          FireStoreService().saveToken(
+            token,
+            carpoolID,
+          );
+        }
+
+        // 0828 한승완 삭제 : 메시지
+        // CollectionReference membersCollection =
+        //     carpoolDocRef.collection('messages');
+        // await membersCollection.add({
+        //   'memberID': '${memberID}_${memberName}',
+        //   'joinedDate': DateTime.now(),
+        // });
+      });
+
+      print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');
+    } catch (e) {
+      print('카풀에 유저 추가 실패');
+    }
   }
+
+
 
   ///거리순 조회
   static Future<List<DocumentSnapshot>> nearByCarpool(

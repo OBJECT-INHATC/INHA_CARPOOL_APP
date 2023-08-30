@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:inha_Carpool/app.dart';
 import 'package:inha_Carpool/common/Colors/app_colors.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
@@ -9,7 +8,6 @@ import 'package:inha_Carpool/common/extension/datetime_extension.dart';
 
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
-import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 
 import '../../../../common/constants.dart';
 
@@ -65,40 +63,13 @@ class _CarpoolListState extends State<CarpoolList> {
       future: _loadCarpools(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return Center(
+              child:
+                  CircularProgressIndicator()); // Loading indicator while waiting
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return SafeArea(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  '참가하고 계신 카풀이 없습니다.\n카풀을 등록해보세요!'
-                      .text
-                      .size(20)
-                      .bold
-                      .color(context.appColors.text)
-                      .align(TextAlign.center)
-                      .make(),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  FloatingActionButton(
-                    heroTag: "recruit_from_myCarpool",
-                    elevation: 4,
-                    backgroundColor: context.appColors.appBar,
-                    onPressed: () {
-                      Nav.push(RecruitPage());
-                    },
-                    child: '+'.text.size(50).color(Colors.white).make(),
-                  ),
-                ],
-              ),
-            ),
-          );
+          return Text('No carpools available.');
         } else {
           List<DocumentSnapshot> myCarpools = snapshot.data!;
 
@@ -139,10 +110,12 @@ class _CarpoolListState extends State<CarpoolList> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => ChatroomPage(
+                          builder: (context) =>
+                              ChatroomPage(
                               carId: carpool['carId'],
                               groupName: '카풀네임',
-                              userName: nickName)),
+                              userName: nickName
+                          )),
                     );
                   },
                   child: Card(
