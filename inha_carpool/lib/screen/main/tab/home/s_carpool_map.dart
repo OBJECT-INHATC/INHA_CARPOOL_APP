@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../common/util/carpool.dart';
 import '../../s_main.dart';
@@ -41,6 +42,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
   late String uid = "";
   late String gender = "";
 
+  String? token = "";
+
   @override
   void initState() {
     super.initState();
@@ -52,6 +55,11 @@ class _CarpoolMapState extends State<CarpoolMap> {
     );
     _getCurrentLocation();
     _loadUserData();
+    _getLocalToken();
+  }
+
+  _getLocalToken() async {
+    token = await storage.read(key: "token");
   }
 
   Future<void> _loadUserData() async {
@@ -137,12 +145,19 @@ class _CarpoolMapState extends State<CarpoolMap> {
               SizedBox(height: 30), // 간격 추가
               GestureDetector(
                 onTap: () async {
+                  DocumentSnapshot carpoolSnapshot = await FirebaseFirestore
+                      .instance
+                      .collection('carpool')
+                      .doc(widget.carId)
+                      .get();
+                  int nowMember = carpoolSnapshot['nowMember'];
+                  int maxMember = carpoolSnapshot['maxMember'];
 
                   String carId = widget.carId;
                   String memberID = uid;
                   String memberName = nickName;
 
-                  await FirebaseCarpool.addMemberToCarpool(carId, memberID, memberName)
+                  await FirebaseCarpool.addMemberToCarpool(carId, memberID, memberName, token!)
                       .then((value) {
                     Navigator.pop(context);
                     Navigator.pushReplacement(
