@@ -30,6 +30,7 @@ class MessageTile extends StatelessWidget {
   }) : super(key: key);
 
 
+  /// 0829 서은율 TODO : 메시지 타일 위젯의 최적화 고민 + 간단한 디자인 수정
 
   @override
   Widget build(BuildContext context) {
@@ -68,18 +69,11 @@ class MessageTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           color: bubbleColor,
         ),
-        child:
-            ///0830 서은율 : 메시지를 보낸 주체가 서비스일 때와 아닐때 분리
-        (messageType == MessageType.service)? Container(child: Text(message ,style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          letterSpacing: -1,
-        ),)) :Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-
+            if (messageType != MessageType.service)
               Text(
                 sender.toUpperCase(),
                 style: const TextStyle(
