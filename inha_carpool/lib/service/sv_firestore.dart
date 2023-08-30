@@ -78,6 +78,16 @@ class FireStoreService {
     DocumentSnapshot documentSnapshot = await d.get();
     return documentSnapshot['admin'];
   }
+  ///0830 서은율
+  ///카풀 참가시 유저 입장 메시지 전송
+  Future sendEntryMessage(String carId, String userName) async {
+    Map<String, dynamic> chatMessageMap = {
+      "message": "$userName님이 입장하였습니다.",
+      "sender": 'service',
+      "time": DateTime.now().millisecondsSinceEpoch,
+    };
+    return carpoolCollection.doc(carId).collection("messages").add(chatMessageMap);
+  }
 
   /// 0828 한승완
   /// 메시지 전송
@@ -107,6 +117,7 @@ class FireStoreService {
     );
 
   }
+
 
   /// 0829 한승완 - 서버에 Fcm 토큰 저장
   Future saveToken(String token, String carId) async {
