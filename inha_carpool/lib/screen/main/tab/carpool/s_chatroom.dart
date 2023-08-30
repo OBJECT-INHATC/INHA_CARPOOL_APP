@@ -38,6 +38,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   /// 메시지 입력 컨트롤러
   TextEditingController messageController = TextEditingController();
 
+  
   /// 스크롤 컨트롤러
   late ScrollController _scrollController;
 
