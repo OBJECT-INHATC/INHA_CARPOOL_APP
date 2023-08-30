@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
@@ -51,19 +52,26 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
   int previousItemCount = 0;
 
+  // 멤버 리스트
+  List<dynamic>? membersList;
+
   @override
   void initState() {
     getChatandAdmin();
-
     /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
-    getCurrentUserandToken();
 
+    getCurrentUserandToken();
     /// 토큰, 사용자 Auth 정보 호출
+
+    getMembersList();
+    /// 멤버 리스트 호출
 
     super.initState();
     _scrollController = ScrollController();
 
     /// 스크롤 컨트롤러 초기화
+
+
   }
 
   getLocalChat() async {
@@ -117,188 +125,147 @@ class _ChatroomPageState extends State<ChatroomPage> {
     token = (await storage.read(key: "token"))!;
   }
 
+  // 멤버 리스트 가져오기
+  getMembersList() async {
+    await FireStoreService().getMembersList(widget.carId).then((val) {
+      setState(() {
+        membersList = val;
+      });
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
+    // 디바이스 사이즈 가져오기
+    double deviceWidth = context.width(1);
+    double deviceHeight = context.height(1);
+    double topBarHeight = deviceHeight * 0.2;
+
     return SafeArea(
       child: Scaffold(
-        /// TODO : 김수현, 김영재 - 상단 카풀 내용 불러오기 및 UI 수정
         appBar: AppBar(
           backgroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.black),
           title: Text(
-            '07.26/16:00 주안역-인하공전',
+            widget.groupName, // 채팅방 이름
             style: TextStyle(color: Colors.black),
           ),
         ),
         body: Column(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 1. 상단 바: 채팅방 정보 표시
-                Container(
-                  decoration: BoxDecoration(
-                    // color: Colors.grey[300],
-
-                    border: Border.all(color: Colors.black, width: 1),
-                    borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                  ),
-                  padding: EdgeInsets.all(20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // 좌측 column
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              _showProfileModal(context, '홀란드 님');
-                            },
-                            style: TextButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              backgroundColor: Colors.blueAccent,
-                              padding: const EdgeInsets.all(10.0),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.flag, color: Colors.white),
-                                Text(
-                                  '홀란드 님',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              _showProfileModal(context, '흐비챠크바르헬리아 님');
-                            },
-                            style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                backgroundColor: Colors.blueAccent,
-                                padding: const EdgeInsets.all(10.0)),
-                            child: Text(
-                              '흐비챠크바르헬리아 님',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              _showProfileModal(context, '카리나 님');
-                            },
-                            style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                backgroundColor: Colors.redAccent,
-                                padding: const EdgeInsets.all(10.0)),
-                            child: Text(
-                              '카리나 님',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      // 우측
-                      Expanded(
-                          child: Column(
-                        children: [
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  child: Text(
-                                    "주안역",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[400],
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(40.0)),
-                                  ),
-                                ),
-                                Icon(Icons.arrow_forward),
-                                Container(
-                                  child: Text(
-                                    "인하공전",
-                                    style: TextStyle(fontSize: 20),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[400],
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(70.0)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: Text(
-                              "출발시간 : 07.26/16:00",
-                              style: TextStyle(fontSize: 20),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton(
-                                  onPressed: () {
-                                    // 확정 버튼 동작
-                                  },
-                                  style: TextButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          0), // 직각 모서리로 설정
-                                    ),
-                                    backgroundColor:
-                                        Colors.grey[300], // 연한 그레이 색상
-                                  ),
-                                  child: Text('확정'),
-                                ),
-                                SizedBox(width: 20), // 20 픽셀의 간격
-                                TextButton(
-                                  onPressed: () {
-                                    // 카풀 종료 버튼 동작
-                                    Navigator.pop(context);
-                                  },
-                                  style: TextButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          0), // 직각 모서리로 설정
-                                    ),
-                                    backgroundColor:
-                                        Colors.grey[300], // 연한 그레이 색상
-                                  ),
-                                  child: Text('방나가기'),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )),
-                    ],
-                  ),
+              Container(
+                height: topBarHeight,
+                decoration: BoxDecoration(
+                  color: Colors.white54,
+                  border: Border.all(color: Colors.black, width: 1),
                 ),
-              ],
-            ),
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        alignment: Alignment.centerLeft,
+                        child: ListView.builder(
+                          itemCount: membersList?.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            String memberName = getName(membersList?[index]); // 회원 이름을 가져오는 부분입니다.
+
+                            return TextButton(
+                              onPressed: () {
+                                _showProfileModal(context, '$memberName 님');
+                              },
+                              style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15)),
+                                backgroundColor: admin == memberName ? Colors.blue : Colors.grey,
+                                // 방장인 경우 파란색, 아닌 경우 회색
+                                padding: const EdgeInsets.all(10.0),
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    '$memberName 님',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    // 우측
+                    Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    child: Text(
+                                      "주안역",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[400],
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(40.0)),
+                                    ),
+                                  ),
+                                  Icon(Icons.arrow_forward),
+                                  Container(
+                                    child: Text(
+                                      "인하공전",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[400],
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(70.0)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: Text(
+                                "출발시간 : 07.26/16:00",
+                                style: TextStyle(fontSize: 18),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            Container(
+                              child: TextButton(
+                                onPressed: () {
+                                  // 카풀 종료 버튼 동작
+                                  Navigator.pop(context);
+                                },
+                                style: TextButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        0), // 직각 모서리로 설정
+                                  ),
+                                  backgroundColor:
+                                      Colors.grey[300], // 연한 그레이 색상
+                                ),
+                                child: Text('방나가기'),
+                              ),
+                              ),
+                          ],
+                    )),
+                  ],
+                ),
+              ),
             Expanded(
               child: Stack(
                 children: <Widget>[

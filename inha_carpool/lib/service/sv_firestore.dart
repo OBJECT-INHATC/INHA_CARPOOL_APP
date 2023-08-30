@@ -108,4 +108,11 @@ class FireStoreService {
 
   }
 
+
+  getMembersList(String carId) async {
+    DocumentReference d = carpoolCollection.doc(carId);
+    DocumentSnapshot documentSnapshot = await d.get();
+    return documentSnapshot['members'];
+  }
+
 }
