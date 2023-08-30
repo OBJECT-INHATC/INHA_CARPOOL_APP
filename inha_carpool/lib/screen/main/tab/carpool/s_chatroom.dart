@@ -51,8 +51,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
   User? user;
 
   int previousItemCount = 0;
-  bool canSend = true;
-
 
   // 멤버 리스트
   List<dynamic>? membersList;
@@ -438,7 +436,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   }
 
   sendMessage() {
-    if (messageController.text.isNotEmpty && canSend) {
+    if (messageController.text.isNotEmpty) {
       /// 전달할 메시지 Map 생성
       Map<String, dynamic> chatMessageMap = {
         "message": messageController.text,
@@ -459,12 +457,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
       setState(() {
         /// 메시지 입력 컨트롤러 초기화
         messageController.clear();
-        canSend = false;
-      });
-      Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          canSend = true;
-        });
       });
     }
   }
