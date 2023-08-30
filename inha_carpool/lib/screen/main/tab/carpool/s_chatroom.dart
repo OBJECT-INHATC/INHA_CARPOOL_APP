@@ -94,7 +94,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
         });
       });
     } else {
-      FireStoreService().getChatsAfterSpecTime(widget.carId, DateTime.now().millisecondsSinceEpoch).then((val) {
+      FireStoreService().getChats(widget.carId).then((val) {
         setState(() {
           chats = val;
         });

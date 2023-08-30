@@ -92,39 +92,28 @@ class FireStoreService {
   /// 0828 한승완
   /// 메시지 전송
   sendMessage(String carId, Map<String, dynamic> chatMessageData) async {
-    final carpoolDocRef = carpoolCollection.doc(carId);
+    carpoolCollection.doc(carId).collection("messages").add(chatMessageData);
+    var myToken = FirebaseMessaging.instance.getToken();
 
-    // 최근 메시지 정보 업데이트
-    await carpoolDocRef.update({
-      "recentMessage": chatMessageData['message'],
-      "recentMessageSender": chatMessageData['sender'],
-      "recentMessageTime": chatMessageData['time'].toString(),
-    });
-
-    // 사용자 FCM 토큰 get
-    var myToken = await FirebaseMessaging.instance.getToken();
-
-    // 다른 유저의 FCM 토큰 get
     QuerySnapshot tokensSnapshot = await fcmTokensCollection.where("carId", isEqualTo: carId).get();
-    List<String> tokenList = tokensSnapshot.docs.map((doc) => doc['token'] as String).toList();
+    List tokenList = [];
 
-    // 본인 토큰 제거
-    tokenList.remove(myToken);
+    for(var token in tokensSnapshot.docs) {
+      tokenList.add(token['token']);
+    }
 
-    // 채팅 메시지 저장
-    await carpoolDocRef.collection("messages").add(chatMessageData);
+    tokenList.remove(await myToken);
 
-    // FCM 메시지 전송
     FcmService().sendMessage(
-      tokenList: tokenList,
-      title: "새로운 채팅이 도착했습니다.",
-      body: "${chatMessageData['sender']} : ${chatMessageData['message']}",
-      chatMessage: ChatMessage(
-        carId: carId,
-        message: chatMessageData['message'],
-        sender: chatMessageData['sender'],
-        time: chatMessageData['time'],
-      ),
+        tokenList: tokenList,
+        title: "새로운 채팅이 도착했습니다.",
+        body: "${chatMessageData['sender']} : ${chatMessageData['message']}",
+        chatMessage: ChatMessage(
+          carId: carId,
+          message: chatMessageData['message'],
+          sender: chatMessageData['sender'],
+          time: chatMessageData['time'],
+        )
     );
 
   }
