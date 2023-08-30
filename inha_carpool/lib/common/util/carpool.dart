@@ -97,8 +97,9 @@ class FirebaseCarpool {
         'endDetailPoint': endDetailPoint,
       });
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
+
       /// 0830 한승완 추가 : carId의 Token 저장
-      await FireStoreService().saveToken( token! , carpoolDocRef.id);
+      await FireStoreService().saveToken(token!, carpoolDocRef.id);
 
       // 0828 한승완 삭제 : 메시지
       // CollectionReference membersCollection =
@@ -115,8 +116,8 @@ class FirebaseCarpool {
   }
 
   ///카풀 참가
-  static Future<void> addMemberToCarpool(
-      String carpoolID, String memberID, String memberName, String token) async {
+  static Future<void> addMemberToCarpool(String carpoolID, String memberID,
+      String memberName, String token) async {
     try {
       CollectionReference carpoolCollection = _firestore.collection('carpool');
       DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
@@ -133,11 +134,12 @@ class FirebaseCarpool {
         // 최대 인원 초과하지 않는 경우, 멤버 추가 및 nowMember 업데이트
         int nowMember = carpoolSnapshot['nowMember'];
         int maxMember = carpoolSnapshot['maxMember'];
-        if(nowMember < maxMember){
+        if (nowMember < maxMember) {
           transaction.update(carpoolDocRef, {
             'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
             'nowMember': FieldValue.increment(1),
           });
+
           /// 0830 한승완 추가 : carId + Token 저장
           FireStoreService().saveToken(
             token,
@@ -159,8 +161,6 @@ class FirebaseCarpool {
       print('카풀에 유저 추가 실패');
     }
   }
-
-
 
   ///거리순 조회
   static Future<List<DocumentSnapshot>> nearByCarpool(

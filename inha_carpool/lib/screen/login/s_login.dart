@@ -131,6 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
                               minimumSize: const Size.fromHeight(50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(90.0),
@@ -160,6 +161,10 @@ class _LoginPageState extends State<LoginPage> {
                                   storage.write(
                                       key: "gender",
                                       value: snapshot.docs[0].get('gender'));
+                                  storage.write(
+                                      key: "email",
+                                      value: snapshot.docs[0].get('email'));
+
 
 
                                   if (context.mounted) {
