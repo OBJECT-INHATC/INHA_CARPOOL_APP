@@ -25,38 +25,41 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
           padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
           child: '성별'.text.size(20).bold.align(TextAlign.left).make(),
         ),
-        Row(
-          children: [
-            Container(
-              margin: EdgeInsets.fromLTRB(30, 0, 12, 0),
-              child: TextButton(
-                onPressed: () {
-                  widget.onGenderSelected('남자');
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: widget.selectedGender == '남자'
-                      ? Colors.lightBlue
-                      : Colors.grey,
+        Container(
+          width: double.infinity,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                child: TextButton(
+                  onPressed: () {
+                    widget.onGenderSelected('남자');
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: widget.selectedGender == '남자'
+                        ? Colors.lightBlue
+                        : Colors.grey,
+                  ),
+                  child: '남자'.text.white.size(17).make(),
                 ),
-                child:
-                '남자'.text.white.size(17).make(),
               ),
-            ),
-            Container(
-              margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: TextButton(
-                onPressed: () {
-                  widget.onGenderSelected('여자');
-                },
-                style: TextButton.styleFrom(
-                  backgroundColor: widget.selectedGender == '여자'
-                      ? Colors.lightBlue
-                      : Colors.grey,
+              Container(
+                margin: EdgeInsets.fromLTRB(0, 0, 30, 0),
+                child: TextButton(
+                  onPressed: () {
+                    widget.onGenderSelected('여자');
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: widget.selectedGender == '여자'
+                        ? Colors.lightBlue
+                        : Colors.grey,
+                  ),
+                  child: '여자'.text.white.size(17).make(),
                 ),
-                child: '여자'.text.white.size(17).make(),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Container(
           width: double.infinity,
@@ -70,8 +73,7 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                   ? Colors.lightBlue
                   : Colors.grey,
             ),
-            child:
-            '무관'.text.white.size(17).make(),
+            child: '무관'.text.white.size(17).make(),
           ),
         ),
       ],
