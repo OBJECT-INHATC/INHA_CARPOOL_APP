@@ -25,7 +25,6 @@ class _HomeState extends State<Home> {
 
   late LatLng myPoint = LatLng(0, 0);
   late Future<List<DocumentSnapshot>> carPoolList = Future.value([]);
-
   late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
   late String gender = "";
@@ -39,8 +38,6 @@ class _HomeState extends State<Home> {
     _loadUserData();
     //  carPoolList = FirebaseCarpool.getCarpoolsWithMember("hoon");
   } // Null 허용
-
-
 
   Future<void> _loadUserData() async {
     nickName = await storage.read(key: "nickName") ?? "";
@@ -225,17 +222,11 @@ class _HomeState extends State<Home> {
                                       radius: 40,
                                       backgroundColor: context.appColors.appBar,
                                       child: FittedBox(
-                                        child: Container(  // Wrap the Text with a Container to control its size
-                                          padding: EdgeInsets.all(8.0),  // Add some padding to the text
                                           child: Text(
-                                            '${carpoolData['startDetailPoint']}',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                              '${carpoolData['startDetailPoint']}',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 20))),
                                     ),
                                     Column(
                                       children: [
