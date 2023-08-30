@@ -22,7 +22,8 @@ class RecruitPage extends StatefulWidget {
 
 class _RecruitPageState extends State<RecruitPage> {
   var _selectedDate = DateTime.now(); // 날짜 값 초기화
-  var _selectedTime = DateTime.now(); // 시간 값 초기화
+  var _selectedTime =
+      DateTime.now().add(const Duration(minutes: 15)); // 시간 값 초기화 (현재시간 + 15분)
   //인하대 후문 cu
   LatLng endPoint = LatLng(37.4514982, 126.6570261);
 
@@ -260,12 +261,18 @@ class _RecruitPageState extends State<RecruitPage> {
                         if (!isAddressValid(startDetailPoint) ||
                             !isAddressValid(endDetailPoint)) {
                           _showAddressAlertDialog(context);
+                          setState(() {
+                            isButtonDisabled = false;
+                          });
                           return;
                         }
 
                         /// 시간 입력 오류 알림창
                         if (!isTimeValid(difference)) {
                           _showTimeAlertDialog(context);
+                          setState(() {
+                            isButtonDisabled = false;
+                          });
                           return;
                         }
 

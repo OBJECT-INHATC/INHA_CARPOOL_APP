@@ -40,8 +40,6 @@ class _HomeState extends State<Home> {
     //  carPoolList = FirebaseCarpool.getCarpoolsWithMember("hoon");
   } // Null 허용
 
-
-
   Future<void> _loadUserData() async {
     nickName = await storage.read(key: "nickName") ?? "";
     uid = await storage.read(key: "uid") ?? "";
@@ -76,11 +74,13 @@ class _HomeState extends State<Home> {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
+          heroTag: "recruit_from_home",
+          elevation: 4,
           backgroundColor: Colors.white,
           onPressed: () {
             Nav.push(RecruitPage());
           },
-          child: '+'.text.color(Colors.lightBlue).size(350).make(),
+            child: '+'.text.size(50).color(context.appColors.appBar).make(),
         ),
         body: Column(
           children: [
@@ -167,10 +167,13 @@ class _HomeState extends State<Home> {
 
                             String currentUser = '${uid}_$nickName';
 
-                            if(carpoolData['members'].contains(currentUser)){ // 이미 참여한 경우
-                              if(carpoolData['admin'] == currentUser) { // 방장인 경우
+                            if (carpoolData['members'].contains(currentUser)) {
+                              // 이미 참여한 경우
+                              if (carpoolData['admin'] == currentUser) {
+                                // 방장인 경우
                                 Nav.push(
-                                  /// 김영재 TODO : 이거 MasterPage 삭제되어서 로직 변경해야함 일단 같은 채팅으로 이동하게 했음
+
+                                    /// 김영재 TODO : 이거 MasterPage 삭제되어서 로직 변경해야함 일단 같은 채팅으로 이동하게 했음
                                     ChatroomPage(
                                   carId: carpoolData['carId'],
                                   groupName: '카풀 네임',
@@ -187,13 +190,15 @@ class _HomeState extends State<Home> {
                               }
                             } else {
                               // 참여하기로
-                              if (nowMember < maxMember) { // 현재 인원이 최대 인원보다 작을 때
+                              if (nowMember < maxMember) {
+                                // 현재 인원이 최대 인원보다 작을 때
                                 Nav.push(
                                   CarpoolMap(
                                     startPoint: LatLng(
                                         carpoolData['startPoint'].latitude,
                                         carpoolData['startPoint'].longitude),
-                                    startPointName: carpoolData['startPointName'],
+                                    startPointName:
+                                        carpoolData['startPointName'],
                                     startTime: formattedTime,
                                     carId: carpoolData['carId'],
                                     admin: carpoolData['admin'],
@@ -209,8 +214,7 @@ class _HomeState extends State<Home> {
                             margin: EdgeInsets.symmetric(
                                 vertical: 15, horizontal: 20),
                             shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                  width: 2, color: borderColor),
+                              side: BorderSide(width: 2, color: borderColor),
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -225,8 +229,10 @@ class _HomeState extends State<Home> {
                                       radius: 40,
                                       backgroundColor: context.appColors.appBar,
                                       child: FittedBox(
-                                        child: Container(  // Wrap the Text with a Container to control its size
-                                          padding: EdgeInsets.all(8.0),  // Add some padding to the text
+                                        child: Container(
+                                          // Wrap the Text with a Container to control its size
+                                          padding: EdgeInsets.all(8.0),
+                                          // Add some padding to the text
                                           child: Text(
                                             '${carpoolData['startDetailPoint']}',
                                             style: TextStyle(
