@@ -12,21 +12,11 @@ class ProFile extends StatefulWidget {
 
 class _ProFileState extends State<ProFile> {
   final storage = FlutterSecureStorage();
-  late Future<String?> nickNameFuture;
-  late Future<String?> uidFuture;
-  late Future<String?> genderFuture;
-  late Future<String?> emailFuture;
+  late Future<String> nickNameFuture;
+  late Future<String> uidFuture;
+  late Future<String> genderFuture;
+  late Future<String> emailFuture;
   late TextEditingController _nameController;
-
-  Future<void> _loadUserData() async {
-    nickNameFuture = Future.value(await storage.read(key: "nickName") ?? "");
-    uidFuture = Future.value(await storage.read(key: "uid") ?? "");
-    genderFuture = Future.value(await storage.read(key: "gender") ?? "");
-    emailFuture = Future.value(await storage.read(key: "email") ?? "");
-
-    _nameController = TextEditingController();
-  }
-
 
   @override
   void initState() {
@@ -34,6 +24,18 @@ class _ProFileState extends State<ProFile> {
     _loadUserData();
   }
 
+  Future<void> _loadUserData() async {
+    nickNameFuture = _loadUserDataForKey("nickName");
+    uidFuture = _loadUserDataForKey("uid");
+    genderFuture = _loadUserDataForKey("gender");
+    emailFuture = _loadUserDataForKey("email");
+
+    _nameController = TextEditingController();
+  }
+
+  Future<String> _loadUserDataForKey(String key) async {
+    return await storage.read(key: key) ?? "";
+  }
 
 
   int _remainingChars = 10; // 남은 글자 수
