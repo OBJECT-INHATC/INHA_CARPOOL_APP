@@ -41,7 +41,8 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                         ? Colors.lightBlue
                         : Colors.grey,
                   ),
-                  child: '남자'.text.white.size(17).make(),
+                  child:
+                  '남자'.text.white.size(17).make(),
                 ),
               ),
               Container(
@@ -73,7 +74,8 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                   ? Colors.lightBlue
                   : Colors.grey,
             ),
-            child: '무관'.text.white.size(17).make(),
+            child:
+            '무관'.text.white.size(17).make(),
           ),
         ),
       ],
