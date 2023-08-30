@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
@@ -43,15 +42,6 @@ class _LoginPageState extends State<LoginPage> {
 
   final formKey = GlobalKey<FormState>();
   final storage = const FlutterSecureStorage();
-
-  /// 장치의 Fcm 토큰을 가져와 로컬에 저장 하는 함수
-  void getMyDeviceToken() async {
-    FirebaseMessaging.instance.getToken().then((value){
-      print("token : $value");
-      storage.write(key: 'token', value: value.toString());
-    });
-
-  }
 
   @override
   void initState() {
@@ -131,6 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
                         child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
                               minimumSize: const Size.fromHeight(50),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(90.0),
@@ -149,8 +140,6 @@ class _LoginPageState extends State<LoginPage> {
                                 if (value == true) {
                                   QuerySnapshot snapshot = await FireStoreService().gettingUserData(email);
 
-                                  getMyDeviceToken();
-
                                   storage.write(
                                       key: "nickName",
                                       value: snapshot.docs[0].get("nickName"));
@@ -160,6 +149,10 @@ class _LoginPageState extends State<LoginPage> {
                                   storage.write(
                                       key: "gender",
                                       value: snapshot.docs[0].get('gender'));
+                                  storage.write(
+                                      key: "email",
+                                      value: snapshot.docs[0].get('email'));
+
 
 
                                   if (context.mounted) {
