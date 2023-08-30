@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:inha_Carpool/service/sv_fcm.dart';
+import '../common/models/m_chat.dart';
 
 /// DatabaseService class - Firebase Firestore Database 관련 함수들을 모아놓은 클래스
 class FireStoreService {
@@ -17,6 +20,10 @@ class FireStoreService {
   /// CollectionReference - Carpool Collection
   final CollectionReference carpoolCollection =
   FirebaseFirestore.instance.collection("carpool");
+
+  /// CollectionReference - FcmTokens Collection
+  final CollectionReference fcmTokensCollection =
+  FirebaseFirestore.instance.collection("fcmTokens");
 
   final User? user = FirebaseAuth.instance.currentUser;
 
@@ -76,36 +83,53 @@ class FireStoreService {
   /// 메시지 전송
   sendMessage(String carId, Map<String, dynamic> chatMessageData) async {
     carpoolCollection.doc(carId).collection("messages").add(chatMessageData);
+    var myToken = FirebaseMessaging.instance.getToken();
 
-    // DocumentSnapshot carpoolSnapshot = await carpoolCollection.doc(groupId).get();
-    // List<dynamic> members = carpoolSnapshot['members'];
-    // List tokenList = [];
-    // String token = '';
-    //
-    // for (var member in members) {
-    //   token = member.substring(member.indexOf('-') + 1);
-    //   if (token != myToken) {
-    //     tokenList.add(token);
-    //   }
-    //   token = '';
-    // }
-    //
-    // for(var token in tokenList) {
-    //   print(token);
-    // }
-    // FcmService().sendMessage(
-    //     groupName: groupName,
-    //     tokenList: tokenList,
-    //     title: "New Message in $groupName",
-    //     body: "${chatMessageData['sender']} : ${chatMessageData['message']}",
-    //     chatMessage: ChatMessage(
-    //       groupId: groupId,
-    //       message: chatMessageData['message'],
-    //       sender: chatMessageData['sender'],
-    //       time: chatMessageData['time'],
-    //     )
-    // );
+    QuerySnapshot tokensSnapshot = await fcmTokensCollection.where("carId", isEqualTo: carId).get();
+    List tokenList = [];
 
+    for(var token in tokensSnapshot.docs) {
+      tokenList.add(token['token']);
+    }
+
+    tokenList.remove(await myToken);
+
+    FcmService().sendMessage(
+        tokenList: tokenList,
+        title: "새로운 채팅이 도착했습니다.",
+        body: "${chatMessageData['sender']} : ${chatMessageData['message']}",
+        chatMessage: ChatMessage(
+          carId: carId,
+          message: chatMessageData['message'],
+          sender: chatMessageData['sender'],
+          time: chatMessageData['time'],
+        )
+    );
+
+  }
+
+  /// 0829 한승완 - 서버에 Fcm 토큰 저장
+  Future saveToken(String token, String carId) async {
+    return await fcmTokensCollection.add(
+        {
+          "token": token,
+          "carId": carId,
+        }
+    );
+  }
+
+  /// 0829 한승완 - 서버에 Fcm 토큰 삭제
+  /// TODO : 추후에 방 나가기 기능이 생겼을 때 연결 해야 함
+  Future deleteTokenByCarId(String token, String carId) async {
+    return await fcmTokensCollection
+        .where("token", isEqualTo: token)
+        .where("carId", isEqualTo: carId)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        element.reference.delete();
+      });
+    });
   }
 
 

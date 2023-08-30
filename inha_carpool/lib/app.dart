@@ -1,7 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
@@ -24,25 +23,11 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
   @override
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
 
-  final storage = const FlutterSecureStorage();
-
-  /// 장치의 Fcm 토큰을 가져와 로컬에 저장 하는 함수
-  void getMyDeviceToken() async {
-    FirebaseMessaging.instance.getToken().then((value){
-      print("token : $value");
-      storage.write(key: 'token', value: value.toString());
-    });
-
-    /// 0830 한승완 TODO : 토큰을 Firebase 서버에 저장
-
-  }
-
   //상태관리 옵저버 실행 + 디바이스 토큰 저장
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    getMyDeviceToken();
 
     /// 알림 수신 시 호출되는 콜백 함수
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
