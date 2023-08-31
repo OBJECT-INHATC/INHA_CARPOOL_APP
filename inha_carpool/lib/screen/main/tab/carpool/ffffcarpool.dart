@@ -62,7 +62,7 @@ class _CarpoolListState extends State<CarpoolList> {
     print(myID);
 
     List<DocumentSnapshot> carpools =
-        await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName);
+    await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName);
     return carpools;
   }
 
@@ -118,7 +118,7 @@ class _CarpoolListState extends State<CarpoolList> {
 
                 //카풀 날짜 및 시간 변환
                 DateTime startTime =
-                    DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
+                DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
                 DateTime currentTime = DateTime.now();
                 Duration difference = startTime.difference(currentTime);
 
@@ -130,13 +130,13 @@ class _CarpoolListState extends State<CarpoolList> {
                   formattedTime = '${difference.inDays ~/ 365}년 후';
                 } else if (difference.inDays >= 30) {
                   formattedTime =
-                      '${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 이후';
+                  '${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 이후';
                 } else if (difference.inDays >= 1) {
                   formattedTime =
-                      '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 이후';
+                  '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 이후';
                 } else if (difference.inHours >= 1) {
                   formattedTime =
-                      '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 이후';
+                  '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 이후';
                 } else {
                   formattedTime = '${difference.inMinutes}분 후';
                 }
@@ -156,7 +156,7 @@ class _CarpoolListState extends State<CarpoolList> {
                     child: Container(
                       color: context.appColors.cardBackground,
                       margin:
-                          EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
+                      EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
                       padding: EdgeInsets.only(
                           left: 12, right: 12, top: 20, bottom: 20),
                       child: Row(
@@ -179,7 +179,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                     color: Colors.transparent,
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
                                         "${formattedStartTime}"
                                             .text
@@ -241,9 +241,9 @@ class _CarpoolListState extends State<CarpoolList> {
                                       insetPadding: const EdgeInsets.all(20),
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(20.0)),
+                                          BorderRadius.circular(20.0)),
                                       title: const Text(
-                                        '카풀 위치',
+                                        '카풀정보',
                                         textAlign: TextAlign.center,
                                       ),
                                       content: Column(
@@ -255,16 +255,17 @@ class _CarpoolListState extends State<CarpoolList> {
                                                     .size
                                                     .width,
                                                 height: MediaQuery.of(context)
-                                                        .size
-                                                        .height * 0.6,
+                                                    .size
+                                                    .height /
+                                                    1.8,
 
                                                 // 카풀 위치 지도 부분
                                                 child: GoogleMap(
                                                   onMapCreated: (controller) =>
-                                                      mapController =
-                                                          controller,
+                                                  mapController =
+                                                      controller,
                                                   initialCameraPosition:
-                                                      CameraPosition(
+                                                  CameraPosition(
                                                     target: LatLng(
                                                         carpool['startPoint']
                                                             .latitude,
@@ -310,17 +311,23 @@ class _CarpoolListState extends State<CarpoolList> {
                                               ),
                                             ],
                                           ),
-                                          SizedBox(height: 5),
-                                          Center(
-                                            child: Column(
-                                              children: [
-                                                Line(
-                                                    color: context.appColors
-                                                        .divider),
-                                                Text('ㅇㅇㅇ'),
-                                              ],
-                                            ),
-                                          ),
+                                          // Container(
+                                          //   margin: const EdgeInsets.symmetric(
+                                          //       horizontal: 20),
+                                          //   child: Expanded(
+                                          //     child: Column(
+                                          //       children: [
+                                          //         Text(
+                                          //             '${carpool['startPointName']}', style: TextStyle(fontSize: 4),),
+                                          //         Text(
+                                          //             '${carpool['startTime']}', style: TextStyle(fontSize: 4),),
+                                          //         '현재 위치와 거리 $_distanceToLocation'
+                                          //             .text
+                                          //             .make(),
+                                          //       ],
+                                          //     ),
+                                          //   ),
+                                          // ),
                                         ],
                                       ),
                                       actions: [
@@ -371,7 +378,7 @@ class _CarpoolListState extends State<CarpoolList> {
     LocationPermission permission = await Geolocator.requestPermission();
 
     CollectionReference carpoolCollection =
-        FirebaseFirestore.instance.collection('carpool');
+    FirebaseFirestore.instance.collection('carpool');
     DocumentReference carpoolDoc = carpoolCollection.doc();
     DocumentSnapshot carpoolSnapshot = await carpoolDoc.get();
 
