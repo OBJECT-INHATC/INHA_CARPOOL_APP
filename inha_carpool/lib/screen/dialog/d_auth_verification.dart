@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inha_Carpool/fragment/setting/f_setting.dart';
+import 'package:inha_Carpool/screen/setting/f_setting.dart';
 import 'package:nav/nav.dart';
 
 
