@@ -5,7 +5,7 @@ class LimitSelectorWidget extends StatelessWidget {
   final String selectedValue;
   final Function(String) onOptionSelected;
 
-  LimitSelectorWidget({
+  const LimitSelectorWidget({super.key,
     required this.options,
     required this.selectedValue,
     required this.onOptionSelected,
@@ -17,7 +17,7 @@ class LimitSelectorWidget extends StatelessWidget {
       children: options.map((option) {
         return Container(
           width: double.infinity,
-          margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
+          margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
           child: TextButton(
             onPressed: () => onOptionSelected(option),
             style: TextButton.styleFrom(
@@ -26,7 +26,7 @@ class LimitSelectorWidget extends StatelessWidget {
             ),
             child: Text(
               option,
-              style: TextStyle(color: Colors.white, fontSize: 17),
+              style: const TextStyle(color: Colors.white, fontSize: 17),
             ),
           ),
         );

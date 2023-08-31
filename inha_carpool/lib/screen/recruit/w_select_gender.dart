@@ -5,7 +5,7 @@ class GenderSelectorWidget extends StatefulWidget {
   final String selectedGender;
   final Function(String) onGenderSelected;
 
-  GenderSelectorWidget({
+  const GenderSelectorWidget({super.key,
     required this.selectedGender,
     required this.onGenderSelected,
   });
@@ -21,8 +21,8 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
       children: [
         Container(
           width: double.infinity,
-          margin: EdgeInsets.all(15),
-          padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+          margin: const EdgeInsets.all(15),
+          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
           child: '성별'.text.size(20).bold.align(TextAlign.left).make(),
         ),
         Container(
@@ -31,7 +31,7 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                margin: EdgeInsets.fromLTRB(30, 0, 0, 0),
+                margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                 child: TextButton(
                   onPressed: () {
                     widget.onGenderSelected('남자');
@@ -45,7 +45,7 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(0, 0, 30, 0),
+                margin: const EdgeInsets.fromLTRB(0, 0, 30, 0),
                 child: TextButton(
                   onPressed: () {
                     widget.onGenderSelected('여자');
@@ -63,7 +63,7 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
         ),
         Container(
           width: double.infinity,
-          margin: EdgeInsets.fromLTRB(30, 0, 30, 0),
+          margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
           child: TextButton(
             onPressed: () {
               widget.onGenderSelected('무관');

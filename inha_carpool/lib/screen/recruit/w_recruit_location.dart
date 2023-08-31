@@ -25,7 +25,6 @@ class LocationInputWidget extends StatefulWidget {
 class _LocationInputWidgetState extends State<LocationInputWidget> {
   String get detailControllerText => widget.detailController.text; // 변수에 접근 가능한 메서드 추가
 
-
   String selectedLocation = '';
   bool isGestureEnabled = true;
 
@@ -42,6 +41,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // 출발지, 도착지
         GestureDetector(
           onTap: isGestureEnabled ? () async {
             final result = await Navigator.push(
@@ -49,6 +49,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               MaterialPageRoute(builder: (context) => LocationInput(widget.Point)),
             );
 
+            // result가 null이 아니면 setState로 selectedLocation을 변경
             if (result != null) {
               setState(() {
                 selectedLocation = Location_handler.getStringBetweenUnderscores(result);
@@ -83,7 +84,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         ),
         Container(
           margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-
           child: TextField(
             decoration: InputDecoration(
               filled: true,
@@ -99,9 +99,4 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       ],
     );
   }
-
-
-
-
-
 }

@@ -21,17 +21,29 @@ class _LocationInputState extends State<LocationInput> {
   int flex = 50;
   bool isMove = false;
 
+  // Google Maps API Key
   final String _apiKey = dotenv.env['GOOGLE_MAP_API_KEY']!;
+
+  // Google Maps API Host
   final String _host = 'https://maps.googleapis.com/maps/api/geocode/json';
 
 
-
+  // Google Maps Controller
   late GoogleMapController mapController;
+
+  // 검색창 컨트롤러
   TextEditingController _searchController = TextEditingController();
+
+  // 검색 결과를 저장할 리스트
   List<dynamic> list = [];
 
+  // 검색한 주소의 좌표를 저장할 변수
   LatLng? searchedPosition;
+
+  // 검색한 주소의 좌표를 저장할 변수
   bool firstStep = false;
+
+  // 마커를 저장할 변수
   Set<Marker> _markers = {};
 
   @override
@@ -205,24 +217,25 @@ class _LocationInputState extends State<LocationInput> {
     );
   }
 
+  // 카메라를 이동시키는 메서드
   void _moveCameraTo(LatLng target) {
     mapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(target: target, zoom: 16.0),
     ));
   }
 
+  // 좌표로 주소를 가져오는 메서드
   Future<void> _getGooglecoo(double lat, double lon) async {
     final uri = Uri.parse('$_host?key=$_apiKey&latlng=$lat,$lon&language=ko');
-    print(uri);
 
     http.Response response = await http.get(uri);
     final responseJson = json.decode(response.body);
 
-    // Check if the 'results' array is not empty
+    // 결과가 있으면 주소를 가져옵니다.
     if (responseJson['results'] != null && responseJson['results'].length > 0) {
       final addressComponents = responseJson['results'][0]['address_components'];
 
-      // Find the formatted address without the country and Incheon
+      // 국가와 인천시는 제외하고 가져옵니다.
       String formattedAddress = '';
       for (var component in addressComponents) {
         if (component['types'].contains('country') || component['long_name'] == 'Incheon') {
@@ -230,6 +243,8 @@ class _LocationInputState extends State<LocationInput> {
         }
         formattedAddress += component['long_name'] + ', ';
       }
+
+      // 마지막 쉼표와 공백을 제거합니다.
       formattedAddress = formattedAddress.replaceAll(RegExp(r', $'), ''); // Remove trailing comma and space
 
       setState(() {
@@ -241,11 +256,7 @@ class _LocationInputState extends State<LocationInput> {
     }
   }
 
-
-
-
-
-
+  // 주소로 좌표를 가져오는 메서드
   void _LocationInfo(String juso) async {
     String? josuUrl = dotenv.env['JUSO_API_KEY'];
     String query = juso;
@@ -296,6 +307,7 @@ class _LocationInputState extends State<LocationInput> {
     list.clear();
   }
 
+  // 검색한 주소로 카메라를 이동시키는 메서드
   void _searchLocation(String query) async {
     if (query.isNotEmpty) {
       List<Location> locations = await locationFromAddress(query);
@@ -318,7 +330,7 @@ class _LocationInputState extends State<LocationInput> {
     }
   }
 
-//마커추가
+  //마커추가
   void _addMarker(
       LatLng point, String infoText, String markerName, BitmapDescriptor icon) {
     // 기존에 같은 MarkerId가 존재하는 마커를 제거합니다.

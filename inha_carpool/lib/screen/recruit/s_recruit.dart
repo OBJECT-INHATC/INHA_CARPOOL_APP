@@ -51,6 +51,7 @@ class _RecruitPageState extends State<RecruitPage> {
     _loadUserData();
   }
 
+  // 로그인한 사용자의 정보를 불러옵니다.
   Future<void> _loadUserData() async {
     nickName = await storage.read(key: "nickName") ?? "";
     uid = await storage.read(key: "uid") ?? "";
@@ -64,17 +65,17 @@ class _RecruitPageState extends State<RecruitPage> {
   String selectedLimit = '2인'; // 선택된 제한인원 초기값
   String selectedGender = '무관'; // 선택된 성별 초기값
 
-  /// 주소 입력 오류 확인
+  // 주소 입력 오류 확인
   bool isAddressValid(String detailPoint) {
     return detailPoint.length >= 2 && detailPoint.length <= 10;
   }
 
-  /// 시간 입력 오류 확인
+  // 시간 입력 오류 확인
   bool isTimeValid(Duration difference) {
     return difference.inMinutes >= 10;
   }
 
-  /// 카풀 시작하기 버튼 활성화 여부
+  // 카풀 시작하기 버튼 활성화 여부
   bool isButtonDisabled = false;
 
   @override
@@ -304,7 +305,7 @@ class _RecruitPageState extends State<RecruitPage> {
                         });
                       },
                 child: '카풀 시작하기'.text.size(20).white.make(),
-              ).p(70),
+              ).p(50),
             ),
           ],
         ),

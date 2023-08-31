@@ -21,9 +21,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  // 필터링 옵션
   final storage = FlutterSecureStorage();
 
   late LatLng myPoint = LatLng(0, 0);
+
   late Future<List<DocumentSnapshot>> carPoolList = Future.value([]);
 
   late String nickName = ""; // 기본값으로 초기화
@@ -89,8 +91,9 @@ class _HomeState extends State<Home> {
               onChanged: (newValue) {
                 setState(() {
                   selectedFilter = newValue!;
-                  print('현재 필터링 $selectedFilter');
 
+                  print('현재 필터링 $selectedFilter');
+                  // 필터링 옵션에 따라서 carPoolList를 변경
                   if (selectedFilter.toString() == 'FilteringOption.Time') {
                     carPoolList = _timeByFunction();
                   } else {
@@ -99,8 +102,10 @@ class _HomeState extends State<Home> {
                 });
               },
               items: FilteringOption.values.map((option) {
+                // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
                 return DropdownMenuItem<FilteringOption>(
                   value: option,
+                  // DropdownMenuItem의 child는 Text 위젯입니다.
                   child: Text(option == FilteringOption.Time ? '시간순' : '거리순'),
                 );
               }).toList(),

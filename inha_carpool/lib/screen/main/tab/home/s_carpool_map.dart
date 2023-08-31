@@ -145,12 +145,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
               SizedBox(height: 30), // 간격 추가
               GestureDetector(
                 onTap: () async {
-
-
                   String carId = widget.carId;
                   String memberID = uid;
                   String memberName = nickName;
-
 
                   await FirebaseCarpool.addMemberToCarpool(
                       carId, memberID, memberName, token!)

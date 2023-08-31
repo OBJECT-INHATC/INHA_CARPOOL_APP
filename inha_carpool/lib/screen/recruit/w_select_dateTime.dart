@@ -6,7 +6,7 @@ class DateTimePickerWidget extends StatefulWidget {
   final DateTime selectedDateTime;
   final Function(DateTime) onDateTimeChanged;
 
-  DateTimePickerWidget({
+  const DateTimePickerWidget({super.key,
     required this.label,
     required this.selectedDateTime,
     required this.onDateTimeChanged,
@@ -98,6 +98,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                   ),
                 ),
               ),
+              // 시간 선택 시 오전/오후 표시
               _isTimePicker
                   ? Text(
                       widget.selectedDateTime.hour > 12 ? '오후' : '오전',
@@ -113,6 +114,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+              // 시간 선택 시 시간 표시
               _isTimePicker
                   ? Text(
                       "${widget.selectedDateTime.hour > 12 ? (widget.selectedDateTime.hour - 12).toString().padLeft(2, '0') : widget.selectedDateTime.hour.toString().padLeft(2, '0')}:"
