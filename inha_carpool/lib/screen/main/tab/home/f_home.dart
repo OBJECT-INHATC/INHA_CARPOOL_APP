@@ -112,11 +112,25 @@ class _HomeState extends State<Home> {
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     print("로딩중");
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
+                    return const SafeArea(
+                      child: Center(
+                        child: Text(
+                          '진행중인 카풀이 없습니다!\n카풀을 등록해보세요!',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No data available'));
+                    return const Center(
+                        child: Text(
+                      '진행중인 카풀이 없습니다!\n카풀을 등록해보세요!',
+                      style: TextStyle(fontSize: 20),
+                      textAlign: TextAlign.center,
+                    ));
                   } else {
                     return ListView.builder(
                       itemCount: snapshot.data!.length,
@@ -211,7 +225,7 @@ class _HomeState extends State<Home> {
                           },
                           child: Card(
                             elevation: 5,
-                            margin: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                                 vertical: 15, horizontal: 20),
                             shape: RoundedRectangleBorder(
                               side: BorderSide(width: 2, color: borderColor),
@@ -220,7 +234,7 @@ class _HomeState extends State<Home> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
@@ -231,11 +245,11 @@ class _HomeState extends State<Home> {
                                       child: FittedBox(
                                         child: Container(
                                           // Wrap the Text with a Container to control its size
-                                          padding: EdgeInsets.all(8.0),
+                                          padding: const EdgeInsets.all(8.0),
                                           // Add some padding to the text
                                           child: Text(
                                             '${carpoolData['startDetailPoint']}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               color: Colors.white,
                                               fontSize: 20,
                                             ),
@@ -245,11 +259,11 @@ class _HomeState extends State<Home> {
                                     ),
                                     Column(
                                       children: [
-                                        Text('${formattedTime}',
-                                            style: TextStyle(
+                                        Text(formattedTime,
+                                            style: const TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.grey)),
-                                        CircleAvatar(
+                                        const CircleAvatar(
                                           radius: 30,
                                           backgroundColor: Colors.white,
                                           child: FittedBox(
@@ -258,7 +272,8 @@ class _HomeState extends State<Home> {
                                         ),
                                         Text(
                                             '${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
-                                            style: TextStyle(fontSize: 16)),
+                                            style:
+                                                const TextStyle(fontSize: 16)),
                                       ],
                                     ),
                                     CircleAvatar(
@@ -267,12 +282,12 @@ class _HomeState extends State<Home> {
                                       child: FittedBox(
                                           child: Text(
                                               '${carpoolData['endDetailPoint']}',
-                                              style: TextStyle(
+                                              style: const TextStyle(
                                                   color: Colors.white))),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 10)
+                                const SizedBox(height: 10)
                               ],
                             ),
                           ),

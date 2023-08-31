@@ -27,8 +27,8 @@ class _RecruitPageState extends State<RecruitPage> {
   //인하대 후문 cu
   LatLng endPoint = LatLng(37.4514982, 126.6570261);
 
-  // 주안역
-  LatLng startPoint = LatLng(37.4645862, 126.6803935);
+  // 주안역 (초기 출발 위치)
+  LatLng startPoint = LatLng(37.4650414, 126.6807024);
   String startPointName = "주안역 택시 승강장";
   String endPointName = "인하대 후문 CU";
 
@@ -47,7 +47,7 @@ class _RecruitPageState extends State<RecruitPage> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
+    //_getCurrentLocation();
     _loadUserData();
   }
 

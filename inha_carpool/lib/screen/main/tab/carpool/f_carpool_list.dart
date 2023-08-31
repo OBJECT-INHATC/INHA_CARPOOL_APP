@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/app.dart';
 import 'package:inha_Carpool/common/Colors/app_colors.dart';
 import 'package:inha_Carpool/common/common.dart';
@@ -25,6 +26,11 @@ class _CarpoolListState extends State<CarpoolList> {
   late String nickName = ""; // Initialize with a default value
   late String uid = "";
   late String gender = "";
+
+  //구글맵 변수
+  LatLng? _myPoint;
+  Set<Marker> _markers = {};
+  late GoogleMapController mapController;
 
   @override
   void initState() {
@@ -219,10 +225,104 @@ class _CarpoolListState extends State<CarpoolList> {
                             const SizedBox(
                               height: 20,
                             ),
-                            const Icon(
-                              //   Icons.arrow_forward_ios_rounded,
-                              Icons.map_outlined,
-                              size: 20,
+
+                            /// 리스트 우측 하단에 지도 버튼 (카풀 위치, 현재 위치 조회가능)
+                            IconButton(
+                              icon: const Icon(
+                                Icons.map_outlined,
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(20.0)),
+                                        title: const Text(
+                                          '카풀 위치',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                        content: Stack(
+                                          children: [
+                                            Container(
+                                              width: MediaQuery.of(context)
+                                                      .size
+                                                      .width -
+                                                  30,
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height /
+                                                  2.5,
+                                              child: GoogleMap(
+                                                onMapCreated: (controller) =>
+                                                    mapController = controller,
+                                                initialCameraPosition:
+                                                    CameraPosition(
+                                                  target: LatLng(
+                                                      carpool['startPoint']
+                                                          .latitude,
+                                                      carpool['startPoint']
+                                                          .longitude),
+                                                  zoom: 16,
+                                                ),
+                                                markers: {
+                                                  Marker(
+                                                    markerId: MarkerId(
+                                                        carpool['startPoint']
+                                                            .toString()),
+                                                    position: LatLng(
+                                                        carpool['startPoint']
+                                                            .latitude,
+                                                        carpool['startPoint']
+                                                            .longitude),
+                                                    infoWindow: InfoWindow(
+                                                        title: '출발지'),
+                                                  ),
+                                                },
+                                                myLocationButtonEnabled: true,
+                                                myLocationEnabled: true,
+                                              ),
+                                            ),
+                                            Positioned(
+                                              bottom: 70,
+                                              right: 10,
+                                              child: ElevatedButton(
+                                                onPressed: () {
+                                                  _moveCameraTo(
+                                                    LatLng(
+                                                        carpool['startPoint']
+                                                            .latitude,
+                                                        carpool['startPoint']
+                                                            .longitude),
+                                                  );
+                                                },
+                                                child: const Text('카풀위치'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        actions: [
+                                          Center(
+                                            child: Column(
+                                              children: [
+                                                Line(
+                                                    color: context
+                                                        .appColors.divider),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('닫기'),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              },
                             ),
                           ]),
                         ],
@@ -236,5 +336,23 @@ class _CarpoolListState extends State<CarpoolList> {
         }
       },
     );
+  }
+
+  void _addMarker(
+      LatLng point, String infoText, String markerName, BitmapDescriptor icon) {
+    _markers.removeWhere((marker) => marker.markerId.value == markerName);
+    _markers.add(Marker(
+      markerId: MarkerId(markerName),
+      position: point,
+      icon: icon,
+      infoWindow: InfoWindow(title: infoText),
+    ));
+  }
+
+  //카메라 이동 메서
+  void _moveCameraTo(LatLng target) {
+    mapController.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(target: target, zoom: 16.0),
+    ));
   }
 }
