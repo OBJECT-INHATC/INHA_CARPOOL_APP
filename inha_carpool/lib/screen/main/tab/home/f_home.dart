@@ -190,13 +190,11 @@ class _HomeState extends State<Home> {
                               // 이미 참여한 경우
                               if (carpoolData['admin'] == currentUser) {
                                 // 방장인 경우
-                                Nav.push(
-
-                                    /// 김영재 TODO : 이거 MasterPage 삭제되어서 로직 변경해야함 일단 같은 채팅으로 이동하게 했음
-                                    ChatroomPage(
+                                Nav.push(ChatroomPage(
                                   carId: carpoolData['carId'],
                                   groupName: '카풀 네임',
                                   userName: nickName,
+                                  uid: uid,
                                 ));
                                 print('현재 유저: $currentUser');
                                 print(carpoolData['members']);
@@ -205,6 +203,7 @@ class _HomeState extends State<Home> {
                                   carId: carpoolData['carId'],
                                   groupName: '카풀 네임',
                                   userName: nickName,
+                                  uid: uid,
                                 ));
                               }
                             } else {

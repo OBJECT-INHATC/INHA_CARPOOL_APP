@@ -41,6 +41,8 @@ class _LoginPageState extends State<LoginPage> {
   void _handleMessage(RemoteMessage message) async {
     // 닉네임 가져오기
     String? nickName = await storage.read(key: "nickName");
+    // uid 가져오기
+    String? uid = await storage.read(key: "uid");
 
     /// 한승완 TODO : 알림의 id에 따라서 이동 경로 구분 기능
     if (message.data['id'] == '1' && nickName != null) {
@@ -52,6 +54,7 @@ class _LoginPageState extends State<LoginPage> {
               carId: message.data['groupId'],
               userName: nickName!,
               groupName: "카풀채팅",
+              uid: uid!,
             )
         ),
       );

@@ -148,7 +148,9 @@ class _CarpoolListState extends State<CarpoolList> {
                           builder: (context) => ChatroomPage(
                               carId: carpool['carId'],
                               groupName: '카풀네임',
-                              userName: nickName)),
+                              userName: nickName,
+                              uid: uid
+                          )),
                     );
                   },
                   child: Card(
