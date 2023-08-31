@@ -131,13 +131,27 @@ class FireStoreService {
 
 
   /// 0829 한승완 - 서버에 Fcm 토큰 저장
-  Future saveToken(String token, String carId) async {
-    return await fcmTokensCollection.add(
+  Future<void> saveToken(String token, String carId) async {
+    // 이미 해당 carId로 저장된 토큰이 있는지 확인
+    QuerySnapshot existingTokens = await fcmTokensCollection.where("carId", isEqualTo: carId).get();
+    bool tokenExists = false;
+
+    for (QueryDocumentSnapshot tokenDoc in existingTokens.docs) {
+      if (tokenDoc["token"] == token) {
+        tokenExists = true;
+        break;
+      }
+    }
+
+    // 이미 저장된 토큰이 없는 경우에만 저장
+    if (!tokenExists) {
+      await fcmTokensCollection.add(
         {
           "token": token,
           "carId": carId,
-        }
-    );
+        },
+      );
+    }
   }
 
   /// 0829 한승완 - 서버에 Fcm 토큰 삭제
