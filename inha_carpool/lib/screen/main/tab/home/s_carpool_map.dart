@@ -145,23 +145,21 @@ class _CarpoolMapState extends State<CarpoolMap> {
               SizedBox(height: 30), // 간격 추가
               GestureDetector(
                 onTap: () async {
-                  DocumentSnapshot carpoolSnapshot = await FirebaseFirestore
-                      .instance
-                      .collection('carpool')
-                      .doc(widget.carId)
-                      .get();
-                  int nowMember = carpoolSnapshot['nowMember'];
-                  int maxMember = carpoolSnapshot['maxMember'];
+
 
                   String carId = widget.carId;
                   String memberID = uid;
                   String memberName = nickName;
 
-                  await FirebaseCarpool.addMemberToCarpool(carId, memberID, memberName, token!)
+
+                  await FirebaseCarpool.addMemberToCarpool(
+                      carId, memberID, memberName, token!)
                       .then((value) {
                     Navigator.pop(context);
                     Navigator.pushReplacement(
                         context, MaterialPageRoute(builder: (context) => MainScreen()));
+                    ///0830 서은율 : 카풀 참가 시 메시지 전송
+                    FireStoreService().sendEntryMessage(carId,memberName);
                   }).catchError((error) {
                     showDialog(
                       context: context,

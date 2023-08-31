@@ -82,32 +82,51 @@ class FireStoreService {
   /// 0828 한승완
   /// 메시지 전송
   sendMessage(String carId, Map<String, dynamic> chatMessageData) async {
-    carpoolCollection.doc(carId).collection("messages").add(chatMessageData);
-    var myToken = FirebaseMessaging.instance.getToken();
+    final carpoolDocRef = carpoolCollection.doc(carId);
 
+    // 최근 메시지 정보 업데이트
+    await carpoolDocRef.update({
+      "recentMessage": chatMessageData['message'],
+      "recentMessageSender": chatMessageData['sender'],
+      "recentMessageTime": chatMessageData['time'].toString(),
+    });
+
+    // 사용자 FCM 토큰 get
+    var myToken = await FirebaseMessaging.instance.getToken();
+
+    // 다른 유저의 FCM 토큰 get
     QuerySnapshot tokensSnapshot = await fcmTokensCollection.where("carId", isEqualTo: carId).get();
-    List tokenList = [];
+    List<String> tokenList = tokensSnapshot.docs.map((doc) => doc['token'] as String).toList();
 
-    for(var token in tokensSnapshot.docs) {
-      tokenList.add(token['token']);
-    }
+    tokenList.remove(myToken);
 
-    tokenList.remove(await myToken);
+    await carpoolDocRef.collection("messages").add(chatMessageData);
 
+    // FCM 메시지 전송
     FcmService().sendMessage(
-        tokenList: tokenList,
-        title: "새로운 채팅이 도착했습니다.",
-        body: "${chatMessageData['sender']} : ${chatMessageData['message']}",
-        chatMessage: ChatMessage(
-          carId: carId,
-          message: chatMessageData['message'],
-          sender: chatMessageData['sender'],
-          time: chatMessageData['time'],
-        )
+      tokenList: tokenList,
+      title: "새로운 채팅이 도착했습니다.",
+      body: "${chatMessageData['sender']} : ${chatMessageData['message']}",
+      chatMessage: ChatMessage(
+        carId: carId,
+        message: chatMessageData['message'],
+        sender: chatMessageData['sender'],
+        time: chatMessageData['time'],
+      ),
     );
 
   }
 
+  ///0830 서은율
+  ///카풀 참가시 유저 입장 메시지 전송
+  Future sendEntryMessage(String carId, String userName) async {
+    Map<String, dynamic> chatMessageMap = {
+      "message": "$userName님이 입장하였습니다.",
+      "sender": 'service',
+      "time": DateTime.now().millisecondsSinceEpoch,
+    };
+    return carpoolCollection.doc(carId).collection("messages").add(chatMessageMap);
+  }
   /// 0829 한승완 - 서버에 Fcm 토큰 저장
   Future<void> saveToken(String token, String carId) async {
     // 이미 해당 carId로 저장된 토큰이 있는지 확인
