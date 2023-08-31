@@ -55,7 +55,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
 
   // 멤버 리스트
-  List<dynamic>? membersList;
+  List<dynamic> membersList = [];
 
   @override
   void initState() {
@@ -171,9 +171,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
                       child: Container(
                         alignment: Alignment.centerLeft,
                         child: ListView.builder(
-                          itemCount: membersList?.length,
+                          itemCount: membersList.length,
                           itemBuilder: (BuildContext context, int index) {
-                            String memberName = getName(membersList?[index]); // 회원 이름을 가져오는 부분입니다.
+                            String memberName = getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
 
                             return TextButton(
                               onPressed: () {
