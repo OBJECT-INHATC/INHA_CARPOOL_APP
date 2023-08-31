@@ -147,10 +147,31 @@ class FireStoreService {
   }
 
 
-  getMembersList(String carId) async {
-    DocumentReference d = carpoolCollection.doc(carId);
-    DocumentSnapshot documentSnapshot = await d.get();
-    return documentSnapshot['members'];
+  // 카풀 정보 가져오기
+  Future<Map<String, dynamic>> getCarDetails(String carId) async {
+    DocumentReference documentRef = carpoolCollection.doc(carId);
+    DocumentSnapshot snapshot = await documentRef.get();
+
+    Map<String, dynamic> carData = snapshot.data() as Map<String, dynamic>;
+    return carData;
   }
+
+  // 카풀 나가기
+  exitCarpool(String carId, String userName, String uid) async {
+    DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
+
+    await carpoolDocRef.update({
+      'members': FieldValue.arrayRemove(['${uid}_$userName']),
+      'nowMember': FieldValue.increment(-1),
+    });
+    // members에서 해당 유저 삭제
+    // nowmember -1
+
+    // await userDocRef.update({
+    //   'carpools': FieldValue.arrayRemove([carId]),
+    // });
+    // // 유저의 carpools에서 해당 carId 삭제
+  }
+
 
 }

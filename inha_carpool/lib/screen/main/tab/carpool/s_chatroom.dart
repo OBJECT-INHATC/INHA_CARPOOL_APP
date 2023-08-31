@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
+import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 /// 0828 서은율, 한승완
@@ -16,13 +19,15 @@ class ChatroomPage extends StatefulWidget {
   final String carId;
   final String groupName;
   final String userName;
+  final String uid;
 
   /// 생성자
   const ChatroomPage(
       {Key? key,
       required this.carId,
       required this.groupName,
-      required this.userName})
+      required this.userName,
+      required this.uid})
       : super(key: key);
 
   @override
@@ -56,6 +61,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
   // 멤버 리스트
   List<dynamic> membersList = [];
+  // 출발 시간
+  DateTime startTime = DateTime.now();
+  // 출발지
+  String startPoint = "";
+  // 도착지
+  String endPoint = "";
 
   @override
   void initState() {
@@ -65,8 +76,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
     getCurrentUserandToken();
     /// 토큰, 사용자 Auth 정보 호출
 
-    getMembersList();
-    /// 멤버 리스트 호출
+    // 멤버 리스트, 출발 시간 가져오기
+    getCarpoolInfo();
 
     super.initState();
     _scrollController = ScrollController();
@@ -127,14 +138,18 @@ class _ChatroomPageState extends State<ChatroomPage> {
     token = (await storage.read(key: "token"))!;
   }
 
-  // 멤버 리스트 가져오기
-  getMembersList() async {
-    await FireStoreService().getMembersList(widget.carId).then((val) {
+  // 멤버 리스트, 출발 시간, 요약주소 가져오기
+  getCarpoolInfo() async {
+    await FireStoreService().getCarDetails(widget.carId).then((val) {
       setState(() {
-        membersList = val;
+        membersList = val['members'];
+        startTime = DateTime.fromMillisecondsSinceEpoch(val['startTime']);
+        startPoint = val['startDetailPoint'];
+        endPoint = val['endDetailPoint'];
       });
     });
   }
+
 
 
   @override
@@ -157,7 +172,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
         ),
         body: Column(
           children: [
-              Container(
+            Container(
                 height: topBarHeight,
                 decoration: BoxDecoration(
                   color: Colors.white54,
@@ -167,6 +182,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // 좌측
                     Expanded(
                       child: Container(
                         alignment: Alignment.centerLeft,
@@ -212,7 +228,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 children: [
                                   Container(
                                     child: Text(
-                                      "주안역",
+                                      startPoint,
                                       style: TextStyle(
                                         fontSize: 20,
                                       ),
@@ -226,7 +242,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                   Icon(Icons.arrow_forward),
                                   Container(
                                     child: Text(
-                                      "인하공전",
+                                      endPoint,
                                       style: TextStyle(fontSize: 20),
                                     ),
                                     decoration: BoxDecoration(
@@ -241,7 +257,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             Container(
                               margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                               child: Text(
-                                "출발시간 : 07.26/16:00",
+                                "출발 : ${startTime.month}월 ${startTime.day}일 ${startTime.hour}시 ${startTime.minute}분",
                                 style: TextStyle(fontSize: 18),
                                 textAlign: TextAlign.center,
                               ),
@@ -249,8 +265,35 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             Container(
                               child: TextButton(
                                 onPressed: () {
-                                  // 카풀 종료 버튼 동작
-                                  Navigator.pop(context);
+                                  if(admin != widget.userName) {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('채팅방 나가기'),
+                                          content: Text('채팅방을 나가시겠습니까?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('취소'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                FireStoreService().exitCarpool(widget.carId, widget.userName, widget.uid);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.pushReplacement(
+                                                    context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                              },
+                                              child: Text('나가기'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  }
                                 },
                                 style: TextButton.styleFrom(
                                   shape: RoundedRectangleBorder(
@@ -260,7 +303,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                   backgroundColor:
                                       Colors.grey[300], // 연한 그레이 색상
                                 ),
-                                child: Text('방나가기'),
+                                child: Text('나가기'),
                               ),
                               ),
                           ],

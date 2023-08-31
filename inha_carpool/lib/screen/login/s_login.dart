@@ -45,16 +45,16 @@ class _LoginPageState extends State<LoginPage> {
     /// 한승완 TODO : 알림의 id에 따라서 이동 경로 구분 기능
     if (message.data['id'] == '1' && nickName != null) {
       if(!mounted) return;
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ChatroomPage(
-              carId: message.data['groupId'],
-              userName: nickName!,
-              groupName: "카풀채팅",
-            )
-        ),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //       builder: (context) => ChatroomPage(
+      //         carId: message.data['groupId'],
+      //         userName: nickName!,
+      //         groupName: "카풀채팅",
+      //       )
+      //   ),
+      // );
     }else{
       if(!mounted) return;
       context.showErrorSnackbar("알림을 불러오는데 실패했습니다.");
