@@ -7,7 +7,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 
 class LocationInput extends StatefulWidget {
   final LatLng Point;
@@ -21,6 +20,12 @@ class LocationInput extends StatefulWidget {
 class _LocationInputState extends State<LocationInput> {
   int flex = 50;
   bool isMove = false;
+
+  final String _apiKey = dotenv.env['GOOGLE_MAP_API_KEY']!;
+  final String _host = 'https://maps.googleapis.com/maps/api/geocode/json';
+
+
+
   late GoogleMapController mapController;
   TextEditingController _searchController = TextEditingController();
   List<dynamic> list = [];
@@ -69,7 +74,7 @@ class _LocationInputState extends State<LocationInput> {
                     backgroundColor: Colors.blue,
                   ),
                   onPressed: () {
-                    _LocationInfo();
+                    _LocationInfo(_searchController.text);
                   },
                   child: 'Search'.tr().text.white.make(),
                 ),
@@ -173,7 +178,7 @@ class _LocationInputState extends State<LocationInput> {
             decoration: BoxDecoration(
               border: Border.all(width: 1, color: Colors.blue),
               borderRadius:
-                  BorderRadius.circular(40),
+              BorderRadius.circular(40),
             ),
             child: Padding(
               padding: const EdgeInsets.all(5.0),
@@ -206,9 +211,44 @@ class _LocationInputState extends State<LocationInput> {
     ));
   }
 
-  void _LocationInfo() async {
+  Future<void> _getGooglecoo(double lat, double lon) async {
+    final uri = Uri.parse('$_host?key=$_apiKey&latlng=$lat,$lon&language=ko');
+    print(uri);
+
+    http.Response response = await http.get(uri);
+    final responseJson = json.decode(response.body);
+
+    // Check if the 'results' array is not empty
+    if (responseJson['results'] != null && responseJson['results'].length > 0) {
+      final addressComponents = responseJson['results'][0]['address_components'];
+
+      // Find the formatted address without the country and Incheon
+      String formattedAddress = '';
+      for (var component in addressComponents) {
+        if (component['types'].contains('country') || component['long_name'] == 'Incheon') {
+          continue; // Skip country and Incheon components
+        }
+        formattedAddress += component['long_name'] + ', ';
+      }
+      formattedAddress = formattedAddress.replaceAll(RegExp(r', $'), ''); // Remove trailing comma and space
+
+      setState(() {
+        _searchController.text = formattedAddress;
+        searchedPosition = LatLng(lat, lon);
+      });
+    } else {
+      print('No results found');
+    }
+  }
+
+
+
+
+
+
+  void _LocationInfo(String juso) async {
     String? josuUrl = dotenv.env['JUSO_API_KEY'];
-    String query = _searchController.text;
+    String query = juso;
     if (query.isNotEmpty) {
       try {
         Map<String, String> params = {
@@ -273,7 +313,6 @@ class _LocationInputState extends State<LocationInput> {
             BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
           );
         });
-
         _moveCameraTo(searchedPosition!);
       }
     }
@@ -290,6 +329,23 @@ class _LocationInputState extends State<LocationInput> {
       position: point,
       icon: icon,
       infoWindow: InfoWindow(title: infoText),
+      draggable: true,
+      onDragEnd: (LatLng newPoint) {
+        setState(() {
+          print("newPoint " + newPoint.toString());
+          _addMarker(
+            newPoint, // 업데이트된 좌표로 마커를 추가합니다.
+            infoText, // 기존의 정보를 사용합니다.
+            markerName, // 기존의 마커 이름을 사용합니다.
+            icon, // 기존의 아이콘을 사용합니다.
+          );
+          _getGooglecoo(newPoint.latitude, newPoint.longitude); // 좌표로 주소를 가져옵니다.
+        });
+      },
+
     ));
   }
 }
+
+
+
