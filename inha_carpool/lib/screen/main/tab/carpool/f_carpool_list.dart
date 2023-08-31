@@ -31,12 +31,14 @@ class _CarpoolListState extends State<CarpoolList> {
   //구글맵 변수
   LatLng? _myPoint;
   String _distanceToLocation = ' ';
+
   late GoogleMapController mapController;
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+    _getCurrentLocation();
   }
 
   // User data retrieval
@@ -115,6 +117,7 @@ class _CarpoolListState extends State<CarpoolList> {
               itemCount: myCarpools.length,
               itemBuilder: (context, i) {
                 DocumentSnapshot carpool = myCarpools[i];
+                String startPointName = carpool['startPointName'];
 
                 //카풀 날짜 및 시간 변환
                 DateTime startTime =
@@ -217,7 +220,7 @@ class _CarpoolListState extends State<CarpoolList> {
                             ),
                           ),
                           Column(children: [
-                            Text('${formattedTime}')
+                            Text(formattedTime)
                                 .text
                                 .size(12)
                                 .bold
@@ -246,82 +249,112 @@ class _CarpoolListState extends State<CarpoolList> {
                                         '카풀 위치',
                                         textAlign: TextAlign.center,
                                       ),
-                                      content: Column(
-                                        children: [
-                                          Stack(
-                                            children: [
-                                              Container(
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                height: MediaQuery.of(context)
-                                                        .size
-                                                        .height * 0.6,
-
-                                                // 카풀 위치 지도 부분
-                                                child: GoogleMap(
-                                                  onMapCreated: (controller) =>
-                                                      mapController =
-                                                          controller,
-                                                  initialCameraPosition:
-                                                      CameraPosition(
-                                                    target: LatLng(
-                                                        carpool['startPoint']
-                                                            .latitude,
-                                                        carpool['startPoint']
-                                                            .longitude),
-                                                    zoom: 16,
-                                                  ),
-                                                  markers: {
-                                                    Marker(
-                                                      markerId: MarkerId(
-                                                          carpool['startPoint']
-                                                              .toString()),
-                                                      position: LatLng(
-                                                          carpool['startPoint']
-                                                              .latitude,
-                                                          carpool['startPoint']
-                                                              .longitude),
-                                                      infoWindow: InfoWindow(
-                                                          title: '출발지'),
-                                                    ),
-                                                  },
-                                                  myLocationButtonEnabled: true,
-                                                  myLocationEnabled: true,
-                                                ),
-                                              ),
-
-                                              //카풀위치 버튼
-                                              Positioned(
-                                                bottom: 70,
-                                                right: 5,
-                                                child: ElevatedButton(
-                                                  onPressed: () {
-                                                    _moveCameraTo(
-                                                      LatLng(
-                                                          carpool['startPoint']
-                                                              .latitude,
-                                                          carpool['startPoint']
-                                                              .longitude),
-                                                    );
-                                                  },
-                                                  child: const Text('카풀위치'),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 5),
-                                          Center(
-                                            child: Column(
+                                      content: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.6,
+                                        child: Stack(
+                                          children: [
+                                            Column(
                                               children: [
-                                                Line(
-                                                    color: context.appColors
-                                                        .divider),
-                                                Text('ㅇㅇㅇ'),
+                                                SizedBox(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.5,
+                                                  child: Stack(
+                                                    children: [
+                                                      // 카풀 위치 지도 부분
+                                                      GoogleMap(
+                                                        onMapCreated:
+                                                            (controller) =>
+                                                                mapController =
+                                                                    controller,
+                                                        initialCameraPosition:
+                                                            CameraPosition(
+                                                          target: LatLng(
+                                                              carpool['startPoint']
+                                                                  .latitude,
+                                                              carpool['startPoint']
+                                                                  .longitude),
+                                                          zoom: 16,
+                                                        ),
+                                                        markers: {
+                                                          Marker(
+                                                            markerId: MarkerId(
+                                                                carpool['startPoint']
+                                                                    .toString()),
+                                                            position: LatLng(
+                                                                carpool['startPoint']
+                                                                    .latitude,
+                                                                carpool['startPoint']
+                                                                    .longitude),
+                                                            infoWindow:
+                                                                InfoWindow(
+                                                                    title:
+                                                                        '출발지'),
+                                                          ),
+                                                        },
+                                                        myLocationButtonEnabled:
+                                                            true,
+                                                        myLocationEnabled: true,
+                                                      ),
+                                                      //카풀위치 버튼
+                                                      Positioned(
+                                                        bottom: 70,
+                                                        right: 5,
+                                                        child: ElevatedButton(
+                                                          onPressed: () {
+                                                            _moveCameraTo(
+                                                              LatLng(
+                                                                  carpool['startPoint']
+                                                                      .latitude,
+                                                                  carpool['startPoint']
+                                                                      .longitude),
+                                                            );
+                                                          },
+                                                          child: const Text(
+                                                              '카풀위치'),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(height: 5),
+                                                Container(
+                                                  margin: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 20),
+                                                  child: Expanded(
+                                                    child: Column(
+                                                      children: [
+                                                        Text(startPointName,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        16)),
+                                                        Text(formattedTime,
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        16)),
+                                                        Text(
+                                                            '현재 위치와 거리 $_distanceToLocation',
+                                                            style:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        16)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
                                               ],
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
                                       actions: [
                                         Center(
@@ -370,11 +403,6 @@ class _CarpoolListState extends State<CarpoolList> {
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
 
-    CollectionReference carpoolCollection =
-        FirebaseFirestore.instance.collection('carpool');
-    DocumentReference carpoolDoc = carpoolCollection.doc();
-    DocumentSnapshot carpoolSnapshot = await carpoolDoc.get();
-
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
       //  _showLocationPermissionSnackBar();
@@ -388,19 +416,19 @@ class _CarpoolListState extends State<CarpoolList> {
     setState(() {
       _myPoint = LatLng(position.latitude, position.longitude);
 
-      double distanceInMeters = Geolocator.distanceBetween(
-        _myPoint!.latitude,
-        _myPoint!.longitude,
-        carpoolSnapshot['startPoint'].latitude,
-        carpoolSnapshot['startPoint'].longitude,
-      );
+      // double distanceInMeters = Geolocator.distanceBetween(
+      //   _myPoint!.latitude,
+      //   _myPoint!.longitude,
+      //   startPoint.latitude,
+      //   startPoint.longitude,
+      // );
 
-      double distanceInKm = distanceInMeters / 1000;
-      if (distanceInKm >= 1) {
-        _distanceToLocation = distanceInKm.toStringAsFixed(1) + "km";
-      } else {
-        _distanceToLocation = (distanceInMeters).toStringAsFixed(0) + "m";
-      }
+      // double distanceInKm = distanceInMeters / 1000;
+      // if (distanceInKm >= 1) {
+      //   _distanceToLocation = distanceInKm.toStringAsFixed(1) + "km";
+      // } else {
+      //   _distanceToLocation = (distanceInMeters).toStringAsFixed(0) + "m";
+      // }
     });
   }
 }
