@@ -79,5 +79,13 @@ class AuthService {
     }
 
   }
+  Future<void> passwordUpdate() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await user.updatePassword("123123123");
+    }
+  }
+
+
 
 }
