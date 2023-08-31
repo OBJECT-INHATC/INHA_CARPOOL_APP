@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 import 'package:nav/nav.dart';
 
@@ -23,11 +24,52 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
+  /// 0830 한승완
+  /// 앱이 꺼진 상태 - FCM 푸시 알림 클릭 시 처리 메소드
+  Future<void> setupInteractedMessage() async {
+    // 앱이 백그라운드 상태에서 푸시 알림 클릭하여 열릴 경우
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+
+    // 메시지 처리
+    if (initialMessage != null) _handleMessage(initialMessage);
+    // IOS 백그라운드 상태 푸시 알림 클릭 열릴 경우
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
+  }
+
+  /// 0830 한승완
+  /// 앱이 꺼진 상태 - FCM 푸시 알림 클릭 시 처리 메소드
+  void _handleMessage(RemoteMessage message) async {
+    // 닉네임 가져오기
+    String? nickName = await storage.read(key: "nickName");
+
+    /// 한승완 TODO : 알림의 id에 따라서 이동 경로 구분 기능
+    if (message.data['id'] == '1' && nickName != null) {
+      if(!mounted) return;
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ChatroomPage(
+              carId: message.data['groupId'],
+              userName: nickName!,
+              groupName: "카풀채팅",
+            )
+        ),
+      );
+    }else{
+      if(!mounted) return;
+      context.showErrorSnackbar("알림을 불러오는데 실패했습니다.");
+    }
+  }
+
+  /// 로그인 여부 확인 메서드
   void checkLogin() async{
+
+    // 로그인 여부 확인
     var result = await AuthService().checkUserAvailable();
     if(result){
       if(!mounted) return;
       Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()),);
+      await setupInteractedMessage();
     }
 
   }
