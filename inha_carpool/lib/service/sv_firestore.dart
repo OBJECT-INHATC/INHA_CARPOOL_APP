@@ -178,19 +178,68 @@ class FireStoreService {
   // 카풀 나가기
   exitCarpool(String carId, String userName, String uid) async {
     DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
+    DocumentSnapshot carpoolSnapshot = await carpoolDocRef.get();
 
-    await carpoolDocRef.update({
-      'members': FieldValue.arrayRemove(['${uid}_$userName']),
-      'nowMember': FieldValue.increment(-1),
-    });
-    // members에서 해당 유저 삭제
-    // nowmember -1
+    int nowMember = carpoolSnapshot['nowMember'];
 
-    // await userDocRef.update({
-    //   'carpools': FieldValue.arrayRemove([carId]),
-    // });
-    // // 유저의 carpools에서 해당 carId 삭제
+    if(nowMember == 1) {
+      await carpoolDocRef.update({
+        'status': false,
+      });
+    } else {
+      await carpoolDocRef.update({
+        'members': FieldValue.arrayRemove(['${uid}_$userName']),
+        'nowMember': FieldValue.increment(-1),
+      });
+      // members에서 해당 유저 삭제
+      // nowmember -1
+
+      // await userDocRef.update({
+      //   'carpools': FieldValue.arrayRemove([carId]),
+      // });
+      // // 유저의 carpools에서 해당 carId 삭제
+    }
+
   }
 
+  // 방장의 카풀 나가기
+  exitCarpoolAsAdmin(String carId, String userName, String uid) async {
+    DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
+
+    DocumentSnapshot carpoolSnapshot = await carpoolDocRef.get();
+
+    int nowMember = carpoolSnapshot['nowMember'];
+
+    if(nowMember == 1) {
+      await carpoolDocRef.update({
+        'status': true,
+      });
+    } else {
+      await carpoolDocRef.update({
+        'members': FieldValue.arrayRemove(['${uid}_$userName']),
+        'nowMember': FieldValue.increment(-1),
+      });
+      // members에서 해당 유저 삭제
+      // nowmember -1
+
+      DocumentSnapshot carpoolSnapshot = await carpoolDocRef.get();
+      List<dynamic> members = carpoolSnapshot['members'];
+      if (members.isNotEmpty) {
+        String newAdmin = members[0]; // 첫 번째 멤버를 새로운 방장으로 설정 (원하는 규칙에 따라 변경 가능)
+        await carpoolDocRef.update({
+          'admin': newAdmin,
+        });
+      }
+
+      // admin을 members[0]으로 변경
+
+      // await userDocRef.update({
+      //   'carpools': FieldValue.arrayRemove([carId]),
+      // });
+      // // 유저의 carpools에서 해당 carId 삭제
+    }
+
+
+  }
 
 }
