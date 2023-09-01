@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/screen/register/s_verifiedregister.dart';
 import 'package:nav/nav.dart';
 import '../../service/sv_auth.dart';
 import '../dialog/d_auth_verification.dart';
@@ -319,15 +320,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     if (value == true) {
                                       await FirebaseAuth.instance.currentUser!
                                           .sendEmailVerification();
-                                      Navigator.pop(context);
+
                                       if (!mounted) return;
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (context) {
-                                          return VerificationDialog();
-                                        },
-                                      );
+                                      Nav.push(VerifiedRegisterPage());
                                     } else {
                                       showSnackbar(context, Colors.red, value);
                                       setState(() {
