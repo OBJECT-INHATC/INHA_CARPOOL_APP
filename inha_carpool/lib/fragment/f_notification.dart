@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
+import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 
 import '../screen/main/tab/carpool/s_chatroom.dart';
 
@@ -17,6 +19,21 @@ class _NotificationListState extends State<NotificationList> {
     "카리나 님을 신고했습니다.": Icons.report,
     "카리나 님이 주안역-인하공전(방장:홀란드) 카풀에 참여하였습니다. ": Icons.car_rental,
   };
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+  testPrint() async {
+    AlarmDao().getAllAlarms().then((value){
+      for( var i in value){
+        print(i.title);
+        print(i.body);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

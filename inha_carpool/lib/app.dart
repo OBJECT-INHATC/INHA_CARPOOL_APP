@@ -2,7 +2,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
+import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
 
 import 'common/theme/custom_theme_app.dart';
@@ -47,6 +49,17 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
               priority: Priority.high,
             ),
           ),
+        );
+
+        /// 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
+        AlarmDao().insert(
+            AlarmMessage(
+              carId: message.data['groupId'] as String,
+              type: message.data['id'] as String,
+              title: notification.title as String,
+              body: notification.body as String,
+              time: DateTime.now().millisecondsSinceEpoch,
+            )
         );
       }
     });
