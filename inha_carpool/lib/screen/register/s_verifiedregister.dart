@@ -20,7 +20,7 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
     super.initState();
     checkUserStatus();
   }
-
+///인증 여부에 따른 state 변경
   Future<void> checkUserStatus() async {
     user = _auth.currentUser;
     if (user != null) {
@@ -75,8 +75,10 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                           color: Colors.white,
                           fontWeight: FontWeight.bold)),
                   onPressed: (verificationText == "본인인증 대기중...")?(){
+                    ///아직 대기중이면 state변경 감지
                     checkUserStatus();
                   }:(){
+                    ///인증이 완료되면 로그인 페이지로 이동
                     Navigator.pop(context);
                     Navigator.pop(context);
 
