@@ -43,7 +43,6 @@ class _HomeState extends State<Home> {
       if (_scrollController.position.pixels == 0) {
         // 맨 위에 도달했을 경우
         print('맨 위');
-
       } else {
         // 맨 아래에 도달했을 경우
         /// 처음에는 리스트가 5개, 스크롤을 내리면 추가 데이터를 가져옴. 최대 개수를 전체 리스트 갯수로 제한.
@@ -249,7 +248,7 @@ class _HomeState extends State<Home> {
                                     carId: carpoolData['carId'],
                                     groupName: '카풀 네임',
                                     userName: nickName,
-                                        uid: uid,
+                                    uid: uid,
                                   ));
                                   print('현재 유저: $currentUser');
                                   print(carpoolData['members']);
