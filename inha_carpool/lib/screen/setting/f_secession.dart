@@ -1,8 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class SecessionPage extends StatelessWidget {
+import '../dialog/d_delete_auth.dart';
+
+class SecessionPage extends StatefulWidget {
+
+  @override
+  State<SecessionPage> createState() => _SecessionPageState();
+}
+
+class _SecessionPageState extends State<SecessionPage> {
+
+  final storage = FlutterSecureStorage();
+  late Future<String> nickNameFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    nickNameFuture = _loadUserDataForKey("nickName");
+  }
+
+  Future<String> _loadUserDataForKey(String key) async {
+    return await storage.read(key: key) ?? "";
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -24,10 +54,22 @@ class SecessionPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              "가나다라마바사님\n정말 탈퇴하시겠어요?",
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
+
+            FutureBuilder<String>(
+              future: nickNameFuture,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // Loading spinner while waiting for data
+                } else if (snapshot.hasError) {
+                  return Text('Error loading nickname');
+                } else {
+                  return Text(
+                      "${snapshot.data}님... 정말 탈퇴하시겠어요?",
+                      style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+                );
+                }
+                },
             ),
             SizedBox(height: 25),
             Icon(
@@ -69,7 +111,16 @@ class SecessionPage extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                // 탈퇴 처리 로직 구현 예정(아직안함ㅎ)
+
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DeleteAuthDialog();
+                  },
+                );
+
+                // Carpool
+
               },
               child: Text('탈퇴하기'),
               style: ElevatedButton.styleFrom(
@@ -88,3 +139,5 @@ class SecessionPage extends StatelessWidget {
 }
 
 void main() => runApp(MaterialApp(home: SecessionPage()));
+
+//탈퇴하기를 누르면 dialog 뜨고 아이디 비밀번호 입력하고 맞으면 확인 눌러서 탈퇴 로직 구현

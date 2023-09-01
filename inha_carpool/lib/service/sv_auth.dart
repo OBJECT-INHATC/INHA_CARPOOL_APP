@@ -119,6 +119,32 @@ class AuthService {
     }
   }
 
+  Future<String> deleteAccount(String email, String password) async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    try {
+      // Create a credential
+      AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+
+      // Reauthenticate
+      await user!.reauthenticateWithCredential(credential);
+
+      // Delete the user
+      await user.delete();
+
+
+      return 'Success';
+    } catch (e) {
+      print(e.toString());
+
+      if (e is FirebaseAuthException && e.code == 'requires-recent-login') {
+        return 'Requires recent login';
+      }
+
+      return 'Failed';
+    }
+  }
+
 
 
 
