@@ -79,5 +79,48 @@ class AuthService {
     }
 
   }
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  Future passwordUpdate({ required String oldPassword, required String newPassword}) async {
+    // 현재 로그인된 유저 가져오기
+    User? user =FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      print('Current user: ${user.email}');
+        try {
+          await user.updatePassword(newPassword);
+
+          return 'Success';
+        } catch (e) {
+          print(e);
+          if (e is FirebaseAuthException && e.code == 'user-mismatch') {
+            print('The provided credentials do not match the currently logged in user.');
+            return 'Failed - User Mismatch';
+          }
+          return 'Failed';
+        }
+      } else {
+        print('User not found or wrong email');
+        return 'Failed - User Not Found Or Wrong Email';
+      }
+    }
+
+
+
+  Future<String> validatePassword(String password) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    AuthCredential credential = EmailAuthProvider.credential(email: user!.email!, password: password);
+
+    try {
+      // Reauthenticate
+      await user.reauthenticateWithCredential(credential);
+      return 'Valid'; //
+    } catch (e) {
+      print(e.toString());
+      return 'Invalid'; // If an error occurs (which means the password is wrong), return 'Invalid'
+    }
+  }
+
+
+
+
 
 }
