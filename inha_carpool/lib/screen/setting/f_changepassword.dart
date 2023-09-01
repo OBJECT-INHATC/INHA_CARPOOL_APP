@@ -47,7 +47,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 '학번',
                 style: TextStyle(fontSize: 16),
               ),
-
               SizedBox(height: 20),
               Text(
                 '현재 비밀번호',
@@ -58,10 +57,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   hintText: '현재 비밀번호 입력',
                 ),
                 obscureText: true,
-                onChanged: (text) {
+                onChanged: (text) async {
                   // 텍스트 필드 값 변경 시 실행할 코드 작성
                   oldPassword = text;
-
                 },
               ),
               SizedBox(height: 10),
@@ -111,26 +109,33 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               ElevatedButton(
                 onPressed: () async {
                   // 비밀번호 변경 로직 구현 예정
+                  String isValid =
+                      await AuthService().validatePassword(oldPassword);
 
-                  String result = await AuthService().passwordUpdate(
-                      oldPassword: oldPassword,
-                      newPassword: newPassword);
-                  if (result == 'Success') {
+                  if (isValid == 'Invalid') {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('성공적으로 변경되었습니다.')),
+                      SnackBar(content: Text('현재 비밀번호가 틀립니다.')),
                     );
-
-                    AuthService().signOut().then((value) {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                            (Route<dynamic> route) => false,
-                      );
-                    });
                   } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('비밀번호 변경에 실패했습니다.')),
-                    );
+                    String result = await AuthService().passwordUpdate(
+                        oldPassword: oldPassword, newPassword: newPassword);
+                    if (result == 'Success') {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('성공적으로 변경되었습니다.')),
+                      );
+
+                      AuthService().signOut().then((value) {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          (Route<dynamic> route) => false,
+                        );
+                      });
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('비밀번호 변경에 실패했습니다.')),
+                      );
+                    }
                   }
                 },
                 child: Text('비밀번호 변경'),
