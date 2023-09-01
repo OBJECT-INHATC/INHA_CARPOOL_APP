@@ -249,6 +249,7 @@ class _HomeState extends State<Home> {
                                     carId: carpoolData['carId'],
                                     groupName: '카풀 네임',
                                     userName: nickName,
+                                        uid: uid,
                                   ));
                                   print('현재 유저: $currentUser');
                                   print(carpoolData['members']);
@@ -257,6 +258,7 @@ class _HomeState extends State<Home> {
                                     carId: carpoolData['carId'],
                                     groupName: '카풀 네임',
                                     userName: nickName,
+                                    uid: uid,
                                   ));
                                 }
                               } else {
