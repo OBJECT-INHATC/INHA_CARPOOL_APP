@@ -237,7 +237,6 @@ class _HomeState extends State<Home> {
                               int maxMember = carpoolData['maxMember'];
 
                               String currentUser = '${uid}_$nickName';
-
                               if (carpoolData['members']
                                   .contains(currentUser)) {
                                 // 이미 참여한 경우

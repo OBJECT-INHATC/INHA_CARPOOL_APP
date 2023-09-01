@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
@@ -41,6 +42,8 @@ class _LoginPageState extends State<LoginPage> {
   void _handleMessage(RemoteMessage message) async {
     // 닉네임 가져오기
     String? nickName = await storage.read(key: "nickName");
+    // uid 가져오기
+    String? uid = await storage.read(key: "uid");
 
     /// 한승완 TODO : 알림의 id에 따라서 이동 경로 구분 기능
     if (message.data['id'] == '1' && nickName != null) {
@@ -52,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
               carId: message.data['groupId'],
               userName: nickName!,
               groupName: "카풀채팅",
+              uid: uid!,
             )
         ),
       );
@@ -80,6 +84,23 @@ class _LoginPageState extends State<LoginPage> {
   // 비밀번호
   String password = "";
 
+  String academy = "@itc.ac.kr";
+
+  var selectedIndex = 0;
+
+  List<Color> selectedBackgroundColors = [Colors.blue, Colors.green];
+  List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
+  void updateBackgroundColors() {
+    // 선택된 토글의 배경색을 변경
+    selectedBackgroundColors = selectedIndex == 0
+        ? [Colors.blue, Colors.white]
+        : [Colors.white, Colors.green];
+
+    // 선택되지 않은 토글의 배경색을 변경
+    unSelectedBackgroundColors = selectedIndex == 0
+        ? [Colors.white, Colors.green]
+        : [Colors.blue, Colors.white];
+  }
   // 로딩 여부
   bool isLoading = false;
 
@@ -127,24 +148,79 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Container(
-                        height: context.height(0.08),
-                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.black), // 밑줄 색상 설정
+                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                        child: Stack(
+                          alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
+                          children: [
+                            TextFormField(
+                                decoration: InputDecoration(
+                                  enabledBorder: const UnderlineInputBorder(
+                                    borderSide:
+                                    BorderSide(color: Colors.black),
+                                  ),
+                                  focusedBorder: const UnderlineInputBorder(
+                                    borderSide:
+                                    BorderSide(color: Colors.blue),
+                                  ),
+                                  labelText: '학번',
+                                ),
+                                onChanged: (text) {
+                                  // 텍스트 필드 값 변경 시 실행할 코드 작성
+                                  email = text + academy;
+                                },
+                                validator: (val) {
+                                  if (val!.isNotEmpty) {
+                                    return null;
+                                  } else {
+                                    return "학번이 비어있습니다.";
+                                  }
+                                }),
+                            Positioned(
+                              // 중간 텍스트를 겹쳐서 배치
+                              right: 140,
+                              child: Text(academy),
                             ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
+                            Positioned(
+                              // 중간 텍스트를 겹쳐서 배치
+                              right: 0,
+                              child: FlutterToggleTab(
+                                width: 30,
+                                borderRadius: 30,
+                                height: 40,
+                                // initialIndex: 0,
+                                selectedTextStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700),
+                                unSelectedTextStyle: const TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500),
+                                labels: const ["인하공전", "인하대"],
+                                selectedLabelIndex: (index) {
+                                  setState(() {
+                                    if (index == 0) {
+                                      academy = "@itc.ac.kr";
+                                    } else {
+                                      academy = "@inha.ac.kr";
+                                    }
+                                    selectedIndex = index;
+                                    updateBackgroundColors();
+                                  });
+                                },
+                                selectedBackgroundColors: const [
+                                  Colors.blue,
+                                  Colors.green
+                                ],
+                                unSelectedBackgroundColors: const [
+                                  Colors.white,
+                                  Colors.white
+                                ],
+                                isScroll: false,
+                                selectedIndex: selectedIndex,
+                              ),
                             ),
-                            labelText: '이메일',
-                          ),
-                          onChanged: (text) {
-                            email = text;
-                          },
+                          ],
                         ),
                       ),
                       Container(
