@@ -24,16 +24,18 @@ import 'package:flutter/foundation.dart'
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   RemoteNotification? notification = message.notification;
+  var nowTime = DateTime.now().millisecondsSinceEpoch; // 알림 도착 시각
 
   if (message.notification != null) {
     /// 백그라운드 상태에서 알림을 수신하면 로컬 알림에 저장
     AlarmDao().insert(
         AlarmMessage(
+          aid: "${notification?.title}${notification?.body}${nowTime.toString()}",
           carId: message.data['groupId'] as String,
           type: message.data['id'] as String,
           title: notification?.title as String,
           body: notification?.body as String,
-          time: DateTime.now().millisecondsSinceEpoch,
+          time: nowTime,
         )
     ).then((value){
       print("백그라운드 저장");
@@ -43,11 +45,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   return;
 
 }
-//
-// @pragma('vm:entry-point')
-// void backgroundHandler(NotificationResponse response) async {
-//
-// }
 
 /// 앱 실행 시 초기화 - 알림 설정
 void initializeNotification() async {

@@ -4,14 +4,17 @@ class AlarmMessage {
 
   int? id;
 
+  final String aid; /// 제목 + 내용 + 시간 -> 해당 정보로 알림을 구분
   final String carId;
   final String type;
   final String title;
   final String body;
   final int time;
 
-  AlarmMessage(
-      {this.id,
+
+  AlarmMessage({
+    this.id,
+    required this.aid,
     required this.carId,
     required this.type,
     required this.title,
@@ -19,20 +22,21 @@ class AlarmMessage {
     required this.time,
   });
 
-  static AlarmMessage fromMap(Map<String, dynamic> map, int? id) {
-    return AlarmMessage(
-      id: id,
-      carId: map['carId'] as String,
-      type: map['type'] as String,
-      title: map['title'] as String,
-      body: map['body'] as String,
-      time: map['time'] as int,
-    );
+  static AlarmMessage fromMap(Map<String, dynamic> map) {
+  return AlarmMessage(
+    aid : map['aid'] as String,
+    carId: map['carId'] as String,
+    type: map['type'] as String,
+    title: map['title'] as String,
+    body: map['body'] as String,
+    time: map['time'] as int,
+  );
   }
+
 
   factory AlarmMessage.fromJson(Map<String, dynamic> json) {
     return AlarmMessage(
-      id : json['id'] as int,
+      aid : json['aid'] as String,
       carId: json['carId'] as String,
       type: json['type'] as String,
       title: json['title'] as String,
@@ -43,7 +47,7 @@ class AlarmMessage {
 
   Map<String, dynamic> toMap() {
     return {
-      'id' : id ?? 0 ,
+      'aid' : aid,
       'carId': carId,
       'type': type,
       'title': title,

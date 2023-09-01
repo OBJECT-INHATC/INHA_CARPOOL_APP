@@ -17,8 +17,8 @@ class AlarmDao {
   }
 
   /// id로 알림 삭제
-  Future deleteById(int id) async {
-    final finder = Finder(filter: Filter.equals('id', id));
+  Future deleteById(String aid) async {
+    final finder = Finder(filter: Filter.equals('aid', aid));
     await _alarmFolder.delete(await _db, finder: finder);
   }
 
@@ -27,19 +27,19 @@ class AlarmDao {
     await _alarmFolder.delete(await _db);
   }
 
-  /// 알림 리스트 반환
+  /// 알림 리스트 반환 + 시간 정렬 [ 최근 ~> 과거 ]
   Future<List<AlarmMessage>> getAllAlarms() async {
     final finder = Finder(sortOrders: [SortOrder('time')]);
 
     final recordSnapshots = await _alarmFolder.find(await _db, finder: finder);
 
-    return recordSnapshots.map((snapshot) {
-      final alarmMessage = AlarmMessage.fromMap(snapshot.value, snapshot.key);
-      alarmMessage.id = snapshot.key;
+    final alarmList = recordSnapshots.map((snapshot) {
+      final alarmMessage = AlarmMessage.fromMap(snapshot.value);
       return alarmMessage;
     }).toList();
-  }
 
+    return alarmList.reversed.toList(); // 리스트를 역순으로 반환
+  }
 
 
 
