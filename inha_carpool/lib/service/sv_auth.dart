@@ -79,6 +79,8 @@ class AuthService {
     }
 
   }
+
+  ///비밀번호 변경
   final FirebaseAuth auth = FirebaseAuth.instance;
   Future passwordUpdate({ required String oldPassword, required String newPassword}) async {
     // 현재 로그인된 유저 가져오기
@@ -104,8 +106,8 @@ class AuthService {
     }
 
 
-
-  Future<String> validatePassword(String password) async {
+/// 현재 비밀번호 확인
+  Future <String> validatePassword(String password) async {
     User? user = FirebaseAuth.instance.currentUser;
     AuthCredential credential = EmailAuthProvider.credential(email: user!.email!, password: password);
 
