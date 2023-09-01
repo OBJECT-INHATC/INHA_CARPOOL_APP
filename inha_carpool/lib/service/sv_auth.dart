@@ -141,7 +141,19 @@ class AuthService {
         return 'Requires recent login';
       }
 
-      return 'Failed';
+      return 'Failed  :${e.toString()}';
+    }
+  }
+
+  Future<bool> validateCredentials(String email, String password) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
+      await user!.reauthenticateWithCredential(credential);
+      return true;
+    } catch (e) {
+      print(e.toString());
+      return false;
     }
   }
 
