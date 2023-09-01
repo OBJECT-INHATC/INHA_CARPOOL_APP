@@ -293,6 +293,34 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                         );
                                       },
                                     );
+                                  } else {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text('채팅방 나가기'),
+                                          content: Text('채팅방을 나가시겠습니까?'),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text('나가기'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                FireStoreService().exitCarpoolAsAdmin(widget.carId, widget.userName, widget.uid);
+                                                Navigator.pop(context);
+                                                Navigator.pop(context);
+                                                Navigator.pushReplacement(
+                                                    context, MaterialPageRoute(builder: (context) => MainScreen()));
+                                              },
+                                              child: Text('삭제'),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
                                   }
                                 },
                                 style: TextButton.styleFrom(
