@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
+import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
@@ -21,16 +23,28 @@ import 'package:flutter/foundation.dart'
 /// 백그라운드 메시지 수신 호출 콜백 함수
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  if (message.notification != null) {
+  RemoteNotification? notification = message.notification;
+  var nowTime = DateTime.now().millisecondsSinceEpoch; // 알림 도착 시각
 
+  if (message.notification != null) {
+    /// 백그라운드 상태에서 알림을 수신하면 로컬 알림에 저장
+    AlarmDao().insert(
+        AlarmMessage(
+          aid: "${notification?.title}${notification?.body}${nowTime.toString()}",
+          carId: message.data['groupId'] as String,
+          type: message.data['id'] as String,
+          title: notification?.title as String,
+          body: notification?.body as String,
+          time: nowTime,
+        )
+    ).then((value){
+      print("백그라운드 저장");
+    });
   }
+
   return;
+
 }
-//
-// @pragma('vm:entry-point')
-// void backgroundHandler(NotificationResponse response) async {
-//
-// }
 
 /// 앱 실행 시 초기화 - 알림 설정
 void initializeNotification() async {

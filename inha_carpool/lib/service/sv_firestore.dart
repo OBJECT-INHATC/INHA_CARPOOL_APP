@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 import '../common/models/m_chat.dart';
 
@@ -117,16 +118,31 @@ class FireStoreService {
 
   }
 
-  ///0830 서은율
-  ///카풀 참가시 유저 입장 메시지 전송
-  Future sendEntryMessage(String carId, String userName) async {
-    Map<String, dynamic> chatMessageMap = {
+  ///0831 서은율, 한승완
+  ///카풀 참가시 유저 입장 메시지 전송 + 로컬 DB에 저장
+  Future<void> sendEntryMessage(String carId, String userName) async {
+
+    const String sender = 'service';
+    final int currentTime = DateTime.now().millisecondsSinceEpoch;
+
+    final Map<String, dynamic> chatMessageMap = {
       "message": "$userName님이 입장하였습니다.",
-      "sender": 'service',
-      "time": DateTime.now().millisecondsSinceEpoch,
+      "sender": sender,
+      "time": currentTime,
     };
-    return carpoolCollection.doc(carId).collection("messages").add(chatMessageMap);
+
+    final ChatMessage chatMessage = ChatMessage(
+      carId: carId,
+      message: chatMessageMap['message'],
+      sender: chatMessageMap['sender'],
+      time: chatMessageMap['time'],
+    );
+
+    ChatDao().insert(chatMessage);
+    await carpoolCollection.doc(carId).collection("messages").add(chatMessageMap);
   }
+
+
   /// 0829 한승완 - 서버에 Fcm 토큰 저장
   Future<void> saveToken(String token, String carId) async {
     // 이미 해당 carId로 저장된 토큰이 있는지 확인

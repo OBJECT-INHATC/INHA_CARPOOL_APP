@@ -9,7 +9,7 @@ class ChatDao {
 
   final _chatFolder = intMapStoreFactory.store(folderName);
 
-  Future<Database> get _db async => await AppDatabase.instance.database;
+  Future<Database> get _db async => await AppDatabase.instance.chatDatabase;
 
   /// 채팅 메시지 단일 저장
   Future insert(ChatMessage chatMessage) async {
