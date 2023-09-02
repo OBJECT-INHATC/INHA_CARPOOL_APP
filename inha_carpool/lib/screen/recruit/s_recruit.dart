@@ -313,13 +313,13 @@ class _RecruitPageState extends State<RecruitPage> {
     );
   }
 
-  Future<void> _getCurrentLocation() async {
-    Location_handler.getCurrentLocation(context, (LatLng location) {
-      setState(() {
-        startPoint = location;
-      });
-    });
-  }
+  // Future<void> _getCurrentLocation() async {
+  //   Location_handler.getCurrentLocation(context, (LatLng location) {
+  //     setState(() {
+  //       startPoint = location;
+  //     });
+  //   });
+  // }
 
   // 주소 입력 오류 알림창
   Future<void> _showAddressAlertDialog(BuildContext context) async {
