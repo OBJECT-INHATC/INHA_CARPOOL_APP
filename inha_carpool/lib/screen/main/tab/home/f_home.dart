@@ -33,28 +33,9 @@ class _HomeState extends State<Home> {
   late String gender = "";
   late String email = "";
 
-  // 페이징 처리
-  int _visibleItemCount = 5; // 한 번에 표시되는 아이템 수
+  // 페이징 처리를 위한 변수 초기화
+  int _visibleItemCount = 0;
   ScrollController _scrollController = ScrollController();
-
-  // 스크롤 감지 이벤트 핸들러
-  void _scrollListener() {
-    if (_scrollController.position.atEdge) {
-      if (_scrollController.position.pixels == 0) {
-        // 맨 위에 도달했을 경우
-        print('맨 위');
-      } else {
-        // 맨 아래에 도달했을 경우
-        /// 처음에는 리스트가 5개, 스크롤을 내리면 추가 데이터를 가져옴. 최대 개수를 전체 리스트 갯수로 제한.
-        setState(() {
-          carPoolList.then((list) {
-            _visibleItemCount = (_visibleItemCount + 5).clamp(0, list.length);
-            print('현재 리스트 수: ${list.length}');
-          });
-        });
-      }
-    }
-  }
 
   @override
   void initState() {
@@ -62,11 +43,13 @@ class _HomeState extends State<Home> {
     initMyPoint();
     carPoolList = _timeByFunction();
     _loadUserData();
+    _refreshCarpoolList();
     // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
     _scrollController.addListener(_scrollListener);
     //  carPoolList = FirebaseCarpool.getCarpoolsWithMember("hoon");
   } // Null 허용
 
+  // 유저 정보 받아오기
   Future<void> _loadUserData() async {
     nickName = await storage.read(key: "nickName") ?? "";
     uid = await storage.read(key: "uid") ?? "";
@@ -77,7 +60,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  //내 위치 받아오기
+  // 내 위치 받아오기
   Future<void> initMyPoint() async {
     myPoint = (await Location_handler.getCurrentLatLng(context))!;
   }
@@ -100,21 +83,42 @@ class _HomeState extends State<Home> {
   Future<void> _refreshCarpoolList() async {
     if (selectedFilter == FilteringOption.Time) {
       carPoolList = _timeByFunction();
-      carPoolList = _nearByFunction();
-      print('새로고침 완료');
-
-      // 새로고침 완료 후 리스트 수를 5개로 초기화
-      setState(() {
-        _visibleItemCount = 5;
-      });
     } else {
-      print('새로고침 오류: e');
+      carPoolList = _nearByFunction();
     }
+    print('새로고침 완료');
+
+    // 새로고침 후 보여지는 리스트 갯수 : 5개 보다 적을시 리스트의 갯수, 이상일 시 5개
+    carPoolList.then((list) {
+      setState(() {
+        _visibleItemCount = list.length < 5 ? list.length : 5;
+      });
+    });
 
     // 로딩과정
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
 
     setState(() {});
+  }
+
+  // 스크롤 감지 이벤트 핸들러
+  void _scrollListener() {
+    if (_scrollController.position.atEdge) {
+      if (_scrollController.position.pixels == 0) {
+        // 맨 위에 도달했을 경우
+        print('맨 위');
+      } else {
+        // 맨 아래에 도달했을 경우
+        /// 처음에는 리스트가 5개, 스크롤을 내리면 추가 데이터를 가져옴(5개씩)
+        /// 최대 개수는 전체 리스트 갯수로 제한.
+        setState(() {
+          carPoolList.then((list) {
+            _visibleItemCount = (_visibleItemCount + 5).clamp(0, list.length);
+            print('리스트 갯수: $_visibleItemCount');
+          });
+        });
+      }
+    }
   }
 
   @override
