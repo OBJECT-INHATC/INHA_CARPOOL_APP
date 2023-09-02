@@ -27,7 +27,6 @@ class _LocationInputState extends State<LocationInput> {
   // Google Maps API Host
   final String _host = 'https://maps.googleapis.com/maps/api/geocode/json';
 
-
   // Google Maps Controller
   late GoogleMapController mapController;
 
@@ -186,11 +185,9 @@ class _LocationInputState extends State<LocationInput> {
           ),
           Container(
             margin: EdgeInsets.symmetric(vertical: 0),
-
             decoration: BoxDecoration(
               border: Border.all(width: 1, color: Colors.blue),
-              borderRadius:
-              BorderRadius.circular(40),
+              borderRadius: BorderRadius.circular(40),
             ),
             child: Padding(
               padding: const EdgeInsets.all(5.0),
@@ -233,22 +230,28 @@ class _LocationInputState extends State<LocationInput> {
 
     // 결과가 있으면 주소를 가져옵니다.
     if (responseJson['results'] != null && responseJson['results'].length > 0) {
-      final addressComponents = responseJson['results'][0]['address_components'];
+      final addressComponents =
+          responseJson['results'][0]['address_components'];
 
-      // 국가와 인천시는 제외하고 가져옵니다.
-      String formattedAddress = '';
-      for (var component in addressComponents) {
-        if (component['types'].contains('country') || component['long_name'] == 'Incheon') {
-          continue; // Skip country and Incheon components
+      // 컴포넌트가 역순으로 생성되기 때문에 그걸 역순으로 가져올 리스트
+      List<String> reversedAddressComponents = [];
+
+      // 국가와 인천시는 제외하고 가져오기
+      // ex) 123-12 인하로 미추홀구 --> 미추홀구 인하로 123-12)
+      for (var i = addressComponents.length - 1; i >= 0; i--) {
+        var component = addressComponents[i];
+        if (component['types'].contains('country') ||
+            component['long_name'] == 'Incheon') {
+          continue;
         }
-        formattedAddress += component['long_name'] + ', ';
+        reversedAddressComponents.add(component['long_name']);
       }
+      // 공백으로 연결
+      String reversedFormattedAddress = reversedAddressComponents.join(' ');
 
-      // 마지막 쉼표와 공백을 제거합니다.
-      formattedAddress = formattedAddress.replaceAll(RegExp(r', $'), ''); // Remove trailing comma and space
-
+      // 텍스트필드에 주소를 대입
       setState(() {
-        _searchController.text = formattedAddress;
+        _searchController.text = reversedFormattedAddress;
         searchedPosition = LatLng(lat, lon);
       });
     } else {
@@ -351,13 +354,10 @@ class _LocationInputState extends State<LocationInput> {
             markerName, // 기존의 마커 이름을 사용합니다.
             icon, // 기존의 아이콘을 사용합니다.
           );
-          _getGooglecoo(newPoint.latitude, newPoint.longitude); // 좌표로 주소를 가져옵니다.
+          _getGooglecoo(
+              newPoint.latitude, newPoint.longitude); // 좌표로 주소를 가져옵니다.
         });
       },
-
     ));
   }
 }
-
-
-

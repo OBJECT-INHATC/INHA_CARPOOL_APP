@@ -14,19 +14,25 @@ class LocationInputWidget extends StatefulWidget {
   final ValueChanged<String> onLocationSelected;
 
   LocationInputWidget(
-      {super.key, required this.labelText,
+      {super.key,
+      required this.labelText,
       required this.Point,
-      required this.pointText, required this.onLocationSelected, required this.detailPoint, required this.detailController}); // 생성자 추가
+      required this.pointText,
+      required this.onLocationSelected,
+      required this.detailPoint,
+      required this.detailController}); // 생성자 추가
 
   @override
   _LocationInputWidgetState createState() => _LocationInputWidgetState();
 }
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
-  String get detailControllerText => widget.detailController.text; // 변수에 접근 가능한 메서드 추가
+  String get detailControllerText =>
+      widget.detailController.text; // 변수에 접근 가능한 메서드 추가
 
   String selectedLocation = '';
-  bool isGestureEnabled = true;
+
+  // bool isGestureEnabled = true;
 
   @override
   void initState() {
@@ -34,30 +40,28 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
     selectedLocation = widget.labelText;
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         // 출발지, 도착지
         GestureDetector(
-          onTap: isGestureEnabled ? () async {
+          onTap: () async {
             final result = await Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => LocationInput(widget.Point)),
+              MaterialPageRoute(
+                  builder: (context) => LocationInput(widget.Point)),
             );
-
             // result가 null이 아니면 setState로 selectedLocation을 변경
             if (result != null) {
               setState(() {
-                selectedLocation = Location_handler.getStringBetweenUnderscores(result);
-                isGestureEnabled = false; // Tap 이벤트 비활성화
+                selectedLocation =
+                    Location_handler.getStringBetweenUnderscores(result);
+                // isGestureEnabled = false; // Tap 이벤트 비활성화
               });
               widget.onLocationSelected(result);
             }
-          } : null, // isGestureEnabled가 false일 때는 onTap 이벤트 비활성화
+          }, // isGestureEnabled가 false일 때는 onTap 이벤트 비활성화
           child: Container(
             margin: const EdgeInsets.fromLTRB(30, 15, 30, 10),
             child: Column(
