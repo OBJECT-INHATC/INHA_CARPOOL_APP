@@ -38,7 +38,6 @@ class _CarpoolListState extends State<CarpoolList> {
   void initState() {
     super.initState();
     _loadUserData();
-    _getCurrentLocation();
   }
 
   // User data retrieval
@@ -118,7 +117,6 @@ class _CarpoolListState extends State<CarpoolList> {
               itemBuilder: (context, i) {
                 DocumentSnapshot carpool = myCarpools[i];
                 String startPointName = carpool['startPointName'];
-
                 //카풀 날짜 및 시간 변환
                 DateTime startTime =
                     DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
@@ -153,8 +151,7 @@ class _CarpoolListState extends State<CarpoolList> {
                               carId: carpool['carId'],
                               groupName: '카풀네임',
                               userName: nickName,
-                              uid: uid
-                          )),
+                              uid: uid)),
                     );
                   },
                   child: Card(
@@ -239,6 +236,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                 size: 30,
                               ),
                               onPressed: () {
+                                _getCurrentLocation(carpool['startPoint']);
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -330,27 +328,25 @@ class _CarpoolListState extends State<CarpoolList> {
                                                   margin: const EdgeInsets
                                                           .symmetric(
                                                       horizontal: 20),
-                                                  child: Expanded(
-                                                    child: Column(
-                                                      children: [
-                                                        Text(startPointName,
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        16)),
-                                                        Text(formattedTime,
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        16)),
-                                                        Text(
-                                                            '현재 위치와 거리 $_distanceToLocation',
-                                                            style:
-                                                                const TextStyle(
-                                                                    fontSize:
-                                                                        16)),
-                                                      ],
-                                                    ),
+                                                  child: Column(
+                                                    children: [
+                                                      Text(startPointName,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      16)),
+                                                      Text(formattedTime,
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      16)),
+                                                      Text(
+                                                          '현재 위치와 거리: $_distanceToLocation',
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      16)),
+                                                    ],
                                                   ),
                                                 ),
                                               ],
@@ -402,7 +398,7 @@ class _CarpoolListState extends State<CarpoolList> {
   }
 
   //현재 기기 위치 정보 가져오기 및 권한
-  Future<void> _getCurrentLocation() async {
+  Future<void> _getCurrentLocation(GeoPoint startPoint) async {
     LocationPermission permission = await Geolocator.requestPermission();
 
     if (permission == LocationPermission.denied ||
@@ -417,20 +413,19 @@ class _CarpoolListState extends State<CarpoolList> {
 
     setState(() {
       _myPoint = LatLng(position.latitude, position.longitude);
+      double distanceInMeters = Geolocator.distanceBetween(
+        _myPoint!.latitude,
+        _myPoint!.longitude,
+        startPoint!.latitude,
+        startPoint!.longitude,
+      );
 
-      // double distanceInMeters = Geolocator.distanceBetween(
-      //   _myPoint!.latitude,
-      //   _myPoint!.longitude,
-      //   startPoint.latitude,
-      //   startPoint.longitude,
-      // );
-
-      // double distanceInKm = distanceInMeters / 1000;
-      // if (distanceInKm >= 1) {
-      //   _distanceToLocation = distanceInKm.toStringAsFixed(1) + "km";
-      // } else {
-      //   _distanceToLocation = (distanceInMeters).toStringAsFixed(0) + "m";
-      // }
+      double distanceInKm = distanceInMeters / 1000;
+      if (distanceInKm >= 1) {
+        _distanceToLocation = distanceInKm.toStringAsFixed(1) + "km";
+      } else {
+        _distanceToLocation = (distanceInMeters).toStringAsFixed(0) + "m";
+      }
     });
   }
 }
