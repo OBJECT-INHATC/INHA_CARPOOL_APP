@@ -184,7 +184,7 @@ class _LocationInputState extends State<LocationInput> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 0),
+            margin: const EdgeInsets.symmetric(vertical: 0),
             decoration: BoxDecoration(
               border: Border.all(width: 1, color: Colors.blue),
               borderRadius: BorderRadius.circular(40),
@@ -194,14 +194,34 @@ class _LocationInputState extends State<LocationInput> {
               child: Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(150, 50),
+                    minimumSize: const Size(150, 50),
                     backgroundColor: Colors.blue,
                   ),
                   onPressed: () {
-                    Navigator.pop(context,
-                        "${searchedPosition!.latitude}_${_searchController.text}_${searchedPosition!.longitude}");
+                    /// 검색창이 비어있을 때 위치 선택 완료 버튼을 누르는 경우
+                    if (_searchController.text.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('주소를 입력해주세요.'),
+                      ));
+                      return; // 주소가 비어있으므로 메서드 종료
+                    }
+
+                    /// 입력된 주소가 위, 경도 값이 없을 경우 ( ex. '지하'를 포함한 주소 )
+                    else if (searchedPosition == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('선택할 수 없는 주소입니다.\n다른 주소를 선택해주세요.'),
+                      ));
+                      _searchController.clear(); // 검색창 비우기
+                      return; // 주소에 대한 좌표가 없으므로 메서드 종료
+                    }
+
+                    /// 검색창에 선택된 주소가 위,경도 값이 있을 경우
+                    else {
+                      Navigator.pop(context,
+                          "${searchedPosition!.latitude}_${_searchController.text}_${searchedPosition!.longitude}");
+                    }
                   },
-                  child: Text(
+                  child: const Text(
                     '위치 선택 완료',
                     style: TextStyle(color: Colors.white),
                   ),
