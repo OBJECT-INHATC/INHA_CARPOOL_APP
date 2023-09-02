@@ -198,6 +198,7 @@ class FireStoreService {
 
     int nowMember = carpoolSnapshot['nowMember'];
 
+    /// 0902 김영재. 마지막 사람이 방을 나가면 status를 true로 변경
     if(nowMember == 1) {
       await carpoolDocRef.update({
         'status': false,

@@ -63,6 +63,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
   List<dynamic> membersList = [];
   // 출발 시간
   DateTime startTime = DateTime.now();
+  // 확정 시간
+  DateTime agreedTime = DateTime.now();
   // 출발지
   String startPoint = "";
   // 도착지
@@ -76,14 +78,13 @@ class _ChatroomPageState extends State<ChatroomPage> {
     getCurrentUserandToken();
     /// 토큰, 사용자 Auth 정보 호출
 
-    // 멤버 리스트, 출발 시간 가져오기
     getCarpoolInfo();
+    // 멤버 리스트, 출발 시간 가져오기
 
     super.initState();
     _scrollController = ScrollController();
 
     /// 스크롤 컨트롤러 초기화
-
 
   }
 
@@ -146,19 +147,21 @@ class _ChatroomPageState extends State<ChatroomPage> {
         startTime = DateTime.fromMillisecondsSinceEpoch(val['startTime']);
         startPoint = val['startDetailPoint'];
         endPoint = val['endDetailPoint'];
+        agreedTime = startTime.subtract(Duration(minutes: 10));
       });
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+
+    bool isExitButtonDisabled = false; // 나가기 버튼 기본적으로 활성화
 
     // 디바이스 사이즈 가져오기
     double deviceWidth = context.width(1);
     double deviceHeight = context.height(1);
     double topBarHeight = deviceHeight * 0.2;
+
 
     return SafeArea(
       child: Scaffold(
@@ -264,58 +267,89 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             ),
                             Container(
                               child: TextButton(
-                                onPressed: () {
-                                  if(admin != widget.userName) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text('채팅방 나가기'),
-                                          content: Text('채팅방을 나가시겠습니까?'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('취소'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                FireStoreService().exitCarpool(widget.carId, widget.userName, widget.uid);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pushReplacement(
-                                                    context, MaterialPageRoute(builder: (context) => MainScreen()));
-                                              },
-                                              child: Text('나가기'),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
+                                onPressed: isExitButtonDisabled ? null : () async {
+                                  final currentTime = DateTime.now();
+                                  final timeDifference = agreedTime.difference(currentTime);
+                                  // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
+                                  final minutesDifference = timeDifference.inMinutes;
+
+                                  if (minutesDifference > 10) {
+                                    // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
+                                    if (admin != widget.userName) {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('채팅방 나가기'),
+                                            content: Text('채팅방을 나가시겠습니까?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('취소'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  FireStoreService().exitCarpool(widget.carId, widget.userName, widget.uid);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => MainScreen()),
+                                                  );
+                                                },
+                                                child: Text('나가기'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text('채팅방 나가기'),
+                                            content: Text('현재 방장입니다. 정말 채팅방을 나가시겠습니까?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Text('취소'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  FireStoreService().exitCarpoolAsAdmin(widget.carId, widget.userName, widget.uid);
+                                                  Navigator.pop(context);
+                                                  Navigator.pop(context);
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context) => MainScreen()),
+                                                  );
+                                                },
+                                                child: Text('나가기'),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+                                    }
                                   } else {
+                                    // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return AlertDialog(
-                                          title: Text('채팅방 나가기'),
-                                          content: Text('채팅방을 나가시겠습니까?'),
+                                          title: Text('나가기 불가'),
+                                          content: Text('카풀 시작 10분 전, 채팅방을 나갈 수 있는 시간이 아닙니다.'),
                                           actions: [
                                             TextButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
                                               },
-                                              child: Text('나가기'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () {
-                                                FireStoreService().exitCarpoolAsAdmin(widget.carId, widget.userName, widget.uid);
-                                                Navigator.pop(context);
-                                                Navigator.pop(context);
-                                                Navigator.pushReplacement(
-                                                    context, MaterialPageRoute(builder: (context) => MainScreen()));
-                                              },
-                                              child: Text('삭제'),
+                                              child: Text('확인'),
                                             ),
                                           ],
                                         );
@@ -325,15 +359,13 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 },
                                 style: TextButton.styleFrom(
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        0), // 직각 모서리로 설정
+                                    borderRadius: BorderRadius.circular(0),
                                   ),
-                                  backgroundColor:
-                                      Colors.grey[300], // 연한 그레이 색상
+                                  backgroundColor: Colors.grey[300],
                                 ),
                                 child: Text('나가기'),
                               ),
-                              ),
+                            ),
                           ],
                     )),
                   ],
