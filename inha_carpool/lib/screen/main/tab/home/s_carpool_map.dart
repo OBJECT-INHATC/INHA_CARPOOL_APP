@@ -155,8 +155,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                     Navigator.pop(context);
                     Navigator.pushReplacement(
                         context, MaterialPageRoute(builder: (context) => MainScreen()));
-                    ///0830 서은율 : 카풀 참가 시 메시지 전송
-                    FireStoreService().sendEntryMessage(carId,memberName);
+                    ///0830 서은율 : 카풀 참가 시 메시지 전송 -> 0903 한승완 수정 : 메시지 전송은 트렌젝션 내부에서 처리
                   }).catchError((error) {
                     showDialog(
                       context: context,

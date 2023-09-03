@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 class FirebaseCarpool {
@@ -100,13 +101,8 @@ class FirebaseCarpool {
       /// 0830 한승완 추가 : carId의 Token 저장
       await FireStoreService().saveToken( token! , carpoolDocRef.id);
 
-      // 0828 한승완 삭제 : 메시지
-      // CollectionReference membersCollection =
-      //     carpoolDocRef.collection('messages');
-      // await membersCollection.add({
-      //   'memberID': '${memberID}_${memberName}',
-      //   'joinedDate': DateTime.now(),
-      // });
+      /// 0903 한승완 추가 : 참가 메시지 전송
+      FireStoreService().sendCreateMessage(carpoolDocRef.id , memberName);
 
       print('Data added to Firestore.');
     } catch (e) {
@@ -143,15 +139,11 @@ class FirebaseCarpool {
             token,
             carpoolID,
           );
+
+          /// 0903 한승완 추가 : 참가 메시지 전송
+          FireStoreService().sendEntryMessage(carpoolID,memberName);
         }
 
-        // 0828 한승완 삭제 : 메시지
-        // CollectionReference membersCollection =
-        //     carpoolDocRef.collection('messages');
-        // await membersCollection.add({
-        //   'memberID': '${memberID}_${memberName}',
-        //   'joinedDate': DateTime.now(),
-        // });
       });
 
       print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');

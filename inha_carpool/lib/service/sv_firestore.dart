@@ -142,6 +142,29 @@ class FireStoreService {
     await carpoolCollection.doc(carId).collection("messages").add(chatMessageMap);
   }
 
+  ///0903 한승완
+  ///카풀 생성 + 로컬 DB에 저장
+  Future<void> sendCreateMessage(String carId, String userName) async {
+
+    const String sender = 'service';
+    final int currentTime = DateTime.now().millisecondsSinceEpoch;
+
+    final Map<String, dynamic> chatMessageMap = {
+      "message": "카풀 생성 완료! '$userName' 님이 방장이 되었습니다. ",
+      "sender": sender,
+      "time": currentTime,
+    };
+
+    final ChatMessage chatMessage = ChatMessage(
+      carId: carId,
+      message: chatMessageMap['message'],
+      sender: chatMessageMap['sender'],
+      time: chatMessageMap['time'],
+    );
+
+    ChatDao().insert(chatMessage);
+  }
+
 
   /// 0829 한승완 - 서버에 Fcm 토큰 저장
   Future<void> saveToken(String token, String carId) async {
