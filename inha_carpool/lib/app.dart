@@ -80,6 +80,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     return CustomThemeApp(
       child: Builder(builder: (context) {
         return MaterialApp(
+
           //네비게이터 관리
           navigatorKey: App.navigatorKey,
           //언어 영역

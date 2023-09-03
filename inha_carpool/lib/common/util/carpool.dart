@@ -102,7 +102,7 @@ class FirebaseCarpool {
       await FireStoreService().saveToken( token! , carpoolDocRef.id);
 
       /// 0903 한승완 추가 : 참가 메시지 전송
-      FireStoreService().sendCreateMessage(carpoolDocRef.id , memberName);
+      await FireStoreService().sendCreateMessage(carpoolDocRef.id , memberName);
 
       print('Data added to Firestore.');
     } catch (e) {

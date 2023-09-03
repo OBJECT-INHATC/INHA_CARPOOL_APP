@@ -35,6 +35,7 @@ enum CustomTheme {
 MaterialColor primarySwatchColor = Colors.lightBlue;
 
 ThemeData lightTheme = ThemeData(
+    useMaterial3: true,
     primarySwatch: primarySwatchColor,
     visualDensity: VisualDensity.adaptivePlatformDensity,
     brightness: Brightness.light,
@@ -44,6 +45,7 @@ ThemeData lightTheme = ThemeData(
     colorScheme: const ColorScheme.light(background: Colors.white));
 
 ThemeData darkTheme = ThemeData(
+    useMaterial3: true,
     primarySwatch: primarySwatchColor,
     visualDensity: VisualDensity.adaptivePlatformDensity,
     brightness: Brightness.dark,
