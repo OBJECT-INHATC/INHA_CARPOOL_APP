@@ -16,6 +16,8 @@ import '../register/s_register.dart';
 
 /// 0824 서은율, 한승완
 /// 로그인 페이지
+/// 0830 최은우
+/// 로그인 페이지 디자인 1차 수정
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -88,17 +90,17 @@ class _LoginPageState extends State<LoginPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Colors.blue, Colors.green];
+  List<Color> selectedBackgroundColors = [Colors.blue, Colors.black];
   List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
         ? [Colors.blue, Colors.white]
-        : [Colors.white, Colors.green];
+        : [Colors.white, Colors.black];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.white, Colors.green]
+        ? [Colors.white, Colors.black]
         : [Colors.blue, Colors.white];
   }
   // 로딩 여부
@@ -132,21 +134,36 @@ class _LoginPageState extends State<LoginPage> {
                 color: Theme.of(context).primaryColor),
           )
         : SafeArea(
-            child: Scaffold(
-              body: Center(
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        height: context.height(0.2),
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
-                        child: FlutterLogo(
-                          size: context.height(0.2),
-                        ),
-                      ),
+      child: Scaffold(
+        body: Center(
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 40, top: 140),
+                  child: Text(
+                    'LOGIN',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Circular',
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(40, 10, 30, 0),
+                  child: Text(
+                    '로그인이 필요한 서비스입니다.',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 70),
+
                       Container(
                         padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                         child: Stack(
@@ -162,7 +179,8 @@ class _LoginPageState extends State<LoginPage> {
                                     borderSide:
                                     BorderSide(color: Colors.blue),
                                   ),
-                                  labelText: '학번',
+                                  labelText: '',
+                                  prefixIcon: Icon(Icons.email),
                                 ),
                                 onChanged: (text) {
                                   // 텍스트 필드 값 변경 시 실행할 코드 작성
@@ -210,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                                 },
                                 selectedBackgroundColors: const [
                                   Colors.blue,
-                                  Colors.green
+                                  Colors.black
                                 ],
                                 unSelectedBackgroundColors: const [
                                   Colors.white,
@@ -223,125 +241,155 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                         ),
                       ),
-                      Container(
-                        height: context.height(0.08),
-                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                        child: TextFormField(
-                          obscureText: true,
-                          decoration: const InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.black), // 밑줄 색상 설정
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
-                            ),
-                            labelText: '비밀번호',
-                          ),
-                          onChanged: (text) {
-                            password = text;
-                          },
+                Container(
+                  padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                  child: TextFormField(
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      labelText: '',
+                      prefixIcon: Icon(Icons.lock),
+                      suffixIcon: TextButton(
+                        onPressed: () {
+                          Nav.push(const FindRegisterPage());
+                        },
+                        child: Text(
+                          '비밀번호 찾기',
+                          style: TextStyle(color: Colors.blue[700]),
                         ),
                       ),
-                      Container(
-                        height: context.height(0.09),
-                        padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
-                        child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size.fromHeight(50),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(90.0),
-                              ),
-                            ),
-                            child: const Text('로그인',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
-                            onPressed: () {
-                              /// 로그인 + 로컬 데이터 저장
-                              AuthService()
-                                  .loginWithUserNameandPassword(email, password)
-                                  .then((value) async {
-                                if (value == true) {
-                                  QuerySnapshot snapshot = await FireStoreService().gettingUserData(email);
+                    ),
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                    onChanged: (text) {
+                      password = text;
+                    },
+                  ),
+                ),
 
-                                  getMyDeviceToken();
-
-                                  storage.write(
-                                      key: "nickName",
-                                      value: snapshot.docs[0].get("nickName"));
-                                  storage.write(
-                                      key: "uid",
-                                      value: snapshot.docs[0].get("uid"));
-                                  storage.write(
-                                      key: "gender",
-                                      value: snapshot.docs[0].get('gender'));
-
-
-                                  if (context.mounted) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const MainScreen()),
-                                    );
-                                  }
-                                }else{
-                                  context.showErrorSnackbar(value);
-                                }
-                              });
-                            }),
-                      ),
-                      Container(
-                        height: context.height(0.04),
-                        padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                Container(
+                        padding: const EdgeInsets.fromLTRB(50, 5, 20, 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            TextButton(
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 35),
+                                primary: Colors.transparent,
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(90.0),
+                                ),
+                              ),
                               onPressed: () {
-                                Nav.push(const FindRegisterPage());
+                                // 로그인 버튼 기능 추가
+                                /// 로그인 + 로컬 데이터 저장
+                                AuthService()
+                                    .loginWithUserNameandPassword(email, password)
+                                    .then((value) async {
+                                  if (value == true) {
+                                    QuerySnapshot snapshot =
+                                    await FireStoreService().gettingUserData(email);
+
+                                    getMyDeviceToken();
+
+                                    storage.write(
+                                      key: "nickName",
+                                      value: snapshot.docs[0].get("nickName"),
+                                    );
+                                    storage.write(
+                                      key: "uid",
+                                      value: snapshot.docs[0].get("uid"),
+                                    );
+                                    storage.write(
+                                      key: "gender",
+                                      value: snapshot.docs[0].get('gender'),
+                                    );
+
+                                    if (context.mounted) {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const MainScreen(),
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    context.showErrorSnackbar(value);
+                                  }
+                                });
                               },
-                              child: Text(
-                                '아이디 / 비밀번호 찾기',
-                                style: TextStyle(color: Colors.grey[700]),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [Colors.blue, Colors.black],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                  ),
+                                  borderRadius: BorderRadius.circular(90.0),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    '  로그인  ',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: context.height(0.1)),
-                        child: Container(
-                          height: context.height(0.09),
-                          padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size.fromHeight(50),
-                              backgroundColor: Colors.grey[700],
-                            ),
-                            child: const Text('회원가입',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const RegisterPage()),
-                              );
-                            },
-                          ),
+
+
+            Container(
+              padding: const EdgeInsets.fromLTRB(30, 190, 30, 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '회원이 아니신가요? ',
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterPage(),
                         ),
+                      );
+                    },
+                    child: Text(
+                      '가입하기',
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.green,
+                        decoration: TextDecoration.underline,
                       ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
                     ],
                   ),
                 ),
               ),
             ),
-          );
+    );
+
   }
 }
