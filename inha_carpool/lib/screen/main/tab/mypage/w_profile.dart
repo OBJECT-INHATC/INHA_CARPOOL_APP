@@ -16,7 +16,6 @@ class _ProFileState extends State<ProFile> {
   late Future<String> uidFuture;
   late Future<String> genderFuture;
   late Future<String> emailFuture;
-  late TextEditingController _nameController;
 
   @override
   void initState() {
@@ -30,7 +29,6 @@ class _ProFileState extends State<ProFile> {
     genderFuture = _loadUserDataForKey("gender");
     emailFuture = _loadUserDataForKey("email");
 
-    _nameController = TextEditingController();
   }
 
   Future<String> _loadUserDataForKey(String key) async {
@@ -54,7 +52,7 @@ class _ProFileState extends State<ProFile> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    _showEditNameDialog(context);
+                    _showEditNicknameDialog(context);
                   },
                   child: Column(
                     children: [
@@ -84,7 +82,7 @@ class _ProFileState extends State<ProFile> {
                 const SizedBox(height: 5),
                 ElevatedButton(
                   onPressed: () {
-                    _showEditNameDialog(context);
+                    _showEditNicknameDialog(context);
                   },
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(70, 24),
@@ -175,6 +173,39 @@ class _ProFileState extends State<ProFile> {
                               }
                             },
                           ),
+
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Text(
+                            "닉네임",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                          ),
+                          const SizedBox(
+                            width: 27,
+                          ),
+                          FutureBuilder<String?>(
+                            future: nickNameFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                return Text(
+                                  snapshot.data ?? '',
+                                  style: const TextStyle(fontSize: 15, color: Colors.black),
+                                );
+                              }
+                            },
+                          ),
                         ],
                       )
                     ],
@@ -188,30 +219,26 @@ class _ProFileState extends State<ProFile> {
     );
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
 
-  void _showEditNameDialog(BuildContext context) async {
-    String newName = await showDialog(
+  Future<void> _showEditNicknameDialog(BuildContext context) async {
+    TextEditingController nicknameController = TextEditingController();
+
+    String? newNickname = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("이름 변경"),
-          content: TextField(
-            controller: _nameController,
-            maxLength: 10,
-            onChanged: (text) {
-              setState(() {
-                _remainingChars = 10 - text.length;
-              });
-            },
-            decoration: InputDecoration(
-              hintText: "새로운 이름을 입력하세요",
-              counterText: "$_remainingChars/10", // 글자 수 카운트 표시, 수정해야됨
-            ),
+          title: const Text("닉네임 변경"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                controller: nicknameController,
+                maxLength: 10,
+                decoration: const InputDecoration(
+                  hintText: "새로운 닉네임을 입력하세요",
+                ),
+              ),
+            ],
           ),
           actions: [
             TextButton(
@@ -222,7 +249,7 @@ class _ProFileState extends State<ProFile> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(_nameController.text);
+                Navigator.of(context).pop(nicknameController.text);
               },
               child: const Text("저장"),
             ),
@@ -231,18 +258,17 @@ class _ProFileState extends State<ProFile> {
       },
     );
 
-    if (newName != null) {
-      setState(() {
-        _nameController.text = newName;
-      });
+    if (newNickname != null) {
+      // 여기에서 새로운 닉네임을 Firebase에 업데이트하는 코드를 작성하세요.
 
-      // 수정완료다이얼로그 표시
+      // 수정완료 다이얼로그 표시
+      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: const Text("수정 완료"),
-            content: const Text("이름이 성공적으로 수정되었습니다."),
+            content: const Text("닉네임이 성공적으로 수정되었습니다."),
             actions: [
               TextButton(
                 onPressed: () {
@@ -256,4 +282,6 @@ class _ProFileState extends State<ProFile> {
       );
     }
   }
+
+
 }
