@@ -332,6 +332,8 @@ class _ProFileState extends State<ProFile> {
           final DocumentReference userRef = users.doc(documentId);
           await userRef.update({'nickName': newNickname});
 
+          // FlutterSecureStorage에 닉네임 업데이트
+          await storage.write(key: 'nickName', value: newNickname);
           print('닉네임이 업데이트되었습니다. => $newNickname');
           return 1;
 
