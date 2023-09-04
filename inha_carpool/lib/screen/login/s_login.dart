@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(
             builder: (context) => ChatroomPage(
               carId: message.data['groupId'],
-              userName: nickName!,
+              userName: nickName,
               groupName: "카풀채팅",
               uid: uid!,
             )
@@ -299,6 +299,20 @@ class _LoginPageState extends State<LoginPage> {
 
                               getMyDeviceToken();
 
+                                  storage.write(
+                                      key: "nickName",
+                                      value: snapshot.docs[0].get("nickName"));
+                                  storage.write(
+                                      key: "uid",
+                                      value: snapshot.docs[0].get("uid"));
+                                  storage.write(
+                                      key: "gender",
+                                      value: snapshot.docs[0].get('gender'));
+                                  storage.write(
+                                      key: "email",
+                                      value: snapshot.docs[0].get('email'));
+
+
                               storage.write(
                                 key: "nickName",
                                 value: snapshot.docs[0].get("nickName"),
@@ -374,7 +388,7 @@ class _LoginPageState extends State<LoginPage> {
                           '가입하기',
                           style: TextStyle(
                             fontSize: 17,
-                            color: Colors.black,
+                            color: Colors.blue,
                             decoration: TextDecoration.underline,
                           ),
                         ),

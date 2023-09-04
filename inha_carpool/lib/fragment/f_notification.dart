@@ -1,6 +1,9 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 
 import '../screen/main/tab/carpool/s_chatroom.dart';
@@ -48,10 +51,15 @@ class _NotificationListState extends State<NotificationList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        titleTextStyle: const TextStyle(
+          color: Colors.white,
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
         leading: const BackButton(
           color: Colors.black,
         ),
+        backgroundColor: Colors.blue,
         title: const Text(
           "알림 목록",
           style: TextStyle(color: Colors.black),
@@ -62,7 +70,7 @@ class _NotificationListState extends State<NotificationList> {
         future: notificationListFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(); // 데이터를 기다리는 동안 로딩 표시
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Text('오류 발생: ${snapshot.error}');
           } else {
@@ -100,37 +108,65 @@ class _NotificationListState extends State<NotificationList> {
                   },
                   child: Column(
                     children: [
-                      ListTile(
-                        // 알림 타입이 1이면 채팅 아이콘, 나머지 차량 아이콘
-                        leading: notificationList![i].type == "1" ? const Icon(Icons.chat) : const Icon(Icons.car_crash_rounded),
-                        /// 최은우 TODO : 알림 리스트 디자인 수정
-                        title: Column(
-                          children: [
-                            Text(notificationList[i].title),
-                            const SizedBox(
-                              width: 10,
+                      SizedBox(
+                        height: context.height(0.05),
+                      ),
+                      SizedBox(
+                        height: context.height(0.1),
+                        child: Card(
+                          surfaceTintColor: Colors.grey[200],
+                          elevation: 4, // 카드 그림자 설정
+                          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8), // 여백 설정
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15.0), // 원하는 정도의 동그란 형태를 설정
+                          ),
+                          child: ListTile(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0), // 원하는 정도의 동그란 형태를 설정
                             ),
-                            Text(
-                              notificationList[i].body,
-                              style: const TextStyle(fontSize: 10),
+                            tileColor: Colors.white,
+                            // 알림 타입이 1이면 채팅 아이콘, 나머지 차량 아이콘
+                            leading: notificationList![i].type == "1"
+                                ? const Icon(Icons.chat, color: Colors.blue)
+                                : const Icon(Icons.car_crash_rounded, color: Colors.blue),
+                            title: Column(
+                              children: [
+                                Text(notificationList[i].title,
+                                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  notificationList[i].body,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                Text(
+                                  DateFormat('yyyy-MM-dd HH:mm')
+                                      .format(DateTime.fromMillisecondsSinceEpoch(notificationList[i].time!))
+                                      .toString(),
+                                  style: const TextStyle(fontSize: 12),
+                                )
+                              ],
                             ),
-                          ],
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            setState(() {
-                              // 알림 리스트 해당 알림 삭제
-                              final deletedItem = notificationList.removeAt(i);
-                              if (deletedItem != null) {
-                                // 알림 제거
-                                AlarmDao().deleteById(
-                                  deletedItem.title! + deletedItem.body! + deletedItem.time.toString(),
-                                );
-                              }
-                            });
-                          },
-                        ),
+                            trailing:IconButton(
+                                icon: const Icon(Icons.close , color: Colors.blue),
+                                onPressed: () {
+                                  setState(() {
+                                    // 알림 리스트 해당 알림 삭제
+                                    final deletedItem = notificationList.removeAt(i);
+                                    if (deletedItem != null) {
+                                      // 알림 제거
+                                      AlarmDao().deleteById(
+                                          deletedItem.title! + deletedItem.body! + deletedItem.time.toString());
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                          ),
                       ),
                     ],
                   ),

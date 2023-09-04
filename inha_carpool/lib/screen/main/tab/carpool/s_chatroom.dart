@@ -288,15 +288,20 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                                 child: Text('취소'),
                                               ),
                                               TextButton(
-                                                onPressed: () {
-                                                  FireStoreService().exitCarpool(widget.carId, widget.userName, widget.uid);
-                                                  Navigator.pop(context);
+                                                onPressed: () async {
+                                                  // 데이터베이스 작업을 비동기로 수행
+                                                  await FireStoreService().exitCarpool(widget.carId, widget.userName, widget.uid);
+
+                                                  // 데이터베이스 작업이 완료되면 다음 페이지로 이동
                                                   Navigator.pop(context);
                                                   Navigator.pushReplacement(
                                                     context,
-                                                    MaterialPageRoute(builder: (context) => MainScreen()),
+                                                    MaterialPageRoute(
+                                                      builder: (context) => MainScreen(),
+                                                    ),
                                                   );
                                                 },
+
                                                 child: Text('나가기'),
                                               ),
                                             ],
