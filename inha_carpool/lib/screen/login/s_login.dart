@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(
             builder: (context) => ChatroomPage(
               carId: message.data['groupId'],
-              userName: nickName,
+              userName: nickName!,
               groupName: "카풀채팅",
               uid: uid!,
             )
