@@ -192,6 +192,8 @@ class _HomeState extends State<Home> {
                       ));
                     } else {
                       return ListView.builder(
+                        // 항상 스크롤이 가능하게 만들어서 리스트 갯수가 적을 때도 새로고침 가능하게 만듦
+                        physics: const AlwaysScrollableScrollPhysics(),
                         controller: _scrollController,
                         itemCount: _visibleItemCount,
                         itemBuilder: (context, index) {
