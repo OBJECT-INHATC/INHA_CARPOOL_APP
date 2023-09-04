@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/widget/w_round_button.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
@@ -45,6 +46,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
   String? token = "";
 
+  DateTime? currentBackPressTime; // 뒤로가기 버튼 누른 시간
+
   @override
   void initState() {
     super.initState();
@@ -75,302 +78,327 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-        title: '${widget.admin.split("_").last}님의 카풀 정보'.text.white.make(),
-        backgroundColor: Colors.blue,
-      ),
-      body: Stack(
-        children: [
-          GoogleMap(
-            onMapCreated: (controller) => mapController = controller,
-            myLocationButtonEnabled: false,
-            initialCameraPosition: CameraPosition(
-              target: widget.startPoint,
-              zoom: 16.0,
+    return WillPopScope(
+      onWillPop: () async {
+        DateTime now = DateTime.now();
+        if (currentBackPressTime == null ||
+            now.difference(currentBackPressTime!) >
+                const Duration(seconds: 2)) {
+          // 첫 번째 뒤로가기 버튼 누름
+          currentBackPressTime = now;
+          // 스낵바 메시지 출력
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('한 번 더 누르면 종료됩니다.'),
             ),
-            markers: _markers,
-            onCameraIdle: () {},
+          );
+          return false; // 뒤로가기 막음
+        }
+        return true; // 뒤로가기 허용
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
           ),
-          Positioned(
-            top: context.height(0.02),
-            // 가운데 위치
-            left: context.width(0.1),
-            child: Container(
-              height: context.height(0.3),
-              width: context.width(0.8),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.blue.withOpacity(0.3),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-                border: Border.all(
-                  color: Colors.blue,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(20),
+          title: '${widget.admin.split("_").last}님의 카풀 정보'.text.white.make(),
+          backgroundColor: Colors.blue,
+        ),
+        body: Stack(
+          children: [
+            GoogleMap(
+              onMapCreated: (controller) => mapController = controller,
+              myLocationButtonEnabled: false,
+              initialCameraPosition: CameraPosition(
+                target: widget.startPoint,
+                zoom: 16.0,
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0), // 내부 패딩 추가
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  // 가로 가운데 정렬
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.location_on,
-                                        color: Colors.blue),
-                                    const SizedBox(width: 3),
-                                    const Text(
-                                      "출발 지점",
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin: const EdgeInsets.only(left: 10),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3, horizontal: 8),
-                                        // 내부 패딩
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[300], // 회색 배경색
-                                          borderRadius: BorderRadius.circular(
-                                              20), // 동그란 모양 설정
+              markers: _markers,
+              onCameraIdle: () {},
+            ),
+            Positioned(
+              top: context.height(0.02),
+              // 가운데 위치
+              left: context.width(0.1),
+              child: Container(
+                height: context.height(0.3),
+                width: context.width(0.8),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade100,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.blue.withOpacity(0.3),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                  border: Border.all(
+                    color: Colors.blue,
+                    width: 1,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0), // 내부 패딩 추가
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    // 가로 가운데 정렬
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.location_on,
+                                          color: Colors.blue),
+                                      const SizedBox(width: 3),
+                                      const Text(
+                                        "출발 지점",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        child: Text(
-                                          widget.startPointName,
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black, // 텍스트 색상
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 10),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 3, horizontal: 8),
+                                          // 내부 패딩
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300], // 회색 배경색
+                                            borderRadius: BorderRadius.circular(
+                                                20), // 동그란 모양 설정
                                           ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.access_time,
-                                        color: Colors.blue),
-                                    const SizedBox(width: 3),
-                                    const Text(
-                                      "출발 시간",
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin: const EdgeInsets.only(left: 10),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3, horizontal: 8),
-                                        // 내부 패딩
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[300], // 회색 배경색
-                                          borderRadius: BorderRadius.circular(
-                                              20), // 동그란 모양 설정
-                                        ),
-                                        child: Text(
-                                          widget.startTime,
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black, // 텍스트 색상
+                                          child: Text(
+                                            widget.startPointName,
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black, // 텍스트 색상
+                                            ),
+                                            textAlign: TextAlign.center,
                                           ),
-                                          textAlign: TextAlign.center,
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.all(5),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.directions_car,
-                                        color: Colors.blue),
-                                    const SizedBox(width: 3),
-                                    const Text(
-                                      "남은 거리",
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin: const EdgeInsets.only(left: 10),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 3, horizontal: 8),
-                                        // 내부 패딩
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[300], // 회색 배경색
-                                          borderRadius: BorderRadius.circular(
-                                              20), // 동그란 모양 설정
+                                Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.access_time,
+                                          color: Colors.blue),
+                                      const SizedBox(width: 3),
+                                      const Text(
+                                        "출발 시간",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        child: Text(
-                                          _distanceToLocation,
-                                          style: const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black, // 텍스트 색상
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 10),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 3, horizontal: 8),
+                                          // 내부 패딩
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300], // 회색 배경색
+                                            borderRadius: BorderRadius.circular(
+                                                20), // 동그란 모양 설정
                                           ),
-                                          textAlign: TextAlign.center,
+                                          child: Text(
+                                            widget.startTime,
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black, // 텍스트 색상
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          ElevatedButton(
-                            onPressed: () async {
-                              String carId = widget.carId;
-                              String memberID = uid;
-                              String memberName = nickName;
-
-                              try {
-                                await FirebaseCarpool.addMemberToCarpool(
-                                    carId, memberID, memberName, token!);
-                                if (!mounted) return;
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const MainScreen()));
-                              } catch (error) {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: const Text('카풀 참가 실패'),
-                                      content: const Text(
-                                          '자리가 마감되었습니다!\n다른 카풀을 이용해주세요.'),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const MainScreen()));
-                                          },
-                                          child: const Text('확인'),
+                                Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.directions_car,
+                                          color: Colors.blue),
+                                      const SizedBox(width: 3),
+                                      const Text(
+                                        "남은 거리",
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              textStyle: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          margin:
+                                              const EdgeInsets.only(left: 10),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 3, horizontal: 8),
+                                          // 내부 패딩
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300], // 회색 배경색
+                                            borderRadius: BorderRadius.circular(
+                                                20), // 동그란 모양 설정
+                                          ),
+                                          child: Text(
+                                            _distanceToLocation,
+                                            style: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black, // 텍스트 색상
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
                             ),
-                            child: Container(
-                              height: context.height(0.04),
-                              width: context.width(0.8),
-                              alignment: Alignment.center,
-                              child: const Text(
-                                '카풀 참가하기',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
+                            ElevatedButton(
+                              onPressed: () async {
+                                String carId = widget.carId;
+                                String memberID = uid;
+                                String memberName = nickName;
+
+                                try {
+                                  await FirebaseCarpool.addMemberToCarpool(
+                                      carId, memberID, memberName, token!);
+                                  if (!mounted) return;
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MainScreen()));
+                                } catch (error) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('카풀 참가 실패'),
+                                        content: const Text(
+                                            '자리가 마감되었습니다!\n다른 카풀을 이용해주세요.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const MainScreen()));
+                                            },
+                                            child: const Text('확인'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                textStyle: const TextStyle(
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
+                              child: Container(
+                                height: context.height(0.04),
+                                width: context.width(0.8),
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  '카풀 참가하기',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: context.height(0.05),
+              left: 20,
+              child: SizedBox(
+                width: context.width(0.4),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: context.height(0.05),
-            left: 20,
-            child: SizedBox(
-              width: context.width(0.4),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
                   ),
+                  onPressed: () {
+                    if (_myPoint != null) {
+                      _moveCameraTo(_myPoint!);
+                    }
+                  },
+                  child: const Text('내 위치로 이동',
+                      style: TextStyle(color: Colors.white)),
                 ),
-                onPressed: () {
-                  if (_myPoint != null) {
-                    _moveCameraTo(_myPoint!);
-                  }
-                },
-                child: const Text('내 위치로 이동',
-                    style: TextStyle(color: Colors.white)),
               ),
             ),
-          ),
-          Positioned(
-            bottom: context.height(0.05),
-            right: 20,
-            child: SizedBox(
-              width: context.width(0.4),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
+            Positioned(
+              bottom: context.height(0.05),
+              right: 20,
+              child: SizedBox(
+                width: context.width(0.4),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    textStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
+                  onPressed: () {
+                    _moveCameraTo(widget.startPoint);
+                  },
+                  child: const Text('출발지로 이동',
+                      style: TextStyle(color: Colors.white)),
                 ),
-                onPressed: () {
-                  _moveCameraTo(widget.startPoint);
-                },
-                child: const Text('출발지로 이동',
-                    style: TextStyle(color: Colors.white)),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
