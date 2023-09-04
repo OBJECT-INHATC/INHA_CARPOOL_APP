@@ -350,7 +350,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
 
-
             Container(
               padding: const EdgeInsets.fromLTRB(30, 190, 30, 24),
               child: Row(
@@ -383,12 +382,21 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-
                     ],
+                      ),
+  },
+                    child: Text(
+                      '가입하기',
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.black,
+                        decoration: TextDecoration.underline,
+                      ),
+  ),
+  ],
                   ),
                 ),
               ),
-            ),
     );
 
   }
