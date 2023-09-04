@@ -3,16 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptyCarpool.dart';
 
 import '../../../../common/util/carpool.dart';
 import '../../../recruit/s_recruit.dart';
 import 'carpoolFilter.dart';
-import 's_carpool_map.dart';
 
 class Home extends StatefulWidget {
   //내 정보
@@ -83,12 +80,40 @@ class _HomeState extends State<Home> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: _refreshCarpoolList,
+                // 카풀 리스트 불러오기
                 child: _buildCarpoolList(),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  // 카풀 리스트 불러오기
+  Widget _buildCarpoolList() {
+    return FutureBuilder<List<DocumentSnapshot>>(
+      future: carPoolList,
+      builder: (context, snapshot) {
+        // print("로딩중");
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError ||
+            !snapshot.hasData ||
+            snapshot.data!.isEmpty) {
+          // 카풀 에러 or 비었을 시
+          return const EmptyCarpool();
+        } else {
+          // 카풀 리스트가 있을 경우 리스트 뷰 빌드 위젯 호출
+          return CarpoolListWidget(
+            snapshot: snapshot, // AsyncSnapshot을 CarpoolListWidget에 전달
+            scrollController: _scrollController,
+            visibleItemCount: _visibleItemCount,
+            nickName: nickName, // 닉네임 전달
+            uid: uid, // UID 전달
+          );
+        }
+      },
     );
   }
 
@@ -103,31 +128,6 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Widget _buildCarpoolList() {
-    return FutureBuilder<List<DocumentSnapshot>>(
-      future: carPoolList,
-      builder: (context, snapshot) {
-        // print("로딩중");
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError ||
-            !snapshot.hasData ||
-            snapshot.data!.isEmpty) {
-          // 카풀 에러 or 비었을 시
-          return const EmptyCarpool();
-        } else {
-          // 카풀 리스트가 있을 경우 리스트 뷰 빌드 tag1
-          return CarpoolListWidget(
-            snapshot: snapshot, // AsyncSnapshot을 CarpoolListWidget에 전달
-            scrollController: _scrollController,
-            visibleItemCount: _visibleItemCount,
-            nickName: nickName, // 닉네임 전달
-            uid: uid, // UID 전달
-          );
-        }
-      },
-    );
-  }
 
   // 유저 정보 받아오기
   Future<void> _loadUserData() async {

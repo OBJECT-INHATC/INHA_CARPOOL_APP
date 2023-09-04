@@ -18,6 +18,7 @@ class _ProFileState extends State<ProFile> {
   late Future<String> uidFuture;
   late Future<String> genderFuture;
   late Future<String> emailFuture;
+  late String email;
 
   @override
   void initState() {
@@ -131,6 +132,7 @@ class _ProFileState extends State<ProFile> {
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
+                                email = snapshot.data ?? '';
                                 return Text(
                                   snapshot.data ?? '',
                                   style: const TextStyle(fontSize: 15, color: Colors.black),
@@ -220,7 +222,7 @@ class _ProFileState extends State<ProFile> {
   Future<void> _showEditNicknameDialog(BuildContext context) async {
     TextEditingController nicknameController = TextEditingController();
 
-    String? newNickname = await showDialog<String>(
+     await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -245,10 +247,30 @@ class _ProFileState extends State<ProFile> {
               child: const Text("취소"),
             ),
             TextButton(
-              onPressed: () {
-                String enteredNickname = nicknameController.text;
-                if (enteredNickname.isNotEmpty && enteredNickname.length > 1) {
-                  Navigator.of(context).pop(enteredNickname);
+              onPressed: () async {
+                String newNickname = nicknameController.text;
+                if (newNickname.isNotEmpty && newNickname.length > 1) {
+                  int result = await updateNickname(newNickname, email);
+
+                  if (result == 1) {
+                    // 업데이트 성공 팝업
+                    Navigator.of(context).pop();
+                    _showResultPopup(context, "수정 완료", "닉네임이 성공적으로 수정되었습니다.");
+
+                    // 업데이트된 닉네임으로 상단의 닉네임 다시 빌드
+                    setState(() {
+                      nickNameFuture = Future.value(newNickname);
+                    });
+                  } else if (result == 2) {
+                    // 중복된 닉네임 팝업
+                    _showResultPopup(context, "오류", "중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.");
+                  } else if (result == 0) {
+                    // 이메일 일치 문서 없음 팝업
+                    _showResultPopup(context, "오류", "해당 이메일과 일치하는 문서가 없습니다.");
+                  } else {
+                    // 업데이트 실패 팝업
+                    _showResultPopup(context, "오류", "닉네임 업데이트에 실패했습니다.");
+                  }
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -263,54 +285,67 @@ class _ProFileState extends State<ProFile> {
         );
       },
     );
+  }
 
-    if (newNickname != null && newNickname.isNotEmpty && newNickname.length > 1) {
-      await updateNickname("cTwNS8OgfRO6591w8YTUSGaZvSl1", newNickname);
-
-      // 업데이트된 닉네임으로 상단의 닉네임 다시 빌드
-      setState(() {
-        nickNameFuture = Future.value(newNickname);
-      });
-
-      // 수정완료 다이얼로그 표시
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text("수정 완료"),
-            content: const Text("닉네임이 성공적으로 수정되었습니다."),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("확인"),
-              ),
-            ],
-          );
-        },
-      );
-    }
+  void _showResultPopup(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("확인"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
 
-  Future<void> updateNickname(String userId, String newNickname) async {
+
+  Future<int> updateNickname(String newNickname, String email) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final CollectionReference users = firestore.collection('users');
 
-    // 변경하려는 닉네임이 다른 문서의 닉네임과 중복되지 않는지 확인
-    final QuerySnapshot duplicateNicknames = await users
-        .where('nickName', isEqualTo: newNickname)
-        .get();
+    try {
+      // 이메일 값을 기반으로 쿼리를 수행하여 문서 ID를 가져옴
+      final QuerySnapshot querySnapshot = await users.where('email', isEqualTo: email).get();
 
-    // 중복된 닉네임이 없다면 닉네임을 업데이트
-    if (duplicateNicknames.docs.isEmpty) {
-      final DocumentReference userRef = users.doc(userId);
-      await userRef.update({'nickName': newNickname});
+      // 쿼리 결과에서 문서 ID를 가져옴
+      if (querySnapshot.docs.isNotEmpty) {
+        final DocumentSnapshot document = querySnapshot.docs.first;
+        final String documentId = document.id;
 
-      print('닉네임이 업데이트되었습니다. => $newNickname');
-    } else {
-      print('중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.');
+        // 변경하려는 닉네임이 다른 문서의 닉네임과 중복되지 않는지 확인
+        final QuerySnapshot duplicateNicknames = await users
+            .where('nickName', isEqualTo: newNickname)
+            .get();
+
+        // 중복된 닉네임이 없다면 닉네임을 업데이트
+        if (duplicateNicknames.docs.isEmpty) {
+          final DocumentReference userRef = users.doc(documentId);
+          await userRef.update({'nickName': newNickname});
+
+          print('닉네임이 업데이트되었습니다. => $newNickname');
+          return 1;
+
+        } else {
+          print('중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.');
+          return 2;
+        }
+      } else {
+        print('해당 이메일과 일치하는 문서가 없습니다.');
+        return 0;
+      }
+    } catch (e) {
+      print('Error updating nickname: $e');
+      return -1;
     }
   }
 
