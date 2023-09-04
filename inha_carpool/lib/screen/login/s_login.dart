@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(
             builder: (context) => ChatroomPage(
               carId: message.data['groupId'],
-              userName: nickName!,
+              userName: nickName,
               groupName: "카풀채팅",
               uid: uid!,
             )
@@ -278,6 +278,9 @@ class _LoginPageState extends State<LoginPage> {
                                   storage.write(
                                       key: "gender",
                                       value: snapshot.docs[0].get('gender'));
+                                  storage.write(
+                                      key: "email",
+                                      value: snapshot.docs[0].get('email'));
 
 
                                   if (context.mounted) {
