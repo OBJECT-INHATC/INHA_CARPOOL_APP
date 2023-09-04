@@ -208,14 +208,11 @@ class _HomeState extends State<Home> {
                           if (difference.inDays >= 365) {
                             formattedTime = '${difference.inDays ~/ 365}년 후';
                           } else if (difference.inDays >= 30) {
-                            formattedTime =
-                                '${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 이후';
+                            formattedTime = '${difference.inDays ~/ 30}달 후';
                           } else if (difference.inDays >= 1) {
-                            formattedTime =
-                                '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 이후';
+                            formattedTime = '${difference.inDays}일 후';
                           } else if (difference.inHours >= 1) {
-                            formattedTime =
-                                '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 이후';
+                            formattedTime = '${difference.inHours}시간 후';
                           } else {
                             formattedTime = '${difference.inMinutes}분 후';
                           }
@@ -286,69 +283,214 @@ class _HomeState extends State<Home> {
                               }
                             },
                             child: Card(
+                              color: carpoolData['gender'] == '무관'
+                                  ? Colors.grey[300]
+                                  : carpoolData['gender'] == '남자'
+                                  ? Colors.blue[200]
+                                  : Colors.red[200],
                               elevation: 5,
                               margin: const EdgeInsets.symmetric(
-                                  vertical: 15, horizontal: 20),
+                                  vertical: 10, horizontal: 15),
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(width: 2, color: borderColor),
                                 borderRadius: BorderRadius.circular(10),
                               ),
+
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 40,
-                                        backgroundColor:
-                                            context.appColors.appBar,
-                                        child: FittedBox(
-                                          child: Container(
-                                            // Wrap the Text with a Container to control its size
-                                            padding: const EdgeInsets.all(8.0),
-                                            // Add some padding to the text
-                                            child: Text(
-                                              '${carpoolData['startDetailPoint']}',
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 20,
-                                              ),
-                                            ),
+                                  Row(children: [
+                                    Container(
+                                      width: context.width(0.889),
+                                      // desired width
+                                      padding: const EdgeInsets.all(8.0),
+                                      margin: const EdgeInsets.all(8.0),
+                                      decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            // POINT
+                                            color: Colors.black,
                                           ),
                                         ),
                                       ),
-                                      Column(
-                                        children: [
-                                          Text(formattedTime,
-                                              style: const TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.grey)),
-                                          const CircleAvatar(
-                                            radius: 30,
-                                            backgroundColor: Colors.white,
-                                            child: FittedBox(
-                                                child: Icon(Icons.arrow_forward,
-                                                    color: Colors.black)),
+
+                                      child: Row(children: [
+                                        //방장 정보 가져오기
+                                        Icon(Icons.person,
+                                            color: Colors.grey, size: 25),
+                                        Text(
+                                            '${carpoolData['admin'].split('_')[1]}',
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold)),
+                                        SizedBox(width: 5),
+                                        //방장 평점
+
+                                      ]),
+                                    ),
+                                  ]),
+                                  Container(
+                                    margin: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Container(
+                                                    width: 40,
+                                                    // desired width
+                                                    height: 30,
+                                                    // desired height
+                                                    decoration: BoxDecoration(
+
+                                                      color: Colors.blue[700],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.all(8.0),
+                                                    child: Center(
+                                                        child: Text('출발',
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.white,
+                                                                fontSize: 13)))),
+                                                SizedBox(width: 5),
+                                                Text(
+                                                    "${carpoolData['startDetailPoint']}",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                SizedBox(width: 5),
+                                                Text(
+                                                    "${carpoolData['startPointName']}",
+                                                    style: TextStyle(
+                                                        color: Colors.grey[600],
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                        FontWeight.bold)),
+                                              ],
+                                            ),
+                                            Container(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Column(children: [
+                                                  Icon(Icons
+                                                      .arrow_drop_down_outlined),
+                                                  Icon(Icons
+                                                      .arrow_drop_down_outlined),
+                                                ])),
+                                            Row(
+                                              children: [
+                                                Container(
+                                                    width: 40,
+                                                    // desired width
+                                                    height: 30,
+                                                    // desired height
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.blue[700],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                    ),
+                                                    padding:
+                                                        const EdgeInsets.all(8.0),
+                                                    child: Center(
+                                                        child: Text('도착',
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.white,
+                                                                fontSize: 13)))),
+                                                SizedBox(width: 5),
+                                                Text(
+                                                    "${carpoolData['endDetailPoint']}",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.bold)),
+                                                SizedBox(width: 5),
+                                                Text(
+                                                    "${carpoolData['endPointName']}",
+                                                    style: TextStyle(
+                                                        color: Colors.grey[600],
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                        FontWeight.bold)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Column(
+                                    children: [
+                                      Row(children: [
+                                        Container(
+                                          width: context.width(0.889),
+                                          // desired width
+                                          padding: const EdgeInsets.all(8.0),
+                                          margin: const EdgeInsets.all(8.0),
+                                          decoration: BoxDecoration(
+                                            border: Border(
+                                              top: BorderSide(
+                                                // POINT
+                                                color: Colors.black,
+                                              ),
+                                            ),
                                           ),
-                                          Text(
-                                              '${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
-                                              style: const TextStyle(
-                                                  fontSize: 16)),
-                                        ],
-                                      ),
-                                      CircleAvatar(
-                                        radius: 40,
-                                        backgroundColor:
-                                            context.appColors.appBar,
-                                        child: FittedBox(
-                                            child: Text(
-                                                '${carpoolData['endDetailPoint']}',
-                                                style: const TextStyle(
-                                                    color: Colors.white))),
-                                      ),
+
+                                          child: Column(children: [
+                                            Row(
+                                              children: [
+                                                Icon(Icons
+                                                    .calendar_today_outlined),
+                                                Text(
+                                                    '${startTime.month}월 ${startTime.day}일 ${startTime.hour}시 ${startTime.minute}분 출발',
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.black)),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Icon(Icons
+                                                    .directions_car_outlined),
+                                                Text(
+                                                    '${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
+                                                    style: const TextStyle(
+                                                        fontSize: 16)),
+                                              ],
+                                            ),
+                                            //방 생성시 설정했던 성별 표시
+                                            Row(
+                                              children: [
+                                                Icon(Icons
+                                                    .perm_identity_outlined),
+                                                Text((carpoolData['gender'])),
+                                              ],
+                                            ),
+                                            Text(formattedTime,
+                                                style: TextStyle(
+                                                    fontSize: 15,
+                                                    color: Colors.black,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ]),
+                                        ),
+                                      ]),
                                     ],
                                   ),
                                   const SizedBox(height: 10)
