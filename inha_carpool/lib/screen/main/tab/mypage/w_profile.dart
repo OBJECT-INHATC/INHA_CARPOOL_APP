@@ -11,7 +11,7 @@ class ProFile extends StatefulWidget {
 }
 
 class _ProFileState extends State<ProFile> {
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   late Future<String> nickNameFuture;
   late Future<String> uidFuture;
   late Future<String> genderFuture;
@@ -45,8 +45,8 @@ class _ProFileState extends State<ProFile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 100, 0, 0),
-      color: Color(0x52dededf),
+      padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
+      color: const Color(0x52dededf),
       child: Column(
         children: [
           Center(
@@ -59,7 +59,7 @@ class _ProFileState extends State<ProFile> {
                   child: Column(
                     children: [
                       Image.asset(
-                        "${basePath}/darkmode/moon.png",
+                        "$basePath/darkmode/moon.png",
                         width: 70,
                         height: 75,
                       ),
@@ -67,13 +67,13 @@ class _ProFileState extends State<ProFile> {
                         future: nickNameFuture,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return CircularProgressIndicator(); // 로딩 중이면 로딩 스피너 표시
+                            return const CircularProgressIndicator(); // 로딩 중이면 로딩 스피너 표시
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else {
                             return Text(
                               snapshot.data ?? '', // 데이터가 있으면 표시
-                              style: TextStyle(fontSize: 15, color: Colors.black),
+                              style: const TextStyle(fontSize: 15, color: Colors.black),
                             );
                           }
                         },
@@ -81,20 +81,20 @@ class _ProFileState extends State<ProFile> {
                     ],
                   ),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 ElevatedButton(
                   onPressed: () {
                     _showEditNameDialog(context);
                   },
-                  child: Text(
-                    "수정하기",
-                    style: TextStyle(fontSize: 12),
-                  ),
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(70, 24),
                   ),
+                  child: const Text(
+                    "수정하기",
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Container(
@@ -105,7 +105,7 @@ class _ProFileState extends State<ProFile> {
                     children: [
                       Container(
                         padding: EdgeInsets.all(10),
-                        child: Text(
+                        child: const Text(
                           "기본정보",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -115,30 +115,30 @@ class _ProFileState extends State<ProFile> {
                       ),
                       Row(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
-                          Text(
+                          const Text(
                             "이메일",
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 28,
                           ),
                           FutureBuilder<String?>(
                             future: emailFuture,
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
-                                return CircularProgressIndicator();
+                                return const CircularProgressIndicator();
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 return Text(
                                   snapshot.data ?? '',
-                                  style: TextStyle(fontSize: 15, color: Colors.black),
+                                  style: const TextStyle(fontSize: 15, color: Colors.black),
                                 );
                               }
                             },
@@ -147,30 +147,30 @@ class _ProFileState extends State<ProFile> {
                       ),
                       Row(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
-                          Text(
+                          const Text(
                             "성별",
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 40,
                           ),
                           FutureBuilder<String?>(
                             future: genderFuture,
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
-                                return CircularProgressIndicator();
+                                return const CircularProgressIndicator();
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else {
                                 return Text(
                                   snapshot.data ?? '',
-                                  style: TextStyle(fontSize: 15, color: Colors.black),
+                                  style: const TextStyle(fontSize: 15, color: Colors.black),
                                 );
                               }
                             },
@@ -210,7 +210,7 @@ class _ProFileState extends State<ProFile> {
             },
             decoration: InputDecoration(
               hintText: "새로운 이름을 입력하세요",
-              counterText: "${_remainingChars}/10", // 글자 수 카운트 표시, 수정해야됨
+              counterText: "$_remainingChars/10", // 글자 수 카운트 표시, 수정해야됨
             ),
           ),
           actions: [
@@ -218,13 +218,13 @@ class _ProFileState extends State<ProFile> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text("취소"),
+              child: const Text("취소"),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(_nameController.text);
               },
-              child: Text("저장"),
+              child: const Text("저장"),
             ),
           ],
         );
@@ -248,7 +248,7 @@ class _ProFileState extends State<ProFile> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("확인"),
+                child: const Text("확인"),
               ),
             ],
           );
