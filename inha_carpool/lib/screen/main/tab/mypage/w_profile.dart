@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inha_Carpool/common/common.dart';
 
 import '../../../../common/constants.dart';
 
@@ -28,16 +30,11 @@ class _ProFileState extends State<ProFile> {
     uidFuture = _loadUserDataForKey("uid");
     genderFuture = _loadUserDataForKey("gender");
     emailFuture = _loadUserDataForKey("email");
-
   }
 
   Future<String> _loadUserDataForKey(String key) async {
     return await storage.read(key: key) ?? "";
   }
-
-
-  int _remainingChars = 10; // 남은 글자 수
-
 
 
   @override
@@ -249,7 +246,16 @@ class _ProFileState extends State<ProFile> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(nicknameController.text);
+                String enteredNickname = nicknameController.text;
+                if (enteredNickname.isNotEmpty && enteredNickname.length > 1) {
+                  Navigator.of(context).pop(enteredNickname);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('2글자 이상 입력해주세요.'),
+                    ),
+                  );
+                }
               },
               child: const Text("저장"),
             ),
@@ -258,11 +264,15 @@ class _ProFileState extends State<ProFile> {
       },
     );
 
-    if (newNickname != null) {
-      // 여기에서 새로운 닉네임을 Firebase에 업데이트하는 코드를 작성하세요.
+    if (newNickname != null && newNickname.isNotEmpty && newNickname.length > 1) {
+      await updateNickname("cTwNS8OgfRO6591w8YTUSGaZvSl1", newNickname);
+
+      // 업데이트된 닉네임으로 상단의 닉네임 다시 빌드
+      setState(() {
+        nickNameFuture = Future.value(newNickname);
+      });
 
       // 수정완료 다이얼로그 표시
-      // ignore: use_build_context_synchronously
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -284,4 +294,26 @@ class _ProFileState extends State<ProFile> {
   }
 
 
+  Future<void> updateNickname(String userId, String newNickname) async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final CollectionReference users = firestore.collection('users');
+
+    // 변경하려는 닉네임이 다른 문서의 닉네임과 중복되지 않는지 확인
+    final QuerySnapshot duplicateNicknames = await users
+        .where('nickName', isEqualTo: newNickname)
+        .get();
+
+    // 중복된 닉네임이 없다면 닉네임을 업데이트
+    if (duplicateNicknames.docs.isEmpty) {
+      final DocumentReference userRef = users.doc(userId);
+      await userRef.update({'nickName': newNickname});
+
+      print('닉네임이 업데이트되었습니다. => $newNickname');
+    } else {
+      print('중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.');
+    }
+  }
+
+
 }
+
