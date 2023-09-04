@@ -92,6 +92,7 @@ class _HomeState extends State<Home> {
     carPoolList.then((list) {
       setState(() {
         _visibleItemCount = list.length < 5 ? list.length : 5;
+        print('초기 리스트 갯수: $_visibleItemCount');
       });
     });
 
@@ -101,20 +102,21 @@ class _HomeState extends State<Home> {
     setState(() {});
   }
 
-  // 스크롤 감지 이벤트 핸들러
   void _scrollListener() {
     if (_scrollController.position.atEdge) {
       if (_scrollController.position.pixels == 0) {
         // 맨 위에 도달했을 경우
         print('맨 위');
-      } else {
+      } else if (_scrollController.position.extentAfter == 0) {
         // 맨 아래에 도달했을 경우
-        /// 처음에는 리스트가 5개, 스크롤을 내리면 추가 데이터를 가져옴(5개씩)
-        /// 최대 개수는 전체 리스트 갯수로 제한.
-        setState(() {
-          carPoolList.then((list) {
-            _visibleItemCount = (_visibleItemCount + 5).clamp(0, list.length);
-            print('리스트 갯수: $_visibleItemCount');
+        ///딜레이가 없어서 처음에 다 로드해오는 것처럼 보였음.
+        Future.delayed(const Duration(seconds: 1), () {
+          // 500 밀리초(0.5초) 딜레이 후 데이터 로드
+          setState(() {
+            carPoolList.then((list) {
+              _visibleItemCount = (_visibleItemCount + 5).clamp(0, list.length);
+              print('리스트 갯수: $_visibleItemCount');
+            });
           });
         });
       }
