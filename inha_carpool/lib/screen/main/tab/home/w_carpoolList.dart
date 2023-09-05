@@ -143,7 +143,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 const SizedBox(height: 10),
                 Row(children: [
                   Container(
-                    width: context.width(0.889),
+                    width: context.width(0.8),
                     // desired width
                     padding: const EdgeInsets.all(8.0),
                     margin: const EdgeInsets.all(8.0),
@@ -193,17 +193,23 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                               color: Colors.white,
                                               fontSize: 13)))),
                               const SizedBox(width: 5),
-                              Text("${carpoolData['startDetailPoint']}",
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold)),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("${carpoolData['startDetailPoint']}  ",
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold)),
+                                  Text("${carpoolData['startPointName']}",
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
                               const SizedBox(width: 5),
-                              Text("${carpoolData['startPointName']}",
-                                  style: TextStyle(
-                                      color: Colors.grey[600],
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold)),
+
                             ],
                           ),
                           Container(
@@ -230,17 +236,23 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                               color: Colors.white,
                                               fontSize: 13)))),
                               const SizedBox(width: 5),
-                              Text("${carpoolData['endDetailPoint']}",
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold)),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("${carpoolData['endDetailPoint']}",
+                                      style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.bold)),
+                                  Text("${carpoolData['endPointName']}",
+                                      style: TextStyle(
+                                          color: Colors.grey[600],
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold)),
+                                ],
+                              ),
                               const SizedBox(width: 5),
-                              Text("${carpoolData['endPointName']}",
-                                  style: TextStyle(
-                                      color: Colors.grey[600],
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold)),
+
                             ],
                           ),
                         ],
@@ -252,7 +264,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                   children: [
                     Row(children: [
                       Container(
-                        width: context.width(0.889),
+                        width: context.width(0.8),
                         // desired width
                         padding: const EdgeInsets.all(8.0),
                         margin: const EdgeInsets.all(8.0),
