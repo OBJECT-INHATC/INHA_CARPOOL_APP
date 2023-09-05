@@ -43,17 +43,17 @@ class MessageTile extends StatelessWidget {
     switch (messageType) {
       case MessageType.me: //내가 보낸 메시지
         alignment = Alignment.centerRight;
-        bubbleColor = Theme.of(context).primaryColor;
-        verticalPadding = 10.0; // 기본 패딩 값
+        bubbleColor = Colors.blue;
+        verticalPadding = 7.0; // 기본 패딩 값
         break;
       case MessageType.other: //상대가 보낸 메시지
         alignment = Alignment.centerLeft;
         bubbleColor = Colors.grey[700]!;
-        verticalPadding = 10.0; // 기본 패딩 값
+        verticalPadding = 7.0; // 기본 패딩 값
         break;
       case MessageType.service: //서비스가 보낸 메시지
         alignment = Alignment.center;
-        bubbleColor = Colors.orange; // 서비스 메시지 색상
+        bubbleColor = Colors.orange[400]!; // 서비스 메시지 색상
         verticalPadding = 5.0; // 기본 패딩 값
         break;
     }
@@ -70,12 +70,12 @@ class MessageTile extends StatelessWidget {
         ),
         child:
         ///0830 서은율 : 메시지를 보낸 주체가 서비스일 때와 아닐때 분리
-        (messageType == MessageType.service)? Container(child: Text(message ,style: const TextStyle(
+        (messageType == MessageType.service)? Text(message ,style: const TextStyle(
           fontSize: 12,
           fontWeight: FontWeight.bold,
           color: Colors.white,
           letterSpacing: -1,
-        ),)) :Column(
+        ),) :Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -83,16 +83,15 @@ class MessageTile extends StatelessWidget {
               Text(
                 sender.toUpperCase(),
                 style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 11,
+                  fontWeight: FontWeight.normal,
                   color: Colors.white,
                   letterSpacing: -1,
                 ),
               ),
-            const SizedBox(height: 7),
             Text(
               message,
-              style: const TextStyle(fontSize: 16, color: Colors.white),
+              style: const TextStyle(fontSize: 17, color: Colors.white, fontWeight: FontWeight.bold, letterSpacing: -1,),
             ),
             Text(
               formattedTime, // 시간 표시
@@ -102,7 +101,6 @@ class MessageTile extends StatelessWidget {
                 letterSpacing: -1,
               ),
             ),
-
           ],
         ),
       ),

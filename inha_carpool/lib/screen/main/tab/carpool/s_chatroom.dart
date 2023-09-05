@@ -56,24 +56,29 @@ class _ChatroomPageState extends State<ChatroomPage> {
   int previousItemCount = 0;
   bool canSend = true;
 
-
   // 멤버 리스트
   List<dynamic> membersList = [];
+
   // 출발 시간
   DateTime startTime = DateTime.now();
+
   // 확정 시간
   DateTime agreedTime = DateTime.now();
+
   // 출발지
   String startPoint = "";
+
   // 도착지
   String endPoint = "";
 
   @override
   void initState() {
     getChatandAdmin();
+
     /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
 
     getCurrentUserandToken();
+
     /// 토큰, 사용자 Auth 정보 호출
 
     getCarpoolInfo();
@@ -83,7 +88,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
     _scrollController = ScrollController();
 
     /// 스크롤 컨트롤러 초기화
-
   }
 
   getLocalChat() async {
@@ -112,7 +116,10 @@ class _ChatroomPageState extends State<ChatroomPage> {
         });
       });
     } else {
-      FireStoreService().getChatsAfterSpecTime(widget.carId, DateTime.now().millisecondsSinceEpoch).then((val) {
+      FireStoreService()
+          .getChatsAfterSpecTime(
+              widget.carId, DateTime.now().millisecondsSinceEpoch)
+          .then((val) {
         setState(() {
           chats = val;
         });
@@ -152,297 +159,357 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
   @override
   Widget build(BuildContext context) {
-
     bool isExitButtonDisabled = false; // 나가기 버튼 기본적으로 활성화
 
-    // 디바이스 사이즈 가져오기
-    double deviceWidth = context.width(1);
-    double deviceHeight = context.height(1);
-    double topBarHeight = deviceHeight * 0.2;
-
-
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          iconTheme: IconThemeData(color: Colors.black),
-          title: Text(
-            widget.groupName, // 채팅방 이름
-            style: TextStyle(color: Colors.black),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        title: const Text(
+          "카풀 대화방", // 채팅방 이름
         ),
-        body: Column(
-          children: [
-            Container(
-                height: topBarHeight,
-                decoration: BoxDecoration(
-                  color: Colors.white54,
-                  border: Border.all(color: Colors.black, width: 1),
-                ),
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // 좌측
-                    Expanded(
-                      child: Container(
-                        alignment: Alignment.centerLeft,
-                        child: ListView.builder(
-                          itemCount: membersList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            String memberName = getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
+        actions: [
+          IconButton(
+            onPressed: isExitButtonDisabled
+                ? null
+                : () async {
+                    final currentTime = DateTime.now();
+                    final timeDifference = agreedTime.difference(currentTime);
+                    // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
+                    final minutesDifference = timeDifference.inMinutes;
 
-                            return TextButton(
-                              onPressed: () {
-                                _showProfileModal(context, '$memberName 님');
-                              },
-                              style: TextButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                backgroundColor: admin == memberName ? Colors.blue : Colors.grey,
-                                // 방장인 경우 파란색, 아닌 경우 회색
-                                padding: const EdgeInsets.all(10.0),
-                              ),
-                              child: Row(
-                                children: [
-                                  Text(
-                                    '$memberName 님',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                    if (minutesDifference > 10) {
+                      // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
+                      if (admin != widget.userName) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('카풀 나가기'),
+                              content: const Text('정말로 카풀을 나가시겠습니까?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('취소'),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    // 데이터베이스 작업을 비동기로 수행
+                                    await FireStoreService().exitCarpool(
+                                        widget.carId,
+                                        widget.userName,
+                                        widget.uid);
+
+                                    // 데이터베이스 작업이 완료되면 다음 페이지로 이동
+                                    if (!mounted) return;
+                                    Navigator.pop(context);
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const MainScreen(),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text('나가기'),
+                                ),
+                              ],
                             );
                           },
-                        ),
-                      ),
-                    ),
-                    // 우측
-                    Expanded(
-                        child: Column(
-                          children: [
-                            Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    child: Text(
-                                      startPoint,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[400],
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(40.0)),
-                                    ),
-                                  ),
-                                  Icon(Icons.arrow_forward),
-                                  Container(
-                                    child: Text(
-                                      endPoint,
-                                      style: TextStyle(fontSize: 20),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[400],
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(70.0)),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              child: Text(
-                                "출발 : ${startTime.month}월 ${startTime.day}일 ${startTime.hour}시 ${startTime.minute}분",
-                                style: TextStyle(fontSize: 18),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            Container(
-                              child: TextButton(
-                                onPressed: isExitButtonDisabled ? null : () async {
-                                  final currentTime = DateTime.now();
-                                  final timeDifference = agreedTime.difference(currentTime);
-                                  // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
-                                  final minutesDifference = timeDifference.inMinutes;
-
-                                  if (minutesDifference > 10) {
-                                    // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
-                                    if (admin != widget.userName) {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('채팅방 나가기'),
-                                            content: Text('채팅방을 나가시겠습니까?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text('취소'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () async {
-                                                  // 데이터베이스 작업을 비동기로 수행
-                                                  await FireStoreService().exitCarpool(widget.carId, widget.userName, widget.uid);
-
-                                                  // 데이터베이스 작업이 완료되면 다음 페이지로 이동
-                                                  Navigator.pop(context);
-                                                  Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                      builder: (context) => MainScreen(),
-                                                    ),
-                                                  );
-                                                },
-
-                                                child: Text('나가기'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    } else {
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text('채팅방 나가기'),
-                                            content: Text('현재 방장입니다. 정말 채팅방을 나가시겠습니까?'),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: Text('취소'),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  FireStoreService().exitCarpoolAsAdmin(widget.carId, widget.userName, widget.uid);
-                                                  Navigator.pop(context);
-                                                  Navigator.pop(context);
-                                                  Navigator.pushReplacement(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context) => MainScreen()),
-                                                  );
-                                                },
-                                                child: Text('나가기'),
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }
-                                  } else {
-                                    // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
-                                    showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) {
-                                        return AlertDialog(
-                                          title: Text('나가기 불가'),
-                                          content: Text('카풀 시작 10분 전, 채팅방을 나갈 수 있는 시간이 아닙니다.'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                              child: Text('확인'),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                                style: TextButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(0),
-                                  ),
-                                  backgroundColor: Colors.grey[300],
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('카풀 나가기'),
+                              content:
+                                  const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('취소'),
                                 ),
-                                child: Text('나가기'),
+                                TextButton(
+                                  onPressed: () async {
+                                    await FireStoreService().exitCarpoolAsAdmin(
+                                        widget.carId,
+                                        widget.userName,
+                                        widget.uid);
+
+                                    if (!mounted) return;
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MainScreen()),
+                                    );
+                                  },
+                                  child: const Text('나가기'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    } else {
+                      // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('카풀 나가기 불가'),
+                            content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('확인'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  },
+            icon: const Icon(
+              Icons.exit_to_app,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Container(
+            height: context.height(0.15),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.grey,
+                  width: 1.0,
+                ),
+              ),
+            ),
+            child: Row(
+              children: [
+                // 좌측
+                Container(
+                  padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                  width: context.width(0.45),
+                  alignment: Alignment.center,
+                  child: ListView.builder(
+                    itemCount: membersList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      String memberName =
+                          getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
+
+                      return TextButton(
+                        onPressed: () {
+                          _showProfileModal(context, '$memberName 님');
+                        },
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          backgroundColor: admin == memberName
+                              ? Colors.blue
+                              : Colors.grey.shade300,
+                          // 방장인 경우 파란색, 아닌 경우 회색
+                          padding: const EdgeInsets.all(10.0),
+                          iconColor:
+                              admin == memberName ? Colors.white : Colors.black,
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.person,
+                              size: 18,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              '$memberName 님',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
                               ),
                             ),
                           ],
-                    )),
-                  ],
-                ),
-              ),
-            Expanded(
-              child: Stack(
-                children: <Widget>[
-                  /// 채팅 메시지 스트림
-                  chatMessages(),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    width: MediaQuery.of(context).size.width,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 10),
-                      width: MediaQuery.of(context).size.width,
-                      height: 70,
-                      color: Colors.grey[600],
-                      child: Row(children: [
-                        Expanded(
-                            child: TextFormField(
-                          cursorColor: Colors.white,
-                          controller: messageController,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: const InputDecoration(
-                            hintText: "메시지 보내기",
-                            hintStyle:
-                                TextStyle(color: Colors.white, fontSize: 16),
-                            filled: true,
-                            fillColor: Colors.grey,
-
-                            border: InputBorder.none,
-                            // fillColor: Colors.white,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30.0)),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(30.0)),
-                            ),
-                          ),
-                        )),
-                        const SizedBox(
-                          width: 12,
                         ),
-                        GestureDetector(
-                          onTap: () {
-                            sendMessage();
-                          },
-                          child: Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: const Center(
-                                child: Icon(
-                              Icons.send,
-                              color: Colors.white,
-                            )),
+                      );
+                    },
+                  ),
+                ),
+                // 우측
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300], // 회색 배경색
+                        borderRadius: BorderRadius.circular(20), // 동그란 모양 설정
+                      ),
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Icon(
+                            Icons.access_time,
+                            size: 20,
+                            color: Colors.blue,
                           ),
-                        )
-                      ]),
+                          const SizedBox(width: 5),
+                          Text(
+                            "${startTime.month}월 ${startTime.day}일 ${startTime.hour}시 ${startTime.minute}분",
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  )
-                ],
-              ),
+                    SizedBox(height: context.height(0.01)),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                      width: context.width(0.5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Icon(
+                            Icons.location_on,
+                            size: 20,
+                            color: Colors.blue,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            startPoint,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                      width: context.width(0.45),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(
+                            Icons.arrow_downward_outlined,
+                            size: 20,
+                            color: Colors.black,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                      width: context.width(0.45),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          const Icon(
+                            Icons.location_on,
+                            size: 20,
+                            color: Colors.blue,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            endPoint,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              ],
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Stack(
+              children: <Widget>[
+                /// 채팅 메시지 스트림
+                chatMessages(),
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  width: MediaQuery.of(context).size.width,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
+                    width: MediaQuery.of(context).size.width,
+                    height: 75,
+                    color: Colors.grey[400],
+                    child: Row(children: [
+                      Expanded(
+                          child: TextFormField(
+                        cursorColor: Colors.white,
+                        controller: messageController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          hintText: "메시지 보내기",
+                          hintStyle:
+                              TextStyle(color: Colors.white, fontSize: 17),
+                          filled: true,
+                          fillColor: Colors.grey,
+                          border: InputBorder.none,
+                          // fillColor: Colors.white,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30.0)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(30.0)),
+                          ),
+                        ),
+                      )),
+                      const SizedBox(
+                        width: 12,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          sendMessage();
+                        },
+                        child: Container(
+                          height: 45,
+                          width: 45,
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: const Center(
+                              child: Icon(
+                            Icons.send,
+                            color: Colors.white,
+                          )),
+                        ),
+                      )
+                    ]),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -519,7 +586,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
                         "${currentDate.year}-${currentDate.month}-${currentDate.day}",
-                        style: TextStyle(color: Colors.grey),
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     ),
                   MessageTile(
@@ -581,19 +648,22 @@ void _showProfileModal(BuildContext context, String userName) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
-      return Container(
-        // 모달 내용을 구성
+      return SizedBox(
+        // 크기 지정
+        height: context.height(0.4),
+        width: double.infinity,
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Text(
               '프로필 조회',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               '유저 이름: $userName' '\n이용횟수, 신고횟수, 성별, 신고하기',
               style: TextStyle(fontSize: 16),
