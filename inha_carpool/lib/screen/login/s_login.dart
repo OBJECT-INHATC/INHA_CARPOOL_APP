@@ -220,10 +220,11 @@ class _LoginPageState extends State<LoginPage> {
                               if (index == 0) {
                                 academy = "@itc.ac.kr";
                               } else {
-                                academy = "@inha.ac.kr";
+                                academy = "@inha.edu";
                               }
                               selectedIndex = index;
                               updateBackgroundColors();
+                              updateEmail();
                             });
                           },
                           selectedBackgroundColors: const [
@@ -389,4 +390,16 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  void updateEmail() {
+    // 텍스트 필드에 이미 값이 있는지 확인
+    if (email.isNotEmpty) {
+      // '@' 문자 앞부분만 가져옴 (학번 부분)
+      String id = email.split('@')[0];
+
+      // 새로운 학교 도메인을 붙임
+      email = id + academy;
+    }
+  }
+
 }

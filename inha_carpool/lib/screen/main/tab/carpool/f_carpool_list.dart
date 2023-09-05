@@ -166,13 +166,7 @@ class _CarpoolListState extends State<CarpoolList> {
                           Expanded(
                             child: Row(
                               children: <Widget>[
-                                CircleAvatar(
-                                  backgroundImage: Image.asset(
-                                    "${basePath}/splash/logo600.png",
-                                  ).image,
-                                  backgroundColor: Colors.grey.shade200,
-                                  maxRadius: 35,
-                                ),
+
                                 SizedBox(
                                   width: 20,
                                 ),
