@@ -46,7 +46,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
   String? token = "";
 
-  DateTime? currentBackPressTime; // 뒤로가기 버튼 누른 시간
+  DateTime? currentBackPressTime;
+
+  bool isLoading = true; // 뒤로가기 버튼 누른 시간
 
   @override
   void initState() {
@@ -80,21 +82,14 @@ class _CarpoolMapState extends State<CarpoolMap> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        DateTime now = DateTime.now();
-        if (currentBackPressTime == null ||
-            now.difference(currentBackPressTime!) >
-                const Duration(seconds: 2)) {
-          // 첫 번째 뒤로가기 버튼 누름
-          currentBackPressTime = now;
-          // 스낵바 메시지 출력
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('한 번 더 누르면 종료됩니다.'),
-            ),
-          );
-          return false; // 뒤로가기 막음
+        if (isLoading) {
+          print('뒤로가기 제한');
+          // 페이지가 로딩 중이면 뒤로가기 막음
+          return false;
+        } else {
+          print('뒤로가기 허용');
+          return true; // 로딩이 완료되면 뒤로가기 허용
         }
-        return true; // 뒤로가기 허용
       },
       child: Scaffold(
         appBar: AppBar(
@@ -427,6 +422,12 @@ class _CarpoolMapState extends State<CarpoolMap> {
     list.clear();
   }
 
+  void handlePageLoadComplete() {
+    setState(() {
+      isLoading = false; // 로딩이 완료되었음을 표시
+    });
+  }
+
   //현재 기기 위치 정보 가져오기 및 권한
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
@@ -459,6 +460,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
       } else {
         _distanceToLocation = (distanceInMeters).toStringAsFixed(0) + "m";
       }
+      print('로딩 상태 : $isLoading');
+      handlePageLoadComplete();
+      print('로딩 상태 ; $isLoading');
     });
   }
 }
