@@ -75,7 +75,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             int nowMember = carpoolData['nowMember'];
             int maxMember = carpoolData['maxMember'];
 
-            String currentUser = '${widget.uid}_$widget.nickName';
+            String currentUser = '${widget.uid}_${widget.nickName}';
             if (carpoolData['members'].contains(currentUser)) {
               // 이미 참여한 경우
               if (carpoolData['admin'] == currentUser) {
