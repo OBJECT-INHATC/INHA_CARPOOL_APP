@@ -57,7 +57,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   bool canSend = true;
 
   // 멤버 리스트
-  List<dynamic> membersList = [];
+  // List<dynamic> membersList = [];
 
   // 출발 시간
   DateTime startTime = DateTime.now();
@@ -148,7 +148,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   getCarpoolInfo() async {
     await FireStoreService().getCarDetails(widget.carId).then((val) {
       setState(() {
-        membersList = val['members'];
+        // membersList = val['members'];
         startTime = DateTime.fromMillisecondsSinceEpoch(val['startTime']);
         startPoint = val['startDetailPoint'];
         endPoint = val['endDetailPoint'];
@@ -306,46 +306,72 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                   width: context.width(0.45),
                   alignment: Alignment.center,
-                  child: ListView.builder(
-                    itemCount: membersList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String memberName =
-                          getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
+                  // 스트림빌더 처리 -> 실시간으로 멤버리스트 출력
+                  child: StreamBuilder<DocumentSnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection('carpool')
+                          .doc(widget.carId)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+                        if (!snapshot.hasData ||
+                            snapshot.data!.data() == null) {
+                          return Text('No data');
+                        }
+                        final carpoolData =
+                            snapshot.data!.data() as Map<String, dynamic>;
+                        final membersList =
+                            carpoolData['members'] as List<dynamic>;
 
-                      return TextButton(
-                        onPressed: () {
-                          _showProfileModal(context, '$memberName 님');
-                        },
-                        style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          backgroundColor: admin == memberName
-                              ? Colors.blue
-                              : Colors.grey.shade300,
-                          // 방장인 경우 파란색, 아닌 경우 회색
-                          padding: const EdgeInsets.all(10.0),
-                          iconColor:
-                              admin == memberName ? Colors.white : Colors.black,
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.person,
-                              size: 18,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              '$memberName 님',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black,
+                        // 방장 이름 추출
+                        String admin = getName(carpoolData['members'][0]);
+
+                        return ListView.builder(
+                          itemCount: membersList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            String memberName = getName(
+                                membersList[index]); // 회원 이름을 가져오는 부분입니다.
+
+                            // 방장인지 확인
+                            bool isAdmin = admin == memberName;
+
+                            return TextButton(
+                              onPressed: () {
+                                _showProfileModal(context, '$memberName 님');
+                              },
+                              style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                backgroundColor: isAdmin
+                                    ? Colors.blue
+                                    : Colors.grey.shade300,// 방장인 경우 파란색, 아닌 경우 회색
+                                padding: const EdgeInsets.all(10.0),
+                                iconColor:
+                                    isAdmin ? Colors.white : Colors.black,
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.person,
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    '$memberName 님',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      }),
                 ),
                 // 우측
                 Column(
