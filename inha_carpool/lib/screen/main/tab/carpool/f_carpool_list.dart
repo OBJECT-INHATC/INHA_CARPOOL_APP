@@ -145,7 +145,7 @@ class _CarpoolListState extends State<CarpoolList> {
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
-                      context,
+                      Nav.globalContext,
                       MaterialPageRoute(
                           builder: (context) => ChatroomPage(
                               carId: carpool['carId'],
