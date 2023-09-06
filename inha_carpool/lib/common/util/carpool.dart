@@ -3,10 +3,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/material.dart';
 
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
+import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
+
+import '../../screen/main/s_main.dart';
 
 class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -56,7 +60,7 @@ class FirebaseCarpool {
     required String endPointName,
     required String startPointName,
     required String selectedLimit,
-    required String selectedGender,
+    required String selectedRoomGender,
     required String memberID,
     required String memberName,
     required String startDetailPoint,
@@ -89,7 +93,7 @@ class FirebaseCarpool {
         'endPointName': endPointName,
         'endPoint': geoEnd,
         'maxMember': int.parse(selectedLimit.replaceAll(RegExp(r'[^\d]'), '')),
-        'gender': selectedGender,
+        'gender': selectedRoomGender,
         'startTime': dateAsInt,
         'nowMember': 1,
         'status': false,
@@ -98,11 +102,12 @@ class FirebaseCarpool {
         'endDetailPoint': endDetailPoint,
       });
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
+
       /// 0830 한승완 추가 : carId의 Token 저장
-      await FireStoreService().saveToken( token! , carpoolDocRef.id);
+      await FireStoreService().saveToken(token!, carpoolDocRef.id);
 
       /// 0903 한승완 추가 : 참가 메시지 전송
-      await FireStoreService().sendCreateMessage(carpoolDocRef.id , memberName);
+      await FireStoreService().sendCreateMessage(carpoolDocRef.id, memberName);
 
       print('Data added to Firestore.');
     } catch (e) {
@@ -110,12 +115,22 @@ class FirebaseCarpool {
     }
   }
 
-  ///카풀 참가
   static Future<void> addMemberToCarpool(
-      String carpoolID, String memberID, String memberName, String token) async {
+      BuildContext context,
+      String carpoolID,
+      String memberID,
+      String memberName,
+      String token,
+      String roomGender) async {
     try {
       CollectionReference carpoolCollection = _firestore.collection('carpool');
       DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
+
+      CollectionReference userCollection = _firestore.collection('users');
+      DocumentReference userDocRef = userCollection.doc(memberID);
+
+      DocumentSnapshot userSnapshot = await userDocRef.get();
+      String gender = userSnapshot['gender'];
 
       // 트랜잭션 시작
       await _firestore.runTransaction((transaction) async {
@@ -126,33 +141,91 @@ class FirebaseCarpool {
           print('해당 카풀이 존재하지 않습니다.');
           return;
         }
+
         // 최대 인원 초과하지 않는 경우, 멤버 추가 및 nowMember 업데이트
         int nowMember = carpoolSnapshot['nowMember'];
         int maxMember = carpoolSnapshot['maxMember'];
-        if(nowMember < maxMember){
-          transaction.update(carpoolDocRef, {
-            'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
-            'nowMember': FieldValue.increment(1),
-          });
-          /// 0830 한승완 추가 : carId + Token 저장
-          FireStoreService().saveToken(
-            token,
-            carpoolID,
-          );
+        if (nowMember < maxMember) {
+          if (gender == roomGender || roomGender == '무관') {
+            transaction.update(carpoolDocRef, {
+              'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
+              'nowMember': FieldValue.increment(1),
+            });
 
-          /// 0903 한승완 추가 : 참가 메시지 전송
-          FireStoreService().sendEntryMessage(carpoolID,memberName);
+            // 0830 한승완 추가 : carId + Token 저장
+            FireStoreService().saveToken(
+              token,
+              carpoolID,
+            );
+
+            // 0903 한승완 추가 : 참가 메시지 전송
+            FireStoreService().sendEntryMessage(carpoolID, memberName);
+          } else {
+            // 성별이 맞지 않을 경우 dialog
+            if (context.mounted) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('카풀 참가 실패'),
+                    content: const Text('성별이 맞지 않아 참여할 수 없습니다.'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(
+                            Nav.globalContext,
+                            MaterialPageRoute(
+                              builder: (context) => const MainScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text('확인'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            }
+          }
+        } else {
+          // 인원수가 맞지 않을 경우 dialog
+          if (context.mounted) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('카풀 참가 실패'),
+                  content: const Text('자리가 마감되었습니다!\n다른 카풀을 이용해주세요.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          Nav.globalContext,
+                          MaterialPageRoute(
+                            builder: (context) => const MainScreen(),
+                          ),
+                        );
+                      },
+                      child: const Text('확인'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
         }
-
       });
 
       print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');
     } catch (e) {
-      print('카풀에 유저 추가 실패');
+      // 예외 처리
+      print('카풀에 유저 추가 실패: $e');
+
+      // 예외 처리 후 다이얼로그 표시
     }
   }
-
-
 
   ///거리순 조회
   static Future<List<DocumentSnapshot>> nearByCarpool(

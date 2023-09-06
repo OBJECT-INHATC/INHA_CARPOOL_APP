@@ -17,6 +17,7 @@ class CarpoolMap extends StatefulWidget {
   final String startTime;
   final String carId;
   final String admin;
+  final String roomGender;
 
   CarpoolMap({
     required this.startPoint,
@@ -24,6 +25,7 @@ class CarpoolMap extends StatefulWidget {
     required this.startTime,
     required this.carId,
     required this.admin,
+    required this.roomGender,
   });
 
   @override
@@ -282,42 +284,17 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 String carId = widget.carId;
                                 String memberID = uid;
                                 String memberName = nickName;
+                                String selectedRoomGender = widget.roomGender;
+                                print('성별시치: $selectedRoomGender');
 
-                                try {
-                                  await FirebaseCarpool.addMemberToCarpool(
-                                      carId, memberID, memberName, token!);
-                                  if (!mounted) return;
-                                  Navigator.pop(context);
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const MainScreen()));
-                                } catch (error) {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('카풀 참가 실패'),
-                                        content: const Text(
-                                            '자리가 마감되었습니다!\n다른 카풀을 이용해주세요.'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const MainScreen()));
-                                            },
-                                            child: const Text('확인'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                }
+                                await FirebaseCarpool.addMemberToCarpool(
+                                  context,
+                                  carId,
+                                  memberID,
+                                  memberName,
+                                  token!,
+                                  selectedRoomGender,
+                                );
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,

@@ -286,7 +286,7 @@ class _RecruitPageState extends State<RecruitPage> {
                           endPointName: endPointName,
                           startPointName: startPointName,
                           selectedLimit: selectedLimit,
-                          selectedGender: selectedGender,
+                          selectedRoomGender: selectedGender,
                           memberID: uid,
                           memberName: nickName,
                           startDetailPoint:
