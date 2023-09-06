@@ -115,16 +115,12 @@ class FirebaseCarpool {
     }
   }
 
-  static Future<void> addMemberToCarpool(
-      String carpoolID,
-      String memberID,
-      String memberName,
-      String token,
-      String roomGender) async {
+  static Future<void> addMemberToCarpool(String carpoolID, String memberID,
+      String memberName, String token, String roomGender) async {
+    CollectionReference carpoolCollection = _firestore.collection('carpool');
+    DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
+
     try {
-      CollectionReference carpoolCollection = _firestore.collection('carpool');
-      DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
-      // 트랜잭션 시작
       await _firestore.runTransaction((transaction) async {
         DocumentSnapshot carpoolSnapshot = await transaction.get(carpoolDocRef);
 
@@ -133,29 +129,27 @@ class FirebaseCarpool {
           print('해당 카풀이 존재하지 않습니다.');
           return;
         }
-        // 최대 인원 초과하지 않는 경우, 멤버 추가 및 nowMember 업데이트
         int nowMember = carpoolSnapshot['nowMember'];
         int maxMember = carpoolSnapshot['maxMember'];
-        if(nowMember < maxMember){
+        if (nowMember < maxMember) {
           transaction.update(carpoolDocRef, {
             'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
             'nowMember': FieldValue.increment(1),
           });
-          /// 0830 한승완 추가 : carId + Token 저장
           FireStoreService().saveToken(
             token,
             carpoolID,
           );
-
-          /// 0903 한승완 추가 : 참가 메시지 전송
-          FireStoreService().sendEntryMessage(carpoolID,memberName);
+          FireStoreService().sendEntryMessage(carpoolID, memberName);
+        } else {
+          // 최대 인원 초과 시 예외 발생
+          throw Exception('최대 인원 초과');
         }
-
       });
-
       print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');
     } catch (e) {
-      print('카풀에 유저 추가 실패( carpool )');
+      // 예외를 다시 던져서 메소드를 호출한 곳에 전달
+      throw e;
     }
   }
 
