@@ -3,10 +3,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/material.dart';
 
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
+import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
+
+import '../../screen/main/s_main.dart';
 
 class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -56,7 +60,7 @@ class FirebaseCarpool {
     required String endPointName,
     required String startPointName,
     required String selectedLimit,
-    required String selectedGender,
+    required String selectedRoomGender,
     required String memberID,
     required String memberName,
     required String startDetailPoint,
@@ -89,7 +93,7 @@ class FirebaseCarpool {
         'endPointName': endPointName,
         'endPoint': geoEnd,
         'maxMember': int.parse(selectedLimit.replaceAll(RegExp(r'[^\d]'), '')),
-        'gender': selectedGender,
+        'gender': selectedRoomGender,
         'startTime': dateAsInt,
         'nowMember': 1,
         'status': false,
@@ -98,11 +102,12 @@ class FirebaseCarpool {
         'endDetailPoint': endDetailPoint,
       });
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
+
       /// 0830 한승완 추가 : carId의 Token 저장
-      await FireStoreService().saveToken( token! , carpoolDocRef.id);
+      await FireStoreService().saveToken(token!, carpoolDocRef.id);
 
       /// 0903 한승완 추가 : 참가 메시지 전송
-      await FireStoreService().sendCreateMessage(carpoolDocRef.id , memberName);
+      await FireStoreService().sendCreateMessage(carpoolDocRef.id, memberName);
 
       print('Data added to Firestore.');
     } catch (e) {
@@ -110,13 +115,15 @@ class FirebaseCarpool {
     }
   }
 
-  ///카풀 참가
   static Future<void> addMemberToCarpool(
-      String carpoolID, String memberID, String memberName, String token) async {
+      String carpoolID,
+      String memberID,
+      String memberName,
+      String token,
+      String roomGender) async {
     try {
       CollectionReference carpoolCollection = _firestore.collection('carpool');
       DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
-
       // 트랜잭션 시작
       await _firestore.runTransaction((transaction) async {
         DocumentSnapshot carpoolSnapshot = await transaction.get(carpoolDocRef);
@@ -148,11 +155,9 @@ class FirebaseCarpool {
 
       print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');
     } catch (e) {
-      print('카풀에 유저 추가 실패');
+      print('카풀에 유저 추가 실패( carpool )');
     }
   }
-
-
 
   ///거리순 조회
   static Future<List<DocumentSnapshot>> nearByCarpool(

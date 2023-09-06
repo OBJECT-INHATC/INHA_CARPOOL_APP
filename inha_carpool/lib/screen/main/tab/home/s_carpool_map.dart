@@ -17,6 +17,7 @@ class CarpoolMap extends StatefulWidget {
   final String startTime;
   final String carId;
   final String admin;
+  final String roomGender;
 
   CarpoolMap({
     required this.startPoint,
@@ -24,6 +25,7 @@ class CarpoolMap extends StatefulWidget {
     required this.startTime,
     required this.carId,
     required this.admin,
+    required this.roomGender,
   });
 
   @override
@@ -282,10 +284,21 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 String carId = widget.carId;
                                 String memberID = uid;
                                 String memberName = nickName;
+                                String selectedRoomGender = widget.roomGender;
 
+                                if (gender != selectedRoomGender &&
+                                    selectedRoomGender != '무관') {
+                                  context.showErrorSnackbar(
+                                      '입장할 수 없는 성별입니다.\n다른 카풀을 이용해주세요!');
+                                  return;
+                                }
                                 try {
                                   await FirebaseCarpool.addMemberToCarpool(
-                                      carId, memberID, memberName, token!);
+                                      carId,
+                                      memberID,
+                                      memberName,
+                                      token!,
+                                      selectedRoomGender);
                                   if (!mounted) return;
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
@@ -293,7 +306,11 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const MainScreen()));
+                                  /// TODO: 0906 김수현 추가 : 입장 실패한 인원한테 다이얼로그 띄워줘야함
+                                  /// 트랜잭션 잘 작동되는데, UI는 안뜸 (당연히 안뜸...)
                                 } catch (error) {
+                                  print(
+                                      '카풀 참가 실패 ( s_carpool_map )');
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
