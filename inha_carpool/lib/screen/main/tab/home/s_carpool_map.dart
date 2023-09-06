@@ -306,11 +306,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const MainScreen()));
-                                  /// TODO: 0906 김수현 추가 : 입장 실패한 인원한테 다이얼로그 띄워줘야함
-                                  /// 트랜잭션 잘 작동되는데, UI는 안뜸 (당연히 안뜸...)
                                 } catch (error) {
-                                  print(
-                                      '카풀 참가 실패 ( s_carpool_map )');
+                                  // addMemberToCarpool에서 던진 예외를 처리함
+                                  print('카풀 참가 실패 ( s_carpool_map )');
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
