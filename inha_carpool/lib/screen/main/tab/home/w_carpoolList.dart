@@ -19,7 +19,9 @@ class CarpoolListWidget extends StatefulWidget {
   const CarpoolListWidget({
     required this.snapshot,
     required this.scrollController,
-    required this.visibleItemCount, required this.nickName, required this.uid,
+    required this.visibleItemCount,
+    required this.nickName,
+    required this.uid,
   });
 
   @override
@@ -27,9 +29,6 @@ class CarpoolListWidget extends StatefulWidget {
 }
 
 class _CarpoolListWidgetState extends State<CarpoolListWidget> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -40,10 +39,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
       itemBuilder: (context, index) {
         DocumentSnapshot carpool = widget.snapshot.data![index];
         Map<String, dynamic> carpoolData =
-        carpool.data() as Map<String, dynamic>;
+            carpool.data() as Map<String, dynamic>;
 
         DateTime startTime =
-        DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
+            DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
         DateTime currentTime = DateTime.now();
         Duration difference = startTime.difference(currentTime);
 
@@ -61,9 +60,9 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
         }
 
         Color borderColor;
-        if (carpoolData['gender'] == '남자') {
+        if (carpoolData['gender'] == '남성') {
           borderColor = Colors.blue; // 남자일 때 보더 색
-        } else if (carpoolData['gender'] == '여자') {
+        } else if (carpoolData['gender'] == '남성') {
           borderColor = Colors.red; // 여자일 때 보더 색
         } else {
           borderColor = Colors.grey; // 무관일 때 보더 색
@@ -83,13 +82,12 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 Navigator.push(
                   Nav.globalContext,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ChatroomPage(
-                          carId: carpoolData['carId'],
-                          groupName: '카풀 네임',
-                          userName: widget.nickName,
-                          uid: widget.uid,)
-                  ),
+                      builder: (context) => ChatroomPage(
+                            carId: carpoolData['carId'],
+                            groupName: '카풀 네임',
+                            userName: widget.nickName,
+                            uid: widget.uid,
+                          )),
                 );
                 print('현재 유저: $currentUser');
                 print(carpoolData['members']);
@@ -97,12 +95,12 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 Navigator.push(
                   Nav.globalContext,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          ChatroomPage(
-                            carId: carpoolData['carId'],
-                            groupName: '카풀 네임',
-                            userName: widget.nickName,
-                            uid: widget.uid,)
+                    builder: (context) => ChatroomPage(
+                      carId: carpoolData['carId'],
+                      groupName: '카풀 네임',
+                      userName: widget.nickName,
+                      uid: widget.uid,
+                    ),
                   ),
                 );
               }
@@ -118,6 +116,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                     startTime: formattedTime,
                     carId: carpoolData['carId'],
                     admin: carpoolData['admin'],
+                    roomGender: carpoolData['gender'],
                   ),
                 );
               } else {
@@ -128,9 +127,9 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
           child: Card(
             color: carpoolData['gender'] == '무관'
                 ? Colors.grey[300]
-                : carpoolData['gender'] == '남자'
-                ? Colors.blue[200]
-                : Colors.red[200],
+                : carpoolData['gender'] == '남성'
+                    ? Colors.blue[200]
+                    : Colors.red[200],
             elevation: 5,
             margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
             shape: RoundedRectangleBorder(
@@ -141,32 +140,37 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
-                Row(children: [
-                  Container(
-                    width: context.width(0.8),
-                    // desired width
-                    padding: const EdgeInsets.all(8.0),
-                    margin: const EdgeInsets.all(8.0),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          // POINT
-                          color: Colors.black,
+                Row(
+                  children: [
+                    Container(
+                      width: context.width(0.8),
+                      // desired width
+                      padding: const EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.all(8.0),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            // POINT
+                            color: Colors.black,
+                          ),
                         ),
                       ),
-                    ),
 
-                    child: Row(children: [
-                      //방장 정보 가져오기
-                      const Icon(Icons.person, color: Colors.grey, size: 25),
-                      Text('${carpoolData['admin'].split('_')[1]}',
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      const SizedBox(width: 5),
-                      //방장 평점
-                    ]),
-                  ),
-                ]),
+                      child: Row(
+                        children: [
+                          //방장 정보 가져오기
+                          const Icon(Icons.person,
+                              color: Colors.grey, size: 25),
+                          Text('${carpoolData['admin'].split('_')[1]}',
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.bold)),
+                          const SizedBox(width: 5),
+                          //방장 평점
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 Container(
                   margin: const EdgeInsets.all(8.0),
                   child: Row(
@@ -209,7 +213,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                 ],
                               ),
                               const SizedBox(width: 5),
-
                             ],
                           ),
                           Container(
@@ -252,7 +255,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                 ],
                               ),
                               const SizedBox(width: 5),
-
                             ],
                           ),
                         ],
@@ -262,54 +264,58 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 ),
                 Column(
                   children: [
-                    Row(children: [
-                      Container(
-                        width: context.width(0.8),
-                        // desired width
-                        padding: const EdgeInsets.all(8.0),
-                        margin: const EdgeInsets.all(8.0),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              // POINT
-                              color: Colors.black,
+                    Row(
+                      children: [
+                        Container(
+                          width: context.width(0.8),
+                          // desired width
+                          padding: const EdgeInsets.all(8.0),
+                          margin: const EdgeInsets.all(8.0),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                // POINT
+                                color: Colors.black,
+                              ),
                             ),
                           ),
-                        ),
 
-                        child: Column(children: [
-                          Row(
+                          child: Column(
                             children: [
-                              const Icon(Icons.calendar_today_outlined),
-                              Text(
-                                  '${startTime.month}월 ${startTime.day}일 ${startTime.hour}시 ${startTime.minute}분 출발',
+                              Row(
+                                children: [
+                                  const Icon(Icons.calendar_today_outlined),
+                                  Text(
+                                      '${startTime.month}월 ${startTime.day}일 ${startTime.hour}시 ${startTime.minute}분 출발',
+                                      style: const TextStyle(
+                                          fontSize: 14, color: Colors.black)),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  const Icon(Icons.directions_car_outlined),
+                                  Text(
+                                      '${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
+                                      style: const TextStyle(fontSize: 16)),
+                                ],
+                              ),
+                              //방 생성시 설정했던 성별 표시
+                              Row(
+                                children: [
+                                  const Icon(Icons.perm_identity_outlined),
+                                  Text((carpoolData['gender'])),
+                                ],
+                              ),
+                              Text(formattedTime,
                                   style: const TextStyle(
-                                      fontSize: 14, color: Colors.black)),
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold)),
                             ],
                           ),
-                          Row(
-                            children: [
-                              const Icon(Icons.directions_car_outlined),
-                              Text(
-                                  '${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
-                                  style: const TextStyle(fontSize: 16)),
-                            ],
-                          ),
-                          //방 생성시 설정했던 성별 표시
-                          Row(
-                            children: [
-                              const Icon(Icons.perm_identity_outlined),
-                              Text((carpoolData['gender'])),
-                            ],
-                          ),
-                          Text(formattedTime,
-                              style: const TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold)),
-                        ]),
-                      ),
-                    ]),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10)
