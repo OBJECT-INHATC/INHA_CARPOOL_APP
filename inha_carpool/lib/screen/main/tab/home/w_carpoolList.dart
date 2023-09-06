@@ -140,35 +140,51 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 10),
+                 SizedBox(height: context.height(0.01),),
                 Row(children: [
-                  Container(
-                    width: context.width(0.8),
-                    // desired width
-                    padding: const EdgeInsets.all(8.0),
-                    margin: const EdgeInsets.all(8.0),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(
-                          // POINT
-                          color: Colors.black,
-                        ),
+                  Expanded(
+                    child: Container(
+                      // width: context.width(0.8),
+                      // desired width
+                      padding: const EdgeInsets.all(8.0),
+                      margin: const EdgeInsets.all(8.0),
+                      decoration: const BoxDecoration(
+                        // border: Border(
+                        //   bottom: BorderSide(
+                        //     // POINT
+                        //     color: Colors.black,
+                        //   ),
+                        // ),
                       ),
-                    ),
 
-                    child: Row(children: [
-                      //방장 정보 가져오기
-                      const Icon(Icons.person, color: Colors.grey, size: 25),
-                      Text('${carpoolData['admin'].split('_')[1]}',
-                          style: const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      const SizedBox(width: 5),
-                      //방장 평점
-                    ]),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                        //방장 정보 가져오기
+                        Row(
+                          children: [
+                            const Icon(Icons.person, color: Colors.grey, size: 25),
+                            Text('${carpoolData['admin'].split('_')[1]}',
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+
+                        Row(
+                          children: [
+                            const Icon(Icons.directions_car_outlined),
+                            Text(
+                                '${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
+                                style: const TextStyle(fontSize: 20)),
+                          ],
+                        ),
+                        //방장 평점
+                      ]),
+                    ),
                   ),
                 ]),
                 Container(
-                  margin: const EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.all(7.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -178,9 +194,9 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                           Row(
                             children: [
                               Container(
-                                  width: 40,
+                                  width: context.width(0.1),
                                   // desired width
-                                  height: 30,
+                                  height: context.height(0.04),
                                   // desired height
                                   decoration: BoxDecoration(
                                     color: Colors.blue[700],
@@ -216,14 +232,14 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                               padding: const EdgeInsets.all(8.0),
                               child: const Column(children: [
                                 Icon(Icons.arrow_drop_down_outlined),
-                                Icon(Icons.arrow_drop_down_outlined),
+                                // Icon(Icons.arrow_drop_down_outlined),
                               ])),
                           Row(
                             children: [
                               Container(
-                                  width: 40,
+                                  width: context.width(0.1),
                                   // desired width
-                                  height: 30,
+                                  height: context.height(0.04),
                                   // desired height
                                   decoration: BoxDecoration(
                                     color: Colors.blue[700],
@@ -263,51 +279,48 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 Column(
                   children: [
                     Row(children: [
-                      Container(
-                        width: context.width(0.8),
-                        // desired width
-                        padding: const EdgeInsets.all(8.0),
-                        margin: const EdgeInsets.all(8.0),
-                        decoration: const BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              // POINT
-                              color: Colors.black,
+                      Expanded(
+                        child: Container(
+                          // desired width
+                          padding: const EdgeInsets.all(8.0),
+                          margin: const EdgeInsets.all(8.0),
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                // POINT
+                                color: Colors.black,
+                              ),
                             ),
                           ),
-                        ),
 
-                        child: Column(children: [
-                          Row(
-                            children: [
-                              const Icon(Icons.calendar_today_outlined),
-                              Text(
-                                  '${startTime.month}월 ${startTime.day}일 ${startTime.hour}시 ${startTime.minute}분 출발',
-                                  style: const TextStyle(
-                                      fontSize: 14, color: Colors.black)),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              const Icon(Icons.directions_car_outlined),
-                              Text(
-                                  '${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
-                                  style: const TextStyle(fontSize: 16)),
-                            ],
-                          ),
-                          //방 생성시 설정했던 성별 표시
-                          Row(
-                            children: [
-                              const Icon(Icons.perm_identity_outlined),
-                              Text((carpoolData['gender'])),
-                            ],
-                          ),
-                          Text(formattedTime,
-                              style: const TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold)),
-                        ]),
+                          child: Column(children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.calendar_today_outlined, size:14),
+                                Text(
+                                    '${startTime.month}월 ${startTime.day}일 ${startTime.hour}시 ${startTime.minute}분 출발',
+                                    style: const TextStyle(
+                                        fontSize: 16, color: Colors.black)),
+                              ],
+                            ),
+
+                            //방 생성시 설정했던 성별 표시
+                            Row(
+                              children: [
+                                const Icon(Icons.perm_identity_outlined, size: 12,),
+                                Text((carpoolData['gender']),style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    ) ),
+                              ],
+                            ),
+                            Text(formattedTime,
+                                style: const TextStyle(
+                                    fontSize: 17,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold)),
+                          ]),
+                        ),
                       ),
                     ]),
                   ],
