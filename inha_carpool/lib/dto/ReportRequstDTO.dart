@@ -1,4 +1,3 @@
-import 'enums/ReportType.enum';
 
 class ReportRequstDTO {
   final String content;
