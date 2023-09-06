@@ -312,6 +312,14 @@ class _LoginPageState extends State<LoginPage> {
                                 key: "gender",
                                 value: snapshot.docs[0].get('gender'),
                               );
+                              storage.write(
+                                key: "email",
+                                value: snapshot.docs[0].get('email'),
+                              );
+                              storage.write(
+                                key: "userName",
+                                value: snapshot.docs[0].get('userName'),
+                              );
 
                               if (context.mounted) {
                                 Navigator.push(
