@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
@@ -274,6 +275,13 @@ class _RecruitPageState extends State<RecruitPage> {
                           setState(() {
                             isButtonDisabled = false;
                           });
+                          return;
+                        }
+
+                        if (gender != selectedGender &&
+                            selectedGender != '무관') {
+                          context.showErrorSnackbar("선택할 수 없는 성별입니다.");
+                          isButtonDisabled = false;
                           return;
                         }
 
