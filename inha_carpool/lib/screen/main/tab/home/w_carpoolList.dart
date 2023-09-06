@@ -196,7 +196,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                               Container(
                                   width: context.width(0.1),
                                   // desired width
-                                  height: context.height(0.04),
+                                  height: context.height(0.042),
                                   // desired height
                                   decoration: BoxDecoration(
                                     color: Colors.blue[700],
@@ -239,14 +239,14 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                               Container(
                                   width: context.width(0.1),
                                   // desired width
-                                  height: context.height(0.04),
+                                  height: context.height(0.042),
                                   // desired height
                                   decoration: BoxDecoration(
                                     color: Colors.blue[700],
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   padding: const EdgeInsets.all(8.0),
-                                  child: const Center(
+                                  child:  Center(
                                       child: Text('도착',
                                           style: TextStyle(
                                               color: Colors.white,

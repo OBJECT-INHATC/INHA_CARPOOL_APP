@@ -155,8 +155,10 @@ class _CarpoolListState extends State<CarpoolList> {
                     );
                   },
                   child: Card(
+                    color: Colors.grey[200],
+
                     child: Container(
-                      color: context.appColors.cardBackground,
+                      // color: context.appColors.cardBackground,
                       margin:
                           EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
                       padding: EdgeInsets.only(
@@ -166,6 +168,13 @@ class _CarpoolListState extends State<CarpoolList> {
                           Expanded(
                             child: Row(
                               children: <Widget>[
+                                CircleAvatar(
+                                  backgroundImage: Image.asset(
+                                    "${basePath}/splash/logo600.png",
+                                  ).image,
+                                  backgroundColor: Colors.grey[900],
+                                  maxRadius: 35,
+                                ),
 
                                 SizedBox(
                                   width: 20,
@@ -182,11 +191,44 @@ class _CarpoolListState extends State<CarpoolList> {
                                             .size(16)
                                             .bold
                                             .make(),
-                                        "${carpool['startDetailPoint']} <-> ${carpool['endDetailPoint']}"
-                                            .text
-                                            .size(16)
-                                            .bold
-                                            .make(),
+                                        Row(
+                                          children: [
+                                            Container(
+                                                width: context.width(0.2),
+                                                // desired width
+                                                height: context.height(0.055),
+                                                margin: const EdgeInsets.only(right: 5),
+                                                // desired height
+                                                decoration: BoxDecoration(
+                                                  color: Colors.blue[700],
+                                                  borderRadius: BorderRadius.circular(10),
+                                                ),
+                                                padding: const EdgeInsets.all(8.0),
+                                                child:  Center(
+                                                    child: Text('${carpool['startDetailPoint']}',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 13)))),
+                                            Icon(Icons.arrow_circle_right_outlined, size: 30, color: Colors.blue[700],),
+                                            Container(
+                                                width: context.width(0.2),
+                                                // desired width
+                                                height: context.height(0.055),
+                                                margin: const EdgeInsets.only(left: 5),
+                                                // desired height
+                                                decoration: BoxDecoration(
+                                                  color: Colors.blue[700],
+                                                  borderRadius: BorderRadius.circular(10),
+                                                ),
+                                                padding: const EdgeInsets.all(8.0),
+                                                child:  Center(
+                                                    child: Text('${carpool['endDetailPoint']}',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 13)))),
+                                          ],
+                                        ),
+
                                         const SizedBox(
                                           height: 6,
                                         ),
@@ -199,12 +241,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                         const SizedBox(
                                           height: 6,
                                         ),
-                                        '마지막 채팅 온 시간'
-                                            .text
-                                            .size(12)
-                                            .normal
-                                            .color(context.appColors.subText)
-                                            .make(),
+
                                       ],
                                     ),
                                   ),
