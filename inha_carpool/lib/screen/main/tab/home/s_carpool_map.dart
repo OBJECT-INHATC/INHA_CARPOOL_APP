@@ -285,16 +285,56 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 String memberID = uid;
                                 String memberName = nickName;
                                 String selectedRoomGender = widget.roomGender;
-                                print('성별시치: $selectedRoomGender');
 
-                                await FirebaseCarpool.addMemberToCarpool(
-                                  context,
-                                  carId,
-                                  memberID,
-                                  memberName,
-                                  token!,
-                                  selectedRoomGender,
-                                );
+                                if (gender != selectedRoomGender &&
+                                    selectedRoomGender != '무관') {
+                                  context.showErrorSnackbar(
+                                      '입장할 수 없는 성별입니다.\n다른 카풀을 이용해주세요!');
+                                  return;
+                                }
+                                try {
+                                  await FirebaseCarpool.addMemberToCarpool(
+                                      carId,
+                                      memberID,
+                                      memberName,
+                                      token!,
+                                      selectedRoomGender);
+                                  if (!mounted) return;
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const MainScreen()));
+                                  /// TODO: 0906 김수현 추가 : 입장 실패한 인원한테 다이얼로그 띄워줘야함
+                                  /// 트랜잭션 잘 작동되는데, UI는 안뜸 (당연히 안뜸...)
+                                } catch (error) {
+                                  print(
+                                      '카풀 참가 실패 ( s_carpool_map )');
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: const Text('카풀 참가 실패'),
+                                        content: const Text(
+                                            '자리가 마감되었습니다!\n다른 카풀을 이용해주세요.'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const MainScreen()));
+                                            },
+                                            child: const Text('확인'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                }
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,

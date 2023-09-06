@@ -116,7 +116,6 @@ class FirebaseCarpool {
   }
 
   static Future<void> addMemberToCarpool(
-      BuildContext context,
       String carpoolID,
       String memberID,
       String memberName,
@@ -125,13 +124,6 @@ class FirebaseCarpool {
     try {
       CollectionReference carpoolCollection = _firestore.collection('carpool');
       DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
-
-      CollectionReference userCollection = _firestore.collection('users');
-      DocumentReference userDocRef = userCollection.doc(memberID);
-
-      DocumentSnapshot userSnapshot = await userDocRef.get();
-      String gender = userSnapshot['gender'];
-
       // 트랜잭션 시작
       await _firestore.runTransaction((transaction) async {
         DocumentSnapshot carpoolSnapshot = await transaction.get(carpoolDocRef);
@@ -141,89 +133,29 @@ class FirebaseCarpool {
           print('해당 카풀이 존재하지 않습니다.');
           return;
         }
-
         // 최대 인원 초과하지 않는 경우, 멤버 추가 및 nowMember 업데이트
         int nowMember = carpoolSnapshot['nowMember'];
         int maxMember = carpoolSnapshot['maxMember'];
-        if (nowMember < maxMember) {
-          if (gender == roomGender || roomGender == '무관') {
-            transaction.update(carpoolDocRef, {
-              'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
-              'nowMember': FieldValue.increment(1),
-            });
+        if(nowMember < maxMember){
+          transaction.update(carpoolDocRef, {
+            'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
+            'nowMember': FieldValue.increment(1),
+          });
+          /// 0830 한승완 추가 : carId + Token 저장
+          FireStoreService().saveToken(
+            token,
+            carpoolID,
+          );
 
-            // 0830 한승완 추가 : carId + Token 저장
-            FireStoreService().saveToken(
-              token,
-              carpoolID,
-            );
-
-            // 0903 한승완 추가 : 참가 메시지 전송
-            FireStoreService().sendEntryMessage(carpoolID, memberName);
-          } else {
-            // 성별이 맞지 않을 경우 dialog
-            if (context.mounted) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: const Text('카풀 참가 실패'),
-                    content: const Text('성별이 맞지 않아 참여할 수 없습니다.'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(
-                            Nav.globalContext,
-                            MaterialPageRoute(
-                              builder: (context) => const MainScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text('확인'),
-                      ),
-                    ],
-                  );
-                },
-              );
-            }
-          }
-        } else {
-          // 인원수가 맞지 않을 경우 dialog
-          if (context.mounted) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: const Text('카풀 참가 실패'),
-                  content: const Text('자리가 마감되었습니다!\n다른 카풀을 이용해주세요.'),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                          Nav.globalContext,
-                          MaterialPageRoute(
-                            builder: (context) => const MainScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text('확인'),
-                    ),
-                  ],
-                );
-              },
-            );
-          }
+          /// 0903 한승완 추가 : 참가 메시지 전송
+          FireStoreService().sendEntryMessage(carpoolID,memberName);
         }
+
       });
 
       print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');
     } catch (e) {
-      // 예외 처리
-      print('카풀에 유저 추가 실패: $e');
-
-      // 예외 처리 후 다이얼로그 표시
+      print('카풀에 유저 추가 실패( carpool )');
     }
   }
 
