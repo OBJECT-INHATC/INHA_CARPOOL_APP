@@ -6,7 +6,9 @@ import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
+import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
+import 'package:inha_Carpool/service/api/ApiService.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 /// 0828 서은율, 한승완
@@ -70,6 +72,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
   // 도착지
   String endPoint = "";
+
+  // API 서비스
+  final apiService = ApiService();
 
   @override
   void initState() {
@@ -320,6 +325,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
                       return TextButton(
                         onPressed: () {
+                          testApi();
                           _showProfileModal(context, '$memberName 님');
                         },
                         style: TextButton.styleFrom(
@@ -646,37 +652,68 @@ class _ChatroomPageState extends State<ChatroomPage> {
       });
     }
   }
-}
 
-// 프로필 조회
-void _showProfileModal(BuildContext context, String userName) {
-  showModalBottomSheet(
-    context: context,
-    builder: (BuildContext context) {
-      return SizedBox(
-        // 크기 지정
-        height: context.height(0.4),
-        width: double.infinity,
+  // 프로필 조회
+  void _showProfileModal(BuildContext context, String userName) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          // 크기 지정
+          height: context.height(0.4),
+          width: double.infinity,
 
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              '프로필 조회',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                '프로필 조회',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '유저 이름: $userName' '\n이용횟수, 신고횟수, 성별, 신고하기',
-              style: TextStyle(fontSize: 16),
-            ),
-            // 추가적인 프로필 정보를 나열하거나 버튼을 추가할 수 있습니다.
-          ],
-        ),
-      );
-    },
-  );
+              const SizedBox(height: 10),
+              Text(
+                '유저 이름: $userName' '\n이용횟수, 신고횟수, 성별, 신고하기',
+                style: TextStyle(fontSize: 16),
+              ),
+              // 추가적인 프로필 정보를 나열하거나 버튼을 추가할 수 있습니다.
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // 테스트용 API
+  testApi() async {
+
+    final historyRequestDTO = HistoryRequestDTO(
+      carPoolId: "vJuRYQ49pAAUAJmQYtcG",
+      admin: "4IoZ0qp17me9v1QA3ljYw2SRbbh2_yeongjae",
+      member1: "aa",
+      member2: "bb",
+      member3: "cc",
+      nowMember: 1,
+      maxMember: 3,
+      startDetailPoint: "출발지 요약주소",
+      startPoint: "출발지 위도경도",
+      startPointName: "출발지 이름",
+      startTime: 123456789,
+      endDetailPoint: "도착지 요약주소",
+      endPoint: "도착지 위도경도",
+      endPointName: "도착지 이름",
+      gender: "남자",
+    );
+
+    final response = await apiService.saveHistory(historyRequestDTO);
+  }
 }
+
+
+
+
+
+
+
