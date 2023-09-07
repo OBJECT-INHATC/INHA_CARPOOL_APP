@@ -125,6 +125,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             }
           },
           child: Card(
+
             color: carpoolData['gender'] == '무관'
                 ? Colors.grey[300]
                 : carpoolData['gender'] == '남성'

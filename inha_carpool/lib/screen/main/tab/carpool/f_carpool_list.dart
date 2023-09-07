@@ -34,6 +34,7 @@ class _CarpoolListState extends State<CarpoolList> {
 
   late GoogleMapController mapController;
 
+
   @override
   void initState() {
     super.initState();
@@ -121,6 +122,8 @@ class _CarpoolListState extends State<CarpoolList> {
               itemBuilder: (context, i) {
                 DocumentSnapshot carpool = myCarpools[i];
                 String startPointName = carpool['startPointName'];
+                Map<String, dynamic> carpoolData =
+                carpool.data() as Map<String, dynamic>;
                 //카풀 날짜 및 시간 변환
                 DateTime startTime =
                     DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
@@ -146,6 +149,14 @@ class _CarpoolListState extends State<CarpoolList> {
                   formattedTime = '${difference.inMinutes}분 후';
                 }
 
+                Color borderColor;
+                if (carpoolData['gender'] == '남자') {
+                  borderColor = Colors.blue; // 남자일 때 보더 색
+                } else if (carpoolData['gender'] == '여자') {
+                  borderColor = Colors.red; // 여자일 때 보더 색
+                } else {
+                  borderColor = Colors.grey; // 무관일 때 보더 색
+                }
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -159,8 +170,18 @@ class _CarpoolListState extends State<CarpoolList> {
                     );
                   },
                   child: Card(
+                    color: carpoolData['gender'] == '무관'
+                        ? Colors.grey[300]
+                        : carpoolData['gender'] == '남자'
+                        ? Colors.blue[200]
+                        : Colors.red[200],
+                    elevation: 5,
+                    margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(width: 2, color: borderColor),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: Container(
-                      color: context.appColors.cardBackground,
                       margin:
                           EdgeInsets.only(left: 0, right: 0, top: 0, bottom: 0),
                       padding: EdgeInsets.only(
@@ -181,16 +202,18 @@ class _CarpoolListState extends State<CarpoolList> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        "${formattedStartTime}"
+                                        Row(children: ["${carpool['startDetailPoint']} -> ${carpool['endDetailPoint']}"
                                             .text
-                                            .size(16)
+                                            .size(18)
                                             .bold
                                             .make(),
-                                        "${carpool['startDetailPoint']} <-> ${carpool['endDetailPoint']}"
-                                            .text
-                                            .size(16)
-                                            .bold
-                                            .make(),
+                                        const SizedBox(width:5),
+                                          "${formattedStartTime}"
+                                              .text
+                                              .size(10)
+                                              .make(),
+                                        ],),
+
                                         const SizedBox(
                                           height: 6,
                                         ),
@@ -203,12 +226,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                         const SizedBox(
                                           height: 6,
                                         ),
-                                        '마지막 채팅 온 시간'
-                                            .text
-                                            .size(12)
-                                            .normal
-                                            .color(context.appColors.subText)
-                                            .make(),
+
                                       ],
                                     ),
                                   ),
@@ -217,7 +235,7 @@ class _CarpoolListState extends State<CarpoolList> {
                             ),
                           ),
                           Column(children: [
-                            Text(formattedTime)
+                            Text('방금 전')
                                 .text
                                 .size(12)
                                 .bold
