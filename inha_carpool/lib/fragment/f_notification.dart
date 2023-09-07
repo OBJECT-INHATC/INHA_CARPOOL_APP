@@ -51,15 +51,22 @@ class _NotificationListState extends State<NotificationList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 45,
+        surfaceTintColor: Colors.white,
+        backgroundColor: Colors.white,
+        shape: Border(
+          bottom: BorderSide(
+            color: Colors.grey.shade200,
+            width: 1,
+          ),
+        ),
         titleTextStyle: const TextStyle(
-          color: Colors.white,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          fontWeight: FontWeight.normal,
         ),
         leading: const BackButton(
           color: Colors.black,
         ),
-        backgroundColor: Colors.blue,
         title: const Text(
           "알림 목록",
           style: TextStyle(color: Colors.black),
