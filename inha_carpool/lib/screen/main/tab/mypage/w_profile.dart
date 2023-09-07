@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'package:inha_Carpool/common/common.dart';
 
-import '../../../../common/constants.dart';
+//import 'package:inha_Carpool/lib/common/constants.dart';
 
 class ProFile extends StatefulWidget {
   const ProFile({Key? key}) : super(key: key);
@@ -37,183 +38,205 @@ class _ProFileState extends State<ProFile> {
     return await storage.read(key: key) ?? "";
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(0, 100, 0, 0),
-      color: const Color(0x52dededf),
-      child: Column(
-        children: [
-          Center(
-            child: Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    _showEditNicknameDialog(context);
-                  },
-                  child: Column(
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(0, 28, 0, 0),
+        color: const Color(00),
+        child: Column(
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Image.asset(
-                        "$basePath/darkmode/moon.png",
-                        width: 70,
-                        height: 75,
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        child: Icon(
+                          Icons.account_circle,
+                          size: 50,
+                          color: Colors.black,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          _showEditNicknameDialog(context);
+                        },
+                        child: Column(
+                          children: [
+                            FutureBuilder<String?>(
+                              future: nickNameFuture,
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const CircularProgressIndicator();
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  return Text(
+                                    snapshot.data ?? '',
+                                    style: const TextStyle(
+                                      fontSize: 17,
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                            const SizedBox(height: 6),
+                            ElevatedButton(
+                              onPressed: () {
+                                _showEditNicknameDialog(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(60, 24),
+                              ),
+                              child: const Text(
+                                "수정하기",
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  // 기본정보 항목
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 6.0),
+                    color: Colors.grey[200],
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
+                      children: [
+                        Text(
+                          '기본 정보',
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        "이메일",
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        width: 28,
                       ),
                       FutureBuilder<String?>(
-                        future: nickNameFuture,
+                        future: emailFuture,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const CircularProgressIndicator(); // 로딩 중이면 로딩 스피너 표시
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else {
-                            return Text(
-                              snapshot.data ?? '', // 데이터가 있으면 표시
-                              style: const TextStyle(fontSize: 15, color: Colors.black),
+                            email = snapshot.data ?? '';
+                            return Padding(
+                                padding: const EdgeInsets.only(top: 4.0), // 텍스트를 약간 내림
+                          child: Text(
+                          snapshot.data ?? '',
+                          style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          ),
+                          ),
                             );
                           }
                         },
                       ),
                     ],
                   ),
-                ),
-                const SizedBox(height: 5),
-                ElevatedButton(
-                  onPressed: () {
-                    _showEditNicknameDialog(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(70, 24),
-                  ),
-                  child: const Text(
-                    "수정하기",
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  color: Colors.white,
-                  padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        child: const Text(
-                          "기본정보",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
+                      const SizedBox(
+                        width: 10,
                       ),
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Text(
-                            "이메일",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                          ),
-                          const SizedBox(
-                            width: 28,
-                          ),
-                          FutureBuilder<String?>(
-                            future: emailFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                email = snapshot.data ?? '';
-                                return Text(
-                                  snapshot.data ?? '',
-                                  style: const TextStyle(fontSize: 15, color: Colors.black),
-                                );
-                              }
-                            },
-                          ),
-                        ],
+                      const Text(
+                        "성별",
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey),
                       ),
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Text(
-                            "성별",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                          ),
-                          const SizedBox(
-                            width: 40,
-                          ),
-                          FutureBuilder<String?>(
-                            future: genderFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                return Text(
-                                  snapshot.data ?? '',
-                                  style: const TextStyle(fontSize: 15, color: Colors.black),
-                                );
-                              }
-                            },
-                          ),
-
-                        ],
+                      const SizedBox(
+                        width: 40,
                       ),
-                      Row(
-                        children: [
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          const Text(
-                            "닉네임",
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey),
-                          ),
-                          const SizedBox(
-                            width: 27,
-                          ),
-                          FutureBuilder<String?>(
-                            future: nickNameFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState == ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                return Text(
-                                  snapshot.data ?? '',
-                                  style: const TextStyle(fontSize: 15, color: Colors.black),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      )
+                      FutureBuilder<String?>(
+                        future: genderFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return Padding(
+                                padding: const EdgeInsets.only(top: 4.0), // 텍스트를 약간 내림
+                          child: Text(
+                          snapshot.data ?? '',
+                          style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          )
+                          ));
+                          }
+                        },
+                      ),
                     ],
                   ),
-                ),
-              ],
+                  Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const Text(
+                        "닉네임",
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey),
+                      ),
+                      const SizedBox(
+                        width: 27,
+                      ),
+                      FutureBuilder<String?>(
+                        future: nickNameFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return Text(
+                              snapshot.data ?? '',
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.black),
+                            );
+                          }
+                        },
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -222,7 +245,7 @@ class _ProFileState extends State<ProFile> {
   Future<void> _showEditNicknameDialog(BuildContext context) async {
     TextEditingController nicknameController = TextEditingController();
 
-     await showDialog<String>(
+    await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -250,7 +273,8 @@ class _ProFileState extends State<ProFile> {
               onPressed: () async {
                 String newNickname = nicknameController.text;
                 if (newNickname.isNotEmpty && newNickname.length > 1) {
-                  int result = await updateNickname(newNickname, email);
+                  int result = await updateNickname(
+                      newNickname, AutofillHints.email);
 
                   if (result == 1) {
                     // 업데이트 성공 팝업
@@ -259,11 +283,12 @@ class _ProFileState extends State<ProFile> {
 
                     // 업데이트된 닉네임으로 상단의 닉네임 다시 빌드
                     setState(() {
-                      nickNameFuture = Future.value(newNickname);
+                      var nickNameFuture = Future.value(newNickname);
                     });
                   } else if (result == 2) {
                     // 중복된 닉네임 팝업
-                    _showResultPopup(context, "오류", "중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.");
+                    _showResultPopup(
+                        context, "오류", "중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.");
                   } else if (result == 0) {
                     // 이메일 일치 문서 없음 팝업
                     _showResultPopup(context, "오류", "해당 이메일과 일치하는 문서가 없습니다.");
@@ -286,6 +311,10 @@ class _ProFileState extends State<ProFile> {
       },
     );
   }
+}
+
+  void setState(Null Function() param0) {
+  }
 
   void _showResultPopup(BuildContext context, String title, String content) {
     showDialog(
@@ -307,15 +336,14 @@ class _ProFileState extends State<ProFile> {
     );
   }
 
-
-
   Future<int> updateNickname(String newNickname, String email) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     final CollectionReference users = firestore.collection('users');
 
     try {
       // 이메일 값을 기반으로 쿼리를 수행하여 문서 ID를 가져옴
-      final QuerySnapshot querySnapshot = await users.where('email', isEqualTo: email).get();
+      final QuerySnapshot querySnapshot = await users.where(
+          'email', isEqualTo: email).get();
 
       // 쿼리 결과에서 문서 ID를 가져옴
       if (querySnapshot.docs.isNotEmpty) {
@@ -333,10 +361,10 @@ class _ProFileState extends State<ProFile> {
           await userRef.update({'nickName': newNickname});
 
           // FlutterSecureStorage에 닉네임 업데이트
+          var storage;
           await storage.write(key: 'nickName', value: newNickname);
           print('닉네임이 업데이트되었습니다. => $newNickname');
           return 1;
-
         } else {
           print('중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.');
           return 2;
@@ -350,7 +378,4 @@ class _ProFileState extends State<ProFile> {
       return -1;
     }
   }
-
-
-}
 

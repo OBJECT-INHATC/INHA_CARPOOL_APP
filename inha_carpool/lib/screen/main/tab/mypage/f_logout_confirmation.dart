@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 
-import '../../screen/login/s_login.dart';
+import '../../../login/s_login.dart';
 
 class LogoutConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
