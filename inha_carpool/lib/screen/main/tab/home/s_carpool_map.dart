@@ -96,12 +96,19 @@ class _CarpoolMapState extends State<CarpoolMap> {
       child: Scaffold(
         appBar: AppBar(
           titleTextStyle: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            fontWeight: FontWeight.normal,
           ),
-          title: '${widget.admin.split("_").last}님의 카풀 정보'.text.white.make(),
-          backgroundColor: Colors.blue,
+          title: '${widget.admin.split("_").last}님의 카풀 정보'.text.black.make(),
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          toolbarHeight: 45,
+          shape: Border(
+            bottom: BorderSide(
+              color: Colors.grey.shade200,
+              width: 1,
+            ),
+          ),
         ),
         body: Stack(
           children: [

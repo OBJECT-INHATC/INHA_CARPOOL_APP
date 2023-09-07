@@ -55,12 +55,25 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           heroTag: "recruit_from_home",
-          elevation: 4,
+          elevation: 10,
           backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: const BorderSide(color: Colors.grey, width: 1),
+          ),
           onPressed: () {
-            Nav.push(RecruitPage());
+            Navigator.push(
+              Nav.globalContext,
+              MaterialPageRoute(
+                builder: (context) => const RecruitPage(),
+              ),
+            );
           },
-          child: '+'.text.size(50).color(context.appColors.appBar).make(),
+          child: const Icon(
+            Icons.add,
+            color: Colors.blue,
+            size: 50,
+          ),
         ),
         body: Column(
           children: [

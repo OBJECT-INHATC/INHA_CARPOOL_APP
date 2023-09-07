@@ -96,10 +96,14 @@ class _CarpoolListState extends State<CarpoolList> {
                   ),
                   FloatingActionButton(
                     heroTag: "recruit_from_myCarpool",
-                    elevation: 4,
+                    elevation: 10,
                     backgroundColor: context.appColors.appBar,
                     onPressed: () {
-                      Nav.push(RecruitPage());
+                      Navigator.push(
+                        Nav.globalContext,
+                        MaterialPageRoute(
+                            builder: (context) => const RecruitPage()),
+                      );
                     },
                     child: '+'.text.size(50).color(Colors.white).make(),
                   ),
