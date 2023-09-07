@@ -212,10 +212,11 @@ class _LoginPageState extends State<LoginPage> {
                               if (index == 0) {
                                 academy = "@itc.ac.kr";
                               } else {
-                                academy = "@inha.ac.kr";
+                                academy = "@inha.edu";
                               }
                               selectedIndex = index;
                               updateBackgroundColors();
+                              updateEmail(); // 이 부분 추가
                             });
                           },
                           selectedBackgroundColors: const [
@@ -293,23 +294,6 @@ class _LoginPageState extends State<LoginPage> {
                               getMyDeviceToken();
 
                               storage.write(
-                                  key: "nickName",
-                                  value: snapshot.docs[0]
-                                      .get("nickName"));
-                              storage.write(
-                                  key: "uid",
-                                  value:
-                                  snapshot.docs[0].get("uid"));
-                              storage.write(
-                                  key: "gender",
-                                  value: snapshot.docs[0]
-                                      .get('gender'));
-                              storage.write(
-                                  key: "email",
-                                  value:
-                                  snapshot.docs[0].get('email'));
-
-                              storage.write(
                                 key: "nickName",
                                 value: snapshot.docs[0]
                                     .get("nickName"),
@@ -323,6 +307,16 @@ class _LoginPageState extends State<LoginPage> {
                                 key: "gender",
                                 value: snapshot.docs[0]
                                     .get('gender'),
+                              );
+                              storage.write(
+                                key: "email",
+                                value: snapshot.docs[0]
+                                    .get('email'),
+                              );
+                              storage.write(
+                                key: "userName",
+                                value: snapshot.docs[0]
+                                    .get('userName'),
                               );
 
                               if (context.mounted) {
@@ -379,8 +373,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) =>
-                              const RegisterPage(),
+                              builder: (context) => const RegisterPage(),
                             ),
                           );
                         },
@@ -388,7 +381,7 @@ class _LoginPageState extends State<LoginPage> {
                           '가입하기',
                           style: TextStyle(
                             fontSize: 17,
-                            color: Colors.blue,
+                            color: Colors.black,
                             decoration: TextDecoration.underline,
                           ),
                         ),
@@ -403,4 +396,18 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  // 이메일 업데이트 메서드 추가
+  void updateEmail() {
+    // 텍스트 필드에 이미 값이 있는지 확인
+    if (email.isNotEmpty) {
+      // '@' 문자 앞부분만 가져옴 (학번 부분)
+      String id = email.split('@')[0];
+
+      // 새로운 학교 도메인을 붙임
+      email = id + academy;
+    }
+  }
 }
+
+
