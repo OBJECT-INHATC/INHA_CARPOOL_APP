@@ -126,17 +126,18 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             }
           },
           child: Card(
+            surfaceTintColor: Colors.transparent,
             color: carpoolData['gender'] == '무관'
-                ? Colors.grey[300]
-                : carpoolData['gender'] == '남자'
-                ? Colors.blue[200]
-                : Colors.red[200],
-            elevation: 5,
-            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            shape: RoundedRectangleBorder(
-              side: BorderSide(width: 2, color: borderColor),
-              borderRadius: BorderRadius.circular(10),
-            ),
+                ? Colors.white
+           : carpoolData['gender'] == '남자'
+                ? Colors.blue[100]
+                : Colors.red[100],
+            elevation: 1,
+            margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            // shape: RoundedRectangleBorder(
+            //   side: BorderSide(width: 2, color: borderColor),
+            //   borderRadius: BorderRadius.circular(10),
+            // ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -184,7 +185,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                   ),
                 ]),
                 Container(
-                  margin: const EdgeInsets.all(7.0),
+                  // margin: const EdgeInsets.all(7.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -194,20 +195,18 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                           Row(
                             children: [
                               Container(
-                                  width: context.width(0.1),
+                                margin: const EdgeInsets.all(7.0),
+                                  width: context.width(0.02),
                                   // desired width
-                                  height: context.height(0.042),
+                                  height: context.height(0.04),
                                   // desired height
                                   decoration: BoxDecoration(
-                                    color: Colors.blue[700],
+                                    color: Colors.lightBlueAccent,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   padding: const EdgeInsets.all(8.0),
                                   child: const Center(
-                                      child: Text('출발',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 13)))),
+                                      )),
                               const SizedBox(width: 5),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,12 +223,15 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                           fontWeight: FontWeight.bold)),
                                 ],
                               ),
-                              const SizedBox(width: 5),
+                              // const SizedBox(width: 5),
 
                             ],
                           ),
                           Container(
-                              padding: const EdgeInsets.all(8.0),
+
+                              margin:
+                              const EdgeInsets.only(left: 0, top: 5, bottom: 5),
+
                               child: const Column(children: [
                                 Icon(Icons.arrow_drop_down_outlined),
                                 // Icon(Icons.arrow_drop_down_outlined),
@@ -237,20 +239,18 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                           Row(
                             children: [
                               Container(
-                                  width: context.width(0.1),
+                                  margin: const EdgeInsets.all(7.0),
+                                  width: context.width(0.02),
                                   // desired width
-                                  height: context.height(0.042),
+                                  height: context.height(0.04),
                                   // desired height
                                   decoration: BoxDecoration(
-                                    color: Colors.blue[700],
+                                    color: Colors.lightBlueAccent,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   padding: const EdgeInsets.all(8.0),
                                   child:  Center(
-                                      child: Text('도착',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 13)))),
+                                      )),
                               const SizedBox(width: 5),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
