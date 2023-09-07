@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
@@ -14,7 +15,7 @@ import '../../fragment/f_notification.dart';
 import '../../screen/setting/f_setting.dart';
 
 class RecruitPage extends StatefulWidget {
-  RecruitPage({super.key});
+  const RecruitPage({super.key});
 
   @override
   State<RecruitPage> createState() => _RecruitPageState();
@@ -82,233 +83,223 @@ class _RecruitPageState extends State<RecruitPage> {
   Widget build(BuildContext context) {
     LocationInputWidget startPointInput;
     LocationInputWidget endPointInput;
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: context.appColors.appBar,
-          title: 'recruit'.tr().text.make(),
-          actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.notifications_none,
-                size: 35,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationList()),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.settings, size: 35),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingPage()),
-                );
-              },
-            ),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        toolbarHeight: 45,
+        shape: Border(
+          bottom: BorderSide(
+            color: Colors.grey.shade200,
+            width: 1,
+          ),
         ),
-        body: Column(
-          children: [
-            startPointInput = LocationInputWidget(
-              labelText: startPointName,
-              Point: startPoint,
-              pointText: '출발지',
-              onLocationSelected: (String value) {
-                setState(() {
-                  startPointName =
-                      Location_handler.getStringBetweenUnderscores(value);
-                  startPoint = LatLng(
-                      Location_handler.parseDoubleBeforeUnderscore(value),
-                      Location_handler.getDoubleAfterSecondUnderscore(value));
-                  print("출발지 주소 : ${startPointName}");
-                  print("출발지 위도경도 : ${startPoint}");
-                });
-              },
-              detailPoint: '요약 주소 (ex 주안역)',
-              detailController: _startPointDetailController,
-            ),
-            endPointInput = LocationInputWidget(
-              labelText: endPointName,
-              Point: endPoint,
-              pointText: '도착지',
-              onLocationSelected: (String value) {
-                setState(() {
-                  endPointName =
-                      Location_handler.getStringBetweenUnderscores(value);
-                  endPoint = LatLng(
-                      Location_handler.parseDoubleBeforeUnderscore(value),
-                      Location_handler.getDoubleAfterSecondUnderscore(value));
-                  print("도착지 주소 : ${endPointName}");
-                  print("도착지 위도경도 : ${endPoint}");
-                });
-              },
-              detailPoint: '요약 주소 (ex 인하대 후문)',
-              detailController: _endPointDetailController,
-            ),
-            Row(
+        title: 'recruit'.tr().text.make(),
+      ),
+      body: Column(
+        children: [
+          startPointInput = LocationInputWidget(
+            labelText: startPointName,
+            Point: startPoint,
+            pointText: '출발지',
+            onLocationSelected: (String value) {
+              setState(() {
+                startPointName =
+                    Location_handler.getStringBetweenUnderscores(value);
+                startPoint = LatLng(
+                    Location_handler.parseDoubleBeforeUnderscore(value),
+                    Location_handler.getDoubleAfterSecondUnderscore(value));
+                print("출발지 주소 : ${startPointName}");
+                print("출발지 위도경도 : ${startPoint}");
+              });
+            },
+            detailPoint: '요약 주소 (ex 주안역)',
+            detailController: _startPointDetailController,
+          ),
+          endPointInput = LocationInputWidget(
+            labelText: endPointName,
+            Point: endPoint,
+            pointText: '도착지',
+            onLocationSelected: (String value) {
+              setState(() {
+                endPointName =
+                    Location_handler.getStringBetweenUnderscores(value);
+                endPoint = LatLng(
+                    Location_handler.parseDoubleBeforeUnderscore(value),
+                    Location_handler.getDoubleAfterSecondUnderscore(value));
+                print("도착지 주소 : ${endPointName}");
+                print("도착지 위도경도 : ${endPoint}");
+              });
+            },
+            detailPoint: '요약 주소 (ex 인하대 후문)',
+            detailController: _endPointDetailController,
+          ),
+          Row(
+            children: [
+              DateTimePickerWidget(
+                label: '날짜',
+                selectedDateTime: _selectedDate,
+                onDateTimeChanged: (newDate) {
+                  setState(() {
+                    _selectedDate = newDate;
+                    print("선택된 날짜: $_selectedDate");
+                  });
+                },
+              ),
+              DateTimePickerWidget(
+                label: '시간',
+                selectedDateTime: _selectedTime,
+                onDateTimeChanged: (newTime) {
+                  setState(() {
+                    _selectedTime = newTime;
+                    print("선택된 시간: $_selectedTime");
+                  });
+                },
+              ),
+            ],
+          ),
+
+          ///  제한인원 및 성별
+          Expanded(
+            // 제한인원, 성별 영역
+            child: Row(
               children: [
-                DateTimePickerWidget(
-                  label: '날짜',
-                  selectedDateTime: _selectedDate,
-                  onDateTimeChanged: (newDate) {
-                    setState(() {
-                      _selectedDate = newDate;
-                      print("선택된 날짜: $_selectedDate");
-                    });
-                  },
+                Expanded(
+                  child: Column(// 제한인원 영역
+                      children: [
+                    Container(
+                      width: double.infinity,
+                      margin: EdgeInsets.all(15),
+                      padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                      child: '인원'
+                          .text
+                          .size(20)
+                          .bold
+                          .align(TextAlign.left)
+                          .make(),
+                    ),
+                    LimitSelectorWidget(
+                      options: ['2인', '3인'],
+                      selectedValue: selectedLimit,
+                      onOptionSelected: (value) {
+                        setState(() {
+                          selectedLimit = value;
+                          print("선택된 인원: $selectedLimit");
+                        });
+                      },
+                    ),
+                  ]),
                 ),
-                DateTimePickerWidget(
-                  label: '시간',
-                  selectedDateTime: _selectedTime,
-                  onDateTimeChanged: (newTime) {
-                    setState(() {
-                      _selectedTime = newTime;
-                      print("선택된 시간: $_selectedTime");
-                    });
-                  },
+                Expanded(
+                  child: Column(// 성별 영역
+                      children: [
+                    // 성별 선택 버튼
+                    GenderSelectorWidget(
+                      selectedGender: selectedGender,
+                      onGenderSelected: (value) {
+                        setState(() {
+                          selectedGender = value;
+                          print("선택된 성별: $selectedGender");
+                        });
+                      },
+                    ),
+                  ]),
                 ),
               ],
             ),
+          ),
 
-            ///  제한인원 및 성별
-            Expanded(
-              // 제한인원, 성별 영역
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(// 제한인원 영역
-                        children: [
-                      Container(
-                        width: double.infinity,
-                        margin: EdgeInsets.all(15),
-                        padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                        child: '인원'
-                            .text
-                            .size(20)
-                            .bold
-                            .align(TextAlign.left)
-                            .make(),
-                      ),
-                      LimitSelectorWidget(
-                        options: ['2인', '3인'],
-                        selectedValue: selectedLimit,
-                        onOptionSelected: (value) {
-                          setState(() {
-                            selectedLimit = value;
-                            print("선택된 인원: $selectedLimit");
-                          });
-                        },
-                      ),
-                    ]),
-                  ),
-                  Expanded(
-                    child: Column(// 성별 영역
-                        children: [
-                      // 성별 선택 버튼
-                      GenderSelectorWidget(
-                        selectedGender: selectedGender,
-                        onGenderSelected: (value) {
-                          setState(() {
-                            selectedGender = value;
-                            print("선택된 성별: $selectedGender");
-                          });
-                        },
-                      ),
-                    ]),
-                  ),
-                ],
+          /// 카풀 시작하기 -- 파베 기능 추가하기
+          Container(
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Colors.lightBlue),
+                // 버튼 배경색
+                fixedSize: MaterialStateProperty.all(Size(200, 30)), // 버튼 크기
               ),
-            ),
 
-            /// 카풀 시작하기 -- 파베 기능 추가하기
-            Container(
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.lightBlue),
-                  // 버튼 배경색
-                  fixedSize: MaterialStateProperty.all(Size(200, 30)), // 버튼 크기
-                ),
+              //카풀 시작하기 버튼
+              onPressed: isButtonDisabled
+                  ? null
+                  : () async {
+                      setState(() {
+                        isButtonDisabled = true;
+                      });
 
-                //카풀 시작하기 버튼
-                onPressed: isButtonDisabled
-                    ? null
-                    : () async {
-                        setState(() {
-                          isButtonDisabled = true;
-                        });
+                      // 버튼 동작
+                      String startDetailPoint =
+                          _startPointDetailController.text;
+                      String endDetailPoint = _endPointDetailController.text;
 
-                        // 버튼 동작
-                        String startDetailPoint =
-                            _startPointDetailController.text;
-                        String endDetailPoint = _endPointDetailController.text;
+                      // 현재 시간과 선택된 날짜와 시간의 차이 계산
+                      DateTime currentTime = DateTime.now();
+                      DateTime selectedDateTime = DateTime(
+                        _selectedDate.year,
+                        _selectedDate.month,
+                        _selectedDate.day,
+                        _selectedTime.hour,
+                        _selectedTime.minute,
+                      );
+                      Duration difference =
+                          selectedDateTime.difference(currentTime);
 
-                        // 현재 시간과 선택된 날짜와 시간의 차이 계산
-                        DateTime currentTime = DateTime.now();
-                        DateTime selectedDateTime = DateTime(
-                          _selectedDate.year,
-                          _selectedDate.month,
-                          _selectedDate.day,
-                          _selectedTime.hour,
-                          _selectedTime.minute,
-                        );
-                        Duration difference =
-                            selectedDateTime.difference(currentTime);
-
-                        /// 주소 입력 오류 알림창
-                        if (!isAddressValid(startDetailPoint) ||
-                            !isAddressValid(endDetailPoint)) {
-                          _showAddressAlertDialog(context);
-                          setState(() {
-                            isButtonDisabled = false;
-                          });
-                          return;
-                        }
-
-                        /// 시간 입력 오류 알림창
-                        if (!isTimeValid(difference)) {
-                          _showTimeAlertDialog(context);
-                          setState(() {
-                            isButtonDisabled = false;
-                          });
-                          return;
-                        }
-
-                        /// 조건 충족 시 파이어베이스에 카풀 정보 저장
-                        await FirebaseCarpool.addDataToFirestore(
-                          selectedDate: _selectedDate,
-                          selectedTime: _selectedTime,
-                          startPoint: startPoint,
-                          endPoint: endPoint,
-                          endPointName: endPointName,
-                          startPointName: startPointName,
-                          selectedLimit: selectedLimit,
-                          selectedGender: selectedGender,
-                          memberID: uid,
-                          memberName: nickName,
-                          startDetailPoint:
-                              startPointInput.detailController.text,
-                          endDetailPoint: endPointInput.detailController.text,
-                        );
-
-                        ///TODO 채팅창으로 넘기기
-                        Nav.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => MainScreen()),
-                        );
+                      /// 주소 입력 오류 알림창
+                      if (!isAddressValid(startDetailPoint) ||
+                          !isAddressValid(endDetailPoint)) {
+                        _showAddressAlertDialog(context);
                         setState(() {
                           isButtonDisabled = false;
                         });
-                      },
-                child: '카풀 시작하기'.text.size(20).white.make(),
-              ).p(50),
-            ),
-          ],
-        ),
+                        return;
+                      }
+
+                      /// 시간 입력 오류 알림창
+                      if (!isTimeValid(difference)) {
+                        _showTimeAlertDialog(context);
+                        setState(() {
+                          isButtonDisabled = false;
+                        });
+                        return;
+                      }
+
+                      if (gender != selectedGender &&
+                          selectedGender != '무관') {
+                        context.showErrorSnackbar("선택할 수 없는 성별입니다.");
+                        isButtonDisabled = false;
+                        return;
+                      }
+
+                      /// 조건 충족 시 파이어베이스에 카풀 정보 저장
+                      await FirebaseCarpool.addDataToFirestore(
+                        selectedDate: _selectedDate,
+                        selectedTime: _selectedTime,
+                        startPoint: startPoint,
+                        endPoint: endPoint,
+                        endPointName: endPointName,
+                        startPointName: startPointName,
+                        selectedLimit: selectedLimit,
+                        selectedRoomGender: selectedGender,
+                        memberID: uid,
+                        memberName: nickName,
+                        startDetailPoint:
+                            startPointInput.detailController.text,
+                        endDetailPoint: endPointInput.detailController.text,
+                      );
+
+                      ///TODO 채팅창으로 넘기기
+                      Nav.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => MainScreen()),
+                      );
+                      setState(() {
+                        isButtonDisabled = false;
+                      });
+                    },
+              child: '카풀 시작하기'.text.size(20).white.make(),
+            ).p(50),
+          ),
+        ],
       ),
     );
   }

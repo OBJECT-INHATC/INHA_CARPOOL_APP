@@ -17,6 +17,7 @@ class CarpoolMap extends StatefulWidget {
   final String startTime;
   final String carId;
   final String admin;
+  final String roomGender;
 
   CarpoolMap({
     required this.startPoint,
@@ -24,6 +25,7 @@ class CarpoolMap extends StatefulWidget {
     required this.startTime,
     required this.carId,
     required this.admin,
+    required this.roomGender,
   });
 
   @override
@@ -46,7 +48,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
   String? token = "";
 
-  DateTime? currentBackPressTime; // 뒤로가기 버튼 누른 시간
+  DateTime? currentBackPressTime;
+
+  bool isLoading = true; // 뒤로가기 버튼 누른 시간
 
   @override
   void initState() {
@@ -80,31 +84,31 @@ class _CarpoolMapState extends State<CarpoolMap> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        DateTime now = DateTime.now();
-        if (currentBackPressTime == null ||
-            now.difference(currentBackPressTime!) >
-                const Duration(seconds: 2)) {
-          // 첫 번째 뒤로가기 버튼 누름
-          currentBackPressTime = now;
-          // 스낵바 메시지 출력
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('한 번 더 누르면 종료됩니다.'),
-            ),
-          );
-          return false; // 뒤로가기 막음
+        if (isLoading) {
+          print('뒤로가기 제한');
+          // 페이지가 로딩 중이면 뒤로가기 막음
+          return false;
+        } else {
+          print('뒤로가기 허용');
+          return true; // 로딩이 완료되면 뒤로가기 허용
         }
-        return true; // 뒤로가기 허용
       },
       child: Scaffold(
         appBar: AppBar(
           titleTextStyle: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            fontWeight: FontWeight.normal,
           ),
-          title: '${widget.admin.split("_").last}님의 카풀 정보'.text.white.make(),
-          backgroundColor: Colors.blue,
+          title: '${widget.admin.split("_").last}님의 카풀 정보'.text.black.make(),
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          toolbarHeight: 45,
+          shape: Border(
+            bottom: BorderSide(
+              color: Colors.grey.shade200,
+              width: 1,
+            ),
+          ),
         ),
         body: Stack(
           children: [
@@ -287,10 +291,21 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 String carId = widget.carId;
                                 String memberID = uid;
                                 String memberName = nickName;
+                                String selectedRoomGender = widget.roomGender;
 
+                                if (gender != selectedRoomGender &&
+                                    selectedRoomGender != '무관') {
+                                  context.showErrorSnackbar(
+                                      '입장할 수 없는 성별입니다.\n다른 카풀을 이용해주세요!');
+                                  return;
+                                }
                                 try {
                                   await FirebaseCarpool.addMemberToCarpool(
-                                      carId, memberID, memberName, token!);
+                                      carId,
+                                      memberID,
+                                      memberName,
+                                      token!,
+                                      selectedRoomGender);
                                   if (!mounted) return;
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
@@ -299,6 +314,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           builder: (context) =>
                                               const MainScreen()));
                                 } catch (error) {
+                                  // addMemberToCarpool에서 던진 예외를 처리함
+                                  print('카풀 참가 실패 ( s_carpool_map )');
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
@@ -427,6 +444,12 @@ class _CarpoolMapState extends State<CarpoolMap> {
     list.clear();
   }
 
+  void handlePageLoadComplete() {
+    setState(() {
+      isLoading = false; // 로딩이 완료되었음을 표시
+    });
+  }
+
   //현재 기기 위치 정보 가져오기 및 권한
   Future<void> _getCurrentLocation() async {
     LocationPermission permission = await Geolocator.requestPermission();
@@ -459,6 +482,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
       } else {
         _distanceToLocation = (distanceInMeters).toStringAsFixed(0) + "m";
       }
+      print('로딩 상태 : $isLoading');
+      handlePageLoadComplete();
+      print('로딩 상태 ; $isLoading');
     });
   }
 }

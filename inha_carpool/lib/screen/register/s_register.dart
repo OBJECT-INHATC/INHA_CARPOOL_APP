@@ -33,6 +33,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // 이름
   String username = "";
+  //닉네임
+  String nickname = "";
 
   // 학교
   String academy = "@itc.ac.kr";
@@ -112,7 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 borderSide: BorderSide(color: Colors.blue),
                               ),
                               labelText: '학번',
-                              prefixIcon: Icon(Icons.school_outlined), // 학번 아이콘
+                              prefixIcon: Icon(Icons.school), // 학번 아이콘
                             ),
                             onChanged: (text) {
                               // 텍스트 필드 값 변경 시 실행할 코드 작성
@@ -152,10 +154,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                 if (index == 0) {
                                   academy = "@itc.ac.kr";
                                 } else {
-                                  academy = "@inha.ac.kr";
+                                  academy = "@inha.edu";
                                 }
                                 selectedIndex = index;
                                 updateBackgroundColors();
+                                updateEmail();
                               });
                             },
                             selectedBackgroundColors: const [
@@ -186,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           borderSide: BorderSide(color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
                         ),
                         labelText: '이름',
-                        prefixIcon: Icon(Icons.person_outline), //이름 아이콘
+                        prefixIcon: Icon(Icons.person), //이름 아이콘
                       ),
                       validator: (val) {
                         if (val!.isNotEmpty) {
@@ -197,6 +200,32 @@ class _RegisterPageState extends State<RegisterPage> {
                       },
                       onChanged: (text) {
                         username = text;
+                      },
+                    ),
+                  ),const SizedBox(height: 9), // 간격 조절 SizedBox
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                    child: TextFormField(
+                      // 이름 입력 필드
+                      decoration: const InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black), // 밑줄 색상 설정
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
+                        ),
+                        labelText: '닉네임',
+                        prefixIcon: Icon(Icons.person), //이름 아이콘
+                      ),
+                      validator: (val) {
+                        if (val!.isNotEmpty) {
+                          return null;
+                        } else {
+                          return "닉네임이 비어있습니다.";
+                        }
+                      },
+                      onChanged: (text) {
+                        nickname = text;
                       },
                     ),
                   ),
@@ -214,10 +243,20 @@ class _RegisterPageState extends State<RegisterPage> {
                           borderSide: BorderSide(color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
                         ),
                         labelText: '비밀번호',
-                        prefixIcon: Icon(Icons.lock_outline_sharp), // 비밀번호 아이콘
+                        prefixIcon: Icon(Icons.lock), // 비밀번호 아이콘
                       ),
                       onChanged: (text) {
                         password = text;
+
+                        if (password == checkPassword) {
+                          setState(() {
+                            passwordCheck = "비밀번호가 일치합니다!";
+                          });
+                        } else {
+                          setState(() {
+                            passwordCheck = "비밀번호가 일치하지 않습니다.";
+                          });
+                        }
                       },
                     ),
                   ),
@@ -236,7 +275,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
                         ),
                         labelText: '비밀번호 확인',
-                        prefixIcon: Icon(Icons.lock_outline_sharp), // 비밀번호 아이콘
+                        prefixIcon: Icon(Icons.lock), // 비밀번호 아이콘
                         suffix: Text(passwordCheck,
                             style: (passwordCheck == "비밀번호가 일치하지 않습니다.")
                                 ? TextStyle(color: Colors.red)
@@ -322,6 +361,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 AuthService()
                                     .registerUserWithEmailandPassword(
                                     username,
+                                    nickname,
                                     email,
                                     password,
                                     "dummy",
@@ -392,4 +432,16 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
+  void updateEmail() {
+    // 텍스트 필드에 이미 값이 있는지 확인
+    if (email.isNotEmpty) {
+      // '@' 문자 앞부분만 가져옴 (학번 부분)
+      String id = email.split('@')[0];
+
+      // 새로운 학교 도메인을 붙임
+      email = id + academy;
+    }
+  }
+
 }

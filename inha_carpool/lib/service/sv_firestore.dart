@@ -30,8 +30,9 @@ class FireStoreService {
 
   /// 0824 서은율
   /// 사용자 정보 저장
-  Future savingUserData(String nickName, String email, String fcmToken, String gender) async {
+  Future savingUserData(String userName,String nickName, String email, String fcmToken, String gender) async {
     return await userCollection.doc(uid).set({
+      "userName": userName,
       "nickName": nickName,
       "email": email,
       "carpools": [],
@@ -142,6 +143,28 @@ class FireStoreService {
     await carpoolCollection.doc(carId).collection("messages").add(chatMessageMap);
   }
 
+  /// 0905 한승완
+  /// 카풀 탈퇴시 유저 퇴장 메시지 전송 + 로컬 DB 삭제
+  Future<void> sendExitMessage(String carId, String userName) async {
+
+    const String sender = 'service';
+    final int currentTime = DateTime.now().millisecondsSinceEpoch;
+
+    final Map<String, dynamic> chatMessageMap = {
+      "message": "$userName님이 퇴장하였습니다.",
+      "sender": sender,
+      "time": currentTime,
+    };
+
+    // 메시지 전송
+    await carpoolCollection.doc(carId).collection("messages").add(chatMessageMap);
+    //5초 후
+    await Future.delayed(const Duration(seconds: 5));
+    // 로컬 DB 삭제
+    ChatDao().deleteByCarId(carId);
+
+  }
+
   ///0903 한승완
   ///카풀 생성 + 로컬 DB에 저장
   Future<void> sendCreateMessage(String carId, String userName) async {
@@ -222,6 +245,10 @@ class FireStoreService {
         'members': FieldValue.arrayRemove(['${uid}_$userName']),
         'nowMember': FieldValue.increment(-1),
       });
+
+      // 탈퇴 메시지 전송
+      FireStoreService().sendExitMessage(carId, userName);
+
       // members에서 해당 유저 삭제
       // nowmember -1
 
@@ -260,7 +287,11 @@ class FireStoreService {
         await carpoolDocRef.update({
           'admin': newAdmin,
         });
+
       }
+
+      // 탈퇴 메시지 전송
+      FireStoreService().sendExitMessage(carId, userName);
 
       // admin을 members[0]으로 변경
 

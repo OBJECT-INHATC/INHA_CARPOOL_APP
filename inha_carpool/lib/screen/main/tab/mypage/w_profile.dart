@@ -18,6 +18,7 @@ class _ProFileState extends State<ProFile> {
   late Future<String> uidFuture;
   late Future<String> genderFuture;
   late Future<String> emailFuture;
+  late Future<String> userNameFuture;
   late String email;
 
   @override
@@ -31,6 +32,7 @@ class _ProFileState extends State<ProFile> {
     uidFuture = _loadUserDataForKey("uid");
     genderFuture = _loadUserDataForKey("gender");
     emailFuture = _loadUserDataForKey("email");
+    userNameFuture = _loadUserDataForKey("userName");
   }
 
   Future<String> _loadUserDataForKey(String key) async {
@@ -181,17 +183,17 @@ class _ProFileState extends State<ProFile> {
                             width: 10,
                           ),
                           const Text(
-                            "닉네임",
+                            "이름",
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey),
                           ),
                           const SizedBox(
-                            width: 27,
+                            width: 39,
                           ),
                           FutureBuilder<String?>(
-                            future: nickNameFuture,
+                            future: userNameFuture,
                             builder: (context, snapshot) {
                               if (snapshot.connectionState == ConnectionState.waiting) {
                                 return const CircularProgressIndicator();

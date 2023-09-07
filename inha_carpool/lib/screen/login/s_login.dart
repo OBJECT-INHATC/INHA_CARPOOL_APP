@@ -50,12 +50,14 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ChatroomPage(
-            carId: message.data['groupId'],
-            userName: nickName,
-            groupName: "카풀채팅",
-            uid: uid!,
-          ),
+
+            builder: (context) => ChatroomPage(
+              carId: message.data['groupId'],
+              userName: nickName!,
+              groupName: "카풀채팅",
+              uid: uid!,
+            )
+
         ),
       );
     } else {
@@ -216,7 +218,7 @@ class _LoginPageState extends State<LoginPage> {
                               }
                               selectedIndex = index;
                               updateBackgroundColors();
-                              updateEmail(); // 이 부분 추가
+
                             });
                           },
                           selectedBackgroundColors: const [
@@ -318,6 +320,14 @@ class _LoginPageState extends State<LoginPage> {
                                 value: snapshot.docs[0]
                                     .get('userName'),
                               );
+                              storage.write(
+                                key: "email",
+                                value: snapshot.docs[0].get('email'),
+                              );
+                              storage.write(
+                                key: "userName",
+                                value: snapshot.docs[0].get('userName'),
+                              );
 
                               if (context.mounted) {
                                 Navigator.push(
@@ -398,6 +408,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // 이메일 업데이트 메서드 추가
+
   void updateEmail() {
     // 텍스트 필드에 이미 값이 있는지 확인
     if (email.isNotEmpty) {
@@ -408,6 +419,7 @@ class _LoginPageState extends State<LoginPage> {
       email = id + academy;
     }
   }
+
 }
 
 

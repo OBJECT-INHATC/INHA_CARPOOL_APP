@@ -97,10 +97,14 @@ class _CarpoolListState extends State<CarpoolList> {
                   ),
                   FloatingActionButton(
                     heroTag: "recruit_from_myCarpool",
-                    elevation: 4,
+                    elevation: 10,
                     backgroundColor: context.appColors.appBar,
                     onPressed: () {
-                      Nav.push(RecruitPage());
+                      Navigator.push(
+                        Nav.globalContext,
+                        MaterialPageRoute(
+                            builder: (context) => const RecruitPage()),
+                      );
                     },
                     child: '+'.text.size(50).color(Colors.white).make(),
                   ),
@@ -156,7 +160,7 @@ class _CarpoolListState extends State<CarpoolList> {
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
-                      context,
+                      Nav.globalContext,
                       MaterialPageRoute(
                           builder: (context) => ChatroomPage(
                               carId: carpool['carId'],
@@ -187,13 +191,7 @@ class _CarpoolListState extends State<CarpoolList> {
                           Expanded(
                             child: Row(
                               children: <Widget>[
-                                CircleAvatar(
-                                  backgroundImage: Image.asset(
-                                    "${basePath}/splash/logo600.png",
-                                  ).image,
-                                  backgroundColor: Colors.grey.shade200,
-                                  maxRadius: 35,
-                                ),
+
                                 SizedBox(
                                   width: 20,
                                 ),

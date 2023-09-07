@@ -5,7 +5,8 @@ class GenderSelectorWidget extends StatefulWidget {
   final String selectedGender;
   final Function(String) onGenderSelected;
 
-  const GenderSelectorWidget({super.key,
+  const GenderSelectorWidget({
+    super.key,
     required this.selectedGender,
     required this.onGenderSelected,
   });
@@ -34,28 +35,28 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                 margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                 child: TextButton(
                   onPressed: () {
-                    widget.onGenderSelected('남자');
+                    widget.onGenderSelected('남성');
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: widget.selectedGender == '남자'
+                    backgroundColor: widget.selectedGender == '남성'
                         ? Colors.lightBlue
                         : Colors.grey,
                   ),
-                  child: '남자'.text.white.size(17).make(),
+                  child: '남성'.text.white.size(17).make(),
                 ),
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 0, 30, 0),
                 child: TextButton(
                   onPressed: () {
-                    widget.onGenderSelected('여자');
+                    widget.onGenderSelected('여성');
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: widget.selectedGender == '여자'
+                    backgroundColor: widget.selectedGender == '여성'
                         ? Colors.lightBlue
                         : Colors.grey,
                   ),
-                  child: '여자'.text.white.size(17).make(),
+                  child: '여성'.text.white.size(17).make(),
                 ),
               ),
             ],
