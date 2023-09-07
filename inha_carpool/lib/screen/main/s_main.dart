@@ -1,5 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/setting/f_setting.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
@@ -36,6 +39,8 @@ class MainScreenState extends State<MainScreen>
 
   static double get bottomNavigationBarBorderRadius => 30.0;
 
+  final storage = const FlutterSecureStorage();
+
   @override
   void initState() {
     super.initState();
@@ -63,16 +68,42 @@ class MainScreenState extends State<MainScreen>
           title: 'titleSTR'.tr().text.white.make(),
           leading: const SizedBox(),
           actions: [
-            IconButton(
-              icon: const Icon(
-                Icons.notifications_none,
-                size: 30,
-                color: Colors.black,
-              ).animate().shake(duration: 1000.ms, hz: 5),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationList()),
+            FutureBuilder<bool>(
+              future: AlarmDao().checkAlarms(),
+              builder: (context, snapshot) {
+                bool hasLocalNotification = snapshot.data ?? false;
+
+                return IconButton(
+                  icon: Stack(
+                    children: [
+                      const Icon(
+                        Icons.notifications,
+                        size: 30,
+                        color: Colors.black,
+                      ),
+                      if (hasLocalNotification)
+                        Positioned(
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 12,
+                              minHeight: 12,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NotificationList()),
+                    );
+                  },
                 );
               },
             ),
@@ -228,4 +259,5 @@ class MainScreenState extends State<MainScreen>
       navigatorKeys.add(GlobalKey<NavigatorState>());
     }
   }
+
 }

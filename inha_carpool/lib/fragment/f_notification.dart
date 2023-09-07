@@ -116,10 +116,6 @@ class _NotificationListState extends State<NotificationList> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: context.height(0.05),
-                      ),
-                      SizedBox(
-                        height: context.height(0.1),
                         child: Card(
                           surfaceTintColor: Colors.grey[200],
                           elevation: 4, // 카드 그림자 설정
@@ -138,28 +134,26 @@ class _NotificationListState extends State<NotificationList> {
                                 : const Icon(Icons.car_crash_rounded, color: Colors.blue),
                             title: Column(
                               children: [
-                                Text(notificationList[i].title,
-                                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                                const SizedBox(
-                                  width: 10,
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(notificationList[i].title,
+                                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                                 ),
-                                Text(
-                                  notificationList[i].body,
-                                  style: const TextStyle(fontSize: 12),
+                                Container(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    DateFormat('yyyy-MM-dd HH:mm')
+                                        .format(DateTime.fromMillisecondsSinceEpoch(notificationList[i].time!))
+                                        .toString(),
+                                    style: const TextStyle(fontSize: 12 , color: Colors.grey),
+                                  ),
                                 ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  DateFormat('yyyy-MM-dd HH:mm')
-                                      .format(DateTime.fromMillisecondsSinceEpoch(notificationList[i].time!))
-                                      .toString(),
-                                  style: const TextStyle(fontSize: 12),
-                                )
                               ],
                             ),
                             trailing:IconButton(
-                                icon: const Icon(Icons.close , color: Colors.blue),
+                              iconSize: 25,
+                              alignment: Alignment.centerRight,
+                                icon: const Icon(Icons.delete , color: Colors.blue),
                                 onPressed: () {
                                   setState(() {
                                     // 알림 리스트 해당 알림 삭제
