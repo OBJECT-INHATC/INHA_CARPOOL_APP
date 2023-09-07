@@ -24,12 +24,15 @@ class _CarpoolListState extends State<CarpoolList> {
   late String nickName = ""; // Initialize with a default value
   late String uid = "";
   late String gender = "";
-
+  DocumentSnapshot? oldLastMessage;
   //구글맵 변수
   LatLng? _myPoint;
   String _distanceToLocation = ' ';
 
   late GoogleMapController mapController;
+
+  var newchat = 0;
+
 
   @override
   void initState() {
@@ -186,7 +189,21 @@ class _CarpoolListState extends State<CarpoolList> {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("${formattedStartTime}", style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+                                              Column(
+                                                children: [
+                                                  Container(
+                                                    margin: const EdgeInsets.only(top: 10),
+                                                    child: Text(formattedTime)
+                                                        .text
+                                                        .size(12)
+                                                        .bold
+                                                        .color(context.appColors.text)
+                                                        .make(),
+                                                  ),
+                                                  Text("${formattedStartTime}", style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold, color: Colors.grey),),
+                                                ],
+                                              ),
+
                                               Container(child: Row(
                                                 children: [
                                                   const Icon(Icons.person, color: Colors.grey, size: 22),
@@ -246,9 +263,44 @@ class _CarpoolListState extends State<CarpoolList> {
                                                     margin:
                                                     const EdgeInsets.only(left: 0, top:0 , bottom: 0),
 
-                                                    child: const Column(children: [
+                                                    child:  Row(
+
+                                                        children: [
                                                       Icon(Icons.arrow_drop_down_outlined),
-                                                      // Icon(Icons.arrow_drop_down_outlined),
+                                                      Container(child:  StreamBuilder<DocumentSnapshot?>(
+                                                        stream: FireStoreService().getLatestMessageStream(carpool['carId']),
+                                                        builder: (context, snapshot) {
+                                                          if (snapshot.connectionState == ConnectionState.waiting) {
+                                                            return CircularProgressIndicator();
+                                                          } else if (snapshot.hasError) {
+                                                            return Text('Error: ${snapshot.error}');
+                                                          } else if (!snapshot.hasData || snapshot.data == null) {
+                                                            // No message available in this chatroom.
+                                                            return Text('아직 채팅이 시작되지 않은 채팅방입니다!');
+                                                          }
+
+                                                          DocumentSnapshot lastMessage = snapshot.data!;
+                                                          String content = lastMessage['message'];
+                                                          String countContent = lastMessage['message'].length.toString();
+
+
+                                                          // 마지막 채팅 텍스트 위젯 반환
+                                                          return Row(
+                                                            children: [
+                                                              Container(child:CircleAvatar(
+                                                                radius: 10,
+                                                                backgroundColor: Colors.grey[300],
+                                                                child: Text(countContent),
+                                                              ) ,
+                                                              ),
+
+                                                              Container(
+                                                                  child:Text(content, style: TextStyle(fontSize: 15,),)),
+                                                            ],
+                                                          );
+                                                        },
+                                                      ),),
+
                                                     ])),
                                                 Row(
                                                   children: [
@@ -293,26 +345,6 @@ class _CarpoolListState extends State<CarpoolList> {
                                         const SizedBox(
                                           height: 6,
                                         ),
-                                        Container(child:  StreamBuilder<DocumentSnapshot?>(
-                                        stream: FireStoreService().getLatestMessageStream(carpool['carId']),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState == ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      } else if (snapshot.hasError) {
-                                        return Text('Error: ${snapshot.error}');
-                                      } else if (!snapshot.hasData || snapshot.data == null) {
-                                        // No message available in this chatroom.
-                                        return Text('아직 채팅이 시작되지 않은 채팅방입니다!');
-                                      }
-
-                                      DocumentSnapshot lastMessage = snapshot.data!;
-                                      String content = lastMessage['message']; // Assuming the field name is 'message'
-
-                                      // 마지막 채팅 텍스트 위젯 반환
-                                      return Container(
-                                          child:Text(content, style: TextStyle(fontSize: 12,),));
-                                    },
-                                  ),),
 
 
 
@@ -335,7 +367,7 @@ class _CarpoolListState extends State<CarpoolList> {
                             IconButton(
                               icon: const Icon(
                                 Icons.map_outlined,
-                                size: 30,
+                                size: 60,
                               ),
                               onPressed: () {
                                 _getCurrentLocation(carpool['startPoint']);
@@ -478,15 +510,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                 );
                               },
                             ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 10),
-                              child: Text(formattedTime)
-                                  .text
-                                  .size(12)
-                                  .bold
-                                  .color(context.appColors.text)
-                                  .make(),
-                            ),
+
                             const SizedBox(
                               height: 20,
                             ),
