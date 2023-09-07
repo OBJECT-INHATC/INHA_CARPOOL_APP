@@ -14,10 +14,6 @@ import '../main/s_main.dart';
 import '../register/s_findregister.dart';
 import '../register/s_register.dart';
 
-/// 0824 서은율, 한승완
-/// 로그인 페이지
-/// 0830 최은우
-/// 로그인 페이지 디자인 1차 수정
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -50,14 +46,12 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-
-            builder: (context) => ChatroomPage(
-              carId: message.data['groupId'],
-              userName: nickName!,
-              groupName: "카풀채팅",
-              uid: uid!,
-            )
-
+          builder: (context) => ChatroomPage(
+            carId: message.data['groupId'],
+            userName: nickName!,
+            groupName: "카풀채팅",
+            uid: uid!,
+          ),
         ),
       );
     } else {
@@ -83,6 +77,7 @@ class _LoginPageState extends State<LoginPage> {
   // 비밀번호
   String password = "";
 
+  // 학교 도메인 기본값
   String academy = "@itc.ac.kr";
 
   var selectedIndex = 0;
@@ -109,7 +104,7 @@ class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   final storage = const FlutterSecureStorage();
 
-  // 장치의 Fcm 토큰을 가져와 로컬에 저장하는 함수
+  // 장치의 FCM 토큰을 가져와 로컬에 저장하는 함수
   void getMyDeviceToken() async {
     FirebaseMessaging.instance.getToken().then((value) {
       print("token : $value");
@@ -130,7 +125,8 @@ class _LoginPageState extends State<LoginPage> {
     return isLoading
         ? Center(
       child: CircularProgressIndicator(
-          color: Theme.of(context).primaryColor),
+        color: Theme.of(context).primaryColor,
+      ),
     )
         : SafeArea(
       child: Scaffold(
@@ -181,6 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                             prefixIcon: Icon(Icons.email),
                           ),
                           onChanged: (text) {
+                            // 학번 부분을 입력한 텍스트에 더해줌
                             email = text + academy;
                           },
                           validator: (val) {
@@ -190,10 +187,7 @@ class _LoginPageState extends State<LoginPage> {
                               return "학번이 비어있습니다.";
                             }
                           }),
-                      Positioned(
-                        right: 140,
-                        child: Text(academy),
-                      ),
+                      // 학교 선택 토글 버튼
                       Positioned(
                         right: 0,
                         child: FlutterToggleTab(
@@ -218,7 +212,6 @@ class _LoginPageState extends State<LoginPage> {
                               }
                               selectedIndex = index;
                               updateBackgroundColors();
-
                             });
                           },
                           selectedBackgroundColors: const [
@@ -302,23 +295,19 @@ class _LoginPageState extends State<LoginPage> {
                               );
                               storage.write(
                                 key: "uid",
-                                value: snapshot.docs[0]
-                                    .get("uid"),
+                                value: snapshot.docs[0].get("uid"),
                               );
                               storage.write(
                                 key: "gender",
-                                value: snapshot.docs[0]
-                                    .get('gender'),
+                                value: snapshot.docs[0].get('gender'),
                               );
                               storage.write(
                                 key: "email",
-                                value: snapshot.docs[0]
-                                    .get('email'),
+                                value: snapshot.docs[0].get('email'),
                               );
                               storage.write(
                                 key: "userName",
-                                value: snapshot.docs[0]
-                                    .get('userName'),
+                                value: snapshot.docs[0].get('userName'),
                               );
                               storage.write(
                                 key: "email",
@@ -408,7 +397,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   // 이메일 업데이트 메서드 추가
-
   void updateEmail() {
     // 텍스트 필드에 이미 값이 있는지 확인
     if (email.isNotEmpty) {
@@ -419,7 +407,4 @@ class _LoginPageState extends State<LoginPage> {
       email = id + academy;
     }
   }
-
 }
-
-
