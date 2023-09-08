@@ -491,7 +491,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                         return Text('Error: ${snapshot.error}');
                                                       } else if (!snapshot.hasData || snapshot.data == null) {
                                                         // No message available in this chatroom.
-                                                        return Text('아직 채팅이 시작되지 않은 채팅방입니다!');
+                                                        return Text('아직 채팅이 시작되지 않은 채팅방입니다!' , style: TextStyle(color: Colors.grey),);
                                                       }
                                                       DocumentSnapshot lastMessage = snapshot.data!;
                                                       String content = lastMessage['message'];
