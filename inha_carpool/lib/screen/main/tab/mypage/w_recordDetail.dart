@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import 'd_complain.dart';
 
-class RecordList extends StatelessWidget {
-  const RecordList({Key? key}) : super(key: key);
+class RecordDetailPage extends StatelessWidget {
+  const RecordDetailPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -133,18 +133,18 @@ class _CarpoolListState extends State<CarpoolList> {
 
                 String formattedTime;
                 if (difference.inDays >= 365) {
-                  formattedTime = '${difference.inDays ~/ 365}년 후';
+                  formattedTime = '${difference.inDays ~/ 365}년 전';
                 } else if (difference.inDays >= 30) {
                   formattedTime =
-                      '${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 이후';
+                      '${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 전';
                 } else if (difference.inDays >= 1) {
                   formattedTime =
-                      '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 이후';
+                      '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 전';
                 } else if (difference.inHours >= 1) {
                   formattedTime =
-                      '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 이후';
+                      '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 전';
                 } else {
-                  formattedTime = '${difference.inMinutes}분 후';
+                  formattedTime = '${difference.inMinutes}분 전';
                 }
 
 
@@ -161,7 +161,7 @@ class _CarpoolListState extends State<CarpoolList> {
                     );
                   },
                   child: Card(
-                    color: Colors.white,
+                    color: Colors.blue[100],
                     surfaceTintColor: Colors.transparent,
                     elevation: 1,
                     margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -189,7 +189,8 @@ class _CarpoolListState extends State<CarpoolList> {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Column(
+                                              Column(crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
                                                     
@@ -214,152 +215,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                               fontSize: 15, fontWeight: FontWeight.bold)),
                                                     ],
                                                   ),
-                                                  IconButton(
-                                                    icon: const Icon(
-                                                      Icons.map_outlined,
-                                                      size: 30,
-                                                    ),
-                                                    onPressed: () {
-                                                      _getCurrentLocation(carpool['startPoint']);
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (BuildContext context) {
-                                                          return AlertDialog(
-                                                            insetPadding: const EdgeInsets.all(20),
-                                                            shape: RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                BorderRadius.circular(20.0)),
-                                                            title: const Text(
-                                                              '카풀 위치',
-                                                              textAlign: TextAlign.center,
-                                                            ),
-                                                            content: SizedBox(
-                                                              height:
-                                                              MediaQuery.of(context).size.height *
-                                                                  0.6,
-                                                              child: Stack(
-                                                                children: [
-                                                                  Column(
-                                                                    children: [
-                                                                      SizedBox(
-                                                                        width: MediaQuery.of(context)
-                                                                            .size
-                                                                            .width,
-                                                                        height: MediaQuery.of(context)
-                                                                            .size
-                                                                            .height *
-                                                                            0.5,
-                                                                        child: Stack(
-                                                                          children: [
-                                                                            // 카풀 위치 지도 부분
-                                                                            GoogleMap(
-                                                                              onMapCreated:
-                                                                                  (controller) =>
-                                                                              mapController =
-                                                                                  controller,
-                                                                              initialCameraPosition:
-                                                                              CameraPosition(
-                                                                                target: LatLng(
-                                                                                    carpool['startPoint']
-                                                                                        .latitude,
-                                                                                    carpool['startPoint']
-                                                                                        .longitude),
-                                                                                zoom: 16,
-                                                                              ),
-                                                                              markers: {
-                                                                                Marker(
-                                                                                  markerId: MarkerId(
-                                                                                      carpool['startPoint']
-                                                                                          .toString()),
-                                                                                  position: LatLng(
-                                                                                      carpool['startPoint']
-                                                                                          .latitude,
-                                                                                      carpool['startPoint']
-                                                                                          .longitude),
-                                                                                  infoWindow:
-                                                                                  InfoWindow(
-                                                                                      title:
-                                                                                      '출발지'),
-                                                                                ),
-                                                                              },
-                                                                              myLocationButtonEnabled:
-                                                                              true,
-                                                                              myLocationEnabled: true,
-                                                                            ),
-                                                                            //카풀위치 버튼
-                                                                            Positioned(
-                                                                              bottom: 70,
-                                                                              right: 5,
-                                                                              child: ElevatedButton(
-                                                                                onPressed: () {
-                                                                                  _moveCameraTo(
-                                                                                    LatLng(
-                                                                                        carpool['startPoint']
-                                                                                            .latitude,
-                                                                                        carpool['startPoint']
-                                                                                            .longitude),
-                                                                                  );
-                                                                                },
-                                                                                child: const Text(
-                                                                                    '카풀위치'),
-                                                                              ),
-                                                                            ),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                      SizedBox(height: 5),
-                                                                      Container(
-                                                                        margin: const EdgeInsets
-                                                                            .symmetric(
-                                                                            horizontal: 20),
-                                                                        child: Column(
-                                                                          children: [
-                                                                            Text(startPointName,
-                                                                                style:
-                                                                                const TextStyle(
-                                                                                    fontSize:
-                                                                                    16)),
-                                                                            Text(formattedTime,
-                                                                                style:
-                                                                                const TextStyle(
-                                                                                    fontSize:
-                                                                                    16)),
-                                                                            Text(
-                                                                                '현재 위치와 거리: $_distanceToLocation',
-                                                                                style:
-                                                                                const TextStyle(
-                                                                                    fontSize:
-                                                                                    16)),
-                                                                          ],
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            actions: [
-                                                              Center(
-                                                                child: Column(
-                                                                  children: [
-                                                                    Line(
-                                                                        color: context
-                                                                            .appColors.divider),
-                                                                    TextButton(
-                                                                      onPressed: () {
-                                                                        Navigator.pop(context);
-                                                                      },
-                                                                      child: const Text('닫기'),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        },
-                                                      );
-                                                    },
-                                                  ),
+
                                                 ],
                                               )),
 
@@ -384,7 +240,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                             height: context.height(0.01),
                                                             // desired height
                                                             decoration: BoxDecoration(
-                                                              color: Colors.lightBlueAccent,
+                                                              color: Colors.white,
                                                               borderRadius: BorderRadius.circular(10),
                                                             ),
                                                             padding: const EdgeInsets.all(8.0),
@@ -398,6 +254,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                               children: [
                                                                 Container(
                                                                   child: Column(
+                                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                                     children: [
                                                                       Text("${carpoolData['startDetailPoint']}  ",
                                                                           style: const TextStyle(
@@ -410,9 +267,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                               fontSize: 10,
                                                                               fontWeight: FontWeight.bold)),
                                                                     ],
-                                                                  ),
-
-
+                                                                  )
                                                                 ),
                                                                 Container(
                                                                   margin:
@@ -429,7 +284,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                         height: context.height(0.01),
                                                                         // desired height
                                                                         decoration: BoxDecoration(
-                                                                          color: Colors.lightBlueAccent,
+                                                                          color: Colors.white,
                                                                           borderRadius: BorderRadius.circular(10),
                                                                         ),
                                                                         padding: const EdgeInsets.all(8.0),
@@ -454,6 +309,152 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                       ],
                                                                     ),
                                                                     const SizedBox(width: 5),
+                                                                    IconButton(
+                                                                      icon: const Icon(
+                                                                        Icons.map_outlined,
+                                                                        size: 30,
+                                                                      ),
+                                                                      onPressed: () {
+                                                                        _getCurrentLocation(carpool['startPoint']);
+                                                                        showDialog(
+                                                                          context: context,
+                                                                          builder: (BuildContext context) {
+                                                                            return AlertDialog(
+                                                                              insetPadding: const EdgeInsets.all(20),
+                                                                              shape: RoundedRectangleBorder(
+                                                                                  borderRadius:
+                                                                                  BorderRadius.circular(20.0)),
+                                                                              title: const Text(
+                                                                                '카풀 위치',
+                                                                                textAlign: TextAlign.center,
+                                                                              ),
+                                                                              content: SizedBox(
+                                                                                height:
+                                                                                MediaQuery.of(context).size.height *
+                                                                                    0.6,
+                                                                                child: Stack(
+                                                                                  children: [
+                                                                                    Column(
+                                                                                      children: [
+                                                                                        SizedBox(
+                                                                                          width: MediaQuery.of(context)
+                                                                                              .size
+                                                                                              .width,
+                                                                                          height: MediaQuery.of(context)
+                                                                                              .size
+                                                                                              .height *
+                                                                                              0.5,
+                                                                                          child: Stack(
+                                                                                            children: [
+                                                                                              // 카풀 위치 지도 부분
+                                                                                              GoogleMap(
+                                                                                                onMapCreated:
+                                                                                                    (controller) =>
+                                                                                                mapController =
+                                                                                                    controller,
+                                                                                                initialCameraPosition:
+                                                                                                CameraPosition(
+                                                                                                  target: LatLng(
+                                                                                                      carpool['startPoint']
+                                                                                                          .latitude,
+                                                                                                      carpool['startPoint']
+                                                                                                          .longitude),
+                                                                                                  zoom: 16,
+                                                                                                ),
+                                                                                                markers: {
+                                                                                                  Marker(
+                                                                                                    markerId: MarkerId(
+                                                                                                        carpool['startPoint']
+                                                                                                            .toString()),
+                                                                                                    position: LatLng(
+                                                                                                        carpool['startPoint']
+                                                                                                            .latitude,
+                                                                                                        carpool['startPoint']
+                                                                                                            .longitude),
+                                                                                                    infoWindow:
+                                                                                                    InfoWindow(
+                                                                                                        title:
+                                                                                                        '출발지'),
+                                                                                                  ),
+                                                                                                },
+                                                                                                myLocationButtonEnabled:
+                                                                                                true,
+                                                                                                myLocationEnabled: true,
+                                                                                              ),
+                                                                                              //카풀위치 버튼
+                                                                                              Positioned(
+                                                                                                bottom: 70,
+                                                                                                right: 5,
+                                                                                                child: ElevatedButton(
+                                                                                                  onPressed: () {
+                                                                                                    _moveCameraTo(
+                                                                                                      LatLng(
+                                                                                                          carpool['startPoint']
+                                                                                                              .latitude,
+                                                                                                          carpool['startPoint']
+                                                                                                              .longitude),
+                                                                                                    );
+                                                                                                  },
+                                                                                                  child: const Text(
+                                                                                                      '카풀위치'),
+                                                                                                ),
+                                                                                              ),
+                                                                                            ],
+                                                                                          ),
+                                                                                        ),
+                                                                                        SizedBox(height: 5),
+                                                                                        Container(
+                                                                                          margin: const EdgeInsets
+                                                                                              .symmetric(
+                                                                                              horizontal: 20),
+                                                                                          child: Column(
+                                                                                            children: [
+                                                                                              Text(startPointName,
+                                                                                                  style:
+                                                                                                  const TextStyle(
+                                                                                                      fontSize:
+                                                                                                      16)),
+                                                                                              Text(formattedTime,
+                                                                                                  style:
+                                                                                                  const TextStyle(
+                                                                                                      fontSize:
+                                                                                                      16)),
+                                                                                              Text(
+                                                                                                  '현재 위치와 거리: $_distanceToLocation',
+                                                                                                  style:
+                                                                                                  const TextStyle(
+                                                                                                      fontSize:
+                                                                                                      16)),
+                                                                                            ],
+                                                                                          ),
+                                                                                        ),
+                                                                                      ],
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ),
+                                                                              actions: [
+                                                                                Center(
+                                                                                  child: Column(
+                                                                                    children: [
+                                                                                      Line(
+                                                                                          color: context
+                                                                                              .appColors.divider),
+                                                                                      TextButton(
+                                                                                        onPressed: () {
+                                                                                          Navigator.pop(context);
+                                                                                        },
+                                                                                        child: const Text('닫기'),
+                                                                                      ),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            );
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                    ),
 
                                                                   ],
                                                                 ),
@@ -485,24 +486,20 @@ class _CarpoolListState extends State<CarpoolList> {
                                                     }
                                                     DocumentSnapshot lastMessage = snapshot.data!;
                                                     String content = lastMessage['message'];
-                                                    String countContent = lastMessage['message'].length.toString();
                                                     // 마지막 채팅 텍스트 위젯 반환
                                                     return Row(
                                                       children: [
 
 
                                                         Container(
-                                                            child:Text(content, style: TextStyle(fontSize: 18,),)),
-                                                        Container(child:CircleAvatar(
-                                                          radius: 10,
-                                                          backgroundColor: Colors.grey[300],
-                                                          child: Text(countContent , style: TextStyle(color: Colors.grey[600]),)
-                                                        ) ,
-                                                        ),
+                                                            child:Text(content, style: TextStyle(fontSize: 20,),)),
+
+
                                                       ],
                                                     );
                                                   },
                                                 ),),
+
                                               ],
                                             ),
                                           ],
@@ -516,16 +513,7 @@ class _CarpoolListState extends State<CarpoolList> {
                               ],
                             ),
                           ),
-                          Column(children: [
 
-
-                            /// 리스트 우측 하단에 지도 버튼 (카풀 위치, 현재 위치 조회가능)
-
-
-                            const SizedBox(
-                              height: 20,
-                            ),
-                          ]),
 
                         ],
 
