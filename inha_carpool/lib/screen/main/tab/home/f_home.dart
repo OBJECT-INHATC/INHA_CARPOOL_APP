@@ -51,32 +51,34 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-
-    return SafeArea(
-      child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          heroTag: "recruit_from_home",
-          elevation: 10,
-          backgroundColor: Colors.grey[100],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            side: const BorderSide(color: Colors.grey, width: 1),
-          ),
-          onPressed: () {
-            Navigator.push(
-              Nav.globalContext,
-              MaterialPageRoute(
-                builder: (context) => const RecruitPage(),
-              ),
-            );
-          },
-          child: const Icon(
-            Icons.add,
-            color: Colors.blue,
-            size: 50,
-          ),
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        heroTag: "recruit_from_home",
+        elevation: 10,
+        backgroundColor: Colors.grey[100],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: const BorderSide(color: Colors.grey, width: 1),
         ),
-        body: Column(
+        onPressed: () {
+          Navigator.push(
+            Nav.globalContext,
+            MaterialPageRoute(
+              builder: (context) => const RecruitPage(),
+            ),
+          );
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.blue,
+          size: 50,
+        ),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+        ),
+        child: Column(
           children: [
             DropdownButton<FilteringOption>(
               value: selectedFilter,
