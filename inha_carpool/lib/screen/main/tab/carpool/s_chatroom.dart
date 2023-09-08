@@ -8,6 +8,8 @@ import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
+import 'package:inha_Carpool/screen/dialog/d_complain.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// 0828 서은율, 한승완
 /// 채팅방 페이지 - 채팅방 정보 표시, 채팅 메시지 스트림, 메시지 입력, 메시지 전송
@@ -137,6 +139,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
   String getName(String res) {
     return res.substring(res.indexOf("_") + 1);
   }
+
+
 
   /// 토큰, 사용자 Auth 정보 호출 메서드
   getCurrentUserandToken() async {
@@ -311,10 +315,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     itemBuilder: (BuildContext context, int index) {
                       String memberName =
                           getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
+                      // String memberGender =
+                      //     getGender(membersList[index]);
 
                       return TextButton(
                         onPressed: () {
-                          _showProfileModal(context, '$memberName 님');
+                          _showProfileModal(context, '$memberName 님','');
                         },
                         style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -643,35 +649,57 @@ class _ChatroomPageState extends State<ChatroomPage> {
   }
 }
 
-// 프로필 조회
-void _showProfileModal(BuildContext context, String userName) {
+void _showProfileModal(BuildContext context, String userName, String gender) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
       return SizedBox(
-        // 크기 지정
-        height: context.height(0.4),
+        height: MediaQuery.of(context).size.height * 0.4,
         width: double.infinity,
-
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text(
+            Text(
               '프로필 조회',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Text(
-              '유저 이름: $userName' '\n이용횟수, 신고횟수, 성별, 신고하기',
+              '닉네임 : $userName\n성별 : $gender\n신고횟수 : ',
               style: TextStyle(fontSize: 16),
             ),
-            // 추가적인 프로필 정보를 나열하거나 버튼을 추가할 수 있습니다.
+            ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: 100,
+                  minHeight: 30,
+                ),
+            child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (context) => ComplainAlert(index: userName),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                    primary: Color.fromARGB(223, 250, 39, 39)
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.warning_rounded,color: Colors.black),
+                    SizedBox(width: 8,),
+                    Text("신고하기",style: TextStyle(color: Colors.black),)
+                  ],
+                )
+            ),)
           ],
         ),
       );
     },
   );
 }
+
