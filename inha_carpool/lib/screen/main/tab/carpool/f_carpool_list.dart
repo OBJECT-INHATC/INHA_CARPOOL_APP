@@ -125,8 +125,7 @@ class _CarpoolListState extends State<CarpoolList> {
                 Map<String, dynamic> carpoolData =
                 carpool.data() as Map<String, dynamic>;
                 String startPointName = carpool['startPointName'];
-                Map<String, dynamic> carpoolData =
-                carpool.data() as Map<String, dynamic>;
+
                 //카풀 날짜 및 시간 변환
                 DateTime startTime =
                     DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
