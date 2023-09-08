@@ -51,59 +51,62 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        heroTag: "recruit_from_home",
-        elevation: 10,
-        backgroundColor: Colors.grey[100],
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-          side: const BorderSide(color: Colors.grey, width: 1),
-        ),
-        onPressed: () {
-          Navigator.push(
-            Nav.globalContext,
-            MaterialPageRoute(
-              builder: (context) => const RecruitPage(),
-            ),
-          );
-        },
-        child: const Icon(
-          Icons.add,
-          color: Colors.blue,
-          size: 50,
-        ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-        ),
-        child: Column(
-          children: [
-            DropdownButton<FilteringOption>(
-              value: selectedFilter,
-              // 아래 함수로 정의 (리팩토링)
-              onChanged: _handleFilterChange,
-              items: FilteringOption.values.map((option) {
-                // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
-                return DropdownMenuItem<FilteringOption>(
-                  value: option,
-                  // DropdownMenuItem의 child는 Text 위젯입니다.
-                  child: Text(option == FilteringOption.Time ? '시간순' : '거리순'),
-                );
-              }).toList(),
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: _refreshCarpoolList,
-                // 카풀 리스트 불러오기
-                child: _buildCarpoolList(),
+    return  SafeArea(
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          heroTag: "recruit_from_home",
+          elevation: 10,
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+            side: const BorderSide(color: Colors.grey, width: 1),
+          ),
+          onPressed: () {
+            Navigator.push(
+              Nav.globalContext,
+              MaterialPageRoute(
+                builder: (context) => const RecruitPage(),
               ),
-            ),
-          ],
+            );
+          },
+          child: const Icon(
+            Icons.add,
+            color: Colors.blue,
+            size: 50,
+          ),
         ),
-      ),
+          body: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+            ),
+            child: Column(
+            children: [
+    DropdownButton<FilteringOption>(
+    value: selectedFilter,
+    // 아래 함수로 정의 (리팩토링)
+    onChanged: _handleFilterChange,
+    items: FilteringOption.values.map((option) {
+    // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
+    return DropdownMenuItem<FilteringOption>(
+    value: option,
+    // DropdownMenuItem의 child는 Text 위젯입니다.
+    child: Text(option == FilteringOption.Time ? '시간순' : '거리순'),
     );
+    }).toList(),
+              ),
+        Expanded(
+            child: RefreshIndicator(
+              onRefresh: _refreshCarpoolList,
+              // 카풀 리스트 불러오기
+              child: _buildCarpoolList(),
+            ),
+                ),
+            ],
+            ),
+          ),
+        ),
+      );
+
   }
 
   // 카풀 리스트 불러오기
