@@ -17,6 +17,7 @@ class CarpoolMap extends StatefulWidget {
   final String startTime;
   final String carId;
   final String admin;
+  final String roomGender;
 
   CarpoolMap({
     required this.startPoint,
@@ -24,6 +25,7 @@ class CarpoolMap extends StatefulWidget {
     required this.startTime,
     required this.carId,
     required this.admin,
+    required this.roomGender,
   });
 
   @override
@@ -94,12 +96,19 @@ class _CarpoolMapState extends State<CarpoolMap> {
       child: Scaffold(
         appBar: AppBar(
           titleTextStyle: const TextStyle(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+            fontSize: 22,
+            fontWeight: FontWeight.normal,
           ),
-          title: '${widget.admin.split("_").last}님의 카풀 정보'.text.white.make(),
-          backgroundColor: Colors.blue,
+          title: '${widget.admin.split("_").last}님의 카풀 정보'.text.black.make(),
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          toolbarHeight: 45,
+          shape: Border(
+            bottom: BorderSide(
+              color: Colors.grey.shade200,
+              width: 1,
+            ),
+          ),
         ),
         body: Stack(
           children: [
@@ -282,10 +291,21 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 String carId = widget.carId;
                                 String memberID = uid;
                                 String memberName = nickName;
+                                String selectedRoomGender = widget.roomGender;
 
+                                if (gender != selectedRoomGender &&
+                                    selectedRoomGender != '무관') {
+                                  context.showErrorSnackbar(
+                                      '입장할 수 없는 성별입니다.\n다른 카풀을 이용해주세요!');
+                                  return;
+                                }
                                 try {
                                   await FirebaseCarpool.addMemberToCarpool(
-                                      carId, memberID, memberName, token!);
+                                      carId,
+                                      memberID,
+                                      memberName,
+                                      token!,
+                                      selectedRoomGender);
                                   if (!mounted) return;
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
@@ -294,6 +314,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           builder: (context) =>
                                               const MainScreen()));
                                 } catch (error) {
+                                  // addMemberToCarpool에서 던진 예외를 처리함
+                                  print('카풀 참가 실패 ( s_carpool_map )');
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {

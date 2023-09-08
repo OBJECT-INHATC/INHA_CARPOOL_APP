@@ -30,8 +30,9 @@ class FireStoreService {
 
   /// 0824 서은율
   /// 사용자 정보 저장
-  Future savingUserData(String nickName, String email, String fcmToken, String gender) async {
+  Future savingUserData(String userName,String nickName, String email, String fcmToken, String gender) async {
     return await userCollection.doc(uid).set({
+      "userName": userName,
       "nickName": nickName,
       "email": email,
       "carpools": [],

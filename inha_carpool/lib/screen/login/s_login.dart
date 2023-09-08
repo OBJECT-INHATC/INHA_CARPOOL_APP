@@ -14,10 +14,6 @@ import '../main/s_main.dart';
 import '../register/s_findregister.dart';
 import '../register/s_register.dart';
 
-/// 0824 서은율, 한승완
-/// 로그인 페이지
-/// 0830 최은우
-/// 로그인 페이지 디자인 1차 수정
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -26,9 +22,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
-  /// 0830 한승완
-  /// 앱이 꺼진 상태 - FCM 푸시 알림 클릭 시 처리 메소드
+  // FCM 관련 설정 및 알림 처리를 위한 메서드
   Future<void> setupInteractedMessage() async {
     // 앱이 백그라운드 상태에서 푸시 알림 클릭하여 열릴 경우
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
@@ -39,45 +33,42 @@ class _LoginPageState extends State<LoginPage> {
     FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   }
 
-  /// 0830 한승완
-  /// 앱이 꺼진 상태 - FCM 푸시 알림 클릭 시 처리 메소드
+  // FCM 푸시 알림 클릭 시 처리 메서드
   void _handleMessage(RemoteMessage message) async {
     // 닉네임 가져오기
     String? nickName = await storage.read(key: "nickName");
     // uid 가져오기
     String? uid = await storage.read(key: "uid");
 
-    /// 한승완 TODO : 알림의 id에 따라서 이동 경로 구분 기능
+    // 한승완 TODO: 알림의 id에 따라서 이동 경로 구분 기능
     if (message.data['id'] == '1' && nickName != null) {
-      if(!mounted) return;
+      if (!mounted) return;
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ChatroomPage(
-              carId: message.data['groupId'],
-              userName: nickName!,
-              groupName: "카풀채팅",
-              uid: uid!,
-            )
+          builder: (context) => ChatroomPage(
+            carId: message.data['groupId'],
+            userName: nickName!,
+            groupName: "카풀채팅",
+            uid: uid!,
+          ),
         ),
       );
-    }else{
-      if(!mounted) return;
+    } else {
+      if (!mounted) return;
       context.showErrorSnackbar("알림을 불러오는데 실패했습니다.");
     }
   }
 
-  /// 로그인 여부 확인 메서드
-  void checkLogin() async{
-
+  // 로그인 여부 확인 메서드
+  void checkLogin() async {
     // 로그인 여부 확인
     var result = await AuthService().checkUserAvailable();
-    if(result){
-      if(!mounted) return;
-      Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()),);
+    if (result) {
+      if (!mounted) return;
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()));
       await setupInteractedMessage();
     }
-
   }
 
   // 이메일
@@ -86,12 +77,15 @@ class _LoginPageState extends State<LoginPage> {
   // 비밀번호
   String password = "";
 
+  // 학교 도메인 기본값
   String academy = "@itc.ac.kr";
 
   var selectedIndex = 0;
 
   List<Color> selectedBackgroundColors = [Colors.blue, Colors.black];
   List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
+
+  // 토글 배경색 업데이트 메서드
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
@@ -103,19 +97,19 @@ class _LoginPageState extends State<LoginPage> {
         ? [Colors.white, Colors.black]
         : [Colors.blue, Colors.white];
   }
+
   // 로딩 여부
   bool isLoading = false;
 
   final formKey = GlobalKey<FormState>();
   final storage = const FlutterSecureStorage();
 
-  /// 장치의 Fcm 토큰을 가져와 로컬에 저장 하는 함수
+  // 장치의 FCM 토큰을 가져와 로컬에 저장하는 함수
   void getMyDeviceToken() async {
-    FirebaseMessaging.instance.getToken().then((value){
+    FirebaseMessaging.instance.getToken().then((value) {
       print("token : $value");
       storage.write(key: 'token', value: value.toString());
     });
-
   }
 
   @override
@@ -131,7 +125,8 @@ class _LoginPageState extends State<LoginPage> {
     return isLoading
         ? Center(
       child: CircularProgressIndicator(
-          color: Theme.of(context).primaryColor),
+        color: Theme.of(context).primaryColor,
+      ),
     )
         : SafeArea(
       child: Scaffold(
@@ -163,11 +158,10 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: 70),
-
                 Container(
                   padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                   child: Stack(
-                    alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
+                    alignment: Alignment.centerRight,
                     children: [
                       TextFormField(
                           decoration: InputDecoration(
@@ -183,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                             prefixIcon: Icon(Icons.email),
                           ),
                           onChanged: (text) {
-                            // 텍스트 필드 값 변경 시 실행할 코드 작성
+                            // 학번 부분을 입력한 텍스트에 더해줌
                             email = text + academy;
                           },
                           validator: (val) {
@@ -193,19 +187,13 @@ class _LoginPageState extends State<LoginPage> {
                               return "학번이 비어있습니다.";
                             }
                           }),
+                      // 학교 선택 토글 버튼
                       Positioned(
-                        // 중간 텍스트를 겹쳐서 배치
-                        right: 140,
-                        child: Text(academy),
-                      ),
-                      Positioned(
-                        // 중간 텍스트를 겹쳐서 배치
                         right: 0,
                         child: FlutterToggleTab(
                           width: 30,
                           borderRadius: 30,
                           height: 40,
-                          // initialIndex: 0,
                           selectedTextStyle: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
@@ -224,7 +212,6 @@ class _LoginPageState extends State<LoginPage> {
                               }
                               selectedIndex = index;
                               updateBackgroundColors();
-                              updateEmail();
                             });
                           },
                           selectedBackgroundColors: const [
@@ -273,7 +260,6 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                 ),
-
                 Container(
                   padding: const EdgeInsets.fromLTRB(50, 5, 20, 0),
                   child: Row(
@@ -281,7 +267,8 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 35),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 25, vertical: 35),
                           primary: Colors.transparent,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
@@ -290,19 +277,21 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         onPressed: () {
                           // 로그인 버튼 기능 추가
-                          /// 로그인 + 로컬 데이터 저장
                           AuthService()
-                              .loginWithUserNameandPassword(email, password)
+                              .loginWithUserNameandPassword(
+                              email, password)
                               .then((value) async {
                             if (value == true) {
                               QuerySnapshot snapshot =
-                              await FireStoreService().gettingUserData(email);
+                              await FireStoreService()
+                                  .gettingUserData(email);
 
                               getMyDeviceToken();
 
                               storage.write(
                                 key: "nickName",
-                                value: snapshot.docs[0].get("nickName"),
+                                value: snapshot.docs[0]
+                                    .get("nickName"),
                               );
                               storage.write(
                                 key: "uid",
@@ -312,12 +301,29 @@ class _LoginPageState extends State<LoginPage> {
                                 key: "gender",
                                 value: snapshot.docs[0].get('gender'),
                               );
+                              storage.write(
+                                key: "email",
+                                value: snapshot.docs[0].get('email'),
+                              );
+                              storage.write(
+                                key: "userName",
+                                value: snapshot.docs[0].get('userName'),
+                              );
+                              storage.write(
+                                key: "email",
+                                value: snapshot.docs[0].get('email'),
+                              );
+                              storage.write(
+                                key: "userName",
+                                value: snapshot.docs[0].get('userName'),
+                              );
 
                               if (context.mounted) {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const MainScreen(),
+                                    builder: (context) =>
+                                    const MainScreen(),
                                   ),
                                 );
                               }
@@ -350,7 +356,6 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-
                 Container(
                   padding: const EdgeInsets.fromLTRB(30, 190, 30, 24),
                   child: Row(
@@ -391,6 +396,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  // 이메일 업데이트 메서드 추가
   void updateEmail() {
     // 텍스트 필드에 이미 값이 있는지 확인
     if (email.isNotEmpty) {
@@ -401,5 +407,4 @@ class _LoginPageState extends State<LoginPage> {
       email = id + academy;
     }
   }
-
 }

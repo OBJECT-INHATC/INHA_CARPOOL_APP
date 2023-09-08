@@ -19,6 +19,7 @@ class _ProFileState extends State<ProFile> {
   late Future<String> uidFuture;
   late Future<String> genderFuture;
   late Future<String> emailFuture;
+  late Future<String> userNameFuture;
   late String email;
 
   @override
@@ -32,6 +33,7 @@ class _ProFileState extends State<ProFile> {
     uidFuture = _loadUserDataForKey("uid");
     genderFuture = _loadUserDataForKey("gender");
     emailFuture = _loadUserDataForKey("email");
+    userNameFuture = _loadUserDataForKey("userName");
   }
 
   Future<String> _loadUserDataForKey(String key) async {
@@ -198,6 +200,39 @@ class _ProFileState extends State<ProFile> {
                           }
                         },
                       ),
+
+                      Row(
+                        children: [
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          const Text(
+                            "이름",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey),
+                          ),
+                          const SizedBox(
+                            width: 39,
+                          ),
+                          FutureBuilder<String?>(
+                            future: userNameFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const CircularProgressIndicator();
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else {
+                                return Text(
+                                  snapshot.data ?? '',
+                                  style: const TextStyle(fontSize: 15, color: Colors.black),
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      )
                     ],
                   ),
                   Row(

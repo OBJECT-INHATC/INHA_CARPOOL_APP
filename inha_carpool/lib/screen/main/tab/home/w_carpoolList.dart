@@ -19,7 +19,9 @@ class CarpoolListWidget extends StatefulWidget {
   const CarpoolListWidget({
     required this.snapshot,
     required this.scrollController,
-    required this.visibleItemCount, required this.nickName, required this.uid,
+    required this.visibleItemCount,
+    required this.nickName,
+    required this.uid,
   });
 
   @override
@@ -27,9 +29,6 @@ class CarpoolListWidget extends StatefulWidget {
 }
 
 class _CarpoolListWidgetState extends State<CarpoolListWidget> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -40,10 +39,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
       itemBuilder: (context, index) {
         DocumentSnapshot carpool = widget.snapshot.data![index];
         Map<String, dynamic> carpoolData =
-        carpool.data() as Map<String, dynamic>;
+            carpool.data() as Map<String, dynamic>;
 
         DateTime startTime =
-        DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
+            DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
         DateTime currentTime = DateTime.now();
         Duration difference = startTime.difference(currentTime);
 
@@ -61,9 +60,9 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
         }
 
         Color borderColor;
-        if (carpoolData['gender'] == '남자') {
+        if (carpoolData['gender'] == '남성') {
           borderColor = Colors.blue; // 남자일 때 보더 색
-        } else if (carpoolData['gender'] == '여자') {
+        } else if (carpoolData['gender'] == '남성') {
           borderColor = Colors.red; // 여자일 때 보더 색
         } else {
           borderColor = Colors.grey; // 무관일 때 보더 색
@@ -83,13 +82,12 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 Navigator.push(
                   Nav.globalContext,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        ChatroomPage(
-                          carId: carpoolData['carId'],
-                          groupName: '카풀 네임',
-                          userName: widget.nickName,
-                          uid: widget.uid,)
-                  ),
+                      builder: (context) => ChatroomPage(
+                            carId: carpoolData['carId'],
+                            groupName: '카풀 네임',
+                            userName: widget.nickName,
+                            uid: widget.uid,
+                          )),
                 );
                 print('현재 유저: $currentUser');
                 print(carpoolData['members']);
@@ -97,12 +95,12 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 Navigator.push(
                   Nav.globalContext,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          ChatroomPage(
-                            carId: carpoolData['carId'],
-                            groupName: '카풀 네임',
-                            userName: widget.nickName,
-                            uid: widget.uid,)
+                    builder: (context) => ChatroomPage(
+                      carId: carpoolData['carId'],
+                      groupName: '카풀 네임',
+                      userName: widget.nickName,
+                      uid: widget.uid,
+                    ),
                   ),
                 );
               }
@@ -118,6 +116,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                     startTime: formattedTime,
                     carId: carpoolData['carId'],
                     admin: carpoolData['admin'],
+                    roomGender: carpoolData['gender'],
                   ),
                 );
               } else {
@@ -146,6 +145,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                   Expanded(
                     child: Container(
                       // width: context.width(0.8),
+
                       // desired width
                       padding: const EdgeInsets.all(8.0),
                       margin: const EdgeInsets.all(8.0),
@@ -184,6 +184,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                     ),
                   ),
                 ]),
+
                 Container(
                   // margin: const EdgeInsets.all(7.0),
                   child: Row(
@@ -223,7 +224,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                           fontWeight: FontWeight.bold)),
                                 ],
                               ),
-                              // const SizedBox(width: 5),
 
                             ],
                           ),
@@ -268,7 +268,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                 ],
                               ),
                               const SizedBox(width: 5),
-
                             ],
                           ),
                         ],
@@ -281,6 +280,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                     Row(children: [
                       Expanded(
                         child: Container(
+
                           // desired width
                           padding: const EdgeInsets.all(8.0),
                           margin: const EdgeInsets.all(8.0),
@@ -323,6 +323,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                         ),
                       ),
                     ]),
+
                   ],
                 ),
                 const SizedBox(height: 10)

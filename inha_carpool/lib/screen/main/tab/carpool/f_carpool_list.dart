@@ -31,7 +31,6 @@ class _CarpoolListState extends State<CarpoolList> {
 
   late GoogleMapController mapController;
 
-  var newchat = 0;
 
 
   @override
@@ -97,10 +96,14 @@ class _CarpoolListState extends State<CarpoolList> {
                   ),
                   FloatingActionButton(
                     heroTag: "recruit_from_myCarpool",
-                    elevation: 4,
+                    elevation: 10,
                     backgroundColor: context.appColors.appBar,
                     onPressed: () {
-                      Nav.push(RecruitPage());
+                      Navigator.push(
+                        Nav.globalContext,
+                        MaterialPageRoute(
+                            builder: (context) => const RecruitPage()),
+                      );
                     },
                     child: '+'.text.size(50).color(Colors.white).make(),
                   ),
@@ -122,6 +125,8 @@ class _CarpoolListState extends State<CarpoolList> {
                 Map<String, dynamic> carpoolData =
                 carpool.data() as Map<String, dynamic>;
                 String startPointName = carpool['startPointName'];
+                Map<String, dynamic> carpoolData =
+                carpool.data() as Map<String, dynamic>;
                 //카풀 날짜 및 시간 변환
                 DateTime startTime =
                     DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
@@ -147,7 +152,6 @@ class _CarpoolListState extends State<CarpoolList> {
                   formattedTime = '${difference.inMinutes}분 전';
                 }
 
-
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -169,6 +173,7 @@ class _CarpoolListState extends State<CarpoolList> {
                     child: Container(
   padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                       margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+
                       child: Row(
                         children: <Widget>[
                           Expanded(
@@ -215,6 +220,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                               fontSize: 15, fontWeight: FontWeight.bold)),
                                                     ],
                                                   ),
+
 
                                                 ],
                                               )),

@@ -35,7 +35,7 @@ class AuthService {
   /// 회원 가입 메서드
   /// 0824 서은율 한승완
   Future registerUserWithEmailandPassword(
-      String nickName, String email, String password, String fcmToken, String gender,) async {
+  String userName ,String nickName, String email, String password, String fcmToken, String gender,) async {
     try {
       User user = (await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password))
@@ -45,7 +45,7 @@ class AuthService {
 
       if (user != null) {
         /// Fire Store 사용자 정보 저장
-        await FireStoreService(uid: user.uid).savingUserData(nickName, email, "dummy", gender);
+        await FireStoreService(uid: user.uid).savingUserData(userName,nickName, email, "dummy", gender);
         return true;
       }
     } on FirebaseAuthException catch (e) {
@@ -59,6 +59,7 @@ class AuthService {
     try {
       await storage.delete(key: 'email');
       await storage.delete(key: 'nickName');
+      await storage.delete(key: 'username');
       await storage.delete(key: 'gender');
       await firebaseAuth.signOut();
       print('로그아웃');
@@ -158,9 +159,5 @@ class AuthService {
       return false;
     }
   }
-
-
-
-
 
 }

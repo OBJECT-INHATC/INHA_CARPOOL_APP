@@ -10,6 +10,9 @@ import 'd_changepassword.dart';
 import 'f_logout_confirmation.dart';
 import 'f_secession.dart';
 
+import '../../../../dto/ReportRequstDTO.dart';
+import '../../../../service/api/ApiService.dart';
+
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
 
@@ -18,7 +21,11 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+
   bool isEventAdsAllowed = true; // 스위치의 초기 상태를 설정
+
+  final apiService = ApiService();
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +37,7 @@ class _MyPageState extends State<MyPage> {
           SizedBox(height: 10),
           Column(
             children: [
+
               // 계정 항목
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 6.0),
@@ -190,10 +198,30 @@ class _MyPageState extends State<MyPage> {
                 },
               ),
             ),
+
             ],
           ),
         ],
       ),
     );
   }
+}
+
+  testAPI() async{
+
+    // ReportRequstDTO 객체를 생성 또는 채웁니다.
+    final reportRequstDTO = ReportRequstDTO(
+      content: '신고 내용',
+      carpoolId: '카풀 ID',
+      userName: '피신고자 ID',
+      reporter: '신고자 ID',
+      reportType: '잠수',
+      reportDate: '신고 일자',
+    );
+
+    // API 호출
+    final response = await apiService.saveReport(reportRequstDTO);
+  }
+
+
 }
