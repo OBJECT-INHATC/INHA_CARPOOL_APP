@@ -6,13 +6,14 @@ import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/f_mypage.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_dateTime.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
 import '../../fragment/f_notification.dart';
-import '../../screen/setting/f_setting.dart';
+import '../../screen/main/tab/mypage/f_mypage.dart';
 
 class RecruitPage extends StatefulWidget {
   const RecruitPage({super.key});
@@ -83,6 +84,7 @@ class _RecruitPageState extends State<RecruitPage> {
   Widget build(BuildContext context) {
     LocationInputWidget startPointInput;
     LocationInputWidget endPointInput;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,

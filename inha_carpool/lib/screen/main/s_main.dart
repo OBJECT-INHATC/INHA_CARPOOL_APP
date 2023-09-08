@@ -107,19 +107,7 @@ class MainScreenState extends State<MainScreen>
                 );
               },
             ),
-            IconButton(
-              icon: const Icon(
-                Icons.settings,
-                size: 30,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingPage()),
-                );
-              },
-            ).animate().shake(duration: 1000.ms, hz: 10),
+
           ],
         ),
         //바디를 하단 네비게이션 바 아래까지 확장

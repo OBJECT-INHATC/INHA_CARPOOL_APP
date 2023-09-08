@@ -7,9 +7,9 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 import 'package:nav/nav.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../common/widget/w_big_button.dart';
-import 'f_changepassword.dart';
-import 'f_logout_confirmation.dart';
-import 'f_secession.dart';
+import '../main/tab/mypage/d_changepassword.dart';
+import '../main/tab/mypage/f_logout_confirmation.dart';
+import '../main/tab/mypage/f_secession.dart';
 
 void main() => runApp(SettingPage());
 
@@ -123,12 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Obx(
-                      () => Switchmenu('푸쉬설정', Prefs.isPushOnRx.get(),
-                      onChanged: (isOn) {
-                        Prefs.isPushOnRx.set(isOn);
-                      }),
-                ),
+
                 Divider(),
                 Obx(
                       () => Slider(
