@@ -65,19 +65,19 @@ class MainScreenState extends State<MainScreen>
                 );
               },
             ),
-            IconButton(
-              icon: const Icon(
-                Icons.settings,
-                size: 35,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SettingPage()),
-                );
-              },
-            ).animate().shake(duration: 1000.ms, hz: 10),
+            //IconButton(
+              // icon: const Icon(
+                // Icons.settings,
+                // size: 35,
+                // color: Colors.white,
+              // ),
+              // onPressed: () {
+                // Navigator.push(
+                  // context,
+                  // MaterialPageRoute(builder: (context) => SettingPage()),
+                // );
+              // },
+            // ).animate().shake(duration: 1000.ms, hz: 10),
           ],
         ),
         //바디를 하단 네비게이션 바 아래까지 확장
