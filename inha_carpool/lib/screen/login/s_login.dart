@@ -128,272 +128,270 @@ class _LoginPageState extends State<LoginPage> {
         color: Theme.of(context).primaryColor,
       ),
     )
-        : SafeArea(
-      child: Scaffold(
-        body: Center(
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 40, top: 140),
-                  child: Text(
-                    'LOGIN',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Circular',
+        : Scaffold(
+          body: Center(
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40, top: 140),
+                    child: Text(
+                      'LOGIN',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Circular',
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(40, 10, 30, 0),
-                  child: Text(
-                    '로그인이 필요한 서비스입니다.',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(40, 10, 30, 0),
+                    child: Text(
+                      '로그인이 필요한 서비스입니다.',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 70),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                  child: Stack(
-                    alignment: Alignment.centerRight,
-                    children: [
-                      TextFormField(
-                          decoration: InputDecoration(
-                            enabledBorder: const UnderlineInputBorder(
-                              borderSide:
-                              BorderSide(color: Colors.black),
+                  SizedBox(height: 70),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                    child: Stack(
+                      alignment: Alignment.centerRight,
+                      children: [
+                        TextFormField(
+                            decoration: InputDecoration(
+                              enabledBorder: const UnderlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.black),
+                              ),
+                              focusedBorder: const UnderlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.blue),
+                              ),
+                              labelText: '',
+                              prefixIcon: Icon(Icons.email),
                             ),
-                            focusedBorder: const UnderlineInputBorder(
-                              borderSide:
-                              BorderSide(color: Colors.blue),
-                            ),
-                            labelText: '',
-                            prefixIcon: Icon(Icons.email),
-                          ),
-                          onChanged: (text) {
-                            // 학번 부분을 입력한 텍스트에 더해줌
-                            email = text + academy;
-                          },
-                          validator: (val) {
-                            if (val!.isNotEmpty) {
-                              return null;
-                            } else {
-                              return "학번이 비어있습니다.";
-                            }
-                          }),
-                      // 학교 선택 토글 버튼
-                      Positioned(
-                        right: 0,
-                        child: FlutterToggleTab(
-                          width: 30,
-                          borderRadius: 30,
-                          height: 40,
-                          selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700),
-                          unSelectedTextStyle: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500),
-                          labels: const ["인하공전", "인하대"],
-                          selectedLabelIndex: (index) {
-                            setState(() {
-                              if (index == 0) {
-                                academy = "@itc.ac.kr";
+                            onChanged: (text) {
+                              // 학번 부분을 입력한 텍스트에 더해줌
+                              email = text + academy;
+                            },
+                            validator: (val) {
+                              if (val!.isNotEmpty) {
+                                return null;
                               } else {
-                                academy = "@inha.edu";
+                                return "학번이 비어있습니다.";
                               }
-                              selectedIndex = index;
-                              updateBackgroundColors();
+                            }),
+                        // 학교 선택 토글 버튼
+                        Positioned(
+                          right: 0,
+                          child: FlutterToggleTab(
+                            width: 30,
+                            borderRadius: 30,
+                            height: 40,
+                            selectedTextStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700),
+                            unSelectedTextStyle: const TextStyle(
+                                color: Colors.black87,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500),
+                            labels: const ["인하공전", "인하대"],
+                            selectedLabelIndex: (index) {
+                              setState(() {
+                                if (index == 0) {
+                                  academy = "@itc.ac.kr";
+                                } else {
+                                  academy = "@inha.edu";
+                                }
+                                selectedIndex = index;
+                                updateBackgroundColors();
+                              });
+                            },
+                            selectedBackgroundColors: const [
+                              Colors.blue,
+                              Colors.black
+                            ],
+                            unSelectedBackgroundColors: const [
+                              Colors.white,
+                              Colors.white
+                            ],
+                            isScroll: false,
+                            selectedIndex: selectedIndex,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                    child: TextFormField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        enabledBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: const UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.blue),
+                        ),
+                        labelText: '',
+                        prefixIcon: Icon(Icons.lock),
+                        suffixIcon: TextButton(
+                          onPressed: () {
+                            Nav.push(const FindRegisterPage());
+                          },
+                          child: Text(
+                            '비밀번호 찾기',
+                            style: TextStyle(color: Colors.blue[700]),
+                          ),
+                        ),
+                      ),
+                      style: TextStyle(
+                        fontSize: 15,
+                      ),
+                      onChanged: (text) {
+                        password = text;
+                      },
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(50, 5, 20, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 35),
+                            primary: Colors.transparent,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(90.0),
+                            ),
+                          ),
+                          onPressed: () {
+                            // 로그인 버튼 기능 추가
+                            AuthService()
+                                .loginWithUserNameandPassword(
+                                email, password)
+                                .then((value) async {
+                              if (value == true) {
+                                QuerySnapshot snapshot =
+                                await FireStoreService()
+                                    .gettingUserData(email);
+
+                                getMyDeviceToken();
+
+                                storage.write(
+                                  key: "nickName",
+                                  value: snapshot.docs[0]
+                                      .get("nickName"),
+                                );
+                                storage.write(
+                                  key: "uid",
+                                  value: snapshot.docs[0].get("uid"),
+                                );
+                                storage.write(
+                                  key: "gender",
+                                  value: snapshot.docs[0].get('gender'),
+                                );
+                                storage.write(
+                                  key: "email",
+                                  value: snapshot.docs[0].get('email'),
+                                );
+                                storage.write(
+                                  key: "userName",
+                                  value: snapshot.docs[0].get('userName'),
+                                );
+                                storage.write(
+                                  key: "email",
+                                  value: snapshot.docs[0].get('email'),
+                                );
+                                storage.write(
+                                  key: "userName",
+                                  value: snapshot.docs[0].get('userName'),
+                                );
+
+                                if (context.mounted) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                      const MainScreen(),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                context.showErrorSnackbar(value);
+                              }
                             });
                           },
-                          selectedBackgroundColors: const [
-                            Colors.blue,
-                            Colors.black
-                          ],
-                          unSelectedBackgroundColors: const [
-                            Colors.white,
-                            Colors.white
-                          ],
-                          isScroll: false,
-                          selectedIndex: selectedIndex,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                  child: TextFormField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      enabledBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: const UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      labelText: '',
-                      prefixIcon: Icon(Icons.lock),
-                      suffixIcon: TextButton(
-                        onPressed: () {
-                          Nav.push(const FindRegisterPage());
-                        },
-                        child: Text(
-                          '비밀번호 찾기',
-                          style: TextStyle(color: Colors.blue[700]),
-                        ),
-                      ),
-                    ),
-                    style: TextStyle(
-                      fontSize: 15,
-                    ),
-                    onChanged: (text) {
-                      password = text;
-                    },
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(50, 5, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 35),
-                          primary: Colors.transparent,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(90.0),
-                          ),
-                        ),
-                        onPressed: () {
-                          // 로그인 버튼 기능 추가
-                          AuthService()
-                              .loginWithUserNameandPassword(
-                              email, password)
-                              .then((value) async {
-                            if (value == true) {
-                              QuerySnapshot snapshot =
-                              await FireStoreService()
-                                  .gettingUserData(email);
-
-                              getMyDeviceToken();
-
-                              storage.write(
-                                key: "nickName",
-                                value: snapshot.docs[0]
-                                    .get("nickName"),
-                              );
-                              storage.write(
-                                key: "uid",
-                                value: snapshot.docs[0].get("uid"),
-                              );
-                              storage.write(
-                                key: "gender",
-                                value: snapshot.docs[0].get('gender'),
-                              );
-                              storage.write(
-                                key: "email",
-                                value: snapshot.docs[0].get('email'),
-                              );
-                              storage.write(
-                                key: "userName",
-                                value: snapshot.docs[0].get('userName'),
-                              );
-                              storage.write(
-                                key: "email",
-                                value: snapshot.docs[0].get('email'),
-                              );
-                              storage.write(
-                                key: "userName",
-                                value: snapshot.docs[0].get('userName'),
-                              );
-
-                              if (context.mounted) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                    const MainScreen(),
-                                  ),
-                                );
-                              }
-                            } else {
-                              context.showErrorSnackbar(value);
-                            }
-                          });
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [Colors.blue, Colors.black],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [Colors.blue, Colors.black],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                              borderRadius: BorderRadius.circular(90.0),
                             ),
-                            borderRadius: BorderRadius.circular(90.0),
-                          ),
-                          child: const Center(
-                            child: Text(
-                              '  로그인  ',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                            child: const Center(
+                              child: Text(
+                                '  로그인  ',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(30, 190, 30, 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        '회원이 아니신가요? ',
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterPage(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          '가입하기',
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(30, 190, 30, 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '회원이 아니신가요? ',
                           style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.black,
-                            decoration: TextDecoration.underline,
+                            color: Colors.grey[700],
                           ),
                         ),
-                      ),
-                    ],
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterPage(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            '가입하기',
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Colors.black,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        );
   }
 
   // 이메일 업데이트 메서드 추가
