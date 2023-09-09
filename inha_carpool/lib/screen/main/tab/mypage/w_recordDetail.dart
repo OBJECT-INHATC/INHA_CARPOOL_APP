@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_recordList.dart';
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/screen/dialog/d_complain.dart';
 
-import 'd_complain.dart';
+
 
 class RecordDetailPage extends StatelessWidget {
   const RecordDetailPage({Key? key}) : super(key: key);

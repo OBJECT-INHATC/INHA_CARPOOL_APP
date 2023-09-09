@@ -329,9 +329,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
                       return TextButton(
                         onPressed: () {
-                          _showProfileModal(context, '$memberName 님','
                           testApi();
-                          _showProfileModal(context, '$memberName 님');
+                          _showProfileModal(context, '$memberName 님','');
                         },
                         style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -664,8 +663,11 @@ void _showProfileModal(BuildContext context, String userName, String gender) {
     context: context,
     builder: (BuildContext context) {
       return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.4,
+
+        // 크기 지정
+        height: context.height(0.4),
         width: double.infinity,
+
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -712,39 +714,6 @@ void _showProfileModal(BuildContext context, String userName, String gender) {
     },
   );
 }
-
-  // 프로필 조회
-  void _showProfileModal(BuildContext context, String userName) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          // 크기 지정
-          height: context.height(0.4),
-          width: double.infinity,
-
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                '프로필 조회',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '유저 이름: $userName' '\n이용횟수, 신고횟수, 성별, 신고하기',
-                style: TextStyle(fontSize: 16),
-              ),
-              // 추가적인 프로필 정보를 나열하거나 버튼을 추가할 수 있습니다.
-            ],
-          ),
-        );
-      },
-    );
-  }
 
   // 테스트용 API
   testApi() async {
