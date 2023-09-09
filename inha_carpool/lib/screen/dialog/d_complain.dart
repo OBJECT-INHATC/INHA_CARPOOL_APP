@@ -150,159 +150,163 @@ class _ComplainAlertState extends State<ComplainAlert> {
                     height: 1,
                     color: Colors.grey,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Expanded(
-                      child: Column(
-                        children: [
-                          Row(
+                  Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Expanded(
+                          child: Column(
                             children: [
-                              Expanded(child: Row(
+                              Row(
                                 children: [
-                                  Checkbox(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            15),
-                                      ),
-                                      value: _isCheck1,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _isCheck1 = value;
-                                        });
-                                      }),
-                                  const Text(
-                                      '욕설/인신공격',
-                                      style: TextStyle(fontSize: 13)),
+                                  Expanded(child: Row(
+                                    children: [
+                                      Checkbox(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                15),
+                                          ),
+                                          value: _isCheck1,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isCheck1 = value;
+                                            });
+                                          }),
+                                      const Text(
+                                          '욕설/인신공격',
+                                          style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
+                                  ),
+                                  Expanded(child: Row(
+                                    children: [
+                                      Checkbox(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                15),
+                                          ),
+                                          value: _isCheck2,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isCheck2 = value;
+                                            });
+                                          }),
+                                      const Text('영리목적/홍보성',
+                                          style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
+                                  ),
                                 ],
                               ),
-                              ),
-                              Expanded(child: Row(
+                              Row(
                                 children: [
-                                  Checkbox(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            15),
-                                      ),
-                                      value: _isCheck2,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _isCheck2 = value;
-                                        });
-                                      }),
-                                  const Text('영리목적/홍보성',
-                                      style: TextStyle(fontSize: 13)),
+                                  Expanded(child: Row(
+                                    children: [
+                                      Checkbox(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                15),
+                                          ),
+                                          value: _isCheck3,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isCheck3 = value;
+                                            });
+                                          }),
+                                      const Text(
+                                          '개인정보노출',
+                                          style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
+                                  ),
+                                  Expanded(child: Row(
+                                    children: [
+                                      Checkbox(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                15),
+                                          ),
+                                          value: _isCheck4,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isCheck4 = value;
+                                            });
+                                          }),
+                                      const Text(
+                                          '불법정보', style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
+                                  ),
                                 ],
                               ),
+                              Row(
+                                children: [
+                                  Expanded(child: Row(
+                                    children: [
+                                      Checkbox(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                15),
+                                          ),
+                                          value: _isCheck5,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isCheck5 = value;
+                                            });
+                                          }),
+                                      const Text(
+                                          '선정성/음란성',
+                                          style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
+                                  ),
+                                  Expanded(child: Row(
+                                    children: [
+                                      Checkbox(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                15),
+                                          ),
+                                          value: _isCheck6,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isCheck6 = value;
+                                            });
+                                          }),
+                                      const Text(
+                                          '채팅도배', style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
+                                  ),
+                                ],
                               ),
+                              Row(
+                                children: [
+                                  Expanded(child: Row(
+                                    children: [
+                                      Checkbox(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                                15),
+                                          ),
+                                          value: _isCheck7,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              _isCheck7 = value;
+                                            });
+                                          }),
+                                      const Text(
+                                          '기타', style: TextStyle(fontSize: 13)),
+                                    ],
+                                  ),
+                                  ),
+                                ],
+                              )
                             ],
                           ),
-                          Row(
-                            children: [
-                              Expanded(child: Row(
-                                children: [
-                                  Checkbox(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            15),
-                                      ),
-                                      value: _isCheck3,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _isCheck3 = value;
-                                        });
-                                      }),
-                                  const Text(
-                                      '개인정보노출',
-                                      style: TextStyle(fontSize: 13)),
-                                ],
-                              ),
-                              ),
-                              Expanded(child: Row(
-                                children: [
-                                  Checkbox(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            15),
-                                      ),
-                                      value: _isCheck4,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _isCheck4 = value;
-                                        });
-                                      }),
-                                  const Text(
-                                      '불법정보', style: TextStyle(fontSize: 13)),
-                                ],
-                              ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(child: Row(
-                                children: [
-                                  Checkbox(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            15),
-                                      ),
-                                      value: _isCheck5,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _isCheck5 = value;
-                                        });
-                                      }),
-                                  const Text(
-                                      '선정성/음란성',
-                                      style: TextStyle(fontSize: 13)),
-                                ],
-                              ),
-                              ),
-                              Expanded(child: Row(
-                                children: [
-                                  Checkbox(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            15),
-                                      ),
-                                      value: _isCheck6,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _isCheck6 = value;
-                                        });
-                                      }),
-                                  const Text(
-                                      '채팅도배', style: TextStyle(fontSize: 13)),
-                                ],
-                              ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Expanded(child: Row(
-                                children: [
-                                  Checkbox(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            15),
-                                      ),
-                                      value: _isCheck7,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          _isCheck7 = value;
-                                        });
-                                      }),
-                                  const Text(
-                                      '기타', style: TextStyle(fontSize: 13)),
-                                ],
-                              ),
-                              ),
-                            ],
-                          )
-                        ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                   Expanded(child: TextField(
                     controller: _controller,
