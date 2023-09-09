@@ -115,6 +115,8 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                     Positioned(
                       // 중간 텍스트를 겹쳐서 배치
                       right: 140,
+                      //bottom
+                      bottom: 15,
                       child: Text(academy),
                     ),
                     Positioned(

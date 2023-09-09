@@ -70,7 +70,7 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
               Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children:[
-              (verificationText == "본인인증 대기중...")?Text("학교 이메일로 가입 인증 메일이 전송되었습니다. 이메일에 접속하여 인증을 진행해 주세요!", style: TextStyle(fontSize: 14,),):
+              (verificationText == "본인인증 대기중...")?Text("학교 이메일로 가입 인증 메일이 전송되었습니다. \n 이메일에 접속하여 인증을 진행해 주세요!", style: TextStyle(fontSize: 14,),):
               Text("본인인증이 완료되었습니다! 확인을 눌러 로그인을 진행하세요!", style: TextStyle(fontSize: 14,),),]),
               const SizedBox(
                 height: 15,
