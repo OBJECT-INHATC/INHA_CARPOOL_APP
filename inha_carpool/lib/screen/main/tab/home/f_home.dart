@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
+import 'package:inha_Carpool/screen/main/tab/home/emptySearchedCarpool.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptyCarpool.dart';
 
@@ -38,6 +39,10 @@ class _HomeState extends State<Home> {
   int _visibleItemCount = 0;
   final ScrollController _scrollController = ScrollController();
 
+  String _searchKeyword = "";
+  final TextEditingController _searchKeywordController =
+      TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +56,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return  SafeArea(
+    return SafeArea(
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           heroTag: "recruit_from_home",
@@ -75,38 +80,72 @@ class _HomeState extends State<Home> {
             size: 50,
           ),
         ),
-          body: Container(
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-            ),
-            child: Column(
+        body: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+          ),
+          child: Column(
             children: [
-    DropdownButton<FilteringOption>(
-    value: selectedFilter,
-    // 아래 함수로 정의 (리팩토링)
-    onChanged: _handleFilterChange,
-    items: FilteringOption.values.map((option) {
-    // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
-    return DropdownMenuItem<FilteringOption>(
-    value: option,
-    // DropdownMenuItem의 child는 Text 위젯입니다.
-    child: Text(option == FilteringOption.Time ? '시간순' : '거리순'),
-    );
-    }).toList(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: 40,
+                    child: TextField(
+                      controller: _searchKeywordController,
+                      decoration: InputDecoration(
+                        hintText: '검색어를 입력하세요',
+                        hintStyle: const TextStyle(
+                          fontSize: 15,
+                          height: 1,
+                        ),
+                        border: OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _searchKeyword = "";
+                              _searchKeywordController.clear();
+                            });
+                          },
+                          icon: const Icon(Icons.clear),
+                        ),
+                      ),
+                      onChanged: (text) {
+                        setState(() {
+                          _searchKeyword = text;
+                        });
+                      },
+                    ),
+                  ),
+                  DropdownButton<FilteringOption>(
+                    value: selectedFilter,
+                    // 아래 함수로 정의 (리팩토링)
+                    onChanged: _handleFilterChange,
+                    items: FilteringOption.values.map((option) {
+                      // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
+                      return DropdownMenuItem<FilteringOption>(
+                        value: option,
+                        // DropdownMenuItem의 child는 Text 위젯입니다.
+                        child: Text(
+                            option == FilteringOption.Time ? '시간순' : '거리순'),
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
-        Expanded(
-            child: RefreshIndicator(
-              onRefresh: _refreshCarpoolList,
-              // 카풀 리스트 불러오기
-              child: _buildCarpoolList(),
-            ),
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: _refreshCarpoolList,
+                  // 카풀 리스트 불러오기
+                  child: _buildCarpoolList(),
                 ),
+              ),
             ],
-            ),
           ),
         ),
-      );
-
+      ),
+    );
   }
 
   // 카풀 리스트 불러오기
@@ -124,18 +163,51 @@ class _HomeState extends State<Home> {
           return const EmptyCarpool();
         } else {
           // 카풀 리스트가 있을 경우 리스트 뷰 빌드 위젯 호출
+
+          // 검색어와 일치하는 항목만 필터링
+          final filteredCarpools = snapshot.data!.where((carpool) {
+            final carpoolData = carpool.data() as Map<String, dynamic>;
+            final startPointName =
+                carpoolData['startPointName'].toString().toLowerCase();
+            final startDetailPointName =
+                carpoolData['startDetailPoint'].toString().toLowerCase();
+            final endPointName =
+                carpoolData['endPointName'].toString().toLowerCase();
+            final endDetailPointName =
+                carpoolData['endDetailPoint'].toString().toLowerCase();
+            final keyword = _searchKeyword.toLowerCase();
+
+            return startPointName.contains(keyword) ||
+                startDetailPointName.contains(keyword) ||
+                endPointName.contains(keyword) ||
+                endDetailPointName.contains(keyword) ||
+                endPointName.contains(keyword);
+          }).toList();
+
+          final itemCount = _visibleItemCount <= filteredCarpools.length
+              ? _visibleItemCount
+              : filteredCarpools.length;
+
+          if (filteredCarpools.isEmpty) {
+            return const EmptySearchedCarpool(); // 검색 결과가 없을 경우 빈 상태 표시
+          }
+
           return CarpoolListWidget(
-            snapshot: snapshot, // AsyncSnapshot을 CarpoolListWidget에 전달
+            snapshot: AsyncSnapshot<List<DocumentSnapshot>>.withData(
+              ConnectionState.done,
+              filteredCarpools.sublist(0, itemCount),
+            ),
+            // AsyncSnapshot을 CarpoolListWidget에 전달
             scrollController: _scrollController,
             visibleItemCount: _visibleItemCount,
-            nickName: nickName, // 닉네임 전달
+            nickName: nickName,
+            // 닉네임 전달
             uid: uid, // UID 전달
           );
         }
       },
     );
   }
-
 
   // 필터링 옵션
   void _handleFilterChange(FilteringOption? newValue) {
@@ -146,7 +218,6 @@ class _HomeState extends State<Home> {
           : _nearByFunction();
     });
   }
-
 
   // 유저 정보 받아오기
   Future<void> _loadUserData() async {
