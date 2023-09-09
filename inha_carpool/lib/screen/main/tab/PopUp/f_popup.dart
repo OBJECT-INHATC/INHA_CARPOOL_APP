@@ -62,14 +62,15 @@ class _PopUpFragmentState extends State<PopUpFragment> {
   }
 
 
+  /// 내가 신고한 리스트 조회
   reportSelectListAPI(String myId) async{
      final response = await apiService.selectReportList(myId);
      print(jsonDecode(utf8.decoder.convert(response.bodyBytes)));
   }
 
 
+  /// 신고하기
   reportSaveAPI() async{
-
     // 밑에 값들은 나중에 외부에서 받아야겠죠?
     final reportRequstDTO = ReportRequstDTO(
       content: '신고 내용',
