@@ -315,8 +315,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     itemBuilder: (BuildContext context, int index) {
                       String memberName =
                           getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
-                      // String memberGender =
-                      //     getGender(membersList[index]);
 
                       return TextButton(
                         onPressed: () {
@@ -685,7 +683,7 @@ void _showProfileModal(BuildContext context, String userName, String gender) {
                   );
                 },
                 style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(223, 250, 39, 39)
+                    primary: Color.fromARGB(223, 246, 30, 30)
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
