@@ -65,7 +65,6 @@ class _PopUpFragmentState extends State<PopUpFragment> {
   /// 내가 신고한 리스트 조회
   reportSelectListAPI(String myId) async{
      final response = await apiService.selectReportList(myId);
-     print(jsonDecode(utf8.decoder.convert(response.bodyBytes)));
   }
 
 
@@ -77,11 +76,12 @@ class _PopUpFragmentState extends State<PopUpFragment> {
       carpoolId: '카풀 ID',
       userName: '피신고자 ID',
       reporter: '신고자 ID',
-      reportType: '잠2수',
+      reportType: '잠수',
       reportDate: '신고 일자',
     );
 
     // API 호출
     final response = await apiService.saveReport(reportRequstDTO);
+
   }
 }

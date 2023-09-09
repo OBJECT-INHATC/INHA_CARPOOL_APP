@@ -17,13 +17,13 @@ class ApiService {
         'Content-Type': 'application/json; charset=UTF-8',
       },
     );
-
+    print(jsonDecode(utf8.decoder.convert(response.bodyBytes)));
     return response;
   }
 
 
   Future<http.Response> saveReport(ReportRequstDTO reportRequstDTO) async {
-    const String apiUrl = '$baseUrl/report/save'; // API 엔드포인트 URL
+    const String apiUrl = '$baseUrl/report/save';
 
     // ReportRequstDTO 객체를 JSON 문자열로 변환
     final String requestBody = jsonEncode(reportRequstDTO);
@@ -36,7 +36,11 @@ class ApiService {
       body: requestBody,
     );
 
-    return response;
+      // 성공적으로 API 요청을 보냈을 때 처리할 코드
+
+      print('API Response: ${utf8.decode(response.body.runes.toList())}');
+      return response; // API 응답을 반환
+
 
   }
 
