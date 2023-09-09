@@ -166,7 +166,7 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
-                      backgroundColor: (onChanged != false)?Colors.blue:Colors.grey,
+                      backgroundColor: (onChanged != false)?Colors.blue:Colors.grey[300],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(90.0),
                       ),

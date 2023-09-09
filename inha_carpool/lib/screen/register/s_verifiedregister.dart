@@ -36,7 +36,9 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+
       child: Scaffold(
+
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -48,28 +50,109 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                 color: Colors.black,
               )),
         ),
-        body: Center(
+        body: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+
+
+            color: Colors.white,
+          ),
+
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
+
             children: [
               Text(verificationText, style: (verificationText=="본인인증 대기중...")?TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.red):TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.green),),
               const SizedBox(
                 height: 15,
               ),
-              (verificationText == "본인인증 대기중...")?Text("본인인증이 완료되면 카풀이 가능합니다.\n 학교 이메일에서 가입 인증을 해주세요!", style: TextStyle(fontSize: 14,),):
-              Text("본인인증이 완료되었습니다!\n 확인을 눌러 로그인을 진행하세요!", style: TextStyle(fontSize: 14,),),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children:[
+              (verificationText == "본인인증 대기중...")?Text("학교 이메일로 가입 인증 메일이 전송되었습니다. 이메일에 접속하여 인증을 진행해 주세요!", style: TextStyle(fontSize: 14,),):
+              Text("본인인증이 완료되었습니다! 확인을 눌러 로그인을 진행하세요!", style: TextStyle(fontSize: 14,),),]),
               const SizedBox(
                 height: 15,
               ),
+              Container(
+                width: context.width(0.9),
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+
+                  color: Colors.white,
+                  border: Border.all(color: Colors.grey),),
+                child: Column(
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: Icon(Icons.email_outlined, color: Colors.grey,),
+                        ),
+                        Text("1단계"),
+                        Text("이메일에서 인증 요청 메시지 확인"),
+                      ],
+                    ),
+                    Icon(Icons.arrow_downward_rounded, color: Colors.grey,),
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: Icon(Icons.check_circle, color: Colors.grey,),
+                        ),
+                        Text("2단계"),
+                        Text("링크를 눌러 인증하기"),
+                      ],
+                    ),
+                    Icon(Icons.arrow_downward_rounded, color: Colors.grey,),
+                    Column(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: Icon(Icons.phone_android_outlined, color: Colors.grey,),
+                        ),
+                        Text("3단계"),
+                        Text("앱으로 돌아와서 인증 완료 버튼 누르기"),
+                      ],
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
               ElevatedButton(
+
+
+
+
                   style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
+                    minimumSize: Size(context.width(1), 50),
+
+
+                    backgroundColor: (verificationText=="본인인증 대기중...")?Colors.grey[300]:Colors.blue[400],
+
+
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(90.0),
+                      borderRadius: BorderRadius.circular(80.0),
+
                     ),
                   ),
-                  child: const Text('확인',
+                  child: const Text('인증 완료',
                       style: TextStyle(
                           fontSize: 20,
                           color: Colors.white,
@@ -85,7 +168,7 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                   }),
             ],
           ),
-      ),
+        ),
       ),);
   }
 }
