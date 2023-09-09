@@ -25,7 +25,7 @@ class MainScreenState extends State<MainScreen>
   TabItem _currentTab = TabItem.home;
 
   //사용 가능한 화면 리스트
-  final tabs = [TabItem.carpool, TabItem.home, TabItem.myPage];
+  final tabs = [TabItem.carpool, TabItem.home, TabItem.myPage, TabItem.test];
 
   //각 화면별 네비게이터 키 리스트
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
