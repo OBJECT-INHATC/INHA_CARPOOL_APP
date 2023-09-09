@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
-import '../dialog/d_delete_auth.dart';
+import '../../../dialog/d_delete_auth.dart';
 
 class SecessionPage extends StatefulWidget {
   @override
@@ -21,19 +21,19 @@ class _SecessionPageState extends State<SecessionPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Colors.blue, Colors.green];
+  List<Color> selectedBackgroundColors = [Colors.blue, Colors.black];
   List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
 
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [Colors.blue, Colors.white]
-        : [Colors.white, Colors.green];
+        ? [Colors.blue, Colors.black]
+        : [Colors.black, Colors.blue];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.white, Colors.green]
-        : [Colors.blue, Colors.white];
+        ? [Colors.white, Colors.white]
+        : [Colors.white, Colors.white];
   }
 
   final storage = FlutterSecureStorage();
@@ -74,24 +74,8 @@ class _SecessionPageState extends State<SecessionPage> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start, // 상단 정렬로 변경
           children: <Widget>[
-            FutureBuilder<String>(
-              future: nickNameFuture,
-              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator(); // Loading spinner while waiting for data
-                } else if (snapshot.hasError) {
-                  return Text('Error loading nickname');
-                } else {
-                  return Text(
-                    "${snapshot.data}님... 정말 탈퇴하시겠어요?",
-                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  );
-                }
-              },
-            ),
             SizedBox(height: 25),
             Icon(
               Icons.warning,
@@ -99,50 +83,60 @@ class _SecessionPageState extends State<SecessionPage> {
               size: 22,
             ),
             SizedBox(height: 10),
+            FutureBuilder<String>(
+              future: nickNameFuture,
+              builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // 데이터를 기다리는 동안 로딩 스피너 표시
+                } else if (snapshot.hasError) {
+                  return Text('닉네임을 불러오는 중 오류 발생');
+                } else {
+                  return Text(
+                    "${snapshot.data}님..\n정말 탈퇴하시겠어요?",
+                    style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  );
+                }
+              },
+            ),
+            SizedBox(height: 25), // 간격 조절
             Text(
-              "지금 탈퇴하시면 더이상 카풀 서비스를 이용할 수 없어요! \n 탈퇴하시려면 학번과 비밀번호를 입력해주세요.",
+              "지금 탈퇴하시면 서비스를 이용할 수 없어요!\n 탈퇴하시려면 학번과 비밀번호를 입력해주세요.",
               style: TextStyle(fontSize: 16, color: Colors.red),
               textAlign: TextAlign.center,
             ),
             Container(
-              // padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
               child: Stack(
                 alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
                 children: [
                   TextFormField(
-                      decoration: InputDecoration(
-                        enabledBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black),
-                        ),
-                        focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.blue),
-                        ),
-                        labelText: '학번',
+                    decoration: InputDecoration(
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
                       ),
-                      onChanged: (text) {
-                        // 텍스트 필드 값 변경 시 실행할 코드 작성
-                        email = text + academy;
-                      },
-                      validator: (val) {
-                        if (val!.isNotEmpty) {
-                          return null;
-                        } else {
-                          return "학번이 비어있습니다.";
-                        }
-                      }),
-                  Positioned(
-                    // 중간 텍스트를 겹쳐서 배치
-                    right: 140,
-                    child: Text(academy),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.blue),
+                      ),
+                      labelText: '학번',
+                    ),
+                    onChanged: (text) {
+                      // 텍스트 필드 값 변경 시 실행할 코드 작성
+                      email = text;
+                    },
+                    validator: (val) {
+                      if (val!.isNotEmpty) {
+                        return null;
+                      } else {
+                        return "학번이 비어있습니다.";
+                      }
+                    },
                   ),
                   Positioned(
-                    // 중간 텍스트를 겹쳐서 배치
                     right: 0,
                     child: FlutterToggleTab(
                       width: 30,
                       borderRadius: 30,
                       height: 40,
-                      // initialIndex: 0,
                       selectedTextStyle: const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
@@ -154,23 +148,17 @@ class _SecessionPageState extends State<SecessionPage> {
                       labels: const ["인하공전", "인하대"],
                       selectedLabelIndex: (index) {
                         setState(() {
+                          selectedIndex = index;
+                          updateBackgroundColors();
                           if (index == 0) {
                             academy = "@itc.ac.kr";
                           } else {
-                            academy = "@inha.ac.kr";
+                            academy = "@inha.edu";
                           }
-                          selectedIndex = index;
-                          updateBackgroundColors();
                         });
                       },
-                      selectedBackgroundColors: const [
-                        Colors.blue,
-                        Colors.green
-                      ],
-                      unSelectedBackgroundColors: const [
-                        Colors.white,
-                        Colors.white
-                      ],
+                      selectedBackgroundColors: selectedBackgroundColors,
+                      unSelectedBackgroundColors: unSelectedBackgroundColors,
                       isScroll: false,
                       selectedIndex: selectedIndex,
                     ),
@@ -180,16 +168,15 @@ class _SecessionPageState extends State<SecessionPage> {
             ),
             Container(
               height: context.height(0.08),
-              // padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
               child: TextFormField(
                 obscureText: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: Colors.black), // 밑줄 색상 설정
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide:
-                        BorderSide(color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
+                    BorderSide(color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
                   ),
                   labelText: '비밀번호',
                 ),
@@ -203,6 +190,7 @@ class _SecessionPageState extends State<SecessionPage> {
               padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
               child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    primary: Colors.grey, // 버튼 배경색 회색으로 설정
                     minimumSize: const Size.fromHeight(50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(90.0),
@@ -214,12 +202,12 @@ class _SecessionPageState extends State<SecessionPage> {
                           color: Colors.white,
                           fontWeight: FontWeight.bold)),
                   onPressed: () async {
-                    bool isValid = await validateCredentials(email, password);
+                    bool isValid = await validateCredentials(email + academy, password);
                     if (isValid) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return DeleteAuthDialog(email, password);
+                          return DeleteAuthDialog(email + academy, password);
                         },
                       );
                     } else {
@@ -234,6 +222,9 @@ class _SecessionPageState extends State<SecessionPage> {
     );
   }
 }
+
+
+
 
 Future<bool> validateCredentials(String email, String password) async {
   try {

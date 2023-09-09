@@ -11,7 +11,7 @@ extension DateTimeExtension on DateTime {
 
   String get formattedDateCarpool => DateFormat('yyyy-mm-dd').format(this);
 
-  String get formattedDateMyCarpool => DateFormat('MM월 dd일 HH:mm').format(this);
+  String get formattedDateMyCarpool => DateFormat('yy.MM.dd HH:mm').format(this);
 
 
 

@@ -114,11 +114,24 @@ class FirebaseCarpool {
       print('Error adding data to Firestore: $e');
     }
   }
+///0907 새 채팅 카운트 업데이트
+  static Future<void> updateNewChatCount(String carpoolId, int newChatCount) async {
+    try {
+      await _firestore.collection('carpools').doc(carpoolId).update({
+        'newchat': newChatCount,
+      });
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
 
   static Future<void> addMemberToCarpool(String carpoolID, String memberID,
       String memberName, String token, String roomGender) async {
     CollectionReference carpoolCollection = _firestore.collection('carpool');
     DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
+
 
     try {
       await _firestore.runTransaction((transaction) async {

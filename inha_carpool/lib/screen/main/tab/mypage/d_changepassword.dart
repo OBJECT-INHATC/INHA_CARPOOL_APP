@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
-
-import '../login/s_login.dart';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import '../../../login/s_login.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   @override
@@ -32,7 +31,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         ),
         title: Text(
           "비밀번호 변경",
-          style: TextStyle(color: Colors.black, fontSize: 20),
+          style: TextStyle(color: Colors.black, fontSize: 20,),
         ),
         centerTitle: true,
       ),
@@ -46,6 +45,11 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               Text(
                 '학번',
                 style: TextStyle(fontSize: 16),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  hintText: '학번 입력',
+                ),
               ),
               SizedBox(height: 20),
               Text(
@@ -110,7 +114,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 onPressed: () async {
                   // 비밀번호 변경 로직 구현 예정
                   String isValid =
-                      await AuthService().validatePassword(oldPassword);
+                  await AuthService().validatePassword(oldPassword);
 
                   if (isValid == 'Invalid') {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -128,7 +132,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(builder: (context) => LoginPage()),
-                          (Route<dynamic> route) => false,
+                              (Route<dynamic> route) => false,
                         );
                       });
                     } else {
@@ -143,7 +147,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 60, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                   primary: Colors.grey,
                 ),
               ),
@@ -154,3 +158,4 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     );
   }
 }
+

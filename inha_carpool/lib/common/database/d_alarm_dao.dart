@@ -42,5 +42,16 @@ class AlarmDao {
   }
 
 
+  /// 알림 리스트에 알림이 존재하는지 확인
+  Future<bool> checkAlarms() async {
+    print('알람 체크');
+    final recordSnapshots = await _alarmFolder.find(await _db);
+    if(recordSnapshots.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
 
 }

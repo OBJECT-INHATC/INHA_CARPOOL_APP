@@ -6,7 +6,9 @@ import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
+import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
+import 'package:inha_Carpool/service/api/ApiService.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 import 'package:inha_Carpool/screen/dialog/d_complain.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -72,6 +74,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
   // 도착지
   String endPoint = "";
+
+  // API 서비스
+  final apiService = ApiService();
 
   @override
   void initState() {
@@ -169,11 +174,16 @@ class _ChatroomPageState extends State<ChatroomPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
-        title: const Text(
-          "카풀 대화방", // 채팅방 이름
+        toolbarHeight: 45,
+        shape: Border(
+          bottom: BorderSide(
+            color: Colors.grey.shade200,
+            width: 1,
+          ),
         ),
         actions: [
           IconButton(
+            iconSize: 30,
             onPressed: isExitButtonDisabled
                 ? null
                 : () async {
@@ -286,6 +296,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
             icon: const Icon(
               Icons.exit_to_app,
               color: Colors.black,
+              size: 30,
             ),
           ),
         ],
@@ -318,7 +329,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
                       return TextButton(
                         onPressed: () {
-                          _showProfileModal(context, '$memberName 님','');
+                          _showProfileModal(context, '$memberName 님','
+                          testApi();
+                          _showProfileModal(context, '$memberName 님');
                         },
                         style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -355,6 +368,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
+                    const SizedBox(height: 5),
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.grey[300], // 회색 배경색
@@ -456,60 +470,58 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   alignment: Alignment.bottomCenter,
                   width: MediaQuery.of(context).size.width,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                     width: MediaQuery.of(context).size.width,
-                    height: 75,
-                    color: Colors.grey[400],
-                    child: Row(children: [
-                      Expanded(
-                          child: TextFormField(
-                        cursorColor: Colors.white,
-                        controller: messageController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: const InputDecoration(
-                          hintText: "메시지 보내기",
-                          hintStyle:
-                              TextStyle(color: Colors.white, fontSize: 17),
-                          filled: true,
-                          fillColor: Colors.grey,
-                          border: InputBorder.none,
-                          // fillColor: Colors.white,
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30.0)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(30.0)),
+                    color: Colors.grey[200],
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            constraints: const BoxConstraints(
+                              minHeight: 38, // Minimum height for the input field
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[400],
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: TextField(
+                              cursorColor: Colors.white,
+                              controller: messageController,
+                              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                              maxLines: null,
+                              decoration: const InputDecoration(
+                                hintText: "메시지 보내기...",
+                                hintStyle: TextStyle(color: Colors.white, fontSize: 15),
+                                border: InputBorder.none,
+                              ),
+                            ),
                           ),
                         ),
-                      )),
-                      const SizedBox(
-                        width: 12,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          sendMessage();
-                        },
-                        child: Container(
-                          height: 45,
-                          width: 45,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: const Center(
+                        const SizedBox(width: 12),
+                        GestureDetector(
+                          onTap: () {
+                            sendMessage();
+                          },
+                          child: Container(
+                            height: 45,
+                            width: 45,
+                            decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: const Center(
                               child: Icon(
-                            Icons.send,
-                            color: Colors.white,
-                          )),
-                        ),
-                      )
-                    ]),
+                                Icons.send,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -645,7 +657,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
       });
     }
   }
-}
+
 
 void _showProfileModal(BuildContext context, String userName, String gender) {
   showModalBottomSheet(
@@ -701,3 +713,60 @@ void _showProfileModal(BuildContext context, String userName, String gender) {
   );
 }
 
+  // 프로필 조회
+  void _showProfileModal(BuildContext context, String userName) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SizedBox(
+          // 크기 지정
+          height: context.height(0.4),
+          width: double.infinity,
+
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                '프로필 조회',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '유저 이름: $userName' '\n이용횟수, 신고횟수, 성별, 신고하기',
+                style: TextStyle(fontSize: 16),
+              ),
+              // 추가적인 프로필 정보를 나열하거나 버튼을 추가할 수 있습니다.
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // 테스트용 API
+  testApi() async {
+
+    final historyRequestDTO = HistoryRequestDTO(
+      carPoolId: "vJuRYQ49pAAUAJmQYtcG",
+      admin: "4IoZ0qp17me9v1QA3ljYw2SRbbh2_yeongjae",
+      member1: "aa",
+      member2: "bb",
+      member3: "cc",
+      nowMember: 1,
+      maxMember: 3,
+      startDetailPoint: "출발지 요약주소",
+      startPoint: "출발지 위도경도",
+      startPointName: "출발지 이름",
+      startTime: 123456789,
+      endDetailPoint: "도착지 요약주소",
+      endPoint: "도착지 위도경도",
+      endPointName: "도착지 이름",
+      gender: "남자",
+    );
+
+    final response = await apiService.saveHistory(historyRequestDTO);
+  }
+}

@@ -81,7 +81,7 @@ class AuthService {
 
   }
 
-  ///비밀번호 변경
+  ///0827 서은율 ,비밀번호 변경
   final FirebaseAuth auth = FirebaseAuth.instance;
   Future passwordUpdate({ required String oldPassword, required String newPassword}) async {
     // 현재 로그인된 유저 가져오기
@@ -107,7 +107,7 @@ class AuthService {
     }
 
 
-/// 현재 비밀번호 확인
+/// 0827 서은율 ,현재 비밀번호 확인
   Future <String> validatePassword(String password) async {
     User? user = FirebaseAuth.instance.currentUser;
     AuthCredential credential = EmailAuthProvider.credential(email: user!.email!, password: password);
@@ -121,7 +121,7 @@ class AuthService {
       return 'Invalid'; // If an error occurs (which means the password is wrong), return 'Invalid'
     }
   }
-
+/// 0828 서은율 ,비밀번호 삭제
   Future<String> deleteAccount(String email, String password) async {
     User? user = FirebaseAuth.instance.currentUser;
 
@@ -147,7 +147,7 @@ class AuthService {
       return 'Failed  :${e.toString()}';
     }
   }
-
+///0828 서은율 ,현재 계정 비교
   Future<bool> validateCredentials(String email, String password) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;

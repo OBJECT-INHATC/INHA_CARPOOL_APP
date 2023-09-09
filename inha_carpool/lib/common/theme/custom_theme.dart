@@ -39,10 +39,16 @@ ThemeData lightTheme = ThemeData(
     primarySwatch: primarySwatchColor,
     visualDensity: VisualDensity.adaptivePlatformDensity,
     brightness: Brightness.light,
+
     // textTheme: GoogleFonts.singleDayTextTheme(
     //   ThemeData(brightness: Brightness.light).textTheme,
     // ),
-    colorScheme: const ColorScheme.light(background: Colors.white));
+    colorScheme: ColorScheme.light().copyWith(
+      primary: Colors.black, // 이 부분이 primary color에 해당합니다.
+      secondary: Colors.transparent, // 이 부분이 tint color에 해당합니다.
+    )
+    // colorScheme: const ColorScheme.light(background: Colors.white)
+);
 
 ThemeData darkTheme = ThemeData(
     useMaterial3: true,
