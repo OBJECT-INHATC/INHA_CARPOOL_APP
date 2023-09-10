@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
@@ -18,6 +20,7 @@ class LocationInput extends StatefulWidget {
 }
 
 class _LocationInputState extends State<LocationInput> {
+
   int flex = 50;
   bool isMove = false;
 
@@ -31,7 +34,7 @@ class _LocationInputState extends State<LocationInput> {
   late GoogleMapController mapController;
 
   // 검색창 컨트롤러
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   // 검색 결과를 저장할 리스트
   List<dynamic> list = [];
@@ -45,9 +48,10 @@ class _LocationInputState extends State<LocationInput> {
   // 마커를 저장할 변수
   final Set<Marker> _markers = {};
 
+  // 위치 정보를 담는 변수
   String? _address;
 
-
+  // 지정한 위치의 지명을 가져오는 메서드
   void selectNearLocation(String juso) async{
     String? josuUrl = dotenv.env['JUSO_API_KEY'];
     String query = juso;
@@ -85,7 +89,6 @@ class _LocationInputState extends State<LocationInput> {
       ScffoldMsgAndListClear(context, "주소를 입력해 주세요");
     }
 
-
   }
 
   @override
@@ -96,6 +99,7 @@ class _LocationInputState extends State<LocationInput> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
       appBar: AppBar(
         // 앱바 타이틀 중앙에 배치
         centerTitle: true,
@@ -108,6 +112,13 @@ class _LocationInputState extends State<LocationInput> {
         elevation: 0,
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.black,
+        )
       ),
       body: Column(
         children: [
@@ -116,7 +127,6 @@ class _LocationInputState extends State<LocationInput> {
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               children: [
-                const SizedBox(width: 10),
                 Expanded(
                   child: Stack(
                     children: [
@@ -165,9 +175,11 @@ class _LocationInputState extends State<LocationInput> {
                 GoogleMap(
                   onMapCreated: (controller) => mapController = controller,
                   myLocationButtonEnabled: false,
+                  mapType: MapType.normal,
+                  markers: _markers,
                   initialCameraPosition: CameraPosition(
                     target: widget.Point,
-                    zoom: 15.0,
+                    zoom: 17.0,
                   ),
                   // markers: _markers,
                   onCameraMove: (position) {
@@ -188,20 +200,42 @@ class _LocationInputState extends State<LocationInput> {
                   },
                 ),
                 Positioned(
-                  top: isMove ? 0 : 30,
-                  bottom: isMove ? 0 : 30,
-                  child: const Icon(
-                    Icons.location_on_sharp,
-                    size: 44,
-                    color: Colors.blue,
+                  // 지도의 왼쪽위에 본인의 위치로 이동하는 버튼
+                  top: 10,
+                  left: 10,
+                  child: FloatingActionButton(
+                    mini: true,
+                    onPressed: () async {
+                      // 위치 권한 확인
+                      LocationPermission permission =
+                          await Geolocator.checkPermission();
+                      if (permission == LocationPermission.denied ||
+                          permission == LocationPermission.deniedForever) {
+                        _showLocationPermissionSnackBar();
+                      } else {
+                        // 현재 위치 가져오기
+                        Position position =
+                            await Geolocator.getCurrentPosition(
+                                desiredAccuracy: LocationAccuracy.high);
+                        // 현재 위치로 카메라 이동
+                        _moveCameraTo(LatLng(position.latitude, position.longitude));
+                      }
+                    },
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    child: const Icon(Icons.my_location),
                   ),
                 ),
                 Positioned(
-                  top: (MediaQuery.of(context).size.height / 2) - 150,
-                  child: isMove
-                      ? const SizedBox()
-                      : GestureDetector(
-                          onTap: (){
+                  // 해당 위젯을 스택 중간에 위치 시켜줘
+                  top: MediaQuery.of(context).size.height / 3.4,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      if (!isMove)
+                        GestureDetector(
+                          onTap: () {
                             if (_address == null) {
                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                 content: Text('주소를 입력해주세요.'),
@@ -222,43 +256,50 @@ class _LocationInputState extends State<LocationInput> {
                                   "${searchedPosition!.latitude}_${_address}_${searchedPosition!.longitude}");
                             }
                           },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 10,
-                                offset: const Offset(
-                                    0, 5), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                '이 위치 선택',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 10,
+                                  offset: const Offset(
+                                      0, 5), // changes position of shadow
                                 ),
-                              ),
-                              Text(
-                                _address ?? ' 화면을 이동해서 위치를 선택해주세요.',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.normal,
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  '이 위치 선택',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                Text(
+                                  _address ?? ' 화면을 이동해서 위치를 선택해주세요.',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
+                      const Icon(
+                        Icons.location_on_sharp,
+                        size: 44,
+                        color: Colors.blue,
                       ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -277,7 +318,6 @@ class _LocationInputState extends State<LocationInput> {
 
   // 좌표로 주소를 가져오는 메서드
   Future<void> _getGooglecoo(double lat, double lon) async {
-    print("좌표호출");
     final uri = Uri.parse('$_host?key=$_apiKey&latlng=$lat,$lon&language=ko');
 
     http.Response response = await http.get(uri);
@@ -333,6 +373,20 @@ class _LocationInputState extends State<LocationInput> {
         _moveCameraTo(searchedPosition!);
       }
     }
+  }
+
+  // 위치 권한이 없을 때 스낵바를 띄워주는 메서드
+  void _showLocationPermissionSnackBar() {
+    SnackBar snackBar = SnackBar(
+      content: const Text("위치 권한이 필요한 서비스입니다."),
+      action: SnackBarAction(
+        label: "설정으로 이동",
+        onPressed: () {
+          AppSettings.openAppSettings();
+        },
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
 }
