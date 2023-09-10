@@ -87,54 +87,74 @@ class _HomeState extends State<Home> {
           ),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    height: 40,
-                    child: TextField(
-                      controller: _searchKeywordController,
-                      decoration: InputDecoration(
-                        hintText: '검색어를 입력하세요',
-                        hintStyle: const TextStyle(
-                          fontSize: 15,
-                          height: 1,
-                        ),
-                        border: OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _searchKeyword = "";
-                              _searchKeywordController.clear();
-                            });
-                          },
-                          icon: const Icon(Icons.clear),
-                        ),
+              Container(height: 5, color: Colors.white),
+              Container(
+                color: Colors.white,
+                height: context.height(0.05),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          TextField(
+                            controller: _searchKeywordController,
+                            decoration: InputDecoration(
+                              hintText: '검색어 입력',
+                              fillColor: Colors.grey[300],
+                              // 배경색 설정
+                              filled: true,
+                              // 배경색을 활성화
+                              border: const OutlineInputBorder(
+                                borderSide: BorderSide.none, // 외곽선 없음
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                              ),
+                              // 글씨의 위치를 가운데 정렬
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 0),
+                            ),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 12),
+                          ),
+                          Positioned(
+                            // 텍스트필드에 맞춰서 위치 정렬
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _searchKeyword =
+                                      _searchKeywordController.text;
+                                });
+                              },
+                              icon: const Icon(Icons.search),
+                            ),
+                          ),
+                        ],
                       ),
-                      onChanged: (text) {
-                        setState(() {
-                          _searchKeyword = text;
-                        });
-                      },
                     ),
-                  ),
-                  DropdownButton<FilteringOption>(
-                    value: selectedFilter,
-                    // 아래 함수로 정의 (리팩토링)
-                    onChanged: _handleFilterChange,
-                    items: FilteringOption.values.map((option) {
-                      // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
-                      return DropdownMenuItem<FilteringOption>(
-                        value: option,
-                        // DropdownMenuItem의 child는 Text 위젯입니다.
-                        child: Text(
-                            option == FilteringOption.Time ? '시간순' : '거리순'),
-                      );
-                    }).toList(),
-                  ),
-                ],
+                    const SizedBox(width: 10),
+                    DropdownButton<FilteringOption>(
+                      value: selectedFilter,
+                      // 아래 함수로 정의 (리팩토링)
+                      onChanged: _handleFilterChange,
+                      borderRadius: BorderRadius.circular(15),
+                      items: FilteringOption.values.map((option) {
+                        // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
+                        return DropdownMenuItem<FilteringOption>(
+                          value: option,
+                          // DropdownMenuItem의 child는 Text 위젯입니다.
+                          child: Text(
+                              option == FilteringOption.Time ? '시간순' : '거리순'),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
               ),
+              Container(height: 5, color: Colors.white),
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: _refreshCarpoolList,
