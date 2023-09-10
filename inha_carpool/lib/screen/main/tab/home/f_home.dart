@@ -39,6 +39,7 @@ class _HomeState extends State<Home> {
   int _visibleItemCount = 0;
   final ScrollController _scrollController = ScrollController();
 
+  // 검색어 필터링
   String _searchKeyword = "";
   final TextEditingController _searchKeywordController =
       TextEditingController();

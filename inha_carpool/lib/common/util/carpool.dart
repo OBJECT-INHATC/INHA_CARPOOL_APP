@@ -11,6 +11,7 @@ import 'package:inha_Carpool/service/sv_firestore.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
 
 import '../../screen/main/s_main.dart';
+import 'addMember_Exception.dart';
 
 class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -139,11 +140,12 @@ class FirebaseCarpool {
 
         if (!carpoolSnapshot.exists) {
           // 카풀 정보가 없는 경우 처리
-          print('해당 카풀이 존재하지 않습니다.');
-          return;
+          throw DeletedRoomException('삭제된 카풀입니다.\n다른 카풀을 참여해주세요.');
         }
+
         int nowMember = carpoolSnapshot['nowMember'];
         int maxMember = carpoolSnapshot['maxMember'];
+
         if (nowMember < maxMember) {
           transaction.update(carpoolDocRef, {
             'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
@@ -155,14 +157,31 @@ class FirebaseCarpool {
           );
           FireStoreService().sendEntryMessage(carpoolID, memberName);
         } else {
-          // 최대 인원 초과 시 예외 발생
-          throw Exception('최대 인원 초과');
+          // 최대 인원 초과 시 처리
+          throw MaxCapacityException('최대 인원을 초과했습니다.\n다른 카풀을 이용해주세요.');
         }
       });
       print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');
     } catch (e) {
       // 예외를 다시 던져서 메소드를 호출한 곳에 전달
-      throw e;
+      // throw e;
+      if (e is DeletedRoomException) {
+        // 카풀 정보가 없는 경우 예외 처리
+        print('카풀 정보가 없는 경우 처리: ${e.message}');
+        throw e;
+        // 예외 처리 코드 추가
+      } else if (e is MaxCapacityException) {
+        // 최대 인원 초과 예외 처리
+        print('최대 인원 초과: ${e.message}');
+        throw e;
+        // 예외 처리 코드 추가
+      } else {
+        // 기타 예외 처리
+        print('기타 예외: $e');
+        throw e;
+        // 예외 처리 코드 추가
+      }
+
     }
   }
 
