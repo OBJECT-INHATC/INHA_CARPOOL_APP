@@ -73,6 +73,8 @@ class ChatDao {
       return chatMessage;
     }).toList();
 
+
+    ///로컬채팅 시간과 가장 최근 시간을 비교해서
   }
 
 }
