@@ -38,6 +38,7 @@ class _HomeState extends State<Home> {
   // 페이징 처리를 위한 변수 초기화
   int _visibleItemCount = 0;
   final ScrollController _scrollController = ScrollController();
+  final limit = 5;
 
   // 검색어 필터링
   String _searchKeyword = "";
@@ -48,7 +49,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     initMyPoint();
-    carPoolList = _timeByFunction();
+    carPoolList = _timeByFunction(5);
     _loadUserData();
     _refreshCarpoolList();
     // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
@@ -235,7 +236,7 @@ class _HomeState extends State<Home> {
     setState(() {
       selectedFilter = newValue ?? FilteringOption.Time;
       carPoolList = (selectedFilter == FilteringOption.Time)
-          ? _timeByFunction()
+          ? _timeByFunction(limit)
           : _nearByFunction();
     });
   }
@@ -257,8 +258,8 @@ class _HomeState extends State<Home> {
   }
 
   // 시간순 정렬
-  Future<List<DocumentSnapshot>> _timeByFunction() async {
-    List<DocumentSnapshot> carpools = await FirebaseCarpool.getCarpoolsTimeby();
+  Future<List<DocumentSnapshot>> _timeByFunction(int limit) async {
+    List<DocumentSnapshot> carpools = await FirebaseCarpool.getCarpoolsTimeby(5);
     return carpools;
   }
 
@@ -273,7 +274,7 @@ class _HomeState extends State<Home> {
   // 새로고침 로직
   Future<void> _refreshCarpoolList() async {
     if (selectedFilter == FilteringOption.Time) {
-      carPoolList = _timeByFunction();
+      carPoolList = _timeByFunction(limit);
     } else {
       carPoolList = _nearByFunction();
     }
