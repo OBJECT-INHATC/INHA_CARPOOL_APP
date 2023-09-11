@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'd_complain.dart';
+import '../../../dialog/d_complain.dart';
 
 class RecordList extends StatelessWidget {
   const RecordList({Key? key}) : super(key: key);
@@ -12,15 +12,20 @@ class RecordList extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ListTile(
-            leading: Image.asset("assets/image/van.png", width: 30, height: 35),
+            //leading: Icon(Icons.car_crash,size: 20,),
             title: Padding(
               padding: const EdgeInsets.fromLTRB(0, 20, 0, 15), // 패딩 추가
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "8월 14일 수",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      Icon(Icons.car_repair,size: 30,),
+                      SizedBox(width: 23),
+                      Text("8월 14일 수",
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10),
                   Row(
@@ -93,11 +98,7 @@ class RecordList extends StatelessWidget {
                                   child: ComplainDialog()));
                           //신고
                         },
-                        child: Image.asset(
-                          "assets/image/warning.png",
-                          width: 20,
-                          height: 20,
-                        ),
+                        child: Icon(Icons.warning_rounded),
                       ),
                     ],
                   ),

@@ -24,7 +24,6 @@ class _MyPageState extends State<MyPage> {
 
   bool isEventAdsAllowed = true; // 스위치의 초기 상태를 설정
 
-  final apiService = ApiService();
 
 
   @override
@@ -207,20 +206,6 @@ class _MyPageState extends State<MyPage> {
   }
 }
 
-  testAPI() async{
 
-    // ReportRequstDTO 객체를 생성 또는 채웁니다.
-    final reportRequstDTO = ReportRequstDTO(
-      content: '신고 내용',
-      carpoolId: '카풀 ID',
-      userName: '피신고자 ID',
-      reporter: '신고자 ID',
-      reportType: '잠수',
-      reportDate: '신고 일자',
-    );
-
-    // API 호출
-    // final response = await apiService.saveReport(reportRequstDTO);
-  }
 
 

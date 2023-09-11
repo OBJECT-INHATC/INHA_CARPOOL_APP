@@ -20,20 +20,22 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Colors.blue, Colors.green];
+  List<Color> selectedBackgroundColors = [Colors.blue, Colors.black];
   List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
 
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
         ? [Colors.blue, Colors.white]
-        : [Colors.white, Colors.green];
+        : [Colors.white, Colors.black];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.white, Colors.green]
+        ? [Colors.white, Colors.black]
         : [Colors.blue, Colors.white];
   }
+
+  var onChanged =false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,16 +54,30 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
       body: Center(
         child: Form(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+               Container(
+                  padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
+                  child: const Text(
+                    '비밀번호를 재설정 하기 위해 \n학번을 입력해주세요!',
+                    style: TextStyle(
+                        fontSize: 25,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
               Container(
-                height: context.height(0.2),
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
-                child: FlutterLogo(
-                  size: context.height(0.2),
+                padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
+                child: const Text(
+                  '학교 이메일로 비밀번호 재설정 코드가 전송됩니다. 확인해주세요!',
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold),
                 ),
               ),
+
               Container(
                 padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                 child: Stack(
@@ -80,7 +96,15 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                         onChanged: (text) {
                           // 텍스트 필드 값 변경 시 실행할 코드 작성
                           email = text + academy;
-                        },
+                          if(text!=""){
+                          setState(() {
+                            onChanged = true;
+                          });
+                        }else{
+                            setState(() {
+                              onChanged = false;
+                            });
+                          }},
                         validator: (val) {
                           if (val!.isNotEmpty) {
                             return null;
@@ -91,6 +115,8 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                     Positioned(
                       // 중간 텍스트를 겹쳐서 배치
                       right: 140,
+                      //bottom
+                      bottom: 15,
                       child: Text(academy),
                     ),
                     Positioned(
@@ -123,7 +149,7 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                         },
                         selectedBackgroundColors: const [
                           Colors.blue,
-                          Colors.green
+                          Colors.black
                         ],
                         unSelectedBackgroundColors: const [
                           Colors.white,
@@ -142,6 +168,7 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
+                      backgroundColor: (onChanged != false)?Colors.blue:Colors.grey[300],
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(90.0),
                       ),
