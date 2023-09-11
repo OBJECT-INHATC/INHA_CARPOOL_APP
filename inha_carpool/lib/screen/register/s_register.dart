@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:inha_Carpool/screen/register/s_verifiedregister.dart';
 import 'package:nav/nav.dart';
 import '../../service/sv_auth.dart';
-// import '../dialog/d_auth_verification.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
-// import 'package:inha_Carpool/common/extension/context_extension.dart';
 
 /// 0824 서은율 한승완
 /// 회원 가입 페이지
-/// 0830 최은우
-/// 디자인 1차 수정
+/// 0830 / 0907 / 0910 최은우
+/// 디자인 수정
+
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
 
@@ -20,7 +19,6 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final formKey = GlobalKey<FormState>();
-
 
   // 이메일
   String email = "";
@@ -33,7 +31,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // 이름
   String username = "";
-  //닉네임
+
+  // 닉네임
   String nickname = "";
 
   // 학교
@@ -50,368 +49,397 @@ class _RegisterPageState extends State<RegisterPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Colors.blue, Colors.black];
+  List<Color> selectedBackgroundColors = [Colors.lightBlueAccent, Colors.black];
   List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
 
+  // 입력 필드 높이 설정
+  double inputFieldHeight = 50.0;
+
+  // 토글 배경색 업데이트 메서드
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [Colors.blue, Colors.white]
-        : [Colors.white, Colors.black];
+    ? [Color(0xff6CC0FF), Colors.black]
+        : [Color(0xff6CC0FF), Colors.black];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.white, Colors.black]
-        : [Colors.blue, Colors.white];
+    ? [Colors.white, Colors.white]
+        : [Colors.white, Colors.white];
   }
 
   @override
   Widget build(BuildContext context) {
+    // 파스텔톤 하늘색 정의
+    const Color pastelSkyBlue = Color(0xff6CC0FF);
     return isLoading
         ? Center(
       child: CircularProgressIndicator(
-          color: Theme.of(context).primaryColor),
+        color: Theme.of(context).primaryColor,
+      ),
     )
-
         : Scaffold(
-          body: Form(
-            key: formKey,
-            child: SingleChildScrollView(
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 37, // 간격 조절 SizedBox
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                      child: Align(
-                        alignment: Alignment.topLeft,
-                        child: IconButton(
-                          icon: Icon(Icons.arrow_back),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          iconSize: 30,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.grey),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          iconSize: 30,
+        ),
+        title: Text(
+          '회원가입', // AppBar에 표시할 글씨
+          style: TextStyle(
+            fontSize: 18, // 원하는 글씨 크기로 조정하세요
+            fontWeight: FontWeight.bold,
+            color: Colors.black, // 원하는 글씨 색상으로 조정하세요
+          ),
+        ),
+      ),
+      body: Form(
+        key: formKey,
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 70),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(40, 25, 40, 0),
+                  child: Stack(
+                    alignment: Alignment.centerRight,
+                    children: [
+                      Container(
+                        // 학번 입력 필드
+                        height: inputFieldHeight, // 높이 변수 적용
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey[300]!, // 연한 회색 테두리
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[100], // 연한 회색 배경색
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 70), // 간격 조절 SizedBox
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                      child: Stack(
-                        alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
-                        children: [
-                          TextFormField(
-                            // 학번 입력 필드
-                              decoration: InputDecoration(
-                                enabledBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black),
-                                ),
-                                focusedBorder: const UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.blue),
-                                ),
-                                labelText: '학번',
-                                prefixIcon: Icon(Icons.school), // 학번 아이콘
-                              ),
-                              onChanged: (text) {
-                                // 텍스트 필드 값 변경 시 실행할 코드 작성
-                                email = text + academy;
-                              },
-                              validator: (val) {
-                                if (val!.isNotEmpty) {
-                                  return null;
-                                } else {
-                                  return "학번이 비어있습니다.";
-                                }
-                              }),
-                          Positioned(
-                            // 중간 텍스트를 겹쳐서 배치
-                            right: 140,
-                            child: Text(academy),
-                          ),
-                          Positioned(
-                            // 중간 텍스트를 겹쳐서 배치
-                            right: 0,
-                            child: FlutterToggleTab(
-                              width: 30,
-                              borderRadius: 30,
-                              height: 40,
-                              // initialIndex: 0,
-                              selectedTextStyle: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700),
-                              unSelectedTextStyle: const TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500),
-                              labels: const ["인하공전", "인하대"],
-                              selectedLabelIndex: (index) {
-                                setState(() {
-                                  if (index == 0) {
-                                    academy = "@itc.ac.kr";
-                                  } else {
-                                    academy = "@inha.edu";
-                                  }
-                                  selectedIndex = index;
-                                  updateBackgroundColors();
-                                  updateEmail();
-                                });
-                              },
-                              selectedBackgroundColors: const [
-                                Colors.blue,
-                                Colors.black
-                              ],
-                              unSelectedBackgroundColors: const [
-                                Colors.white,
-                                Colors.white
-                              ],
-                              isScroll: false,
-                              selectedIndex: selectedIndex,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 9), // 간격 조절 SizedBox
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                      child: TextFormField(
-                        // 이름 입력 필드
-                        decoration: const InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black), // 밑줄 색상 설정
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
-                          ),
-                          labelText: '이름',
-                          prefixIcon: Icon(Icons.person), //이름 아이콘
-                        ),
-                        validator: (val) {
-                          if (val!.isNotEmpty) {
-                            return null;
-                          } else {
-                            return "이름이 비어있습니다.";
-                          }
-                        },
-                        onChanged: (text) {
-                          username = text;
-                        },
-                      ),
-                    ),const SizedBox(height: 9), // 간격 조절 SizedBox
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                      child: TextFormField(
-                        // 이름 입력 필드
-                        decoration: const InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black), // 밑줄 색상 설정
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
-                          ),
-                          labelText: '닉네임',
-                          prefixIcon: Icon(Icons.person), //이름 아이콘
-                        ),
-                        validator: (val) {
-                          if (val!.isNotEmpty) {
-                            return null;
-                          } else {
-                            return "닉네임이 비어있습니다.";
-                          }
-                        },
-                        onChanged: (text) {
-                          nickname = text;
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 9), //간격 조절 SizedBox
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                      child: TextFormField(
-                        // 비밀번호 입력 필드
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black), // 밑줄 색상 설정
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
-                          ),
-                          labelText: '비밀번호',
-                          prefixIcon: Icon(Icons.lock), // 비밀번호 아이콘
-                        ),
-                        onChanged: (text) {
-                          password = text;
-
-                          if (password == checkPassword) {
-                            setState(() {
-                              passwordCheck = "비밀번호가 일치합니다!";
-                            });
-                          } else {
-                            setState(() {
-                              passwordCheck = "비밀번호가 일치하지 않습니다.";
-                            });
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 9), // 간격 조절 SizedBox
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                      child: TextFormField(
-                        // 비밀번호 확인 입력 필드
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.black), // 밑줄 색상 설정
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
-                          ),
-                          labelText: '비밀번호 확인',
-                          prefixIcon: Icon(Icons.lock), // 비밀번호 아이콘
-                          suffix: Text(passwordCheck,
-                              style: (passwordCheck == "비밀번호가 일치하지 않습니다.")
-                                  ? TextStyle(color: Colors.red)
-                                  : TextStyle(color: Colors.green)),
-                        ),
-                        onChanged: (text) {
-                          checkPassword = text;
-                          if (password == checkPassword) {
-                            setState(() {
-                              passwordCheck = "비밀번호가 일치합니다!";
-                            });
-                          } else {
-                            setState(() {
-                              passwordCheck = "비밀번호가 일치하지 않습니다.";
-                            });
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 9,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(15, 20, 40, 0),
-                      child: Column(
-                        children: [
-                          RadioListTile(
-                              title: const Text("남성"),
-                              value: "남성",
-                              groupValue: genders,
-                              onChanged: (value) {
-                                setState(() {
-                                  genders = value;
-                                  gender = value.toString();
-                                });
-                              },
-                              fillColor:
-                              MaterialStateProperty.all(Colors.black)
-                          ),
-                          RadioListTile(
-                            title: const Text("여성"),
-                            value: "여성",
-                            groupValue: genders,
-                            onChanged: (value) {
-                              setState(() {
-                                genders = value;
-                                gender = value.toString();
-                              });
-                            },
-                            fillColor:
-                            MaterialStateProperty.all(Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 50,
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(0, 1, 110, 0),
-                      child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                        child: Row(
                           children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 1), backgroundColor: Colors.transparent,
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(90.0),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: '학번',
+                                  border: InputBorder.none,
+                                  prefixIcon: Icon(
+                                    Icons.school,
+                                    color: Colors.grey,
+                                  ),
                                 ),
-                              ),
-                              onPressed: () {
-                                // 로그인 버튼 기능 추가
-
-                                if (passwordCheck != "비밀번호가 일치합니다!" ||
-                                    username == "" ||
-                                    email == "" ||
-                                    password == "" ||
-                                    gender == "") {
-                                  showSnackbar(context, Colors.red,
-                                      "정보가 올바르지 않습니다. 다시 확인해주세요.");
-                                } else {
-                                  AuthService()
-                                      .registerUserWithEmailandPassword(
-                                      username,
-                                      nickname,
-                                      email,
-                                      password,
-                                      "dummy",
-                                      gender!)
-                                      .then((value) async {
-                                    if (value == true) {
-                                      await FirebaseAuth.instance.currentUser!
-                                          .sendEmailVerification();
-
-                                      if (!mounted) return;
-                                      Nav.push(VerifiedRegisterPage());
-                                    } else {
-                                      showSnackbar(context, Colors.red, value);
-                                      setState(() {
-                                        isLoading = false;
-                                      });
-                                    }
+                                onChanged: (text) {
+                                  setState(() {
+                                    email = text + academy;
                                   });
-                                }
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    colors: [Colors.blue, Colors.black],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                  borderRadius: BorderRadius.circular(90.0),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    '  가입하기  ',
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
+                                },
+                                validator: (val) {
+                                  if (val!.isNotEmpty) {
+                                    return null;
+                                  } else {
+                                    return "학번이 비어있습니다.";
+                                  }
+                                },
                               ),
                             ),
-                          ]
+                            Positioned(
+                              right: 0,
+                              child: FlutterToggleTab(
+                                width: 28,
+                                borderRadius: 10,
+                                height: inputFieldHeight, // 높이 변수 적용
+                                selectedTextStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700),
+                                unSelectedTextStyle: const TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500),
+                                labels: const ["인하공전", "인하대"],
+                                selectedLabelIndex: (index) {
+                                  setState(() {
+                                    if (index == 0) {
+                                      academy = "@itc.ac.kr";
+                                    } else {
+                                      academy = "@inha.edu";
+                                    }
+                                    selectedIndex = index;
+                                    updateBackgroundColors();
+                                  });
+                                },
+                                selectedBackgroundColors: selectedBackgroundColors,
+                                unSelectedBackgroundColors: unSelectedBackgroundColors,
+                                isScroll: false,
+                                selectedIndex: selectedIndex,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 15), // 15 아래로 이동
+                Container(
+                  padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                  child: Container(
+                    // 이름 입력 필드
+                    height: inputFieldHeight, // 높이 변수 적용
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey[300]!, // 연한 회색 테두리
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey[100], // 연한 회색 배경색
+                    ),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: '이름',
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      validator: (val) {
+                        if (val!.isNotEmpty) {
+                          return null;
+                        } else {
+                          return "이름이 비어있습니다.";
+                        }
+                      },
+                      onChanged: (text) {
+                        username = text;
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15), // 15 아래로 이동
+                Container(
+                  padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                  child: Container(
+                    // 닉네임 입력 필드
+                    height: inputFieldHeight, // 높이 변수 적용
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey[300]!, // 연한 회색 테두리
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey[100], // 연한 회색 배경색
+                    ),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: '닉네임',
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.person,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      validator: (val) {
+                        if (val!.isNotEmpty) {
+                          return null;
+                        } else {
+                          return "닉네임이 비어있습니다.";
+                        }
+                      },
+                      onChanged: (text) {
+                        nickname = text;
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                  child: Container(
+                    // 비밀번호 입력 필드
+                    height: inputFieldHeight, // 높이 변수 적용
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey[300]!, // 연한 회색 테두리
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey[100], // 연한 회색 배경색
+                    ),
+                    child: TextFormField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: '비밀번호',
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      onChanged: (text) {
+                        password = text;
+
+                        if (password == checkPassword) {
+                          setState(() {
+                            passwordCheck = "비밀번호가 일치합니다!";
+                          });
+                        } else {
+                          setState(() {
+                            passwordCheck = "비밀번호가 일치하지 않습니다.";
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                  child: Container(
+                    // 비밀번호 확인 입력 필드
+                    height: inputFieldHeight, // 높이 변수 적용
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey[300]!, // 연한 회색 테두리
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.grey[100], // 연한 회색 배경색
+                    ),
+                    child: TextFormField(
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: '비밀번호 확인',
+                        border: InputBorder.none,
+                        prefixIcon: Icon(
+                          Icons.lock,
+                          color: Colors.grey,
+                        ),
+                        suffix: Text(
+                          passwordCheck,
+                          style: (passwordCheck ==
+                              "비밀번호가 일치하지 않습니다.")
+                              ? TextStyle(color: Colors.red)
+                              : TextStyle(color: Colors.green),
+                        ),
+                      ),
+                      onChanged: (text) {
+                        checkPassword = text;
+                        if (password == checkPassword) {
+                          setState(() {
+                            passwordCheck = "비밀번호가 일치합니다!";
+                          });
+                        } else {
+                          setState(() {
+                            passwordCheck = "비밀번호가 일치하지 않습니다.";
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(15, 20, 40, 0),
+                  child: Column(
+                    children: [
+                      RadioListTile(
+                        title: const Text("남성"),
+                        value: "남성",
+                        groupValue: genders,
+                        onChanged: (value) {
+                          setState(() {
+                            genders = value;
+                            gender = value.toString();
+                          });
+                        },
+                      ),
+                      RadioListTile(
+                        title: const Text("여성"),
+                        value: "여성",
+                        groupValue: genders,
+                        onChanged: (value) {
+                          setState(() {
+                            genders = value;
+                            gender = value.toString();
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(40, 15, 40, 0), // 수정된 패딩 값
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 11), // 버튼 높이
+                      primary: pastelSkyBlue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 2, // 그림자 추가
+                      shadowColor: Colors.black, // 그림자 색상
+                      surfaceTintColor: Colors.transparent,
+                    ),
+                    onPressed: () {
+                      if (passwordCheck != "비밀번호가 일치합니다!" ||
+                          username == "" ||
+                          email == "" ||
+                          password == "" ||
+                          gender == "") {
+                        showSnackbar(context, Colors.red,
+                            "정보가 올바르지 않습니다. 다시 확인해주세요.");
+                      } else {
+                        AuthService()
+                            .registerUserWithEmailandPassword(
+                            username,
+                            nickname,
+                            email,
+                            password,
+                            "dummy",
+                            gender!)
+                            .then((value) async {
+                          if (value == true) {
+                            await FirebaseAuth.instance.currentUser!
+                                .sendEmailVerification();
+
+                            if (!mounted) return;
+                            Nav.push(VerifiedRegisterPage());
+                          } else {
+                            showSnackbar(
+                                context, Colors.red, value);
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        });
+                      }
+                    },
+                    child: Text(
+                      '가입하기',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+
+              ],
             ),
           ),
-        );
+        ),
+      ),
+    );
   }
+
+
 
   void showSnackbar(context, color, message) {
     ScaffoldMessenger.of(context).showSnackBar(
@@ -441,5 +469,4 @@ class _RegisterPageState extends State<RegisterPage> {
       email = id + academy;
     }
   }
-
 }
