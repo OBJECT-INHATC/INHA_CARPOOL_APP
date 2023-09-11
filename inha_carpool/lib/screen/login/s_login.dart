@@ -82,21 +82,22 @@ class _LoginPageState extends State<LoginPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Colors.blue, Colors.black];
+  List<Color> selectedBackgroundColors = [Color(0xff6CC0FF), Colors.black];
   List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
 
-  // 토글 배경색 업데이트 메서드
+// 토글 배경색 업데이트 메서드
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [Colors.blue, Colors.white]
-        : [Colors.white, Colors.black];
+        ? [Color(0xff6CC0FF), Colors.black]
+        : [Color(0xff6CC0FF), Colors.black];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.white, Colors.black]
-        : [Colors.blue, Colors.white];
+        ? [Colors.white, Colors.white]
+        : [Colors.white, Colors.white];
   }
+
 
   // 로딩 여부
   bool isLoading = false;
@@ -122,47 +123,50 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return isLoading
-        ? Center(
-      child: CircularProgressIndicator(
-        color: Theme.of(context).primaryColor,
-      ),
-    )
-        : Scaffold(
-          body: Center(
-            child: Form(
-              key: formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40, top: 140),
-                    child: Text(
-                      'LOGIN',
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Circular',
-                      ),
-                    ),
+    // 화면의 너비와 높이를 가져와서 화면 비율 계산함
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
+    // 화면 비율에 따라 폰트 크기 조정
+    final titleFontSize = screenWidth * 0.1;
+    final subTitleFontSize = screenWidth * 0.04;
+
+    return Scaffold(
+      body: Center(
+        child: Form(
+          key: formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.2, 0, 0), // 위쪽 패딩을 늘림
+                child: Text(
+                  'LOGIN',
+                  style: TextStyle(
+                    fontSize: titleFontSize - 5,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Circular',
                   ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(40, 10, 30, 0),
-                    child: Text(
-                      '로그인이 필요한 서비스입니다.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
+                ),
+              ),
+
+              Container(
+                padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.01, screenWidth * 0.08, 0),
+                child: Text(
+                  '로그인이 필요한 서비스입니다.',
+                  style: TextStyle(
+                    fontSize: subTitleFontSize,
+                    color: Colors.grey,
                   ),
-                  SizedBox(height: 70),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                    child: Stack(
-                      alignment: Alignment.centerRight,
-                      children: [
-                        TextFormField(
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.1),
+              Container(
+                padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
+                child: Stack(
+                  alignment: Alignment.centerRight,
+                  children: [
+                    TextFormField(
                             decoration: InputDecoration(
                               enabledBorder: const UnderlineInputBorder(
                                 borderSide:
@@ -187,50 +191,47 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             }),
                         // 학교 선택 토글 버튼
-                        Positioned(
-                          right: 0,
-                          child: FlutterToggleTab(
-                            width: 30,
-                            borderRadius: 30,
-                            height: 40,
-                            selectedTextStyle: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700),
-                            unSelectedTextStyle: const TextStyle(
-                                color: Colors.black87,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500),
-                            labels: const ["인하공전", "인하대"],
-                            selectedLabelIndex: (index) {
-                              setState(() {
-                                if (index == 0) {
-                                  academy = "@itc.ac.kr";
-                                } else {
-                                  academy = "@inha.edu";
-                                }
-                                selectedIndex = index;
-                                updateBackgroundColors();
-                              });
-                            },
-                            selectedBackgroundColors: const [
-                              Colors.blue,
-                              Colors.black
-                            ],
-                            unSelectedBackgroundColors: const [
-                              Colors.white,
-                              Colors.white
-                            ],
-                            isScroll: false,
-                            selectedIndex: selectedIndex,
-                          ),
+                    Positioned(
+                      right: 0,
+                      child: FlutterToggleTab(
+                        width: 30,
+                        borderRadius: 30,
+                        height: 40,
+                        selectedTextStyle: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
                         ),
-                      ],
+                        unSelectedTextStyle: const TextStyle(
+                          color: Colors.black87,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        labels: const ["인하공전", "인하대"],
+                        selectedLabelIndex: (index) {
+                          setState(() {
+                            if (index == 0) {
+                              academy = "@itc.ac.kr";
+                            } else {
+                              academy = "@inha.edu";
+                            }
+                            selectedIndex = index;
+                            updateBackgroundColors();
+                          });
+                        },
+                        selectedBackgroundColors: selectedBackgroundColors,
+                        unSelectedBackgroundColors: unSelectedBackgroundColors,
+                        isScroll: false,
+                        selectedIndex: selectedIndex,
+                      ),
+                    ),
+
+                  ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                    child: TextFormField(
+              Container(
+                padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
+                child: TextFormField(
                       obscureText: true,
                       decoration: InputDecoration(
                         enabledBorder: const UnderlineInputBorder(
@@ -259,12 +260,12 @@ class _LoginPageState extends State<LoginPage> {
                       },
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(50, 5, 20, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        ElevatedButton(
+              Container(
+                padding: EdgeInsets.fromLTRB(screenWidth * 0.12, screenHeight * 0.01, screenWidth * 0.04, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 25, vertical: 35),
@@ -331,68 +332,71 @@ class _LoginPageState extends State<LoginPage> {
                               }
                             });
                           },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Colors.blue, Colors.black],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                              ),
-                              borderRadius: BorderRadius.circular(90.0),
-                            ),
-                            child: const Center(
-                              child: Text(
-                                '  로그인  ',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xff6CC0FF), Colors.black],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
+                          borderRadius: BorderRadius.circular(90.0),
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(30, 190, 30, 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '회원이 아니신가요? ',
-                          style: TextStyle(
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const RegisterPage(),
-                              ),
-                            );
-                          },
+                        child: const Center(
                           child: Text(
-                            '가입하기',
+                            '  로그인  ',
                             style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.black,
-                              decoration: TextDecoration.underline,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                         ),
+                      ),
+
+                    ),
                       ],
                     ),
                   ),
-                ],
+              Spacer(), // 화면 아래에 여백을 추가
+              Container(
+                padding: EdgeInsets.fromLTRB(screenWidth * 0.09, 0, screenWidth * 0.09, screenHeight * 0.04),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '회원이 아니신가요? ',
+                      style: TextStyle(
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const RegisterPage(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        '가입하기',
+                        style: TextStyle(
+                          fontSize: subTitleFontSize,
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
-        );
+        ),
+      ),
+    );
   }
+
 
   // 이메일 업데이트 메서드 추가
   void updateEmail() {
