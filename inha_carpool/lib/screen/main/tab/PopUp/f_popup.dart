@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 import '../../../../common/widget/round_button_theme.dart';
 import '../../../../common/widget/w_arrow.dart';
 import '../../../../common/widget/w_round_button.dart';
@@ -48,10 +49,24 @@ class _PopUpFragmentState extends State<PopUpFragment> {
           ),
           const Height(20),
           RoundButton(
-            text: '다른거 Api 테스트',
+            text: '이용기록 저장 Api 테스트',
             onTap: () {
-              // 다른거 추가
+              historySaveApi();
             }
+          ),
+          const Height(20),
+          RoundButton(
+              text: '이용기록 조회 Api 테스트',
+              onTap: () {
+                selectHistoryList("yeongjae", "xxx");
+              }
+          ),
+          const Height(20),
+          RoundButton(
+              text: '다른거 테스트',
+              onTap: () {
+                // 다른거 추가
+              }
           ),
 
           EmptyExpanded(),
@@ -84,4 +99,36 @@ class _PopUpFragmentState extends State<PopUpFragment> {
     final response = await apiService.saveReport(reportRequstDTO);
 
   }
+
+  // 이용내역 저장
+  historySaveApi() async {
+
+    final historyRequestDTO = HistoryRequestDTO(
+      carPoolId: "vJuRYQ49pAAUAJmQYtcG",
+      admin: "4IoZ0qp17me9v1QA3ljYw2SRbbh2_yeongjae",
+      member1: "aa",
+      member2: "bb",
+      member3: "cc",
+      nowMember: 1,
+      maxMember: 3,
+      startDetailPoint: "출발지 요약주소",
+      startPoint: "출발지 위도경도",
+      startPointName: "출발지 이름",
+      startTime: 123456789,
+      endDetailPoint: "도착지 요약주소",
+      endPoint: "도착지 위도경도",
+      endPointName: "도착지 이름",
+      gender: "남자",
+    );
+
+    final response = await apiService.saveHistory(historyRequestDTO);
+  }
+
+  // 이용내역 조회
+  selectHistoryList(String uid, String nickName) async {
+    final response = await apiService.selectHistoryList(uid, nickName);
+  }
+
 }
+
+
