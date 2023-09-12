@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:inha_Carpool/common/common.dart';
 
 class DateTimePickerWidget extends StatefulWidget {
   final String label;
@@ -37,7 +38,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
             context: context,
             builder: (BuildContext context) {
               return SizedBox(
-                height: 300,
+                height: context.width(0.9),
                 child: _isTimePicker
                     ? SizedBox(
                         height: 250,
@@ -45,7 +46,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                           data: const CupertinoThemeData(
                             textTheme: CupertinoTextThemeData(
                               dateTimePickerTextStyle: TextStyle(
-                                fontSize: 20,
+                                fontSize: 10,
                               ),
                             ),
                           ),
@@ -64,7 +65,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                         data: const CupertinoThemeData(
                           textTheme: CupertinoTextThemeData(
                             dateTimePickerTextStyle:
-                                TextStyle(color: Colors.black, fontSize: 20),
+                                TextStyle(color: Colors.black, fontSize: 10),
                           ),
                         ),
                         child: CupertinoDatePicker(
@@ -94,7 +95,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                 child: Text(
                   widget.label,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 10,
                   ),
                 ),
               ),

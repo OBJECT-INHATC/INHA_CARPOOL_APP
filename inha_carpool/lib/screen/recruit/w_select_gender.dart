@@ -46,7 +46,7 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                 ),
               ),
               Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: TextButton(
                   onPressed: () {
                     widget.onGenderSelected('여성');
@@ -57,26 +57,28 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                         : Colors.grey,
                   ),
                   child: '여성'.text.white.size(17).make(),
+
+                ),
+              ),
+              Container(
+                // width: double.infinity,
+                margin: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                child: TextButton(
+                  onPressed: () {
+                    widget.onGenderSelected('무관');
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: widget.selectedGender == '무관'
+                        ? Colors.lightBlue
+                        : Colors.grey,
+                  ),
+                  child: '무관'.text.white.size(17).make(),
                 ),
               ),
             ],
           ),
         ),
-        Container(
-          width: double.infinity,
-          margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: TextButton(
-            onPressed: () {
-              widget.onGenderSelected('무관');
-            },
-            style: TextButton.styleFrom(
-              backgroundColor: widget.selectedGender == '무관'
-                  ? Colors.lightBlue
-                  : Colors.grey,
-            ),
-            child: '무관'.text.white.size(17).make(),
-          ),
-        ),
+
       ],
     );
   }

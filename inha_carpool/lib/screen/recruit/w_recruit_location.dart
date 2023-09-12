@@ -63,23 +63,27 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             }
           }, // isGestureEnabled가 false일 때는 onTap 이벤트 비활성화
           child: Container(
+
             margin: const EdgeInsets.fromLTRB(30, 15, 30, 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  child: widget.pointText.text.size(14).bold.black.make(),
+                  margin: const EdgeInsets.only(bottom: 5),
+                  child: widget.pointText.text.size(12).bold.black.make(),
+
                 ),
                 TextField(
                   enabled: false,
+
                   decoration: InputDecoration(
+
                     filled: true,
-                    fillColor: Colors.grey.shade300,
+                    fillColor: Colors.white,
                     border: InputBorder.none,
-                    labelStyle: const TextStyle(color: Colors.black),
+                    labelStyle: const TextStyle(color: Colors.black, fontSize: 13),
                   ),
-                  style: const TextStyle(color: Colors.black),
+                  style: const TextStyle(color: Colors.black, fontSize: 13),
                   controller: TextEditingController(text: selectedLocation),
                 ),
               ],
@@ -90,13 +94,18 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
           child: TextField(
             decoration: InputDecoration(
+
+
               filled: true,
-              fillColor: Colors.grey.shade300,
+              fillColor: Colors.white,
               hintText: widget.detailPoint,
-              labelStyle: const TextStyle(color: Colors.black),
-              border: InputBorder.none,
+              labelStyle: const TextStyle(color: Colors.black, fontSize: 13),
+              border: UnderlineInputBorder(
+
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
-            style: const TextStyle(color: Colors.black),
+            style: const TextStyle(color: Colors.black, fontSize: 13),
             controller: widget.detailController,
           ),
         )
