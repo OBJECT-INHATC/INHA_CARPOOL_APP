@@ -70,7 +70,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               children: [
                 Container(
                   margin: const EdgeInsets.only(bottom: 5),
-                  child: widget.pointText.text.size(12).bold.black.make(),
+                  child: widget.pointText.text.size(16).bold.black.make(),
 
                 ),
                 TextField(
@@ -83,7 +83,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                     border: InputBorder.none,
                     labelStyle: const TextStyle(color: Colors.black, fontSize: 13),
                   ),
-                  style: const TextStyle(color: Colors.black, fontSize: 13),
+                  style: const TextStyle(color: Colors.black, fontSize: 14),
                   controller: TextEditingController(text: selectedLocation),
                 ),
               ],
@@ -99,13 +99,13 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               filled: true,
               fillColor: Colors.white,
               hintText: widget.detailPoint,
-              labelStyle: const TextStyle(color: Colors.black, fontSize: 13),
+              labelStyle: const TextStyle(color: Colors.black, fontSize: 14),
               border: UnderlineInputBorder(
 
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            style: const TextStyle(color: Colors.black, fontSize: 13),
+            style: const TextStyle(color: Colors.black, fontSize: 14),
             controller: widget.detailController,
           ),
         )

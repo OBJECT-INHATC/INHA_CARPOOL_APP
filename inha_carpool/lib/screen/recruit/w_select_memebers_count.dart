@@ -24,11 +24,11 @@ class LimitSelectorWidget extends StatelessWidget {
             onPressed: () => onOptionSelected(option),
             style: TextButton.styleFrom(
               backgroundColor:
-              selectedValue == option ? Colors.lightBlue : Colors.grey,
+              selectedValue == option ? Colors.blue[200] : Colors.grey[300],
             ),
             child: Text(
               option,
-              style: const TextStyle(color: Colors.white, fontSize: 17),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
           ),
         );

@@ -46,7 +46,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                           data: const CupertinoThemeData(
                             textTheme: CupertinoTextThemeData(
                               dateTimePickerTextStyle: TextStyle(
-                                fontSize: 10,
+                                fontSize: 20,
                               ),
                             ),
                           ),
@@ -65,7 +65,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                         data: const CupertinoThemeData(
                           textTheme: CupertinoTextThemeData(
                             dateTimePickerTextStyle:
-                                TextStyle(color: Colors.black, fontSize: 10),
+                                TextStyle(color: Colors.black, fontSize: 20),
                           ),
                         ),
                         child: CupertinoDatePicker(
@@ -95,7 +95,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                 child: Text(
                   widget.label,
                   style: const TextStyle(
-                    fontSize: 10,
+                    fontSize: 15,
                   ),
                 ),
               ),
@@ -104,14 +104,14 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                   ? Text(
                       widget.selectedDateTime.hour > 12 ? '오후' : '오전',
                       style: const TextStyle(
-                        fontSize: 19,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     )
                   : Text(
                       widget.selectedDateTime.year.toString(),
                       style: const TextStyle(
-                        fontSize: 19,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

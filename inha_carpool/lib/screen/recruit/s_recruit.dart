@@ -160,11 +160,8 @@ class _RecruitPageState extends State<RecruitPage> {
             ),
 
             ///  제한인원 및 성별
-            Flexible(
-              child: Container(
-                height: context.height(0.2),
-                // 제한인원, 성별 영역
-                child: Column(
+
+                Column(
                   children: [
                     Container(
                       child: Column(// 제한인원 영역
@@ -175,7 +172,7 @@ class _RecruitPageState extends State<RecruitPage> {
                           padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
                           child: '인원'
                               .text
-                              .size(20)
+                              .size(16)
                               .bold
                               .align(TextAlign.left)
                               .make(),
@@ -210,16 +207,13 @@ class _RecruitPageState extends State<RecruitPage> {
                     ),
                   ],
                 ),
-              ),
-            ),
-            SizedBox(height: context.width(0.05)),
+
+            SizedBox(height: 50),
             /// 카풀 시작하기 -- 파베 기능 추가하기
             Container(
-              width: context.width(0.5),
-              height: context.width(0.04),
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.lightBlue),
+                  backgroundColor: MaterialStateProperty.all(Colors.blue[200]),
                   // 버튼 배경색
                   fixedSize: MaterialStateProperty.all(Size(context.width(0.5), context.height(0.04))), // 버튼 크기
                 ),
