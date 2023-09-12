@@ -18,7 +18,7 @@ class FirebaseCarpool {
   static const storage = FlutterSecureStorage();
   late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
-  late String gender = "";
+  // late String gender = "";
 
   ///출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
   static Future<List<DocumentSnapshot>> getCarpoolsTimeby() async {
@@ -63,6 +63,7 @@ class FirebaseCarpool {
     required String selectedRoomGender,
     required String memberID,
     required String memberName,
+    required String memberGender,
     required String startDetailPoint,
     required String endDetailPoint,
   }) async {
@@ -82,12 +83,12 @@ class FirebaseCarpool {
       GeoPoint geoStart = GeoPoint(startPoint.latitude, startPoint.longitude);
       GeoPoint geoEnd = GeoPoint(endPoint.latitude, endPoint.longitude);
 
-      List<String> hobbies = ['${memberID}_$memberName'];
+      List<String> hobbies = ['${memberID}_${memberName}_$memberGender'];
 
       print(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''));
 
       DocumentReference carpoolDocRef = await users.add({
-        'admin': '${memberID}_$memberName',
+        'admin': '${memberID}_${memberName}_$memberGender',
         'startPointName': startPointName,
         'startPoint': geoStart,
         'endPointName': endPointName,
@@ -128,7 +129,7 @@ class FirebaseCarpool {
 
 
   static Future<void> addMemberToCarpool(String carpoolID, String memberID,
-      String memberName, String token, String roomGender) async {
+      String memberName, String memberGender, String token, String roomGender) async {
     CollectionReference carpoolCollection = _firestore.collection('carpool');
     DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
 
@@ -146,7 +147,7 @@ class FirebaseCarpool {
         int maxMember = carpoolSnapshot['maxMember'];
         if (nowMember < maxMember) {
           transaction.update(carpoolDocRef, {
-            'members': FieldValue.arrayUnion(['${memberID}_$memberName']),
+            'members': FieldValue.arrayUnion(['${memberID}_${memberName}_$memberGender']),
             'nowMember': FieldValue.increment(1),
           });
           FireStoreService().saveToken(
@@ -159,7 +160,7 @@ class FirebaseCarpool {
           throw Exception('최대 인원 초과');
         }
       });
-      print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');
+      print('카풀에 유저가 추가되었습니다 -> ${memberID}_${memberName}_$memberGender');
     } catch (e) {
       // 예외를 다시 던져서 메소드를 호출한 곳에 전달
       throw e;
@@ -229,10 +230,10 @@ class FirebaseCarpool {
 
   /// 내가 참여한 카풀
   static Future<List<DocumentSnapshot>> getCarpoolsWithMember(
-      String memberID, String memberName) async {
+      String memberID, String memberName,) async {
     QuerySnapshot querySnapshot = await _firestore
         .collection('carpool')
-        .where('members', arrayContains: '${memberID}_$memberName')
+        .where('members', arrayContains: '${memberID}_${memberName}')
         .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
