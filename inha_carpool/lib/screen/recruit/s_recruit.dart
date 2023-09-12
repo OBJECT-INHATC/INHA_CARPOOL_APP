@@ -34,9 +34,9 @@ class _RecruitPageState extends State<RecruitPage> {
   String startPointName = "주안역 택시 승강장";
   String endPointName = "인하대 후문 CU";
 
-  late TextEditingController _startPointDetailController =
+  late final TextEditingController _startPointDetailController =
       TextEditingController();
-  late TextEditingController _endPointDetailController =
+  late final TextEditingController _endPointDetailController =
       TextEditingController();
 
   final storage = FlutterSecureStorage();

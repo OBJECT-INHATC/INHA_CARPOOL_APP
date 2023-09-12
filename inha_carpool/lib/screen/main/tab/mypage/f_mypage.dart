@@ -4,7 +4,7 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_profile.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_recordList.dart';
 
-import '../../../../common/data/preference/prefs.dart';
+import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import '../../../setting/w_switch_menu.dart';
 import 'd_changepassword.dart';
 import 'f_logout_confirmation.dart';
@@ -24,7 +24,6 @@ class _MyPageState extends State<MyPage> {
 
   bool isEventAdsAllowed = true; // 스위치의 초기 상태를 설정
 
-  final apiService = ApiService();
 
 
   @override
@@ -41,8 +40,8 @@ class _MyPageState extends State<MyPage> {
               // 계정 항목
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 6.0),
-                color: Colors.grey[200],
-                padding: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0), // vertical 값을 조정
+                color: Colors.grey[100],
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
                   children: [
@@ -92,7 +91,7 @@ class _MyPageState extends State<MyPage> {
               ListTile(
                 leading: Icon(
                   Icons.delete,
-                  color: Colors.red,
+                  color: Colors.black,
                 ),
                 title: Text('회원탈퇴'),
                 onTap: () {
@@ -105,8 +104,8 @@ class _MyPageState extends State<MyPage> {
               // 알림 항목
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 6.0),
-                color: Colors.grey[200],
-                padding: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0), // vertical 값을 조정
+                color: Colors.grey[100],
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -123,7 +122,7 @@ class _MyPageState extends State<MyPage> {
               ListTile(
                 leading: Icon(
                   Icons.alarm_rounded,
-                  color: Colors.blue,
+                  color: Colors.blueGrey,
                 ),
                 title: Text('알림 설정'),
                 trailing: Switch(
@@ -139,8 +138,8 @@ class _MyPageState extends State<MyPage> {
               // 기타 항목
               Container(
                 margin: EdgeInsets.symmetric(horizontal: 6.0),
-                color: Colors.grey[200],
-                padding: const EdgeInsets.symmetric(horizontal: 17.0, vertical: 15.0), // vertical 값을 조정
+                color: Colors.grey[100],
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
                   children: [
@@ -170,7 +169,7 @@ class _MyPageState extends State<MyPage> {
               ListTile(
                 leading: Icon(
                   Icons.nightlight_round,
-                  color: Colors.deepPurple,
+                  color: Colors.deepPurple
                 ),
                 title: Text('야간모드'),
                 trailing: Switch(
@@ -207,20 +206,6 @@ class _MyPageState extends State<MyPage> {
   }
 }
 
-  testAPI() async{
 
-    // ReportRequstDTO 객체를 생성 또는 채웁니다.
-    final reportRequstDTO = ReportRequstDTO(
-      content: '신고 내용',
-      carpoolId: '카풀 ID',
-      userName: '피신고자 ID',
-      reporter: '신고자 ID',
-      reportType: '잠수',
-      reportDate: '신고 일자',
-    );
-
-    // API 호출
-    // final response = await apiService.saveReport(reportRequstDTO);
-  }
 
 

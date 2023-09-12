@@ -4,6 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
+import 'package:inha_Carpool/screen/main/tab/home/emptySearchedCarpool.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptyCarpool.dart';
 
@@ -37,12 +38,18 @@ class _HomeState extends State<Home> {
   // 페이징 처리를 위한 변수 초기화
   int _visibleItemCount = 0;
   final ScrollController _scrollController = ScrollController();
+  final limit = 5;
+
+  // 검색어 필터링
+  String _searchKeyword = "";
+  final TextEditingController _searchKeywordController =
+      TextEditingController();
 
   @override
   void initState() {
     super.initState();
     initMyPoint();
-    carPoolList = _timeByFunction();
+    carPoolList = _timeByFunction(5);
     _loadUserData();
     _refreshCarpoolList();
     // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
@@ -75,29 +82,89 @@ class _HomeState extends State<Home> {
             size: 50,
           ),
         ),
-        body: Column(
-          children: [
-            DropdownButton<FilteringOption>(
-              value: selectedFilter,
-              // 아래 함수로 정의 (리팩토링)
-              onChanged: _handleFilterChange,
-              items: FilteringOption.values.map((option) {
-                // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
-                return DropdownMenuItem<FilteringOption>(
-                  value: option,
-                  // DropdownMenuItem의 child는 Text 위젯입니다.
-                  child: Text(option == FilteringOption.Time ? '시간순' : '거리순'),
-                );
-              }).toList(),
-            ),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: _refreshCarpoolList,
-                // 카풀 리스트 불러오기
-                child: _buildCarpoolList(),
+        body: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[100],
+          ),
+          child: Column(
+            children: [
+              Container(height: 5, color: Colors.white),
+              Container(
+                color: Colors.white,
+                height: context.height(0.05),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Stack(
+                        children: [
+                          TextField(
+                            controller: _searchKeywordController,
+                            decoration: InputDecoration(
+                              hintText: '검색어 입력',
+                              fillColor: Colors.grey[300],
+                              // 배경색 설정
+                              filled: true,
+                              // 배경색을 활성화
+                              border: const OutlineInputBorder(
+                                borderSide: BorderSide.none, // 외곽선 없음
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20)),
+                              ),
+                              // 글씨의 위치를 가운데 정렬
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 0),
+                            ),
+                            style: const TextStyle(
+                                color: Colors.black, fontSize: 12),
+                          ),
+                          Positioned(
+                            // 텍스트필드에 맞춰서 위치 정렬
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            child: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _searchKeyword =
+                                      _searchKeywordController.text;
+                                });
+                              },
+                              icon: const Icon(Icons.search),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    DropdownButton<FilteringOption>(
+                      value: selectedFilter,
+                      // 아래 함수로 정의 (리팩토링)
+                      onChanged: _handleFilterChange,
+                      borderRadius: BorderRadius.circular(15),
+                      items: FilteringOption.values.map((option) {
+                        // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
+                        return DropdownMenuItem<FilteringOption>(
+                          value: option,
+                          // DropdownMenuItem의 child는 Text 위젯입니다.
+                          child: Text(
+                              option == FilteringOption.Time ? '시간순' : '거리순'),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              Container(height: 5, color: Colors.white),
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: _refreshCarpoolList,
+                  // 카풀 리스트 불러오기
+                  child: _buildCarpoolList(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -118,11 +185,45 @@ class _HomeState extends State<Home> {
           return const EmptyCarpool();
         } else {
           // 카풀 리스트가 있을 경우 리스트 뷰 빌드 위젯 호출
+
+          // 검색어와 일치하는 항목만 필터링
+          final filteredCarpools = snapshot.data!.where((carpool) {
+            final carpoolData = carpool.data() as Map<String, dynamic>;
+            final startPointName =
+                carpoolData['startPointName'].toString().toLowerCase();
+            final startDetailPointName =
+                carpoolData['startDetailPoint'].toString().toLowerCase();
+            final endPointName =
+                carpoolData['endPointName'].toString().toLowerCase();
+            final endDetailPointName =
+                carpoolData['endDetailPoint'].toString().toLowerCase();
+            final keyword = _searchKeyword.toLowerCase();
+
+            return startPointName.contains(keyword) ||
+                startDetailPointName.contains(keyword) ||
+                endPointName.contains(keyword) ||
+                endDetailPointName.contains(keyword) ||
+                endPointName.contains(keyword);
+          }).toList();
+
+          final itemCount = _visibleItemCount <= filteredCarpools.length
+              ? _visibleItemCount
+              : filteredCarpools.length;
+
+          if (filteredCarpools.isEmpty) {
+            return const EmptySearchedCarpool(); // 검색 결과가 없을 경우 빈 상태 표시
+          }
+
           return CarpoolListWidget(
-            snapshot: snapshot, // AsyncSnapshot을 CarpoolListWidget에 전달
+            snapshot: AsyncSnapshot<List<DocumentSnapshot>>.withData(
+              ConnectionState.done,
+              filteredCarpools.sublist(0, itemCount),
+            ),
+            // AsyncSnapshot을 CarpoolListWidget에 전달
             scrollController: _scrollController,
             visibleItemCount: _visibleItemCount,
-            nickName: nickName, // 닉네임 전달
+            nickName: nickName,
+            // 닉네임 전달
             uid: uid, // UID 전달
           );
         }
@@ -130,17 +231,15 @@ class _HomeState extends State<Home> {
     );
   }
 
-
   // 필터링 옵션
   void _handleFilterChange(FilteringOption? newValue) {
     setState(() {
       selectedFilter = newValue ?? FilteringOption.Time;
       carPoolList = (selectedFilter == FilteringOption.Time)
-          ? _timeByFunction()
+          ? _timeByFunction(limit)
           : _nearByFunction();
     });
   }
-
 
   // 유저 정보 받아오기
   Future<void> _loadUserData() async {
@@ -159,8 +258,8 @@ class _HomeState extends State<Home> {
   }
 
   // 시간순 정렬
-  Future<List<DocumentSnapshot>> _timeByFunction() async {
-    List<DocumentSnapshot> carpools = await FirebaseCarpool.getCarpoolsTimeby();
+  Future<List<DocumentSnapshot>> _timeByFunction(int limit) async {
+    List<DocumentSnapshot> carpools = await FirebaseCarpool.getCarpoolsTimeby(5);
     return carpools;
   }
 
@@ -175,7 +274,7 @@ class _HomeState extends State<Home> {
   // 새로고침 로직
   Future<void> _refreshCarpoolList() async {
     if (selectedFilter == FilteringOption.Time) {
-      carPoolList = _timeByFunction();
+      carPoolList = _timeByFunction(limit);
     } else {
       carPoolList = _nearByFunction();
     }

@@ -11,6 +11,7 @@ import 'package:inha_Carpool/service/sv_firestore.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
 
 import '../../screen/main/s_main.dart';
+import 'addMember_Exception.dart';
 
 class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -21,12 +22,17 @@ class FirebaseCarpool {
   // late String gender = "";
 
   ///출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
-  static Future<List<DocumentSnapshot>> getCarpoolsTimeby() async {
+  static Future<List<DocumentSnapshot>> getCarpoolsTimeby(int limit) async {
     CollectionReference carpoolCollection = _firestore.collection('carpool');
-    QuerySnapshot querySnapshot = await carpoolCollection.get();
+    QuerySnapshot querySnapshot = await carpoolCollection
+        .where('startTime',
+            isGreaterThan: DateTime.now().millisecondsSinceEpoch)
+        .orderBy('startTime')
+        .limit(limit)
+        .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
-    print("조회된 카풀 수: ${querySnapshot.docs.length}");
+    print("조회된 카풀 수(getCarpoolsTimeby): ${querySnapshot.docs.length}");
 
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
@@ -115,8 +121,10 @@ class FirebaseCarpool {
       print('Error adding data to Firestore: $e');
     }
   }
-///0907 새 채팅 카운트 업데이트
-  static Future<void> updateNewChatCount(String carpoolId, int newChatCount) async {
+
+  ///0907 새 채팅 카운트 업데이트
+  static Future<void> updateNewChatCount(
+      String carpoolId, int newChatCount) async {
     try {
       await _firestore.collection('carpools').doc(carpoolId).update({
         'newchat': newChatCount,
@@ -127,12 +135,10 @@ class FirebaseCarpool {
     }
   }
 
-
   static Future<void> addMemberToCarpool(String carpoolID, String memberID,
       String memberName, String memberGender, String token, String roomGender) async {
     CollectionReference carpoolCollection = _firestore.collection('carpool');
     DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
-
 
     try {
       await _firestore.runTransaction((transaction) async {
@@ -140,11 +146,12 @@ class FirebaseCarpool {
 
         if (!carpoolSnapshot.exists) {
           // 카풀 정보가 없는 경우 처리
-          print('해당 카풀이 존재하지 않습니다.');
-          return;
+          throw DeletedRoomException('삭제된 카풀입니다.\n다른 카풀을 참여해주세요.');
         }
+
         int nowMember = carpoolSnapshot['nowMember'];
         int maxMember = carpoolSnapshot['maxMember'];
+
         if (nowMember < maxMember) {
           transaction.update(carpoolDocRef, {
             'members': FieldValue.arrayUnion(['${memberID}_${memberName}_$memberGender']),
@@ -156,24 +163,41 @@ class FirebaseCarpool {
           );
           FireStoreService().sendEntryMessage(carpoolID, memberName);
         } else {
-          // 최대 인원 초과 시 예외 발생
-          throw Exception('최대 인원 초과');
+          // 최대 인원 초과 시 처리
+          throw MaxCapacityException('최대 인원을 초과했습니다.\n다른 카풀을 이용해주세요.');
         }
       });
       print('카풀에 유저가 추가되었습니다 -> ${memberID}_${memberName}_$memberGender');
     } catch (e) {
       // 예외를 다시 던져서 메소드를 호출한 곳에 전달
-      throw e;
+      // throw e;
+      if (e is DeletedRoomException) {
+        // 카풀 정보가 없는 경우 예외 처리
+        print('카풀 정보가 없는 경우 처리: ${e.message}');
+        throw e;
+        // 예외 처리 코드 추가
+      } else if (e is MaxCapacityException) {
+        // 최대 인원 초과 예외 처리
+        print('최대 인원 초과: ${e.message}');
+        throw e;
+        // 예외 처리 코드 추가
+      } else {
+        // 기타 예외 처리
+        print('기타 예외: $e');
+        throw e;
+        // 예외 처리 코드 추가
+      }
     }
   }
 
   ///거리순 조회
   static Future<List<DocumentSnapshot>> nearByCarpool(
       double myLat, double myLon) async {
-    QuerySnapshot querySnapshot = await _firestore.collection('carpool').get();
+    QuerySnapshot querySnapshot =
+        await _firestore.collection('carpool').get();
 
     List<Map<String, dynamic>> sortedCarpools = [];
-    print("조회된 카풀 수: ${querySnapshot.docs.length}");
+    print("조회된 카풀 수(nearByCarpool): ${querySnapshot.docs.length}");
 
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
@@ -237,7 +261,7 @@ class FirebaseCarpool {
         .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
-    print("조회된 카풀 수: ${querySnapshot.docs.length}");
+    print("조회된 카풀 수(참여): ${querySnapshot.docs.length}");
 
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();

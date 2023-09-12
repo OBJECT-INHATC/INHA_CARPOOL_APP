@@ -9,6 +9,7 @@ import 'package:inha_Carpool/common/widget/w_round_button.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../common/util/carpool.dart';
+import '../../../../common/util/addMember_Exception.dart';
 import '../../s_main.dart';
 
 class CarpoolMap extends StatefulWidget {
@@ -310,36 +311,21 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                   if (!mounted) return;
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
-                                      context,
+                                      Nav.globalContext,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const MainScreen()));
                                 } catch (error) {
-                                  // addMemberToCarpool에서 던진 예외를 처리함
-                                  print('카풀 참가 실패 ( s_carpool_map )');
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return AlertDialog(
-                                        title: const Text('카풀 참가 실패'),
-                                        content: const Text(
-                                            '자리가 마감되었습니다!\n다른 카풀을 이용해주세요.'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                              Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const MainScreen()));
-                                            },
-                                            child: const Text('확인'),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
+                                  if (error is DeletedRoomException) {
+                                    // 방 삭제 예외 처리
+                                    showErrorDialog(context, error.message);
+                                  } else if (error is MaxCapacityException) {
+                                    // 인원 초과 예외 처리
+                                    showErrorDialog(context, error.message);
+                                  } else {
+                                    // 기타 예외 처리
+                                    print('카풀 참가 실패 (다른 예외): $error');
+                                  }
                                 }
                               },
                               style: ElevatedButton.styleFrom(
@@ -440,7 +426,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
   void ScffoldMsgAndListClear(BuildContext context, String text) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$text')),
+      SnackBar(content: Text(text)),
     );
     list.clear();
   }
@@ -479,13 +465,40 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
       double distanceInKm = distanceInMeters / 1000;
       if (distanceInKm >= 1) {
-        _distanceToLocation = distanceInKm.toStringAsFixed(1) + "km";
+        _distanceToLocation = "${distanceInKm.toStringAsFixed(1)}km";
       } else {
-        _distanceToLocation = (distanceInMeters).toStringAsFixed(0) + "m";
+        _distanceToLocation = "${(distanceInMeters).toStringAsFixed(0)}m";
       }
       print('로딩 상태 : $isLoading');
       handlePageLoadComplete();
       print('로딩 상태 ; $isLoading');
     });
+  }
+
+  // 에러 다이얼로그
+  void showErrorDialog(BuildContext context, String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('카풀참가 실패'),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  Nav.globalContext,
+                  MaterialPageRoute(
+                    builder: (context) => const MainScreen(),
+                  ),
+                );
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

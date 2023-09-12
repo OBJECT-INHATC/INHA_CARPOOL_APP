@@ -76,9 +76,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
   // 도착지
   String endPoint = "";
 
-  // API 서비스
-  final apiService = ApiService();
-
   @override
   void initState() {
     getChatandAdmin();
@@ -342,6 +339,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         onPressed: () {
                           testApi();
                           _showProfileModal(context, '$memberName 님','$memberGender');
+
                         },
                         style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -726,27 +724,5 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
   );
 }
 
-  // 테스트용 API
-  testApi() async {
 
-    final historyRequestDTO = HistoryRequestDTO(
-      carPoolId: "vJuRYQ49pAAUAJmQYtcG",
-      admin: "4IoZ0qp17me9v1QA3ljYw2SRbbh2_yeongjae",
-      member1: "aa",
-      member2: "bb",
-      member3: "cc",
-      nowMember: 1,
-      maxMember: 3,
-      startDetailPoint: "출발지 요약주소",
-      startPoint: "출발지 위도경도",
-      startPointName: "출발지 이름",
-      startTime: 123456789,
-      endDetailPoint: "도착지 요약주소",
-      endPoint: "도착지 위도경도",
-      endPointName: "도착지 이름",
-      gender: "남자",
-    );
-
-    final response = await apiService.saveHistory(historyRequestDTO);
-  }
 }

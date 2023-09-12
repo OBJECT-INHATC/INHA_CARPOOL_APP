@@ -91,6 +91,7 @@ class FireStoreService {
       "recentMessage": chatMessageData['message'],
       "recentMessageSender": chatMessageData['sender'],
       "recentMessageTime": chatMessageData['time'].toString(),
+      'unreadCount': FieldValue.increment(1), ///0909 서은율 읽지않은 메시지 카운트
     });
 
     // 사용자 FCM 토큰 get
@@ -116,7 +117,14 @@ class FireStoreService {
         time: chatMessageData['time'],
       ),
     );
+  }
 
+  ///0909 서은율 읽지않은 메시지 리셋
+  Future<void> resetUnreadCount(String carId) async {
+    final carpoolDocRef = carpoolCollection.doc(carId);
+    await carpoolDocRef.update({
+      'unreadCount': 0,
+    });
   }
 
   ///0831 서은율, 한승완
