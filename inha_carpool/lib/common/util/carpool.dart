@@ -22,12 +22,17 @@ class FirebaseCarpool {
   late String gender = "";
 
   ///출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
-  static Future<List<DocumentSnapshot>> getCarpoolsTimeby() async {
+  static Future<List<DocumentSnapshot>> getCarpoolsTimeby(int limit) async {
     CollectionReference carpoolCollection = _firestore.collection('carpool');
-    QuerySnapshot querySnapshot = await carpoolCollection.get();
+    QuerySnapshot querySnapshot = await carpoolCollection
+        .where('startTime',
+            isGreaterThan: DateTime.now().millisecondsSinceEpoch)
+        .orderBy('startTime')
+        .limit(limit)
+        .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
-    print("조회된 카풀 수: ${querySnapshot.docs.length}");
+    print("조회된 카풀 수(getCarpoolsTimeby): ${querySnapshot.docs.length}");
 
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
@@ -115,8 +120,10 @@ class FirebaseCarpool {
       print('Error adding data to Firestore: $e');
     }
   }
-///0907 새 채팅 카운트 업데이트
-  static Future<void> updateNewChatCount(String carpoolId, int newChatCount) async {
+
+  ///0907 새 채팅 카운트 업데이트
+  static Future<void> updateNewChatCount(
+      String carpoolId, int newChatCount) async {
     try {
       await _firestore.collection('carpools').doc(carpoolId).update({
         'newchat': newChatCount,
@@ -127,12 +134,10 @@ class FirebaseCarpool {
     }
   }
 
-
   static Future<void> addMemberToCarpool(String carpoolID, String memberID,
       String memberName, String token, String roomGender) async {
     CollectionReference carpoolCollection = _firestore.collection('carpool');
     DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
-
 
     try {
       await _firestore.runTransaction((transaction) async {
@@ -181,17 +186,17 @@ class FirebaseCarpool {
         throw e;
         // 예외 처리 코드 추가
       }
-
     }
   }
 
   ///거리순 조회
   static Future<List<DocumentSnapshot>> nearByCarpool(
       double myLat, double myLon) async {
-    QuerySnapshot querySnapshot = await _firestore.collection('carpool').get();
+    QuerySnapshot querySnapshot =
+        await _firestore.collection('carpool').get();
 
     List<Map<String, dynamic>> sortedCarpools = [];
-    print("조회된 카풀 수: ${querySnapshot.docs.length}");
+    print("조회된 카풀 수(nearByCarpool): ${querySnapshot.docs.length}");
 
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
@@ -255,7 +260,7 @@ class FirebaseCarpool {
         .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
-    print("조회된 카풀 수: ${querySnapshot.docs.length}");
+    print("조회된 카풀 수(참여): ${querySnapshot.docs.length}");
 
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
