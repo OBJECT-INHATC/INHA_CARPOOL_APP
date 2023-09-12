@@ -283,6 +283,7 @@ class _RecruitPageState extends State<RecruitPage> {
                         selectedRoomGender: selectedGender,
                         memberID: uid,
                         memberName: nickName,
+                        memberGender: gender,
                         startDetailPoint:
                             startPointInput.detailController.text,
                         endDetailPoint: endPointInput.detailController.text,

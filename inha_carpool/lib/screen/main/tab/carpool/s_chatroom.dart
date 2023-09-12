@@ -23,13 +23,14 @@ class ChatroomPage extends StatefulWidget {
   final String userName;
   final String uid;
 
+
   /// 생성자
   const ChatroomPage(
       {Key? key,
       required this.carId,
       required this.groupName,
       required this.userName,
-      required this.uid})
+      required this.uid,})
       : super(key: key);
 
   @override
@@ -141,6 +142,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
   String getName(String res) {
     return res.substring(res.indexOf("_") + 1);
   }
+  
+  String getGender(String adminField) {
+    List<String> parts = adminField.split('_');
+    return parts.length > 2 ? parts[2] : 'Unknown';
+  }
+
 
 
 
@@ -153,6 +160,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   // 멤버 리스트, 출발 시간, 요약주소 가져오기
   getCarpoolInfo() async {
     await FireStoreService().getCarDetails(widget.carId).then((val) {
+      print("Fetched data: $val");
       setState(() {
         membersList = val['members'];
         startTime = DateTime.fromMillisecondsSinceEpoch(val['startTime']);
@@ -166,6 +174,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   @override
   Widget build(BuildContext context) {
     bool isExitButtonDisabled = false; // 나가기 버튼 기본적으로 활성화
+
 
     return Scaffold(
       appBar: AppBar(
@@ -323,10 +332,14 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     itemBuilder: (BuildContext context, int index) {
                       String memberName =
                           getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
+                      String memberGender =
+                          getGender(membersList[index]); //회원 성별 가져오는 부분
 
                       return TextButton(
                         onPressed: () {
-                          _showProfileModal(context, '$memberName 님','');
+                          testApi();
+                          _showProfileModal(context, '$memberName 님','$memberGender');
+
                         },
                         style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -654,7 +667,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   }
 
 
-void _showProfileModal(BuildContext context, String userName, String gender) {
+void _showProfileModal(BuildContext context, String userName, String memberGender) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -676,7 +689,7 @@ void _showProfileModal(BuildContext context, String userName, String gender) {
             ),
             SizedBox(height: 10),
             Text(
-              '닉네임 : $userName\n성별 : $gender\n신고횟수 : ',
+              '닉네임 : $userName\n성별 : $memberGender\n신고횟수 : ',
               style: TextStyle(fontSize: 16),
             ),
             ConstrainedBox(
