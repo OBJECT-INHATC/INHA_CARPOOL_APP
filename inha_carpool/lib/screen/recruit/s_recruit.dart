@@ -97,6 +97,7 @@ class _RecruitPageState extends State<RecruitPage> {
       ),
       body: SingleChildScrollView(
         child: Column(
+
           children: [
             startPointInput = LocationInputWidget(
               labelText: startPointName,
@@ -208,11 +209,13 @@ class _RecruitPageState extends State<RecruitPage> {
                   ],
                 ),
 
-            SizedBox(height: 50),
+            SizedBox(height: context.height(0.01)),
             /// 카풀 시작하기 -- 파베 기능 추가하기
             Container(
               child: ElevatedButton(
+
                 style: ButtonStyle(
+                  surfaceTintColor: MaterialStateProperty.all(Colors.blue[200]),
                   backgroundColor: MaterialStateProperty.all(Colors.blue[200]),
                   // 버튼 배경색
                   fixedSize: MaterialStateProperty.all(Size(context.width(0.5), context.height(0.04))), // 버튼 크기

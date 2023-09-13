@@ -121,14 +121,14 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                       "${widget.selectedDateTime.hour > 12 ? (widget.selectedDateTime.hour - 12).toString().padLeft(2, '0') : widget.selectedDateTime.hour.toString().padLeft(2, '0')}:"
                       "${widget.selectedDateTime.minute.toString().padLeft(2, '0')}",
                       style: const TextStyle(
-                        fontSize: 40,
+                        fontSize: 32,
                       ),
                     )
                   : Text(
                       "${widget.selectedDateTime.month.toString().padLeft(2, '0')}."
                       "${widget.selectedDateTime.day.toString().padLeft(2, '0')}",
                       style: const TextStyle(
-                        fontSize: 40,
+                        fontSize: 32,
                       ),
                     ),
             ],

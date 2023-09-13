@@ -64,28 +64,38 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           }, // isGestureEnabled가 false일 때는 onTap 이벤트 비활성화
           child: Container(
 
-            margin: const EdgeInsets.fromLTRB(30, 15, 30, 10),
+            margin: const EdgeInsets.fromLTRB(30, 20, 30, 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   margin: const EdgeInsets.only(bottom: 5),
-                  child: widget.pointText.text.size(16).bold.black.make(),
-
-                ),
-                TextField(
-                  enabled: false,
-
-                  decoration: InputDecoration(
-
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: InputBorder.none,
-                    labelStyle: const TextStyle(color: Colors.black, fontSize: 13),
+                  child: Row(
+                    children: [
+                      widget.pointText.text.size(16).bold.black.make(),
+                      const SizedBox(width: 10),
+                    ],
                   ),
-                  style: const TextStyle(color: Colors.black, fontSize: 14),
-                  controller: TextEditingController(text: selectedLocation),
+
+
                 ),
+                Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        selectedLocation,
+                        style: const TextStyle(color: Colors.black, fontSize: 14),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.black,
+                        size: 14,)
+                    ],
+                  ),
+                )
               ],
             ),
           ),
