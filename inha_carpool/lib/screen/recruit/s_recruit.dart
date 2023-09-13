@@ -196,6 +196,7 @@ class _RecruitPageState extends State<RecruitPage> {
                         // 성별 선택 버튼
                         GenderSelectorWidget(
                           selectedGender: selectedGender,
+                          gender: gender,
                           onGenderSelected: (value) {
                             setState(() {
                               selectedGender = value;

@@ -4,12 +4,14 @@ import 'package:inha_Carpool/common/common.dart';
 
 class GenderSelectorWidget extends StatefulWidget {
   final String selectedGender;
+  final String gender;
   final Function(String) onGenderSelected;
 
   const GenderSelectorWidget({
     super.key,
     required this.selectedGender,
     required this.onGenderSelected,
+    required this.gender,
   });
 
   @override
@@ -18,23 +20,11 @@ class GenderSelectorWidget extends StatefulWidget {
 
 class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
   final storage = const FlutterSecureStorage();
-  late String gender;
 
   @override
   void initState() {
     super.initState();
-    _loadGenderFromStorage();
   }
-
-  Future<void> _loadGenderFromStorage() async {
-    String? storedGender = await storage.read(key: "gender");
-    if (storedGender != null) {
-      setState(() {
-        gender = storedGender;
-      });
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +46,14 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: TextButton(
                   onPressed: () {
-                    widget.onGenderSelected(gender);
+                    widget.onGenderSelected(widget.gender);
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: widget.selectedGender == gender
+                    backgroundColor: widget.selectedGender == widget.gender
                         ? Colors.blue[200]
                         : Colors.grey[300],
                   ),
-                  child: '${gender}만'.text.white.size(13).make(),
+                  child: '${widget.gender}만'.text.white.size(13).make(),
                 ),
               ),
               // Container(
