@@ -91,8 +91,13 @@ class _recordListState extends State<recordList> {
   }
 
   // 카풀 컬렉션 이름 추출
+  // String getName(String res) {
+  //   return res.substring(res.indexOf("_") + 1);
+  // }
   String getName(String res) {
-    return res.substring(res.indexOf("_") + 1);
+    int start = res.indexOf("_") + 1;
+    int end = res.lastIndexOf("_");
+    return res.substring(start, end);
   }
 
   // Retrieve carpools and apply FutureBuilder

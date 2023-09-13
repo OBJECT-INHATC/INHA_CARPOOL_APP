@@ -100,7 +100,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
             fontSize: 22,
             fontWeight: FontWeight.normal,
           ),
-          title: '${widget.admin.split("_").last}님의 카풀 정보'.text.black.make(),
+          title: '${widget.admin.split("_")[1]}님의 카풀 정보'.text.black.make(),
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
           toolbarHeight: 45,

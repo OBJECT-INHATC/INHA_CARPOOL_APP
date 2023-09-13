@@ -19,7 +19,8 @@ class FirebaseCarpool {
   static const storage = FlutterSecureStorage();
   late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
-  // late String gender = "";
+  late String gender = "";
+
 
   ///출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
   static Future<List<DocumentSnapshot>> getCarpoolsTimeby(int limit) async {
@@ -89,7 +90,7 @@ class FirebaseCarpool {
       GeoPoint geoStart = GeoPoint(startPoint.latitude, startPoint.longitude);
       GeoPoint geoEnd = GeoPoint(endPoint.latitude, endPoint.longitude);
 
-      List<String> hobbies = ['${memberID}_${memberName}_$memberGender'];
+      List<String> members = ['${memberID}_${memberName}_$memberGender'];
 
       print(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''));
 
@@ -104,7 +105,7 @@ class FirebaseCarpool {
         'startTime': dateAsInt,
         'nowMember': 1,
         'status': false,
-        'members': hobbies,
+        'members': members,
         'startDetailPoint': startDetailPoint,
         'endDetailPoint': endDetailPoint,
       });
@@ -167,7 +168,7 @@ class FirebaseCarpool {
           throw MaxCapacityException('최대 인원을 초과했습니다.\n다른 카풀을 이용해주세요.');
         }
       });
-      print('카풀에 유저가 추가되었습니다 -> ${memberID}_${memberName}_$memberGender');
+      print('카풀에 유저가 추가되었습니다 -> ${memberID}_${memberName}');
     } catch (e) {
       // 예외를 다시 던져서 메소드를 호출한 곳에 전달
       // throw e;
@@ -254,10 +255,10 @@ class FirebaseCarpool {
 
   /// 내가 참여한 카풀
   static Future<List<DocumentSnapshot>> getCarpoolsWithMember(
-      String memberID, String memberName,) async {
+      String memberID, String memberName, String memberGender) async {
     QuerySnapshot querySnapshot = await _firestore
         .collection('carpool')
-        .where('members', arrayContains: '${memberID}_${memberName}')
+        .where('members', arrayContains: '${memberID}_${memberName}_$memberGender')
         .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
