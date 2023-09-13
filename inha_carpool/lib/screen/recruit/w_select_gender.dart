@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 
 class GenderSelectorWidget extends StatefulWidget {
@@ -17,25 +16,6 @@ class GenderSelectorWidget extends StatefulWidget {
 }
 
 class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
-  final storage = const FlutterSecureStorage();
-  late String gender;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadGenderFromStorage();
-  }
-
-  Future<void> _loadGenderFromStorage() async {
-    String? storedGender = await storage.read(key: "gender");
-    if (storedGender != null) {
-      setState(() {
-        gender = storedGender;
-      });
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,63 +24,59 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
           width: double.infinity,
           margin: const EdgeInsets.all(15),
           padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-          child: '성별'.text.size(16).bold.align(TextAlign.left).make(),
+          child: '성별'.text.size(20).bold.align(TextAlign.left).make(),
         ),
         Container(
-
+          width: double.infinity,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
-                width: context.width(0.3),
-                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                margin: const EdgeInsets.fromLTRB(30, 0, 0, 0),
                 child: TextButton(
                   onPressed: () {
-                    widget.onGenderSelected(gender);
+                    widget.onGenderSelected('남성');
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: widget.selectedGender == gender
-                        ? Colors.blue[200]
-                        : Colors.grey[300],
+                    backgroundColor: widget.selectedGender == '남성'
+                        ? Colors.lightBlue
+                        : Colors.grey,
                   ),
-                  child: '${gender}만'.text.white.size(13).make(),
+                  child: '남성'.text.white.size(17).make(),
                 ),
               ),
-              // Container(
-              //   width: context.width(0.3),
-              //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              //   child: TextButton(
-              //     onPressed: () {
-              //       widget.onGenderSelected('여성');
-              //     },
-              //     style: TextButton.styleFrom(
-              //       backgroundColor: widget.selectedGender == '여성'
-              //           ? Colors.lightBlue
-              //           : Colors.grey[300],
-              //     ),
-              //     child: '여성'.text.white.size(17).make(),
-              //
-              //   ),
-              // ),
               Container(
-                width: context.width(0.3),
-                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                margin: const EdgeInsets.fromLTRB(0, 0, 30, 0),
                 child: TextButton(
                   onPressed: () {
-                    widget.onGenderSelected('무관');
+                    widget.onGenderSelected('여성');
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: widget.selectedGender == '무관'
-                        ? Colors.blue[200]
-                        : Colors.grey[300],
+                    backgroundColor: widget.selectedGender == '여성'
+                        ? Colors.lightBlue
+                        : Colors.grey,
                   ),
-                  child: '무관'.text.white.size(17).make(),
+                  child: '여성'.text.white.size(17).make(),
                 ),
               ),
             ],
           ),
         ),
-
+        Container(
+          width: double.infinity,
+          margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+          child: TextButton(
+            onPressed: () {
+              widget.onGenderSelected('무관');
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: widget.selectedGender == '무관'
+                  ? Colors.lightBlue
+                  : Colors.grey,
+            ),
+            child: '무관'.text.white.size(17).make(),
+          ),
+        ),
       ],
     );
   }

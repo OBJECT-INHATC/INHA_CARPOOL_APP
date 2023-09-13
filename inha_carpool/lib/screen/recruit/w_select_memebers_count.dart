@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:inha_Carpool/common/common.dart';
 
 class LimitSelectorWidget extends StatelessWidget {
   final List<String> options;
@@ -14,21 +13,20 @@ class LimitSelectorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
       children: options.map((option) {
         return Container(
-          width: context.width(0.3),
-          margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+          width: double.infinity,
+          margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
           child: TextButton(
             onPressed: () => onOptionSelected(option),
             style: TextButton.styleFrom(
               backgroundColor:
-              selectedValue == option ? Colors.blue[200] : Colors.grey[300],
+              selectedValue == option ? Colors.lightBlue : Colors.grey,
             ),
             child: Text(
               option,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 17),
             ),
           ),
         );
