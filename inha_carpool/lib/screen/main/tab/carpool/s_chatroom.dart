@@ -22,6 +22,7 @@ class ChatroomPage extends StatefulWidget {
   final String groupName;
   final String userName;
   final String uid;
+  final String gender;
 
 
   /// 생성자
@@ -30,7 +31,8 @@ class ChatroomPage extends StatefulWidget {
       required this.carId,
       required this.groupName,
       required this.userName,
-      required this.uid,})
+      required this.uid,
+      required this.gender,})
       : super(key: key);
 
   @override
@@ -140,13 +142,26 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
   // 카풀 컬렉션 이름 추출
   String getName(String res) {
-    return res.substring(res.indexOf("_") + 1);
+    int start = res.indexOf("_") + 1;
+    int end = res.lastIndexOf("_");
+    return res.substring(start, end);
+  }
+
+  String getGender(String res){
+    print("Input string: $res");
+    print("Last index of _: ${res.lastIndexOf("_")}");
+    String gender = res.substring(res.lastIndexOf("_")+1);
+    print("Extracted gender: $gender");
+    return gender;
   }
   
-  String getGender(String adminField) {
-    List<String> parts = adminField.split('_');
-    return parts.length > 2 ? parts[2] : 'Unknown';
-  }
+  // String getGender(String adminField) {
+  //   return adminField.substring(adminField.lastIndexOf("_")+1);
+  // }
+  // String getGender(String adminField) {
+  //   List<String> parts = adminField.split('_');
+  //   return parts.length > 2 ? parts[2] : 'Unknown';
+  // }
 
 
 
@@ -220,7 +235,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                     await FireStoreService().exitCarpool(
                                         widget.carId,
                                         widget.userName,
-                                        widget.uid);
+                                        widget.uid,
+                                        widget.gender);
 
                                     // 데이터베이스 작업이 완료되면 다음 페이지로 이동
                                     if (!mounted) return;
@@ -259,7 +275,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                     await FireStoreService().exitCarpoolAsAdmin(
                                         widget.carId,
                                         widget.userName,
-                                        widget.uid);
+                                        widget.uid,
+                                        widget.gender);
 
                                     if (!mounted) return;
                                     Navigator.pop(context);
@@ -337,8 +354,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
                       return TextButton(
                         onPressed: () {
-                          testApi();
-                          _showProfileModal(context, '$memberName 님','$memberGender');
+                          _showProfileModal(context, '$memberName 님',memberGender);
 
                         },
                         style: TextButton.styleFrom(

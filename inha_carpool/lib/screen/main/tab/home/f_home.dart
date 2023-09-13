@@ -225,6 +225,7 @@ class _HomeState extends State<Home> {
             nickName: nickName,
             // 닉네임 전달
             uid: uid, // UID 전달
+            gender: gender,
           );
         }
       },
