@@ -284,8 +284,9 @@ class _RecruitPageState extends State<RecruitPage> {
                           selectedRoomGender: selectedGender,
                           memberID: uid,
                           memberName: nickName,
+                          memberGender: gender,
                           startDetailPoint:
-                              startPointInput.detailController.text,
+                          startPointInput.detailController.text,
                           endDetailPoint: endPointInput.detailController.text,
                         );
 
@@ -298,12 +299,12 @@ class _RecruitPageState extends State<RecruitPage> {
                         setState(() {
                           isButtonDisabled = false;
                         });
-
-                      },
+                },
                 child: '카풀 시작하기'.text.size(20).white.make(),
               ).p(50),
             ),
           ],
+
         ),
 
       ),
