@@ -22,6 +22,8 @@ class ChatroomPage extends StatefulWidget {
   final String groupName;
   final String userName;
   final String uid;
+  final String gender;
+
 
   /// 생성자
   const ChatroomPage(
@@ -29,7 +31,8 @@ class ChatroomPage extends StatefulWidget {
       required this.carId,
       required this.groupName,
       required this.userName,
-      required this.uid})
+      required this.uid,
+      required this.gender,})
       : super(key: key);
 
   @override
@@ -139,8 +142,27 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
   // 카풀 컬렉션 이름 추출
   String getName(String res) {
-    return res.substring(res.indexOf("_") + 1);
+    int start = res.indexOf("_") + 1;
+    int end = res.lastIndexOf("_");
+    return res.substring(start, end);
   }
+
+  String getGender(String res){
+    print("Input string: $res");
+    print("Last index of _: ${res.lastIndexOf("_")}");
+    String gender = res.substring(res.lastIndexOf("_")+1);
+    print("Extracted gender: $gender");
+    return gender;
+  }
+  
+  // String getGender(String adminField) {
+  //   return adminField.substring(adminField.lastIndexOf("_")+1);
+  // }
+  // String getGender(String adminField) {
+  //   List<String> parts = adminField.split('_');
+  //   return parts.length > 2 ? parts[2] : 'Unknown';
+  // }
+
 
 
 
@@ -153,6 +175,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   // 멤버 리스트, 출발 시간, 요약주소 가져오기
   getCarpoolInfo() async {
     await FireStoreService().getCarDetails(widget.carId).then((val) {
+      print("Fetched data: $val");
       setState(() {
         membersList = val['members'];
         startTime = DateTime.fromMillisecondsSinceEpoch(val['startTime']);
@@ -166,6 +189,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   @override
   Widget build(BuildContext context) {
     bool isExitButtonDisabled = false; // 나가기 버튼 기본적으로 활성화
+
 
     return Scaffold(
       appBar: AppBar(
@@ -211,7 +235,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                     await FireStoreService().exitCarpool(
                                         widget.carId,
                                         widget.userName,
-                                        widget.uid);
+                                        widget.uid,
+                                        widget.gender);
 
                                     // 데이터베이스 작업이 완료되면 다음 페이지로 이동
                                     if (!mounted) return;
@@ -250,7 +275,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                     await FireStoreService().exitCarpoolAsAdmin(
                                         widget.carId,
                                         widget.userName,
-                                        widget.uid);
+                                        widget.uid,
+                                        widget.gender);
 
                                     if (!mounted) return;
                                     Navigator.pop(context);
@@ -323,10 +349,13 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     itemBuilder: (BuildContext context, int index) {
                       String memberName =
                           getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
+                      String memberGender =
+                          getGender(membersList[index]); //회원 성별 가져오는 부분
 
                       return TextButton(
                         onPressed: () {
-                          _showProfileModal(context, '$memberName 님','');
+                          _showProfileModal(context, '$memberName 님',memberGender);
+
                         },
                         style: TextButton.styleFrom(
                           shape: RoundedRectangleBorder(
@@ -654,7 +683,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   }
 
 
-void _showProfileModal(BuildContext context, String userName, String gender) {
+void _showProfileModal(BuildContext context, String userName, String memberGender) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -676,7 +705,7 @@ void _showProfileModal(BuildContext context, String userName, String gender) {
             ),
             SizedBox(height: 10),
             Text(
-              '닉네임 : $userName\n성별 : $gender\n신고횟수 : ',
+              '닉네임 : $userName\n성별 : $memberGender\n신고횟수 : ',
               style: TextStyle(fontSize: 16),
             ),
             ConstrainedBox(

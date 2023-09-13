@@ -298,12 +298,14 @@ class _RecruitPageState extends State<RecruitPage> {
                         setState(() {
                           isButtonDisabled = false;
                         });
+
                       },
                 child: '카풀 시작하기'.text.size(20).white.make(),
               ).p(50),
             ),
           ],
         ),
+
       ),
     );
   }

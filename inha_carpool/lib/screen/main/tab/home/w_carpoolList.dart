@@ -15,6 +15,7 @@ class CarpoolListWidget extends StatefulWidget {
   final int visibleItemCount;
   final String nickName; // nickName 추가
   final String uid; // uid 추가
+  final String gender;
 
   const CarpoolListWidget({
     required this.snapshot,
@@ -22,6 +23,7 @@ class CarpoolListWidget extends StatefulWidget {
     required this.visibleItemCount,
     required this.nickName,
     required this.uid,
+    required this.gender,
   });
 
   @override
@@ -82,7 +84,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
               int nowMember = carpoolData['nowMember'];
               int maxMember = carpoolData['maxMember'];
 
-              String currentUser = '${widget.uid}_${widget.nickName}';
+              String currentUser = '${widget.uid}_${widget.nickName}_${widget.gender}';
               if (carpoolData['members'].contains(currentUser)) {
                 // 이미 참여한 경우
                 if (carpoolData['admin'] == currentUser) {
@@ -95,6 +97,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                               groupName: '카풀 네임',
                               userName: widget.nickName,
                               uid: widget.uid,
+                              gender: widget.gender,
                             )),
                   );
                   print('현재 유저: $currentUser');
@@ -108,6 +111,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                         groupName: '카풀 네임',
                         userName: widget.nickName,
                         uid: widget.uid,
+                        gender: widget.gender,
                       ),
                     ),
                   );
