@@ -5,9 +5,11 @@ import '../../service/api/ApiService.dart';
 import 'd_complain_complete.dart';
 
 class ComplainAlert extends StatefulWidget {
-  const ComplainAlert({super.key, required this.index});
+  const ComplainAlert({super.key, required this.userName, required this.myId, required this.carpoolId});
 
-  final String index; // 이름 따라보내기
+  final String userName; // 이름 따라보내기
+  final String myId;
+  final String carpoolId; // 카풀 ID 따라보내기
 
   @override
   State<ComplainAlert> createState() => _ComplainAlertState();
@@ -61,7 +63,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                         color: Colors.grey,
                       ),
                       Text(
-                        widget.index.replaceFirst(' ', '').toString(),
+                        widget.userName.replaceFirst(' ', '').toString(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -114,24 +116,29 @@ class _ComplainAlertState extends State<ComplainAlert> {
                 // Todo: 신고 api 추가
                 //print(getCheckedItems());
                 // print(_controller.text);
-                final reportRequstDTO = ReportRequstDTO(
-                  content: _controller.text,
-                  carpoolId: '카풀 ㅠ허ㅏㅛㅗID',
-                  userName: '피신고자 ID',
-                  reporter: '신고자 ID',
-                  reportType: getCheckedItems().toString(),
-                  reportDate: DateTime.now().toString(),
-                );
+                if(_controller.text.isNotEmpty && getCheckedItems().isNotEmpty){
+                  final reportRequstDTO = ReportRequstDTO(
+                    content: _controller.text,
+                    carpoolId: widget.carpoolId,
+                    userName: widget.userName,
+                    reporter: widget.myId,
+                    reportType: getCheckedItems().toString(),
+                    reportDate: DateTime.now().toString(),
+                  );
 
-                // API 호출
-                final response = await apiService.saveReport(reportRequstDTO);
-                print(response.statusCode);
+                  // API 호출
+                  final response = await apiService.saveReport(reportRequstDTO);
+                  print(response.statusCode);
 
-                Navigator.pop(context);
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) => ComplainComplete(),
-                );
+                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => ComplainComplete(),
+                  );
+                }else{
+                  print('내용을 입력해주세요');
+                }
+
               },
               child: const Text('신고하기', style: TextStyle(color: Colors.red)),
             ),

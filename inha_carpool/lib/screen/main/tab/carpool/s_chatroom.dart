@@ -737,7 +737,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                       Navigator.pop(context);
                       showDialog(
                         context: context,
-                        builder: (context) => ComplainAlert(index: userName),
+                        builder: (context) => ComplainAlert(userName: userName, myId: userName, carpoolId: widget.carId)
                       );
                     },
                     style: ElevatedButton.styleFrom(

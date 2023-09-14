@@ -66,7 +66,8 @@ class _ComplainDialogState extends State<ComplainDialog> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return ComplainAlert(index: index.toString());
+                       // return ComplainAlert(userName: index.toString());
+                        return Placeholder();
                       },
                     );
                   },
