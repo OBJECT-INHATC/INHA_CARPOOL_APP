@@ -97,8 +97,8 @@ class _ComplainAlertState extends State<ComplainAlert> {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      labelText: '문의사항',
-                      prefixIcon: Icon(Icons.edit, size: 18),
+                      labelText: '신고내용',
+                      prefixIcon: const Icon(Icons.edit, size: 18),
                     ),
                   ),
                 ),
@@ -113,9 +113,6 @@ class _ComplainAlertState extends State<ComplainAlert> {
           children: [
             TextButton(
               onPressed: () async {
-                // Todo: 신고 api 추가
-                //print(getCheckedItems());
-                // print(_controller.text);
                 if(_controller.text.isNotEmpty && getCheckedItems().isNotEmpty){
                   final reportRequstDTO = ReportRequstDTO(
                     content: _controller.text,
@@ -133,10 +130,13 @@ class _ComplainAlertState extends State<ComplainAlert> {
                   Navigator.pop(context);
                   showDialog(
                     context: context,
-                    builder: (BuildContext context) => ComplainComplete(),
+                    builder: (BuildContext context) => const ComplainComplete(),
                   );
                 }else{
-                  print('내용을 입력해주세요');
+                    SnackBar snackBar = const SnackBar(
+                      content: Text("체크박스와 신고내용을 모두 입력 해주세요."),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                 }
 
               },
