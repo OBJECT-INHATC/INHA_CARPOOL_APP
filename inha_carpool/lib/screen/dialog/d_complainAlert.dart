@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../dto/ReportRequstDTO.dart';
+import '../../service/api/ApiService.dart';
 import 'd_complain_complete.dart';
 
 class ComplainAlert extends StatefulWidget {
@@ -12,6 +14,7 @@ class ComplainAlert extends StatefulWidget {
 }
 
 class _ComplainAlertState extends State<ComplainAlert> {
+  final apiService = ApiService();
   final _controller = TextEditingController();
   List<Map<String, dynamic>> _checkBoxItems = [
     {'value': false, 'label': '욕설'},
@@ -107,10 +110,22 @@ class _ComplainAlertState extends State<ComplainAlert> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 // Todo: 신고 api 추가
                 //print(getCheckedItems());
                 // print(_controller.text);
+                final reportRequstDTO = ReportRequstDTO(
+                  content: _controller.text,
+                  carpoolId: '카풀 ㅠ허ㅏㅛㅗID',
+                  userName: '피신고자 ID',
+                  reporter: '신고자 ID',
+                  reportType: getCheckedItems().toString(),
+                  reportDate: DateTime.now().toString(),
+                );
+
+                // API 호출
+                final response = await apiService.saveReport(reportRequstDTO);
+                print(response.statusCode);
 
                 Navigator.pop(context);
                 showDialog(
