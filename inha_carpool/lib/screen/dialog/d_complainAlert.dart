@@ -108,6 +108,10 @@ class _ComplainAlertState extends State<ComplainAlert> {
           children: [
             TextButton(
               onPressed: () {
+                // Todo: 신고 api 추가
+                //print(getCheckedItems());
+                // print(_controller.text);
+
                 Navigator.pop(context);
                 showDialog(
                   context: context,
@@ -186,6 +190,20 @@ class _ComplainAlertState extends State<ComplainAlert> {
     });
   }
 
-  // 신고완료 알림 다이얼로그
+  // 체크된 리스트 확인
+  List<String> getCheckedItems() {
+    List<String> checkedItems = [];
+
+    for (var item in _checkBoxItems) {
+      if (item['value'] == true) {
+        checkedItems.add(item['label']);
+      }
+    }
+
+    return checkedItems;
+  }
+
+
+// 신고완료 알림 다이얼로그
 
 }
