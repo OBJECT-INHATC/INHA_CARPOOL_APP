@@ -43,75 +43,19 @@ class _ProFileState extends State<ProFile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(0, 28, 0, 0),
       color: const Color(00),
       child: Column(
         children: [
           Center(
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20.0),
-                      child: Icon(
-                        Icons.account_circle,
-                        size: 50,
-                        color: Colors.black,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        _showEditNicknameDialog(context);
-                      },
-                      child: Column(
-                        children: [
-                          FutureBuilder<String?>(
-                            future: nickNameFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const CircularProgressIndicator();
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else {
-                                return Text(
-                                  snapshot.data ?? '',
-                                  style: const TextStyle(
-                                    fontSize: 17,
-                                    color: Colors.black,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                          const SizedBox(height: 6),
-                          ElevatedButton(
-                            onPressed: () {
-                              _showEditNicknameDialog(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(60, 24),
-                            ),
-                            child: const Text(
-                              "수정하기",
-                              style: TextStyle(fontSize: 14),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
                 // 기본정보 항목
                 Container(
                   margin: EdgeInsets.symmetric(horizontal: 6.0),
                   color: Colors.grey[100],
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 13.0), // vertical 값을 조정
-                  child: Column(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 15.0, vertical: 13.0), // vertical 값을 조정
+                  child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
                     children: [
                       Text(
@@ -124,6 +68,78 @@ class _ProFileState extends State<ProFile> {
                     ],
                   ),
                 ),
+                const SizedBox(height: 10),
+                // 기본정보 학목 중 프로필사진, 닉네임 부분
+                Row(
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left: 5.0),
+                                child: Icon(
+                                  Icons.account_circle,
+                                  size: 50,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              FutureBuilder<String?>(
+                                future: nickNameFuture,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    return Text(
+                                      snapshot.data ?? '',
+                                      style: const TextStyle(
+                                        fontSize: 17,
+                                        color: Colors.black,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          right: 225,
+                          bottom: 15,
+                          child: GestureDetector(
+                            onTap: () {
+                              _showEditNicknameDialog(context);
+                            },
+                            child: const Row(
+                              children: [
+                                Icon(Icons.edit, size: 14, color: Colors.grey),
+                                Text(
+                                  "수정",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                // SizedBox(width: 5),
+
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     const SizedBox(
@@ -142,14 +158,16 @@ class _ProFileState extends State<ProFile> {
                     FutureBuilder<String?>(
                       future: emailFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           email = snapshot.data ?? '';
                           return Padding(
-                            padding: const EdgeInsets.only(top: 4.0), // 텍스트를 약간 내림
+                            padding: const EdgeInsets.only(top: 4.0),
+                            // 텍스트를 약간 내림
                             child: Text(
                               snapshot.data ?? '',
                               style: const TextStyle(
@@ -181,14 +199,16 @@ class _ProFileState extends State<ProFile> {
                     FutureBuilder<String?>(
                       future: userNameFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           return Text(
                             snapshot.data ?? '',
-                            style: const TextStyle(fontSize: 15, color: Colors.black),
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.black),
                           );
                         }
                       },
@@ -214,14 +234,16 @@ class _ProFileState extends State<ProFile> {
                     FutureBuilder<String?>(
                       future: nickNameFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           return Text(
                             snapshot.data ?? '',
-                            style: const TextStyle(fontSize: 14, color: Colors.black),
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.black),
                           );
                         }
                       },
@@ -246,13 +268,15 @@ class _ProFileState extends State<ProFile> {
                     FutureBuilder<String?>(
                       future: genderFuture,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return const CircularProgressIndicator();
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           return Padding(
-                            padding: const EdgeInsets.only(top: 4.0), // 텍스트를 약간 내림
+                            padding: const EdgeInsets.only(top: 4.0),
+                            // 텍스트를 약간 내림
                             child: Text(
                               snapshot.data ?? '',
                               style: const TextStyle(
@@ -268,8 +292,8 @@ class _ProFileState extends State<ProFile> {
                 ),
               ],
             ),
-
-          )],
+          )
+        ],
       ),
     );
   }
@@ -305,8 +329,8 @@ class _ProFileState extends State<ProFile> {
               onPressed: () async {
                 String newNickname = nicknameController.text;
                 if (newNickname.isNotEmpty && newNickname.length > 1) {
-                  int result = await updateNickname(
-                      newNickname, AutofillHints.email);
+                  int result =
+                  await updateNickname(newNickname, AutofillHints.email);
 
                   if (result == 1) {
                     // 업데이트 성공 팝업
@@ -345,68 +369,68 @@ class _ProFileState extends State<ProFile> {
   }
 }
 
-  void setState(Null Function() param0) {
-  }
+void setState(Null Function() param0) {}
 
-  void _showResultPopup(BuildContext context, String title, String content) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(content),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("확인"),
-            ),
-          ],
-        );
-      },
-    );
-  }
+void _showResultPopup(BuildContext context, String title, String content) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("확인"),
+          ),
+        ],
+      );
+    },
+  );
+}
 
-  Future<int> updateNickname(String newNickname, String email) async {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final CollectionReference users = firestore.collection('users');
+Future<int> updateNickname(String newNickname, String email) async {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final CollectionReference users = firestore.collection('users');
 
-    try {
-      // 이메일 값을 기반으로 쿼리를 수행하여 문서 ID를 가져옴
-      final QuerySnapshot querySnapshot = await users.where(
-          'email', isEqualTo: email).get();
+  try {
+    // 이메일 값을 기반으로 쿼리를 수행하여 문서 ID를 가져옴
+    final QuerySnapshot querySnapshot =
+    await users.where('email', isEqualTo: email).get();
 
-      // 쿼리 결과에서 문서 ID를 가져옴
-      if (querySnapshot.docs.isNotEmpty) {
-        final DocumentSnapshot document = querySnapshot.docs.first;
-        final String documentId = document.id;
+    // 쿼리 결과에서 문서 ID를 가져옴
+    if (querySnapshot.docs.isNotEmpty) {
+      final DocumentSnapshot document = querySnapshot.docs.first;
+      final String documentId = document.id;
 
-        // 변경하려는 닉네임이 다른 문서의 닉네임과 중복되지 않는지 확인
-        final QuerySnapshot duplicateNicknames = await users
-            .where('nickName', isEqualTo: newNickname)
-            .get();
+      // 변경하려는 닉네임이 다른 문서의 닉네임과 중복되지 않는지 확인
+      final QuerySnapshot duplicateNicknames =
+      await users.where('nickName', isEqualTo: newNickname).get();
 
-        // 중복된 닉네임이 없다면 닉네임을 업데이트
-        if (duplicateNicknames.docs.isEmpty) {
-          final DocumentReference userRef = users.doc(documentId);
-          await userRef.update({'nickName': newNickname});
+      // 중복된 닉네임이 없다면 닉네임을 업데이트
+      if (duplicateNicknames.docs.isEmpty) {
+        final DocumentReference userRef = users.doc(documentId);
+        await userRef.update({'nickName': newNickname});
 
-          // FlutterSecureStorage에 닉네임 업데이트
-          var storage;
-          await storage.write(key: 'nickName', value: newNickname);
-          print('닉네임이 업데이트되었습니다. => $newNickname');
-          return 1;
-        } else {
-          print('중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.');
-          return 2;
-        }
+        // FlutterSecureStorage에 닉네임 업데이트
+        var storage;
+        await storage.write(key: 'nickName', value: newNickname);
+        print('닉네임이 업데이트되었습니다. => $newNickname');
+        return 1;
       } else {
-        print('해당 이메일과 일치하는 문서가 없습니다.');
-        return 0;
+        print('중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.');
+        return 2;
       }
-    } catch (e) {
-      print('Error updating nickname: $e');
-      return -1;
+    } else {
+      print('해당 이메일과 일치하는 문서가 없습니다.');
+      return 0;
     }
+  } catch (e) {
+    print('Error updating nickname: $e');
+    return -1;
   }
+}
+
+
