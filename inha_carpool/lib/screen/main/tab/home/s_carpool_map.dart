@@ -1,12 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/common/widget/w_round_button.dart';
-import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../common/util/carpool.dart';
 import '../../../../common/util/addMember_Exception.dart';
@@ -15,18 +14,22 @@ import '../../s_main.dart';
 class CarpoolMap extends StatefulWidget {
   final LatLng startPoint;
   final String startPointName;
+  final LatLng endPoint;
+  final String endPointName;
   final String startTime;
   final String carId;
   final String admin;
   final String roomGender;
 
-  CarpoolMap({
+  const CarpoolMap({super.key,
     required this.startPoint,
     required this.startPointName,
     required this.startTime,
     required this.carId,
     required this.admin,
     required this.roomGender,
+    required this.endPoint,
+    required this.endPointName,
   });
 
   @override
@@ -36,11 +39,8 @@ class CarpoolMap extends StatefulWidget {
 class _CarpoolMapState extends State<CarpoolMap> {
   late GoogleMapController mapController;
   List<dynamic> list = [];
-  String _distanceToLocation = '계산중...';
   bool firstStep = false;
-  Set<Marker> _markers = {};
   late double distanceInMeters;
-  LatLng? _myPoint;
 
   final storage = const FlutterSecureStorage();
   late String nickName = ""; // 기본값으로 초기화
@@ -53,18 +53,41 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
   bool isLoading = true; // 뒤로가기 버튼 누른 시간
 
+  LatLng? midPoint;
+
+  BitmapDescriptor startCustomIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor endCustomIcon = BitmapDescriptor.defaultMarker;
+
   @override
   void initState() {
     super.initState();
-    _addMarker(
-      widget.startPoint,
-      widget.startPointName,
-      "StartMarker",
-      BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-    );
-    _getCurrentLocation();
+    addCustomIcon(); // 커스텀 아이콘 추가
+    _moveCamera(); // 카메라 이동
     _loadUserData();
     _getLocalToken();
+  }
+
+  /// 커스텀 아이콘 이미지 추가 - 0915 한승완
+  void addCustomIcon() async {
+
+    final Uint8List? starticon = await getBytesFromAsset('assets/image/startmarker.png', 200);
+    setState(() {
+      startCustomIcon = BitmapDescriptor.fromBytes(starticon!);
+    });
+
+    final Uint8List? endicon = await getBytesFromAsset('assets/image/endmarker.png', 200);
+    setState(() {
+      endCustomIcon = BitmapDescriptor.fromBytes(endicon!);
+    });
+  }
+
+  /// 중간 지점 계산 및 카메라 이동 - 0914 한승완
+  _moveCamera() async{
+    final double midLat = (widget.startPoint.latitude + widget.endPoint.latitude) / 2;
+    final double midLng = (widget.startPoint.longitude + widget.endPoint.longitude) / 2;
+    midPoint = LatLng(midLat, midLng);
+    // 뒤로가기 제한 해제
+    handlePageLoadComplete();
   }
 
   _getLocalToken() async {
@@ -97,9 +120,10 @@ class _CarpoolMapState extends State<CarpoolMap> {
       child: Scaffold(
         appBar: AppBar(
           titleTextStyle: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.normal,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
           ),
+          centerTitle: true,
           title: '${widget.admin.split("_")[1]}님의 카풀 정보'.text.black.make(),
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
@@ -113,23 +137,47 @@ class _CarpoolMapState extends State<CarpoolMap> {
         ),
         body: Stack(
           children: [
-            GoogleMap(
-              onMapCreated: (controller) => mapController = controller,
-              myLocationButtonEnabled: false,
-              initialCameraPosition: CameraPosition(
-                target: widget.startPoint,
-                zoom: 16.0,
+            Padding(
+              padding: EdgeInsets.only(bottom: context.height(0.25)),
+              child: GoogleMap(
+                onMapCreated: (controller) { mapController = controller; },
+                myLocationButtonEnabled: false,
+                initialCameraPosition: CameraPosition(
+                  target: midPoint!,
+                  zoom: 13.5,
+                ),
+                cameraTargetBounds: CameraTargetBounds(
+                  getCurrentBounds(widget.startPoint, widget.endPoint),
+                ),
+                markers: {
+                  /// 시작 지점 마커
+                  Marker(
+                    markerId: const MarkerId('start'),
+                    position: widget.startPoint,
+                    icon: startCustomIcon,
+                    infoWindow: InfoWindow(
+                      title: "출발 지점 : ${widget.startPointName}",
+                    ),
+                  ),
+                  /// 도착 지점 마커
+                  Marker(
+                    markerId: const MarkerId('end'),
+                    position: widget.endPoint,
+                    icon: endCustomIcon,
+                    infoWindow: InfoWindow(
+                      title: "도착 지점 : ${widget.endPointName}",
+                    ),
+                  ),
+                },
+                onCameraIdle: () {},
               ),
-              markers: _markers,
-              onCameraIdle: () {},
             ),
             Positioned(
-              top: context.height(0.02),
+              bottom : context.height(0),
               // 가운데 위치
-              left: context.width(0.1),
               child: Container(
-                height: context.height(0.3),
-                width: context.width(0.8),
+                height: context.height(0.25),
+                width: context.width(1),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade100,
                   boxShadow: [
@@ -144,7 +192,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
                     color: Colors.blue,
                     width: 1,
                   ),
-                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(10.0), // 내부 패딩 추가
@@ -171,7 +218,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       const Text(
                                         "출발 지점",
                                         style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -190,7 +237,48 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           child: Text(
                                             widget.startPointName,
                                             style: const TextStyle(
-                                              fontSize: 15,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black, // 텍스트 색상
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),Container(
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.location_on,
+                                          color: Colors.lightGreenAccent),
+                                      const SizedBox(width: 3),
+                                      const Text(
+                                        "도착 지점",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          margin:
+                                          const EdgeInsets.only(left: 10),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 3, horizontal: 8),
+                                          // 내부 패딩
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300], // 회색 배경색
+                                            borderRadius: BorderRadius.circular(
+                                                20), // 동그란 모양 설정
+                                          ),
+                                          child: Text(
+                                            widget.endPointName,
+                                            style: const TextStyle(
+                                              fontSize: 12,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black, // 텍스트 색상
                                             ),
@@ -213,7 +301,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       const Text(
                                         "출발 시간",
                                         style: TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -232,49 +320,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           child: Text(
                                             widget.startTime,
                                             style: const TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black, // 텍스트 색상
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.directions_car,
-                                          color: Colors.blue),
-                                      const SizedBox(width: 3),
-                                      const Text(
-                                        "남은 거리",
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 10),
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 3, horizontal: 8),
-                                          // 내부 패딩
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300], // 회색 배경색
-                                            borderRadius: BorderRadius.circular(
-                                                20), // 동그란 모양 설정
-                                          ),
-                                          child: Text(
-                                            _distanceToLocation,
-                                            style: const TextStyle(
-                                              fontSize: 15,
+                                              fontSize: 12,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black, // 텍스트 색상
                                             ),
@@ -331,18 +377,17 @@ class _CarpoolMapState extends State<CarpoolMap> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                                 textStyle: const TextStyle(
-                                  fontSize: 20,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               child: Container(
-                                height: context.height(0.04),
                                 width: context.width(0.8),
                                 alignment: Alignment.center,
                                 child: const Text(
                                   '카풀 참가하기',
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 14,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -358,47 +403,33 @@ class _CarpoolMapState extends State<CarpoolMap> {
               ),
             ),
             Positioned(
-              bottom: context.height(0.05),
-              left: 20,
-              child: SizedBox(
-                width: context.width(0.4),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () {
-                    if (_myPoint != null) {
-                      _moveCameraTo(_myPoint!);
-                    }
-                  },
-                  child: const Text('내 위치로 이동',
-                      style: TextStyle(color: Colors.white)),
-                ),
+              top: context.height(0.01),
+              left: 10,
+              child: FloatingActionButton(
+                heroTag: 'definite',
+                backgroundColor: Colors.blue,
+                mini: true,
+                onPressed: () {
+                  _moveCameraTo(widget.startPoint);
+                },
+                // 도착지점을 나타내는 아이콘
+                child: const Icon(Icons.location_on_outlined,
+                    color: Colors.white),
               ),
             ),
             Positioned(
-              bottom: context.height(0.05),
-              right: 20,
-              child: SizedBox(
-                width: context.width(0.4),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  onPressed: () {
-                    _moveCameraTo(widget.startPoint);
-                  },
-                  child: const Text('출발지로 이동',
-                      style: TextStyle(color: Colors.white)),
-                ),
+              top: context.height(0.01),
+              left: 60,
+              child: FloatingActionButton(
+                heroTag: 'start',
+                backgroundColor: Colors.lightGreenAccent.shade700,
+                mini: true,
+                onPressed: () {
+                  _moveCameraTo(widget.endPoint);
+                },
+                // 도착지점을 나타내는 아이콘
+                child: const Icon(Icons.location_on_outlined,
+                    color: Colors.white),
               ),
             ),
           ],
@@ -407,75 +438,21 @@ class _CarpoolMapState extends State<CarpoolMap> {
     );
   }
 
-  void _addMarker(
-      LatLng point, String infoText, String markerName, BitmapDescriptor icon) {
-    _markers.removeWhere((marker) => marker.markerId.value == markerName);
-    _markers.add(Marker(
-      markerId: MarkerId(markerName),
-      position: point,
-      icon: icon,
-      infoWindow: InfoWindow(title: infoText),
-    ));
-  }
-
+  /// 카메라 이동 메서드
   void _moveCameraTo(LatLng target) {
     mapController.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: target, zoom: 16.0),
+      CameraPosition(target: target, zoom: 15),
     ));
   }
 
-  void ScffoldMsgAndListClear(BuildContext context, String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(text)),
-    );
-    list.clear();
-  }
-
+  /// 페이지 로딩 완료 메서드
   void handlePageLoadComplete() {
     setState(() {
       isLoading = false; // 로딩이 완료되었음을 표시
     });
   }
 
-  //현재 기기 위치 정보 가져오기 및 권한
-  Future<void> _getCurrentLocation() async {
-    LocationPermission permission = await Geolocator.requestPermission();
-
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      //  _showLocationPermissionSnackBar();
-      return;
-    }
-
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    setState(() {
-      _myPoint = LatLng(position.latitude, position.longitude);
-      _addMarker(_myPoint!, "내 위치", "BlueMarker",
-          BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue));
-
-      double distanceInMeters = Geolocator.distanceBetween(
-        _myPoint!.latitude,
-        _myPoint!.longitude,
-        widget.startPoint.latitude,
-        widget.startPoint.longitude,
-      );
-
-      double distanceInKm = distanceInMeters / 1000;
-      if (distanceInKm >= 1) {
-        _distanceToLocation = "${distanceInKm.toStringAsFixed(1)}km";
-      } else {
-        _distanceToLocation = "${(distanceInMeters).toStringAsFixed(0)}m";
-      }
-      print('로딩 상태 : $isLoading');
-      handlePageLoadComplete();
-      print('로딩 상태 ; $isLoading');
-    });
-  }
-
-  // 에러 다이얼로그
+  /// 에러 다이얼로그
   void showErrorDialog(BuildContext context, String errorMessage) {
     showDialog(
       context: context,
@@ -501,4 +478,32 @@ class _CarpoolMapState extends State<CarpoolMap> {
       },
     );
   }
+
+  /// 현재 위치를 포함하는 LatLngBounds 객체를 반환하는 메서드 - 0914 한승완
+  LatLngBounds getCurrentBounds(LatLng position1, LatLng position2) {
+    LatLngBounds bounds;
+
+    try {
+      bounds = LatLngBounds(
+        northeast: position1,
+        southwest: position2,
+      );
+    } catch (_) {
+      bounds = LatLngBounds(
+        northeast: position2,
+        southwest: position1,
+      );
+    }
+
+    return bounds;
+  }
+
+  /// 이미지 크기 조정 메서드- 0915 한승완
+  Future<Uint8List?> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))?.buffer.asUint8List();
+  }
+
 }
