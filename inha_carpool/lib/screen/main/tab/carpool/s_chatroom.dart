@@ -699,63 +699,88 @@ class _ChatroomPageState extends State<ChatroomPage> {
     }
   }
 
+void _showProfileModal(BuildContext context, String userName, String memberGender) {
+  showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
 
-  void _showProfileModal(BuildContext context, String userName,
-      String memberGender) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
+        // 크기 지정
+        height: context.height(0.35),
+        width: double.infinity,
 
-          // 크기 지정
-          height: context.height(0.4),
-          width: double.infinity,
-
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '프로필 조회',
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15), 
+            topRight: Radius.circular(15), 
+          ),
+        ),
+        child: Column(
+          // mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.all(10.0),
+              alignment: Alignment.center,
+              child: Text('프로필 조회',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10),
-              Text(
-                '닉네임 : $userName\n성별 : $memberGender\n신고횟수 : ',
-                style: TextStyle(fontSize: 16),
-              ),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: 100,
-                  minHeight: 30,
+            ),
+            Divider(
+              height: 1,
+              color: Colors.grey,
+            ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.fromLTRB(20, 5, 0, 0),
+                  alignment: Alignment.centerLeft,
+                  child: Icon(
+                    Icons.person_search, size: 120,),
                 ),
-                child: ElevatedButton(
-                    onPressed: () {
-                      print("신고하기 클릭");
-                      Navigator.pop(context);
-                      showDialog(
-                        context: context,
-                        builder: (context) => ComplainAlert(userName: userName, myId: userName, carpoolId: widget.carId)
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                        primary: Color.fromARGB(223, 246, 30, 30)
+                const SizedBox(width: 10,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('$userName', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    Text('$memberGender',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          showDialog(
+                            context: context,
+                            builder: (context) => ComplainAlert(index: userName),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 254, 112, 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.warning_rounded,color: Colors.white),
+                            SizedBox(width: 8,),
+                            Text("신고하기",style: TextStyle(color: Colors.white),)
+                          ],
+                        )
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.warning_rounded, color: Colors.black),
-                        SizedBox(width: 8,),
-                        Text("신고하기", style: TextStyle(color: Colors.black),)
-                      ],
-                    )
-                ),)
-            ],
-          ),
-        );
-      },
-    );
-  }
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
+  
 }
