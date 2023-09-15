@@ -687,52 +687,79 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
-      return SizedBox(
+      return Container(
 
         // 크기 지정
-        height: context.height(0.4),
+        height: context.height(0.35),
         width: double.infinity,
 
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(15), // 모달 좌상단 라운딩 처리
+            topRight: Radius.circular(15), // 모달 우상단 라운딩 처리
+          ),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              '프로필 조회',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            Container(
+              padding: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.all(10.0),
+              alignment: Alignment.center,
+              child: Text('프로필 조회',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            SizedBox(height: 10),
-            Text(
-              '닉네임 : $userName\n성별 : $memberGender\n신고횟수 : ',
-              style: TextStyle(fontSize: 16),
+            Divider(
+              height: 1,
+              color: Colors.grey,
             ),
-            ConstrainedBox(
-                constraints: BoxConstraints(
-                  minWidth: 100,
-                  minHeight: 30,
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.fromLTRB(20, 5, 0, 0),
+                  alignment: Alignment.centerLeft,
+                  child: Icon(
+                    Icons.person_search, size: 120,),
                 ),
-            child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  showDialog(
-                    context: context,
-                    builder: (context) => ComplainAlert(index: userName),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                    primary: Color.fromARGB(223, 246, 30, 30)
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                const SizedBox(width: 10,),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.warning_rounded,color: Colors.black),
-                    SizedBox(width: 8,),
-                    Text("신고하기",style: TextStyle(color: Colors.black),)
+                    Text('$userName', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    Text('$memberGender',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                          showDialog(
+                            context: context,
+                            builder: (context) => ComplainAlert(index: userName),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                            primary: Color.fromARGB(255, 254, 112, 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5.0)
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.warning_rounded,color: Colors.white),
+                            SizedBox(width: 8,),
+                            Text("신고하기",style: TextStyle(color: Colors.white),)
+                          ],
+                        )
+                    ),
                   ],
-                )
-            ),)
+                ),
+              ],
+            ),
           ],
         ),
       );
