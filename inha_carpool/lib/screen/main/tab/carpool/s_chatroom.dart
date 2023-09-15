@@ -27,6 +27,7 @@ class ChatroomPage extends StatefulWidget {
   final String gender;
 
 
+
   /// 생성자
   const ChatroomPage(
       {Key? key,
@@ -754,7 +755,7 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                           Navigator.pop(context);
                           showDialog(
                             context: context,
-                            builder: (context) => ComplainAlert(index: userName),
+                            builder: (context) => ComplainAlert(userName: userName, myId: userName, carpoolId: widget.carId),
                           );
                         },
                         style: ElevatedButton.styleFrom(
