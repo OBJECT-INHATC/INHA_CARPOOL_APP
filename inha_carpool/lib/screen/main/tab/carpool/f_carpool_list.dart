@@ -24,6 +24,7 @@ class _CarpoolListState extends State<CarpoolList> {
   late String nickName = ""; // Initialize with a default value
   late String uid = "";
   late String gender = "";
+
   DocumentSnapshot? oldLastMessage;
   //구글맵 변수
   LatLng? _myPoint;
@@ -45,14 +46,21 @@ class _CarpoolListState extends State<CarpoolList> {
     uid = await storage.read(key: "uid") ?? "";
     gender = await storage.read(key: "gender") ?? "";
 
+
     setState(() {
       // Update the state to trigger a UI refresh
     });
   }
 
   // 카풀 컬렉션 이름 추출
+  // String getName(String res) {
+  //   return res.substring(res.indexOf("_") + 1);
+  // }
+
   String getName(String res) {
-    return res.substring(res.indexOf("_") + 1);
+    int start = res.indexOf("_") + 1;
+    int end = res.lastIndexOf("_");
+    return res.substring(start, end);
   }
 
   String shortenText(String text, int maxLength) {
@@ -67,10 +75,11 @@ class _CarpoolListState extends State<CarpoolList> {
   Future<List<DocumentSnapshot>> _loadCarpools() async {
     String myID = uid;
     String myNickName = nickName;
+    String myGender = gender;
     print(myID);
 
     List<DocumentSnapshot> carpools =
-        await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName);
+        await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
     return carpools;
 
   }
@@ -172,7 +181,8 @@ class _CarpoolListState extends State<CarpoolList> {
                                 carId: carpool['carId'],
                                 groupName: '카풀네임',
                                 userName: nickName,
-                                uid: uid)),
+                                uid: uid,
+                                gender: gender,)),
                       );
                     },
                     child: Card(
@@ -239,8 +249,10 @@ class _CarpoolListState extends State<CarpoolList> {
                                                   ],
                                                 )),
 
+
                                             )],
                                             ),),
+
 
 
                                           SizedBox(height: 8), // 날짜 아래 여백 추가

@@ -100,7 +100,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
             fontSize: 22,
             fontWeight: FontWeight.normal,
           ),
-          title: '${widget.admin.split("_").last}님의 카풀 정보'.text.black.make(),
+          title: '${widget.admin.split("_")[1]}님의 카풀 정보'.text.black.make(),
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
           toolbarHeight: 45,
@@ -305,6 +305,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       carId,
                                       memberID,
                                       memberName,
+                                      gender,
                                       token!,
                                       selectedRoomGender);
                                   if (!mounted) return;
@@ -319,7 +320,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                     // 방 삭제 예외 처리
                                     showErrorDialog(context, error.message);
                                   } else if (error is MaxCapacityException) {
-                                    // 인원 초과 예외 처리
+                                    // 인원 초과 예외 처원리
                                     showErrorDialog(context, error.message);
                                   } else {
                                     // 기타 예외 처리

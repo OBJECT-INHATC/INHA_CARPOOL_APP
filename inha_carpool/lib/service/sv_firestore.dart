@@ -237,7 +237,7 @@ class FireStoreService {
   }
 
   // 카풀 나가기
-  exitCarpool(String carId, String userName, String uid) async {
+  exitCarpool(String carId, String userName, String uid, String gender) async {
     DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
     DocumentSnapshot carpoolSnapshot = await carpoolDocRef.get();
 
@@ -250,7 +250,7 @@ class FireStoreService {
       });
     } else {
       await carpoolDocRef.update({
-        'members': FieldValue.arrayRemove(['${uid}_$userName']),
+        'members': FieldValue.arrayRemove(['${uid}_${userName}_$gender']),
         'nowMember': FieldValue.increment(-1),
       });
 
@@ -269,7 +269,7 @@ class FireStoreService {
   }
 
   // 방장의 카풀 나가기
-  exitCarpoolAsAdmin(String carId, String userName, String uid) async {
+  exitCarpoolAsAdmin(String carId, String userName, String uid, String gender) async {
     DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
 
     DocumentSnapshot carpoolSnapshot = await carpoolDocRef.get();
@@ -282,7 +282,7 @@ class FireStoreService {
       });
     } else {
       await carpoolDocRef.update({
-        'members': FieldValue.arrayRemove(['${uid}_$userName']),
+        'members': FieldValue.arrayRemove(['${uid}_${userName}_$gender']),
         'nowMember': FieldValue.increment(-1),
       });
       // members에서 해당 유저 삭제

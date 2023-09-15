@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_profile.dart';
-import 'package:inha_Carpool/screen/main/tab/mypage/w_recordDetail.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/w_recordList.dart';
 
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import '../../../setting/w_switch_menu.dart';
@@ -161,7 +161,7 @@ class _MyPageState extends State<MyPage> {
                 title: Text('이용기록'),
                 onTap: () {
                   // 이용기록 페이지로 이동
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => RecordDetailPage()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => recordList()));
                 },
               ),
 
