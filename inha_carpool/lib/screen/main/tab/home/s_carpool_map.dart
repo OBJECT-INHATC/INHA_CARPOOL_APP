@@ -320,7 +320,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                     // 방 삭제 예외 처리
                                     showErrorDialog(context, error.message);
                                   } else if (error is MaxCapacityException) {
-                                    // 인원 초과 예외 처리
+                                    // 인원 초과 예외 처원리
                                     showErrorDialog(context, error.message);
                                   } else {
                                     // 기타 예외 처리
