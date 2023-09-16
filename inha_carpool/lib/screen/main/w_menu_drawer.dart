@@ -109,6 +109,9 @@ class _MenuDrawerState extends State<MenuDrawer> {
               }
             },
           ),
+
+
+
           const Line(),
           isSmallScreen(context) ? const Height(10) : const EmptyExpanded(),
           MouseRegion(
@@ -127,24 +130,10 @@ class _MenuDrawerState extends State<MenuDrawer> {
           ),
           const Height(10),
           getLanguageOption(context),
+
+
           const Height(10),
-          Row(
-            children: [
-              Expanded(
-                child: Tap(
-                  child: Container(
-                      height: 30,
-                      width: 100,
-                      padding: const EdgeInsets.only(left: 15),
-                      child: '© 2023. INHAtc 전공 동아리  Object.'
-                          .selectableText
-                          .size(10)
-                          .makeWithDefaultFont()),
-                  onTap: () async {},
-                ),
-              ),
-            ],
-          )
+
         ],
       ),
     );
