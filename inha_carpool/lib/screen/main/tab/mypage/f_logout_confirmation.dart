@@ -11,6 +11,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      surfaceTintColor: Colors.transparent,
       title: Text('로그아웃'),
       content: Text('정말 로그아웃 하시겠습니까?'),
       actions: <Widget>[

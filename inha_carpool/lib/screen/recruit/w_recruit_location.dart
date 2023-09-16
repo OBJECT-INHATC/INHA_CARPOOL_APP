@@ -46,7 +46,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
       children: [
         // 출발지, 도착지
         GestureDetector(
+
           onTap: () async {
+            FocusScope.of(context).unfocus();
             final result = await Navigator.push(
               context,
               MaterialPageRoute(

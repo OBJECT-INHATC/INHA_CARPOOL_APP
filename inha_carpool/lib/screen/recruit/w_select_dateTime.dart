@@ -31,6 +31,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
     return Expanded(
       child: GestureDetector(
         onTap: () {
+          FocusScope.of(context).unfocus();
           showModalBottomSheet(
             backgroundColor: Colors.white,
             shape:

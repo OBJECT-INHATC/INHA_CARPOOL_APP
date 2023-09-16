@@ -38,6 +38,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
     double widthPercentage = 0.9; // 90% 화면 너비 사용
 
     return AlertDialog(
+      surfaceTintColor: Colors.transparent,
       insetPadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
       contentPadding: const EdgeInsets.all(10),
       shape: RoundedRectangleBorder(
