@@ -32,7 +32,7 @@ class MessageTile extends StatelessWidget {
     switch (messageType) {
       case MessageType.me:
         alignment = Alignment.centerRight;
-        bubbleColor = Colors.blue;
+        bubbleColor = Colors.lightBlueAccent;
         verticalPadding = 7.0;
         break;
 
@@ -44,7 +44,7 @@ class MessageTile extends StatelessWidget {
 
       case MessageType.service:
         alignment = Alignment.center;
-        bubbleColor = Colors.orange[400]!;
+        bubbleColor = Colors.grey[200]!;
         verticalPadding = 5.0;
         break;
     }
@@ -104,7 +104,7 @@ class MessageTile extends StatelessWidget {
 
                             children: [
                                 Text(
-                                  sender.toUpperCase(),
+                                  sender,
                                   style: TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.normal,

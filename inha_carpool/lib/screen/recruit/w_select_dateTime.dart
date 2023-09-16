@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:inha_Carpool/common/common.dart';
 
 class DateTimePickerWidget extends StatefulWidget {
   final String label;
@@ -37,7 +38,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
             context: context,
             builder: (BuildContext context) {
               return SizedBox(
-                height: 300,
+                height: context.width(0.9),
                 child: _isTimePicker
                     ? SizedBox(
                         height: 250,
@@ -103,14 +104,14 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                   ? Text(
                       widget.selectedDateTime.hour > 12 ? '오후' : '오전',
                       style: const TextStyle(
-                        fontSize: 19,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     )
                   : Text(
                       widget.selectedDateTime.year.toString(),
                       style: const TextStyle(
-                        fontSize: 19,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -120,14 +121,14 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                       "${widget.selectedDateTime.hour > 12 ? (widget.selectedDateTime.hour - 12).toString().padLeft(2, '0') : widget.selectedDateTime.hour.toString().padLeft(2, '0')}:"
                       "${widget.selectedDateTime.minute.toString().padLeft(2, '0')}",
                       style: const TextStyle(
-                        fontSize: 40,
+                        fontSize: 32,
                       ),
                     )
                   : Text(
                       "${widget.selectedDateTime.month.toString().padLeft(2, '0')}."
                       "${widget.selectedDateTime.day.toString().padLeft(2, '0')}",
                       style: const TextStyle(
-                        fontSize: 40,
+                        fontSize: 32,
                       ),
                     ),
             ],

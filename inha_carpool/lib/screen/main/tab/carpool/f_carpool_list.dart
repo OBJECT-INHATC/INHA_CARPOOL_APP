@@ -24,6 +24,7 @@ class _CarpoolListState extends State<CarpoolList> {
   late String nickName = ""; // Initialize with a default value
   late String uid = "";
   late String gender = "";
+
   DocumentSnapshot? oldLastMessage;
   //구글맵 변수
   LatLng? _myPoint;
@@ -45,14 +46,21 @@ class _CarpoolListState extends State<CarpoolList> {
     uid = await storage.read(key: "uid") ?? "";
     gender = await storage.read(key: "gender") ?? "";
 
+
     setState(() {
       // Update the state to trigger a UI refresh
     });
   }
 
   // 카풀 컬렉션 이름 추출
+  // String getName(String res) {
+  //   return res.substring(res.indexOf("_") + 1);
+  // }
+
   String getName(String res) {
-    return res.substring(res.indexOf("_") + 1);
+    int start = res.indexOf("_") + 1;
+    int end = res.lastIndexOf("_");
+    return res.substring(start, end);
   }
 
   String shortenText(String text, int maxLength) {
@@ -67,10 +75,11 @@ class _CarpoolListState extends State<CarpoolList> {
   Future<List<DocumentSnapshot>> _loadCarpools() async {
     String myID = uid;
     String myNickName = nickName;
+    String myGender = gender;
     print(myID);
 
     List<DocumentSnapshot> carpools =
-        await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName);
+    await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
     return carpools;
 
   }
@@ -140,7 +149,7 @@ class _CarpoolListState extends State<CarpoolList> {
 
                   //카풀 날짜 및 시간 변환
                   DateTime startTime =
-                      DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
+                  DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
                   DateTime currentTime = DateTime.now();
                   Duration difference = startTime.difference(currentTime);
 
@@ -152,13 +161,13 @@ class _CarpoolListState extends State<CarpoolList> {
                     formattedTime = '${difference.inDays ~/ 365}년 전';
                   } else if (difference.inDays >= 30) {
                     formattedTime =
-                        '${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 전';
+                    '${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 전';
                   } else if (difference.inDays >= 1) {
                     formattedTime =
-                        '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 전';
+                    '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 전';
                   } else if (difference.inHours >= 1) {
                     formattedTime =
-                        '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 전';
+                    '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 전';
                   } else {
                     formattedTime = '${difference.inMinutes}분 전';
                   }
@@ -169,10 +178,11 @@ class _CarpoolListState extends State<CarpoolList> {
                         Nav.globalContext,
                         MaterialPageRoute(
                             builder: (context) => ChatroomPage(
-                                carId: carpool['carId'],
-                                groupName: '카풀네임',
-                                userName: nickName,
-                                uid: uid)),
+                              carId: carpool['carId'],
+                              groupName: '카풀네임',
+                              userName: nickName,
+                              uid: uid,
+                              gender: gender,)),
                       );
                     },
                     child: Card(
@@ -182,7 +192,7 @@ class _CarpoolListState extends State<CarpoolList> {
                       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
 
                       child: Container(
-  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
                         margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
 
                         child: Row(
@@ -198,7 +208,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                       color: Colors.transparent,
                                       child: Column(
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                         children: [
                                           Container(
                                             margin: const EdgeInsets.only(bottom: 3),
@@ -220,119 +230,121 @@ class _CarpoolListState extends State<CarpoolList> {
                                                   ],
                                                 ),
 
-                                            Padding(
-                                              padding: const EdgeInsets.only(right: 10.0),
-                                              child: Container(
-                                                  child: Column(
-                                                    children: [
-                                                      Row(
+                                                Padding(
+                                                  padding: const EdgeInsets.only(right: 10.0),
+                                                  child: Container(
+                                                      child: Column(
                                                         children: [
-                                                        const Icon(Icons.person, color: Colors.grey, size: 22),
-                                                        SizedBox(width: 5), // 왼쪽으로 이동
-                                                        Text('${carpoolData['admin'].split('_')[1]}',
-                                                            style: const TextStyle(
-                                                                fontSize: 15, fontWeight: FontWeight.bold)),
-                                                      ],
-                                                    ),
+                                                          Row(
+                                                            children: [
+                                                              const Icon(Icons.person, color: Colors.grey, size: 22),
+                                                              SizedBox(width: 5), // 왼쪽으로 이동
+                                                              Text('${carpoolData['admin'].split('_')[1]}',
+                                                                  style: const TextStyle(
+                                                                      fontSize: 15, fontWeight: FontWeight.bold)),
+                                                            ],
+                                                          ),
 
 
-                                                  ],
-                                                )),
+                                                        ],
+                                                      )),
 
-                                            )],
+
+                                                )],
                                             ),),
 
 
+
                                           SizedBox(height: 8), // 날짜 아래 여백 추가
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      children: [
-                                      Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Container(
-                                                  margin: const EdgeInsets.all(7.0),
-                                                  width: context.width(0.02),
-                                                  // desired width
-                                                  height: context.height(0.01),
-                                                  // desired height
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey,
-                                                    borderRadius: BorderRadius.circular(10),
-                                                  ),
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: const Center(),
-                                                ),
-                                                const SizedBox(width: 5),
-                                                Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Container(
-                                                          child: Column(
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      Row(
+                                                        children: [
+                                                          Container(
+                                                            margin: const EdgeInsets.all(7.0),
+                                                            width: context.width(0.02),
+                                                            // desired width
+                                                            height: context.height(0.01),
+                                                            // desired height
+                                                            decoration: BoxDecoration(
+                                                              color: Colors.grey,
+                                                              borderRadius: BorderRadius.circular(10),
+                                                            ),
+                                                            padding: const EdgeInsets.all(8.0),
+                                                            child: const Center(),
+                                                          ),
+                                                          const SizedBox(width: 5),
+                                                          Column(
                                                             crossAxisAlignment: CrossAxisAlignment.start,
                                                             children: [
-                                                              Text(
-                                                                "${carpoolData['startDetailPoint']}  ",
-                                                                style: const TextStyle(
-                                                                  color: Colors.black,
-                                                                  fontSize: 12,
-                                                                  fontWeight: FontWeight.bold,
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                shortenText(carpoolData['startPointName'], 10),
-                                                                style: TextStyle(
-                                                                  color: Colors.grey[600],
-                                                                  fontSize: 10,
-                                                                  fontWeight: FontWeight.bold,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          margin: const EdgeInsets.only(left: 10, top: 0, bottom: 10, right: 10),
-                                                          child: Icon(Icons.arrow_forward_ios_rounded, size: 15, color: Colors.grey[600]),
-                                                        ),
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              margin: const EdgeInsets.all(7.0),
-                                                              width: context.width(0.02),
-                                                              height: context.height(0.01),
-                                                              decoration: BoxDecoration(
-                                                                color: Colors.grey,
-                                                                borderRadius: BorderRadius.circular(10),
-                                                              ),
-                                                              padding: const EdgeInsets.all(8.0),
-                                                              child: Center(),
-                                                            ),
-                                                            const SizedBox(width: 5),
-                                                            Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Text(
-                                                                  "${carpoolData['endDetailPoint']}",
-                                                                  style: const TextStyle(
-                                                                    color: Colors.black,
-                                                                    fontSize: 12,
-                                                                    fontWeight: FontWeight.bold,
+                                                              Row(
+                                                                children: [
+                                                                  Container(
+                                                                    child: Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Text(
+                                                                          "${carpoolData['startDetailPoint']}  ",
+                                                                          style: const TextStyle(
+                                                                            color: Colors.black,
+                                                                            fontSize: 12,
+                                                                            fontWeight: FontWeight.bold,
+                                                                          ),
+                                                                        ),
+                                                                        Text(
+                                                                          shortenText(carpoolData['startPointName'], 10),
+                                                                          style: TextStyle(
+                                                                            color: Colors.grey[600],
+                                                                            fontSize: 10,
+                                                                            fontWeight: FontWeight.bold,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                Text(
-                                                                  shortenText(carpoolData['endPointName'], 10),
-                                                                  style: TextStyle(
-                                                                    color: Colors.grey[600],
-                                                                    fontSize: 10,
-                                                                    fontWeight: FontWeight.bold,
+                                                                  Container(
+                                                                    margin: const EdgeInsets.only(left: 10, top: 0, bottom: 10, right: 10),
+                                                                    child: Icon(Icons.arrow_forward_ios_rounded, size: 15, color: Colors.grey[600]),
                                                                   ),
-                                                                )],
+                                                                  Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        margin: const EdgeInsets.all(7.0),
+                                                                        width: context.width(0.02),
+                                                                        height: context.height(0.01),
+                                                                        decoration: BoxDecoration(
+                                                                          color: Colors.grey,
+                                                                          borderRadius: BorderRadius.circular(10),
+                                                                        ),
+                                                                        padding: const EdgeInsets.all(8.0),
+                                                                        child: Center(),
+                                                                      ),
+                                                                      const SizedBox(width: 5),
+                                                                      Column(
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text(
+                                                                            "${carpoolData['endDetailPoint']}",
+                                                                            style: const TextStyle(
+                                                                              color: Colors.black,
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          ),
+                                                                          Text(
+                                                                            shortenText(carpoolData['endPointName'], 10),
+                                                                            style: TextStyle(
+                                                                              color: Colors.grey[600],
+                                                                              fontSize: 10,
+                                                                              fontWeight: FontWeight.bold,
+                                                                            ),
+                                                                          )],
                                                                       ),
                                                                       const SizedBox(width: 5),
 
@@ -449,5 +461,3 @@ class _CarpoolListState extends State<CarpoolList> {
 
 
 }
-
-

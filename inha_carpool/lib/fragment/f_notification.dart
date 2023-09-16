@@ -28,6 +28,8 @@ class _NotificationListState extends State<NotificationList> {
   /// 사용자 닉네임
   String? nickName;
   String? uid;
+  String? gender;
+
 
   @override
   void initState() {
@@ -108,6 +110,7 @@ class _NotificationListState extends State<NotificationList> {
                             groupName : "그룹 이름",
                             userName: nickName!,
                             uid: uid! ,
+                            gender: gender!,
                           ),
                         ),
                       );
