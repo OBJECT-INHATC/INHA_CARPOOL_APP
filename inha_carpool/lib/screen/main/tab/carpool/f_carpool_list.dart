@@ -12,6 +12,7 @@ import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 
 import 'package:inha_Carpool/service/sv_firestore.dart';
+
 class CarpoolList extends StatefulWidget {
   const CarpoolList({Key? key}) : super(key: key);
 
@@ -20,7 +21,7 @@ class CarpoolList extends StatefulWidget {
 }
 
 class _CarpoolListState extends State<CarpoolList> {
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   late String nickName = ""; // Initialize with a default value
   late String uid = "";
   late String gender = "";
@@ -67,7 +68,7 @@ class _CarpoolListState extends State<CarpoolList> {
     if (text.length <= maxLength) {
       return text;
     } else {
-      return text.substring(0, maxLength - 3) + '...';
+      return '${text.substring(0, maxLength - 3)}...';
     }
   }
 
@@ -221,33 +222,33 @@ class _CarpoolListState extends State<CarpoolList> {
                                                     Container(
                                                       child: Text(formattedTime)
                                                           .text
-                                                          .size(15)
+                                                          .size(13)
                                                           .bold
                                                           .color(context.appColors.text)
                                                           .make(),
                                                     ),
-                                                    Text("${formattedStartTime}", style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold, color: Colors.grey),),
+                                                    Text(formattedStartTime,
+                                                      style: const TextStyle(fontSize: 11,fontWeight: FontWeight.bold, color: Colors.grey),),
                                                   ],
                                                 ),
 
-                                            Padding(
-                                              padding: const EdgeInsets.only(right: 10.0),
-                                              child: Container(
-                                                  child: Column(
+                                              Padding(
+                                                padding: const EdgeInsets.only(right: 10.0),
+                                                child: Column(
+                                                  children: [
+                                                  Row(
                                                     children: [
-                                                      Row(
-                                                        children: [
-                                                        const Icon(Icons.person, color: Colors.grey, size: 22),
-                                                        SizedBox(width: 5), // 왼쪽으로 이동
-                                                        Text('${carpoolData['admin'].split('_')[1]}',
-                                                            style: const TextStyle(
-                                                                fontSize: 15, fontWeight: FontWeight.bold)),
-                                                      ],
-                                                    ),
-
-
+                                                    const Icon(Icons.person, color: Colors.grey, size: 20),
+                                                    const SizedBox(width: 5), // 왼쪽으로 이동
+                                                    Text('${carpoolData['admin'].split('_')[1]}',
+                                                        style: const TextStyle(
+                                                            fontSize: 15, fontWeight: FontWeight.bold)),
                                                   ],
-                                                )),
+                                                ),
+
+
+                                              ],
+                                                ),
 
 
                                             )],
@@ -255,7 +256,7 @@ class _CarpoolListState extends State<CarpoolList> {
 
 
 
-                                          SizedBox(height: 8), // 날짜 아래 여백 추가
+                                          const SizedBox(height: 8), // 날짜 아래 여백 추가
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       children: [
@@ -285,28 +286,26 @@ class _CarpoolListState extends State<CarpoolList> {
                                                   children: [
                                                     Row(
                                                       children: [
-                                                        Container(
-                                                          child: Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Text(
-                                                                "${carpoolData['startDetailPoint']}  ",
-                                                                style: const TextStyle(
-                                                                  color: Colors.black,
-                                                                  fontSize: 12,
-                                                                  fontWeight: FontWeight.bold,
-                                                                ),
+                                                        Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                              "${carpoolData['startDetailPoint']}  ",
+                                                              style: const TextStyle(
+                                                                color: Colors.black,
+                                                                fontSize: 13,
+                                                                fontWeight: FontWeight.bold,
                                                               ),
-                                                              Text(
-                                                                shortenText(carpoolData['startPointName'], 10),
-                                                                style: TextStyle(
-                                                                  color: Colors.grey[600],
-                                                                  fontSize: 10,
-                                                                  fontWeight: FontWeight.bold,
-                                                                ),
+                                                            ),
+                                                            Text(
+                                                              shortenText(carpoolData['startPointName'], 10),
+                                                              style: TextStyle(
+                                                                color: Colors.grey[600],
+                                                                fontSize: 11,
+                                                                fontWeight: FontWeight.bold,
                                                               ),
-                                                            ],
-                                                          ),
+                                                            ),
+                                                          ],
                                                         ),
                                                         Container(
                                                           margin: const EdgeInsets.only(left: 10, top: 0, bottom: 10, right: 10),
@@ -333,7 +332,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                   "${carpoolData['endDetailPoint']}",
                                                                   style: const TextStyle(
                                                                     color: Colors.black,
-                                                                    fontSize: 12,
+                                                                    fontSize: 13,
                                                                     fontWeight: FontWeight.bold,
                                                                   ),
                                                                 ),
@@ -341,7 +340,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                   shortenText(carpoolData['endPointName'], 10),
                                                                   style: TextStyle(
                                                                     color: Colors.grey[600],
-                                                                    fontSize: 10,
+                                                                    fontSize: 11,
                                                                     fontWeight: FontWeight.bold,
                                                                   ),
                                                                 )],
@@ -361,34 +360,29 @@ class _CarpoolListState extends State<CarpoolList> {
                                                       ),
                                                     ],
                                                   ),
-                                                  SizedBox(height: 13),
+                                                  const SizedBox(height: 13),
 
-                                                  Container(child:  StreamBuilder<DocumentSnapshot?>(
+                                                  StreamBuilder<DocumentSnapshot?>(
                                                     stream: FireStoreService().getLatestMessageStream(carpool['carId']),
                                                     builder: (context, snapshot) {
                                                       if (snapshot.connectionState == ConnectionState.waiting) {
-                                                        return CircularProgressIndicator();
+                                                        return const CircularProgressIndicator();
                                                       } else if (snapshot.hasError) {
                                                         return Text('Error: ${snapshot.error}');
                                                       } else if (!snapshot.hasData || snapshot.data == null) {
                                                         // No message available in this chatroom.
-                                                        return Text('아직 채팅이 시작되지 않은 채팅방입니다!' , style: TextStyle(color: Colors.grey),);
+                                                        return const Text('아직 채팅이 시작되지 않은 채팅방입니다!' , style: TextStyle(fontSize: 13 ,color: Colors.grey),);
                                                       }
                                                       DocumentSnapshot lastMessage = snapshot.data!;
                                                       String content = lastMessage['message'];
                                                       // 마지막 채팅 텍스트 위젯 반환
                                                       return Row(
                                                         children: [
-
-
-                                                          Container(
-                                                              child:Text(content, style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold, color: Colors.grey,),)),
-
-
+                                                          Text(content, style: const TextStyle(fontSize: 15,fontWeight: FontWeight.bold, color: Colors.grey,),),
                                                         ],
                                                       );
                                                     },
-                                                  ),),
+                                                  ),
 
                                                 ],
                                               ),

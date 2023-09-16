@@ -84,9 +84,9 @@ class MessageTile extends StatelessWidget {
                 children: [
                   if (messageType == MessageType.me)
                     Container(
-                      margin: EdgeInsets.only(right: 10),
-                      padding: EdgeInsets.only(left:20, top:30),
-                      child : Text(formattedTime , style: TextStyle(fontSize: 12)),
+                      margin: const EdgeInsets.only(right: 10),
+                      padding: const EdgeInsets.only(left:20, top:30),
+                      child : Text(formattedTime , style: const TextStyle(fontSize: 11)),
                     ),
                   Container(
                     padding: EdgeInsets.symmetric(
@@ -105,14 +105,14 @@ class MessageTile extends StatelessWidget {
                             children: [
                                 Text(
                                   sender,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.normal,
                                       color: Colors.white),
                                 ),
                                 Text(message,
-                                    style: TextStyle(
-                                      fontSize: 17,
+                                    style: const TextStyle(
+                                      fontSize: 15,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                       letterSpacing: -1,
@@ -121,11 +121,11 @@ class MessageTile extends StatelessWidget {
                   ),
                   if (messageType != MessageType.me)
                     Container(
-                      margin: EdgeInsets.only(left: 10),
-                      padding: EdgeInsets.only(right:20, top:30),
+                      margin: const EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.only(right:20, top:30),
                       child : Row(
                         children: [
-                          Text(formattedTime  , style: TextStyle(fontSize: 12)),
+                          Text(formattedTime  , style: const TextStyle(fontSize: 11)),
 
                         ],
                       ),

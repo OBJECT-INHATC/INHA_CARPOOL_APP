@@ -10,7 +10,7 @@ class EmptySearchedCarpool extends StatelessWidget {
       child: Center(
         child: Text(
           '검색 결과가 없습니다!',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           textAlign: TextAlign.center,
         ),
       ),

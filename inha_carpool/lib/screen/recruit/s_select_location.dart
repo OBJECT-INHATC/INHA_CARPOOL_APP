@@ -105,7 +105,7 @@ class _LocationInputState extends State<LocationInput> {
         centerTitle: true,
         title: const Text(
           '위치 선택',
-          style: TextStyle(color: Colors.black,fontSize: 15),
+          style: TextStyle(color: Colors.black,fontSize: 17, fontWeight: FontWeight.bold),
         ),
         toolbarHeight: 45,
         // 해당 선을 내릴때만 나오게 해줘
@@ -278,14 +278,14 @@ class _LocationInputState extends State<LocationInput> {
                                 const Text(
                                   '이 위치 선택',
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 13,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   _address ?? ' 화면을 이동해서 위치를 선택해주세요.',
                                   style: const TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.normal,
                                   ),
                                 ),

@@ -43,7 +43,7 @@ class _ProFileState extends State<ProFile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(00),
+      color: const Color(0x00000000),
       child: Column(
         children: [
           Center(
@@ -51,7 +51,7 @@ class _ProFileState extends State<ProFile> {
               children: [
                 // 기본정보 항목
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 6.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 6.0),
                   color: Colors.grey[100],
                   padding: const EdgeInsets.symmetric(
                       horizontal: 15.0, vertical: 13.0), // vertical 값을 조정
@@ -61,7 +61,7 @@ class _ProFileState extends State<ProFile> {
                       Text(
                         '기본 정보',
                         style: TextStyle(
-                          fontSize: 17.5,
+                          fontSize: 17,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -74,12 +74,12 @@ class _ProFileState extends State<ProFile> {
                   children: [
                     Stack(
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.only(left: 5.0),
                                 child: Icon(
                                   Icons.account_circle,
@@ -113,7 +113,7 @@ class _ProFileState extends State<ProFile> {
                           ),
                         ),
                         Positioned(
-                          right: 225,
+                          right: 25,
                           bottom: 15,
                           child: GestureDetector(
                             onTap: () {
@@ -121,11 +121,11 @@ class _ProFileState extends State<ProFile> {
                             },
                             child: const Row(
                               children: [
-                                Icon(Icons.edit, size: 14, color: Colors.grey),
+                                Icon(Icons.edit, size: 15, color: Colors.grey),
                                 Text(
                                   "수정",
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -165,15 +165,11 @@ class _ProFileState extends State<ProFile> {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           email = snapshot.data ?? '';
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            // 텍스트를 약간 내림
-                            child: Text(
-                              snapshot.data ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                              ),
+                          return Text(
+                            snapshot.data ?? '',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black,
                             ),
                           );
                         }
@@ -208,7 +204,7 @@ class _ProFileState extends State<ProFile> {
                           return Text(
                             snapshot.data ?? '',
                             style: const TextStyle(
-                                fontSize: 14, color: Colors.black),
+                                fontSize: 13, color: Colors.black),
                           );
                         }
                       },
@@ -243,7 +239,7 @@ class _ProFileState extends State<ProFile> {
                           return Text(
                             snapshot.data ?? '',
                             style: const TextStyle(
-                                fontSize: 14, color: Colors.black),
+                                fontSize: 13, color: Colors.black),
                           );
                         }
                       },
@@ -274,15 +270,11 @@ class _ProFileState extends State<ProFile> {
                         } else if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            // 텍스트를 약간 내림
-                            child: Text(
-                              snapshot.data ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                              ),
+                          return Text(
+                            snapshot.data ?? '',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.black,
                             ),
                           );
                         }

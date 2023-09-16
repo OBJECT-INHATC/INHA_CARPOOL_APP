@@ -19,7 +19,7 @@ class ComplainComplete extends StatelessWidget {
               height: 40,
               child: Text(
                 '신고완료',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
             ),
             Divider(
@@ -30,14 +30,14 @@ class ComplainComplete extends StatelessWidget {
             Text(
               '신고가 정상적으로 완료되었습니다.\n더 나은 서비스를 위해 노력하겠습니다.\n감사합니다.',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, height: 1.7),
+              style: TextStyle(fontSize: 13, height: 1.7),
             ),
           ],
         ),
       ),
       actions: [
         Container(
-          padding: EdgeInsets.only(right: 10),
+          padding: const EdgeInsets.only(right: 10),
           child: ElevatedButton(
             style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.redAccent),
@@ -45,7 +45,7 @@ class ComplainComplete extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ),
       ],
