@@ -154,7 +154,7 @@ class _SecessionPageState extends State<SecessionPage> {
                                       ),
                                     ),
                                     onChanged: (text) {
-                                      email = text + academy;
+                                      email = text;
                                       if (text != "") {
                                         setState(() {
                                           onChanges = true;
