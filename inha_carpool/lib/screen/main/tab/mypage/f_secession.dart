@@ -17,11 +17,14 @@ class _SecessionPageState extends State<SecessionPage> {
   // 비밀번호
   String password = "";
 
+
+
   String academy = "@itc.ac.kr";
+  var onChanges = false;
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Colors.blue, Colors.black];
+  List<Color> selectedBackgroundColors = [Colors.lightBlueAccent, Colors.black];
   List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
 
   void updateBackgroundColors() {
@@ -59,7 +62,7 @@ class _SecessionPageState extends State<SecessionPage> {
       onTap: () {
         // 텍스트 포커스 해제
         FocusScope.of(context).unfocus();
-      } ,
+      },
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -69,169 +72,235 @@ class _SecessionPageState extends State<SecessionPage> {
               color: Colors.black,
             ),
           ),
-          title: const Text(
-            "회원탈퇴",
-            style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
+
+          title: Text(
+            "회원 탈퇴",
+            style: TextStyle(color: Colors.black, fontSize: 20),
           ),
           centerTitle: true,
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.start, // 상단 정렬로 변경
-            children: <Widget>[
-              const SizedBox(height: 40),
-              const Icon(
-                Icons.warning,
-                color: Colors.red,
-                size: 44,
-              ),
-              const SizedBox(height: 10),
-              FutureBuilder<String>(
-                future: nickNameFuture,
-                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const  CircularProgressIndicator(); // 데이터를 기다리는 동안 로딩 스피너 표시
-                  } else if (snapshot.hasError) {
-                    return const Text('닉네임을 불러오는 중 오류 발생');
-                  } else {
-                    return Text(
-                      "${snapshot.data}님.. 정말 탈퇴하시겠어요?",
-                      style: const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: 10), // 간격 조절
-              const Text(
-                "지금 탈퇴하시면 서비스를 이용할 수 없어요!\n 탈퇴하시려면 학번과 비밀번호를 입력해주세요.",
-                style: TextStyle(fontSize: 15, color: Colors.red),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 30),
-              Stack(
-                alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue),
-                      ),
-                      labelText: '학번',
-                    ),
-                    onChanged: (text) {
-                      // 텍스트 필드 값 변경 시 실행할 코드 작성
-                      email = text;
-                    },
-                    validator: (val) {
-                      if (val!.isNotEmpty) {
-                        return null;
-                      } else {
-                        return "학번이 비어있습니다.";
-                      }
-                    },
-                  ),
-                  Positioned(
-                    right: 0,
-                    child: FlutterToggleTab(
-                      width: 30,
-                      borderRadius: 30,
-                      height: 40,
-                      selectedTextStyle: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w700),
-                      unSelectedTextStyle: const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500),
-                      labels: const ["인하공전", "인하대"],
-                      selectedLabelIndex: (index) {
-                        setState(() {
-                          selectedIndex = index;
-                          updateBackgroundColors();
-                          if (index == 0) {
-                            academy = "@itc.ac.kr";
-                          } else {
-                            academy = "@inha.edu";
-                          }
-                        });
-                      },
-                      selectedBackgroundColors: selectedBackgroundColors,
-                      unSelectedBackgroundColors: unSelectedBackgroundColors,
-                      isScroll: false,
-                      selectedIndex: selectedIndex,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                height: context.height(0.08),
-                child: TextFormField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black), // 밑줄 색상 설정
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                      BorderSide(color: Colors.blue), // 포커스된 상태의 밑줄 색상 설정
-                    ),
-                    labelText: '비밀번호',
-                  ),
-                  onChanged: (text) {
-                    password = text;
-                  },
-                ),
-              ),
-              Container(
-                height: context.height(0.09),
-                padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.grey, // 버튼 배경색 회색으로 설정
-                      minimumSize: const Size.fromHeight(50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(90.0),
-                      ),
-                    ),
-                    child: const Text('탈퇴하기',
-                        style: TextStyle(
-                            fontSize: 19,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)),
-                    onPressed: () async {
-                      bool isValid = await validateCredentials(email + academy, password);
-                      if (isValid) {
-                        if(!mounted) return;
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return DeleteAuthDialog(email + academy, password);
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center, // 상단 정렬로 변경
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.warning_amber_rounded,
+                          color: Colors.red,
+                          size: 30,
+                        ),
+
+                        // SizedBox(height: 20),
+                        FutureBuilder<String>(
+                          future: nickNameFuture,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<String> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return CircularProgressIndicator(); // 데이터를 기다리는 동안 로딩 스피너 표시
+                            } else if (snapshot.hasError) {
+                              return Text('닉네임을 불러오는 중 오류 발생');
+                            } else {
+                              return Text(
+                                "${snapshot.data}님.. 정말 탈퇴하시겠어요?",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.start,
+                              );
+                            }
                           },
-                        );
-                      } else {
-                        if(!mounted) return;
-                        ScaffoldMessenger.of(context)
-                            .showSnackBar(const SnackBar(content: Text('잘못된 정보입니다.')));
-                      }
-                    }),
-              ),
-            ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 15), // 간격 조절
+                    Text(
+                      "지금 탈퇴하시면 서비스를 이용할 수 없어요!\n탈퇴하시려면 학번과 비밀번호를 입력해주세요.",
+                      style: TextStyle(fontSize: 16, color: Colors.red),
+                      textAlign: TextAlign.start,
+                    ),
+                    SizedBox(height: context.height(0.015)),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(40, 25, 40, 0),
+                      child: Stack(
+                        alignment: Alignment.centerRight,
+                        children: [
+                          Container(
+                            // 학번 입력 필드
+                            height: 50.0, // 높이 변수 적용
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey[300]!, // 연한 회색 테두리
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey[100], // 연한 회색 배경색
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextFormField(
+                                    decoration: const InputDecoration(
+                                      labelText: '학번',
+                                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                                      border: InputBorder.none,
+                                      prefixIcon: Icon(
+                                        Icons.school,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                    onChanged: (text) {
+                                      email = text;
+                                      if (text != "") {
+                                        setState(() {
+                                          onChanges = true;
+
+
+                                        });
+                                      } else {
+                                        setState(() {
+                                          onChanges = false;
+                                        });
+                                      }
+                                    },
+                                    // setState(() {
+                                    //
+                                    //
+                                    // });
+
+                                    // },
+
+                                    validator: (val) {
+                                      if (val!.isNotEmpty) {
+                                        return null;
+                                      } else {
+                                        return "학번이 비어있습니다.";
+                                      }
+                                    },
+                                  ),
+                                ),
+                                FlutterToggleTab(
+                                  width: 28,
+                                  borderRadius: 10,
+                                  height: 50.0,
+                                  // 높이 변수 적용
+                                  selectedTextStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700),
+                                  unSelectedTextStyle: const TextStyle(
+                                      color: Colors.black87,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500),
+                                  labels: const ["인하공전", "인하대"],
+                                  selectedLabelIndex: (index) {
+                                    setState(() {
+                                      if (index == 0) {
+                                        academy = "@itc.ac.kr";
+                                      } else {
+                                        academy = "@inha.edu";
+                                      }
+                                      selectedIndex = index;
+                                      updateBackgroundColors();
+                                    });
+                                  },
+                                  selectedBackgroundColors:
+                                      selectedBackgroundColors,
+                                  unSelectedBackgroundColors:
+                                      unSelectedBackgroundColors,
+                                  isScroll: false,
+                                  selectedIndex: selectedIndex,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: context.height(0.01)),
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                      child: Container(
+                        // 비밀번호 입력 필드
+                        height: 50.0, // 높이 변수 적용
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey[300]!, // 연한 회색 테두리
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[100], // 연한 회색 배경색
+                        ),
+                        child: TextFormField(
+                          obscureText: true,
+                          decoration: const InputDecoration(
+                            floatingLabelBehavior: FloatingLabelBehavior.never,
+                            labelText: '비밀번호',
+                            border: InputBorder.none,
+                            prefixIcon: Icon(
+                              Icons.lock,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          onChanged: (text) {
+                            password = text;
+
+
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: context.height(0.3)),
+                    Container(
+                      height: context.height(0.09),
+                      padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: (onChanges != false)?Colors.blue:Colors.grey[300], // 버튼 배경색 회색으로 설정
+                            minimumSize: const Size.fromHeight(50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(90.0),
+                            ),
+                          ),
+                          child: Expanded(
+                            child: const Text('탈퇴하기',
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          onPressed: () async {
+                            bool isValid = await validateCredentials(
+                                email + academy, password);
+                            if (isValid) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return DeleteAuthDialog(
+                                      email + academy, password);
+                                },
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('잘못된 정보입니다.')));
+                            }
+                          }),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+
           ),
         ),
       ),
     );
   }
 }
-
-
-
 
 Future<bool> validateCredentials(String email, String password) async {
   try {
