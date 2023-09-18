@@ -47,6 +47,7 @@ class _NotificationListState extends State<NotificationList> {
   gettingNickName() async {
     nickName = await storage.read(key: "nickName");
     uid = await storage.read(key: "uid");
+    gender = await storage.read(key: "gender");
   }
 
   @override
