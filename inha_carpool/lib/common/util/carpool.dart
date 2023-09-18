@@ -123,18 +123,11 @@ class FirebaseCarpool {
       await apiTopic.saveTopoic(topicRequstDTO);
 
         print("토픽 추가");
-
-      }
-      /// 취소하기
-      //await FirebaseMessaging.instance.unsubscribeFromTopic('news');
-
-
       /// 0830 한승완 추가 : carId의 Token 저장
       await FireStoreService().saveToken(token!, carpoolDocRef.id);
 
       /// 0903 한승완 추가 : 참가 메시지 전송
       await FireStoreService().sendCreateMessage(carpoolDocRef.id, memberName);
-
       print('Data added to Firestore.');
     } catch (e) {
       print('Error adding data to Firestore: $e');
