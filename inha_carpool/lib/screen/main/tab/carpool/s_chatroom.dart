@@ -768,7 +768,7 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                           Navigator.pop(context);
                           showDialog(
                             context: context,
-                            builder: (context) => ComplainAlert(userName: userName, myId: widget.userName, carpoolId: widget.carId),
+                            builder: (context) => ComplainAlert(reportedUserNickName: userName, myId: widget.userName, carpoolId: widget.carId),
                           );
                         },
                         style: ElevatedButton.styleFrom(

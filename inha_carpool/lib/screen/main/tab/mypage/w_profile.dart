@@ -14,7 +14,7 @@ class ProFile extends StatefulWidget {
 }
 
 class _ProFileState extends State<ProFile> {
-  final storage = const FlutterSecureStorage();
+  var storage = const FlutterSecureStorage();
   late Future<String> nickNameFuture;
   late Future<String> uidFuture;
   late Future<String> genderFuture;
@@ -244,7 +244,8 @@ class _ProFileState extends State<ProFile> {
                           return Text(
                             snapshot.data ?? '',
                             style: const TextStyle(
-                                fontSize: 14, color: Colors.black),
+                                fontSize: 14,
+                                color: Colors.black),
                           );
                         }
                       },
@@ -332,19 +333,21 @@ class _ProFileState extends State<ProFile> {
                 String newNickname = nicknameController.text;
                 if (newNickname.isNotEmpty && newNickname.length > 1) {
                   int result =
-                  await updateNickname(newNickname, AutofillHints.email);
+                  await updateNickname(newNickname, email);
 
                   if (result == 1) {
                     // 업데이트 성공 팝업
-                    if(!mounted) return;
+                    if (!mounted) return;
                     Navigator.of(context).pop();
                     _showResultPopup(context, "수정 완료", "닉네임이 성공적으로 수정되었습니다.");
 
                     // 업데이트된 닉네임으로 상단의 닉네임 다시 빌드
                     setState(() {
-                      var nickNameFuture = Future.value(newNickname);
+                      nickNameFuture = _loadUserDataForKey("nickName");
                     });
-                  } else if (result == 2) {
+
+                  }
+                  else if (result == 2) {
                     // 중복된 닉네임 팝업
                     if(!mounted) return;
                     _showResultPopup(
@@ -421,16 +424,17 @@ Future<int> updateNickname(String newNickname, String email) async {
         await userRef.update({'nickName': newNickname});
 
         // FlutterSecureStorage에 닉네임 업데이트
-        var storage;
-        await storage.write(key: 'nickName', value: newNickname);
-        print('닉네임이 업데이트되었습니다. => $newNickname');
+        const storage = FlutterSecureStorage();
+
+        await storage.write(key: 'nickname', value: newNickname);
+        print('파베 닉네임이 업데이트되었습니다. => $newNickname');
         return 1;
       } else {
-        print('중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.');
+        print('파베 중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.');
         return 2;
       }
     } else {
-      print('해당 이메일과 일치하는 문서가 없습니다.');
+      print('파베 해당 이메일과 일치하는 문서가 없습니다.');
       return 0;
     }
   } catch (e) {
