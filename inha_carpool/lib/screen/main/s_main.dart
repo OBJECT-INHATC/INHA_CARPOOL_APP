@@ -75,7 +75,7 @@ class MainScreenState extends State<MainScreen>
                   icon: Stack(
                     children: [
                       const Icon(
-                        Icons.notifications,
+                        Icons.notifications_outlined,
                         size: 30,
                         color: Colors.black,
                       ),

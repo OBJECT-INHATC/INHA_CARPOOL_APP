@@ -43,7 +43,7 @@ class _ProFileState extends State<ProFile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(00),
+      color: const Color(0x00000000),
       child: Column(
         children: [
           Center(
@@ -51,7 +51,7 @@ class _ProFileState extends State<ProFile> {
               children: [
                 // 기본정보 항목
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 6.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 6.0),
                   color: Colors.grey[100],
                   padding: const EdgeInsets.symmetric(
                       horizontal: 15.0, vertical: 13.0), // vertical 값을 조정
@@ -61,7 +61,7 @@ class _ProFileState extends State<ProFile> {
                       Text(
                         '기본 정보',
                         style: TextStyle(
-                          fontSize: 17.5,
+                          fontSize: 17,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -74,12 +74,12 @@ class _ProFileState extends State<ProFile> {
                   children: [
                     Stack(
                       children: [
-                        Container(
+                        SizedBox(
                           width: MediaQuery.of(context).size.width,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Padding(
+                              const Padding(
                                 padding: EdgeInsets.only(left: 5.0),
                                 child: Icon(
                                   Icons.account_circle,
@@ -113,7 +113,7 @@ class _ProFileState extends State<ProFile> {
                           ),
                         ),
                         Positioned(
-                          right: 225,
+                          right: 25,
                           bottom: 15,
                           child: GestureDetector(
                             onTap: () {
@@ -121,11 +121,12 @@ class _ProFileState extends State<ProFile> {
                             },
                             child: const Row(
                               children: [
-                                Icon(Icons.edit, size: 14, color: Colors.grey),
+                                Icon(Icons.edit, size: 15, color: Colors.grey),
+                                SizedBox(width: 5),
                                 Text(
                                   "수정",
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -335,6 +336,7 @@ class _ProFileState extends State<ProFile> {
 
                   if (result == 1) {
                     // 업데이트 성공 팝업
+                    if(!mounted) return;
                     Navigator.of(context).pop();
                     _showResultPopup(context, "수정 완료", "닉네임이 성공적으로 수정되었습니다.");
 
@@ -344,13 +346,16 @@ class _ProFileState extends State<ProFile> {
                     });
                   } else if (result == 2) {
                     // 중복된 닉네임 팝업
+                    if(!mounted) return;
                     _showResultPopup(
                         context, "오류", "중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.");
                   } else if (result == 0) {
                     // 이메일 일치 문서 없음 팝업
+                    if(!mounted) return;
                     _showResultPopup(context, "오류", "해당 이메일과 일치하는 문서가 없습니다.");
                   } else {
                     // 업데이트 실패 팝업
+                    if(!mounted) return;
                     _showResultPopup(context, "오류", "닉네임 업데이트에 실패했습니다.");
                   }
                 } else {

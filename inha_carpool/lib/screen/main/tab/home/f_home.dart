@@ -62,10 +62,11 @@ class _HomeState extends State<Home> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           heroTag: "recruit_from_home",
-          elevation: 10,
+          elevation: 5,
+          mini: false,
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(20),
             side: const BorderSide(color: Colors.grey, width: 1),
           ),
           onPressed: () {
@@ -116,7 +117,7 @@ class _HomeState extends State<Home> {
                                   horizontal: 20, vertical: 0),
                             ),
                             style: const TextStyle(
-                                color: Colors.black, fontSize: 12),
+                                color: Colors.black, fontSize: 11),
                           ),
                           Positioned(
                             // 텍스트필드에 맞춰서 위치 정렬

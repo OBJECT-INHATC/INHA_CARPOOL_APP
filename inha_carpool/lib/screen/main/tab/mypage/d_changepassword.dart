@@ -29,14 +29,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           leadingWidth: 56,
-          leading: Center(
+          leading: const Center(
             child: BackButton(
               color: Colors.black,
             ),
           ),
-          title: Text(
+          title: const Text(
             "비밀번호 변경",
-            style: TextStyle(color: Colors.black, fontSize: 20,),
+            style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
         ),
@@ -46,23 +46,23 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   '학번',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 15),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: '학번 입력',
                   ),
                 ),
-                SizedBox(height: 20),
-                Text(
+                const SizedBox(height: 20),
+                const Text(
                   '현재 비밀번호',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 15),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: '현재 비밀번호 입력',
                   ),
                   obscureText: true,
@@ -71,13 +71,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     oldPassword = text;
                   },
                 ),
-                SizedBox(height: 10),
-                Text(
+                const SizedBox(height: 10),
+                const Text(
                   '새 비밀번호',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 15),
                 ),
                 TextFormField(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: '새로운 비밀번호 입력',
                   ),
                   obscureText: true,
@@ -86,18 +86,18 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     newPassword = text;
                   },
                 ),
-                SizedBox(height: 10),
-                Text(
+                const SizedBox(height: 10),
+                const Text(
                   '새 비밀번호 확인',
-                  style: TextStyle(fontSize: 16),
+                  style: TextStyle(fontSize: 15),
                 ),
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: '새로운 비밀번호 다시 입력',
                     suffix: Text(passwordCheck,
                         style: (passwordCheck == "비밀번호가 일치하지 않습니다.")
-                            ? TextStyle(color: Colors.red)
-                            : TextStyle(color: Colors.green)),
+                            ? const TextStyle(color: Colors.red)
+                            : const TextStyle(color: Colors.green)),
                   ),
                   obscureText: true,
                   onChanged: (text) {
@@ -114,7 +114,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     }
                   },
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: () async {
                     // 비밀번호 변경 로직 구현 예정
@@ -122,15 +122,17 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     await AuthService().validatePassword(oldPassword);
 
                     if (isValid == 'Invalid') {
+                      if(!mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('현재 비밀번호가 틀립니다.')),
+                        const SnackBar(content: Text('현재 비밀번호가 틀립니다.')),
                       );
                     } else {
                       String result = await AuthService().passwordUpdate(
                           oldPassword: oldPassword, newPassword: newPassword);
                       if (result == 'Success') {
+                        if(!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('성공적으로 변경되었습니다.')),
+                          const SnackBar(content: Text('성공적으로 변경되었습니다.')),
                         );
 
                         AuthService().signOut().then((value) {
@@ -141,20 +143,21 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           );
                         });
                       } else {
+                        if(!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('비밀번호 변경에 실패했습니다.')),
+                          const SnackBar(content: Text('비밀번호 변경에 실패했습니다.')),
                         );
                       }
                     }
                   },
-                  child: Text('비밀번호 변경'),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    primary: Colors.grey,
+                    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    backgroundColor: Colors.grey[400],
                   ),
+                  child: const Text('비밀번호 변경'),
                 ),
               ],
             ),

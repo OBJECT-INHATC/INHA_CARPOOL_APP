@@ -89,12 +89,12 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                     children: [
                       Text(
                         selectedLocation,
-                        style: const TextStyle(color: Colors.black, fontSize: 14),
+                        style: const TextStyle(color: Colors.black, fontSize: 15),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.arrow_forward_ios,
                         color: Colors.black,
-                        size: 14,)
+                        size: 15,)
                     ],
                   ),
                 )
@@ -111,13 +111,13 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               filled: true,
               fillColor: Colors.white,
               hintText: widget.detailPoint,
-              labelStyle: const TextStyle(color: Colors.black, fontSize: 14),
+              labelStyle: const TextStyle(color: Colors.black, fontSize: 13),
               border: UnderlineInputBorder(
 
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
-            style: const TextStyle(color: Colors.black, fontSize: 14),
+            style: const TextStyle(color: Colors.black, fontSize: 13),
             controller: widget.detailController,
           ),
         )

@@ -47,7 +47,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                           data: const CupertinoThemeData(
                             textTheme: CupertinoTextThemeData(
                               dateTimePickerTextStyle: TextStyle(
-                                fontSize: 20,
+                                fontSize: 17,
                               ),
                             ),
                           ),
@@ -66,7 +66,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                         data: const CupertinoThemeData(
                           textTheme: CupertinoTextThemeData(
                             dateTimePickerTextStyle:
-                                TextStyle(color: Colors.black, fontSize: 20),
+                                TextStyle(color: Colors.black, fontSize: 17),
                           ),
                         ),
                         child: CupertinoDatePicker(
@@ -96,7 +96,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                 child: Text(
                   widget.label,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 17, fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
@@ -105,14 +105,14 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                   ? Text(
                       widget.selectedDateTime.hour > 12 ? '오후' : '오전',
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
                     )
                   : Text(
                       widget.selectedDateTime.year.toString(),
                       style: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 15,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -122,14 +122,14 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                       "${widget.selectedDateTime.hour > 12 ? (widget.selectedDateTime.hour - 12).toString().padLeft(2, '0') : widget.selectedDateTime.hour.toString().padLeft(2, '0')}:"
                       "${widget.selectedDateTime.minute.toString().padLeft(2, '0')}",
                       style: const TextStyle(
-                        fontSize: 32,
+                        fontSize: 27,
                       ),
                     )
                   : Text(
                       "${widget.selectedDateTime.month.toString().padLeft(2, '0')}."
                       "${widget.selectedDateTime.day.toString().padLeft(2, '0')}",
                       style: const TextStyle(
-                        fontSize: 32,
+                        fontSize: 27,
                       ),
                     ),
             ],
