@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
-
 import 'd_complainAlert.dart';
 
 class ComplainDialog extends StatefulWidget {
   const ComplainDialog({super.key});
+
+
 
   @override
   State<ComplainDialog> createState() => _ComplainDialogState();
@@ -61,12 +62,12 @@ class _ComplainDialogState extends State<ComplainDialog> {
                   title:
                   Text('민지', style: TextStyle(fontWeight: FontWeight.bold)),
                   trailing:
-                  Icon(Icons.priority_high, color: Colors.red, size: 35),
+                  Icon(Icons.priority_high, color: Colors.red, size: 18),
                   onTap: () {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                       // return ComplainAlert(userName: index.toString());
+                       // return ComplainAlert(userName: userName);
                         return Placeholder();
                       },
                     );
@@ -80,7 +81,5 @@ class _ComplainDialogState extends State<ComplainDialog> {
     );
   }
 }
-
-//신고 다이얼로그창
 
 

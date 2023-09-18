@@ -17,8 +17,10 @@ import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import 'package:inha_Carpool/screen/main/tab/carpool/f_carpool_list.dart';
 
+
 class recordList extends StatefulWidget {
   const recordList({super.key});
+
 
   @override
   State<recordList> createState() => _recordListState();
@@ -26,47 +28,42 @@ class recordList extends StatefulWidget {
 
 class _recordListState extends State<recordList> {
 
+
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final storage = FlutterSecureStorage();
   late String nickName = ""; // Initialize with a default value
   late String uid = "";
-  late String gender = "";
+  late String gender = ""; //gender추가
 
-  // static Future<List<DocumentSnapshot>> getCarpoolsWithMemberAndPastTime(String myID, String myNickName, int currentTime) async {
-  //   CollectionReference carpoolCollection = _firestore.collection('carpool');
-  //   QuerySnapshot querySnapshot = await carpoolCollection.get();
-
-    static Future<List<DocumentSnapshot>> getCarpoolsWithMemberAndPastTime(String memberID, String memberName, int currentTime
-    ) async {
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('carpool')
-          .where('members', arrayContains: '${memberID}_$memberName')
-          .get();
+  //지난 이용기록 가져오기
+  static Future<List<DocumentSnapshot>> getCarpoolsWithMemberAndPastTime(String memberID, String memberName, String memberGender, int currentTime
+      ) async {
+    QuerySnapshot querySnapshot = await _firestore.collection('carpool').get();
 
     List<DocumentSnapshot> pastCarpools = [];
 
-    // 현재 시간 가져옴
-    DateTime currentTime = DateTime.now();
+    DateTime currentDateTime = DateTime.fromMicrosecondsSinceEpoch(currentTime); //밑에 _loadCarpools의 currentTime인자 받아와서 쓰기
 
     querySnapshot.docs.forEach((doc) {
-      if (doc['members'].contains(memberID) || doc['admin'].contains(memberName)) {
-        DateTime startTime =
-        DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+      String memberIdString = '${memberID}_${memberName}_$memberGender';
+      bool isAdmin = doc['admin'] == memberIdString; // 멤버ID가 admin 필드와 일치하는지 확인
+      bool isMember = doc['members'].contains(memberIdString); // 멤버ID가 members 리스트에 포함되어 있는지 확인
 
-        // 현재 시간보다 과거의 시간인 경우만 추가
-        if (startTime.isBefore(currentTime)) {
+      if (isAdmin || isMember) { // 둘 중 하나라도 참이면
+        DateTime startTime = DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+        if (startTime.isBefore(currentDateTime)) { //현재시간보다 과거의 것만 가져오기
           pastCarpools.add(doc);
         }
       }
     });
 
-    //이용기록 리스트 정렬
+    //이용기록 정렬
     pastCarpools.sort((a, b) {
       DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
       DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b['startTime']);
 
-      return startTimeB.compareTo(startTimeA); // 최근의 것부터 정렬
+      return startTimeB.compareTo(startTimeA); // 최근 것부터 정렬
     });
 
     return pastCarpools;
@@ -91,33 +88,33 @@ class _recordListState extends State<recordList> {
   }
 
   // 카풀 컬렉션 이름 추출
-  // String getName(String res) {
-  //   return res.substring(res.indexOf("_") + 1);
-  // }
   String getName(String res) {
     int start = res.indexOf("_") + 1;
     int end = res.lastIndexOf("_");
     return res.substring(start, end);
   }
 
+  String shortenText(String text, int maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      return text.substring(0, maxLength - 3) + '...';
+    }
+  }
+
+
   // Retrieve carpools and apply FutureBuilder
   Future<List<DocumentSnapshot>> _loadCarpools() async {
     String myID = uid;
     String myNickName = nickName;
+    String myGender = gender;   //gender추가
     print(myID);
 
     //현재시간 가져오기
     DateTime currentTime = DateTime.now();
 
     List<DocumentSnapshot> carpools =
-    await _recordListState.getCarpoolsWithMemberAndPastTime(myID, myNickName,currentTime.microsecondsSinceEpoch);
-
-    // for (DocumentSnapshot carpool in carpools) {
-    //   int numberOfMembers = carpool['members'].length;
-    //   print("Number of Members in the carpool: $numberOfMembers");
-    // }
-    //
-    // return carpools;
+    await _recordListState.getCarpoolsWithMemberAndPastTime(myID, myNickName, myGender ,currentTime.microsecondsSinceEpoch);
 
     return carpools;
 
@@ -137,20 +134,20 @@ class _recordListState extends State<recordList> {
           return Text('Error: ${snapshot.error}');
         } else if(!snapshot.hasData || snapshot.data!.isEmpty){
           return SafeArea(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    '카풀 이용기록이 없네요!\n카풀을 등록하여 이용해보세요.'
-                        .text
-                        .size(20)
-                        .bold
-                        .color(context.appColors.text)
-                        .align(TextAlign.center)
-                        .make(),
-                  ],
-                ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  '카풀 이용기록이 없네요!\n카풀을 등록하여 이용해보세요.'
+                      .text
+                      .size(20)
+                      .bold
+                      .color(context.appColors.text)
+                      .align(TextAlign.center)
+                      .make(),
+                ],
               ),
+            ),
           );
         } else{
           List<DocumentSnapshot> myCarpools = snapshot.data!;
@@ -354,17 +351,29 @@ class _recordListState extends State<recordList> {
                                                                       GestureDetector(
                                                                         onTap: (){
                                                                           showModalBottomSheet(
-                                                                              shape: RoundedRectangleBorder(
-                                                                                  borderRadius: BorderRadius.circular(20)),
+                                                                              // shape: RoundedRectangleBorder(
+                                                                              //     borderRadius: BorderRadius.circular(20)),
                                                                               context: context,
                                                                               builder: (BuildContext context) => Container(
-                                                                                color: Colors.white,
+                                                                                  decoration: const BoxDecoration(
+                                                                                    color: Colors.white,
+                                                                                    borderRadius: BorderRadius.only(
+                                                                                      topLeft: Radius.circular(15),
+                                                                                      topRight: Radius.circular(15),
+                                                                                    ),
+                                                                                  ),
                                                                                   padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
                                                                                   height:
                                                                                   MediaQuery.of(context).size.height * 0.35,
                                                                                   child: ComplainDialog()));
                                                                         },
-                                                                        child: Icon(Icons.warning_rounded, size: 20,),
+                                                                        child: Row(
+                                                                          children: [
+                                                                            Icon(Icons.search_outlined, size: 20,),
+                                                                            const SizedBox(width: 3,),
+                                                                            Text('${carpoolData['members'].length}인'),
+                                                                          ],
+                                                                        ),
                                                                       ),
 
                                                                     ],
@@ -403,4 +412,8 @@ class _recordListState extends State<recordList> {
     );//FutureBuilder<List<DocumentSnapshot>>
   }
 }
+
+
+
+
 

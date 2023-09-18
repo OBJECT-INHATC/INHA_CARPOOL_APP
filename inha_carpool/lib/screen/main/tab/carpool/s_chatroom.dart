@@ -145,7 +145,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
     });
   }
 
-  // 카풀 컬렉션 이름 추출
+  // 카풀 컬렉션 nickname 추출
   String getName(String res) {
     int start = res.indexOf("_") + 1;
     int end = res.lastIndexOf("_");
@@ -159,14 +159,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
     print("Extracted gender: $gender");
     return gender;
   }
-
-  // String getGender(String adminField) {
-  //   return adminField.substring(adminField.lastIndexOf("_")+1);
-  // }
-  // String getGender(String adminField) {
-  //   List<String> parts = adminField.split('_');
-  //   return parts.length > 2 ? parts[2] : 'Unknown';
-  // }
 
 
   /// 토큰, 사용자 Auth 정보 호출 메서드

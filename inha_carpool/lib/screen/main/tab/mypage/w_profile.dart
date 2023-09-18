@@ -7,7 +7,7 @@ import 'package:inha_Carpool/common/common.dart';
 //import 'package:inha_Carpool/lib/common/constants.dart';
 
 class ProFile extends StatefulWidget {
-  const ProFile({Key? key}) : super(key: key);
+  ProFile({Key? key}) : super(key: key);
 
   @override
   _ProFileState createState() => _ProFileState();
@@ -22,6 +22,8 @@ class _ProFileState extends State<ProFile> {
   late Future<String> userNameFuture;
   late String email;
 
+
+
   @override
   void initState() {
     super.initState();
@@ -29,14 +31,27 @@ class _ProFileState extends State<ProFile> {
   }
 
   Future<void> _loadUserData() async {
+
+    emailFuture = _loadUserDataForKey("email");
+    email = await emailFuture;
+    print("Initialized email: $email"); //로그찍어볼라고
+
     nickNameFuture = _loadUserDataForKey("nickName");
     uidFuture = _loadUserDataForKey("uid");
     genderFuture = _loadUserDataForKey("gender");
     emailFuture = _loadUserDataForKey("email");
     userNameFuture = _loadUserDataForKey("userName");
+
+
+
   }
 
   Future<String> _loadUserDataForKey(String key) async {
+
+    String? value = await storage.read(key: key);
+    print("Value for $key: $value");
+    return value ?? ""; //로그찍
+
     return await storage.read(key: key) ?? "";
   }
 
@@ -424,6 +439,9 @@ Future<int> updateNickname(String newNickname, String email) async {
         return 2;
       }
     } else {
+      print("Trying to update nickname for email: $email");
+      print("Query result: ${querySnapshot.docs}"); //로그찍
+
       print('해당 이메일과 일치하는 문서가 없습니다.');
       return 0;
     }

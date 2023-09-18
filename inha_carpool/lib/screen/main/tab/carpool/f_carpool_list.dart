@@ -12,6 +12,8 @@ import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 
 import 'package:inha_Carpool/service/sv_firestore.dart';
+
+
 class CarpoolList extends StatefulWidget {
   const CarpoolList({Key? key}) : super(key: key);
 
@@ -51,11 +53,6 @@ class _CarpoolListState extends State<CarpoolList> {
       // Update the state to trigger a UI refresh
     });
   }
-
-  // 카풀 컬렉션 이름 추출
-  // String getName(String res) {
-  //   return res.substring(res.indexOf("_") + 1);
-  // }
 
   String getName(String res) {
     int start = res.indexOf("_") + 1;
