@@ -387,7 +387,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               Text(
                                 '$memberName 님',
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: Colors.black,
                                 ),
                               ),
@@ -421,7 +421,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               "${startTime.month}월 ${startTime.day}일 ${startTime
                                   .hour}시 ${startTime.minute}분",
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -445,7 +445,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             Text(
                               startPoint,
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -482,7 +482,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             Text(
                               endPoint,
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -536,7 +536,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 decoration: const InputDecoration(
                                   hintText: "메시지 보내기...",
                                   hintStyle: TextStyle(
-                                      color: Colors.white, fontSize: 15),
+                                      color: Colors.white, fontSize: 13),
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -728,14 +728,14 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
               padding: const EdgeInsets.all(10.0),
               margin: const EdgeInsets.all(10.0),
               alignment: Alignment.center,
-              child: Text('프로필 조회',
+              child: const Text('프로필 조회',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            Divider(
+            const Divider(
               height: 1,
               color: Colors.grey,
             ),
@@ -745,15 +745,15 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                   padding: const EdgeInsets.all(8.0),
                   margin: const EdgeInsets.fromLTRB(20, 5, 0, 0),
                   alignment: Alignment.centerLeft,
-                  child: Icon(
+                  child: const Icon(
                     Icons.person_search, size: 120,),
                 ),
                 const SizedBox(width: 10,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('$userName', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                    Text('$memberGender',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),),
+                    Text('$userName', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    Text('$memberGender',style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey),),
                     ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -763,12 +763,12 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 254, 112, 2),
+                            backgroundColor: const Color.fromARGB(255, 254, 112, 2),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0)
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.warning_rounded,color: Colors.white),

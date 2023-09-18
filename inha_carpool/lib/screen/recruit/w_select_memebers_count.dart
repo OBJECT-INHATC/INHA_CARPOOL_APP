@@ -28,7 +28,7 @@ class LimitSelectorWidget extends StatelessWidget {
             ),
             child: Text(
               option,
-              style: const TextStyle(color: Colors.white, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 17),
             ),
           ),
         );

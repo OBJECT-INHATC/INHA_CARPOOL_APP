@@ -224,8 +224,8 @@ class _CarpoolListState extends State<CarpoolList> {
                                                       //    .make(),
                                                     ),
                                                     Text(
-                                                      "${formattedStartTime}",
-                                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
+                                                      formattedStartTime,
+                                                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey),
                                                     ),
                                                   ],
                                                 ),
@@ -240,7 +240,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                             SizedBox(width: 5), // 왼쪽으로 이동
                                                             Text(
                                                               '${carpoolData['admin'].split('_')[1]}',
-                                                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                                                             ),
                                                           ],
                                                         ),
@@ -288,15 +288,15 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                           "${carpoolData['startDetailPoint']}  ",
                                                                           style: const TextStyle(
                                                                             color: Colors.brown,
-                                                                            fontSize: 16,
+                                                                            fontSize: 15,
                                                                             fontWeight: FontWeight.bold,
                                                                           ),
                                                                         ),
                                                                         Text(
-                                                                          shortenText(carpoolData['startPointName'], 17),
+                                                                          shortenText(carpoolData['startPointName'], 16),
                                                                           style: TextStyle(
                                                                             color: Colors.grey[600],
-                                                                            fontSize: 10,
+                                                                            fontSize: 11,
                                                                             fontWeight: FontWeight.bold,
                                                                           ),
                                                                         ),
@@ -328,15 +328,15 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                             "${carpoolData['endDetailPoint']}",
                                                                             style: const TextStyle(
                                                                               color: Colors.brown,
-                                                                              fontSize: 16,
+                                                                              fontSize: 15,
                                                                               fontWeight: FontWeight.bold,
                                                                             ),
                                                                           ),
                                                                           Text(
-                                                                            shortenText(carpoolData['endPointName'], 17),
+                                                                            shortenText(carpoolData['endPointName'], 16),
                                                                             style: TextStyle(
                                                                               color: Colors.grey[600],
-                                                                              fontSize: 10,
+                                                                              fontSize: 11,
                                                                               fontWeight: FontWeight.bold,
                                                                             ),
                                                                           ),
@@ -384,7 +384,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                       padding: EdgeInsets.only(left: 3.0), // 채팅 왼쪽 여백
                                                       child: Text(
                                                         '$sender : $content',
-                                                        style: TextStyle(fontSize: 14, color: Colors.grey),
+                                                        style: TextStyle(fontSize: 13, color: Colors.grey),
                                                       ),
                                                     ),
                                                   ],

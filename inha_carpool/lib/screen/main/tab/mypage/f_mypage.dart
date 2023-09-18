@@ -49,7 +49,7 @@ class _MyPageState extends State<MyPage> {
                     Text(
                       '계정',
                       style: TextStyle(
-                        fontSize: 17.5,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -64,8 +64,8 @@ class _MyPageState extends State<MyPage> {
                 title: const Text('이용기록'),
                 onTap: () {
                   // 이용기록 페이지로 이동
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const recordList()));
+                  Navigator.of(Nav.globalContext).push(
+                      MaterialPageRoute(builder: (context) => const RecordList()));
                 },
               ),
               ListTile(
@@ -76,7 +76,7 @@ class _MyPageState extends State<MyPage> {
                 title: const Text('비밀번호 변경'),
                 onTap: () {
                   // 비밀번호 변경 페이지로 이동
-                  Navigator.of(context).push(
+                  Navigator.of(Nav.globalContext).push(
                     MaterialPageRoute(
                       builder: (context) =>
                           ChangePasswordPage(), // ChangePasswordPage로 이동
@@ -110,14 +110,14 @@ class _MyPageState extends State<MyPage> {
                 title: const Text('회원탈퇴'),
                 onTap: () {
                   // 회원탈퇴 페이지로 이동하
-                  Navigator.of(context).push(
+                  Navigator.of(Nav.globalContext).push(
                       MaterialPageRoute(builder: (context) => SecessionPage()));
                 },
               ),
 
               // 알림 항목
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 6.0),
+                margin: const EdgeInsets.symmetric(horizontal: 6.0),
                 color: Colors.grey[100],
                 padding: const EdgeInsets.symmetric(
                     horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
@@ -127,7 +127,7 @@ class _MyPageState extends State<MyPage> {
                     Text(
                       '알림',
                       style: TextStyle(
-                        fontSize: 17.5,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -156,7 +156,7 @@ class _MyPageState extends State<MyPage> {
                     Text(
                       '기타',
                       style: TextStyle(
-                        fontSize: 17.5,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

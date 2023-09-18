@@ -105,7 +105,7 @@ class _LocationInputState extends State<LocationInput> {
         centerTitle: true,
         title: const Text(
           '위치 선택',
-          style: TextStyle(color: Colors.black,fontSize: 15),
+          style: TextStyle(color: Colors.black,fontSize: 17, fontWeight: FontWeight.bold),
         ),
         toolbarHeight: 45,
         // 해당 선을 내릴때만 나오게 해줘
@@ -143,7 +143,7 @@ class _LocationInputState extends State<LocationInput> {
                           // 글씨의 위치를 가운데 정렬
                           contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                         ),
-                      style: const TextStyle(color: Colors.black, fontSize: 12),
+                      style: const TextStyle(color: Colors.black, fontSize: 11),
                     ),
                       Positioned(
                         // 텍스트필드에 맞춰서 위치 정렬
@@ -278,14 +278,14 @@ class _LocationInputState extends State<LocationInput> {
                                 const Text(
                                   '이 위치 선택',
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                                 Text(
                                   _address ?? ' 화면을 이동해서 위치를 선택해주세요.',
                                   style: const TextStyle(
-                                    fontSize: 12,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.normal,
                                   ),
                                 ),
