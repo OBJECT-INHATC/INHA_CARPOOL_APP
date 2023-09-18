@@ -43,7 +43,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: Colors.brown[50],
         borderRadius: BorderRadius.circular(10),
       ),
       child: ListView.builder(
