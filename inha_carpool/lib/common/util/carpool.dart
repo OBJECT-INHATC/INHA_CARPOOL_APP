@@ -11,6 +11,7 @@ import 'package:inha_Carpool/service/sv_firestore.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
 
 import '../../screen/main/s_main.dart';
+import '../data/preference/prefs.dart';
 import 'addMember_Exception.dart';
 
 class FirebaseCarpool {
@@ -110,6 +111,16 @@ class FirebaseCarpool {
         'endDetailPoint': endDetailPoint,
       });
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
+
+      /// 0918 해당 카풀 알림 토픽 추가
+      if(Prefs.isPushOnRx.get() == true){
+        await FirebaseMessaging.instance.subscribeToTopic(carpoolDocRef.id);
+        print("토픽 추가");
+
+      }
+      /// 취소하기
+      //await FirebaseMessaging.instance.unsubscribeFromTopic('news');
+
 
       /// 0830 한승완 추가 : carId의 Token 저장
       await FireStoreService().saveToken(token!, carpoolDocRef.id);
