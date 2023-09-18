@@ -344,7 +344,7 @@ class _ProFileState extends State<ProFile> {
                     setState(() {
                       nickNameFuture = _loadUserDataForKey("nickName");
                     });
-
+                    ///Todo : 서버 디비에도 업데이트문 날려주기 0919 상훈
 
                   }
                   else if (result == 2) {
