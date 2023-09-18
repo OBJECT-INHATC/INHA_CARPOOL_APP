@@ -67,11 +67,12 @@ class _SecessionPageState extends State<SecessionPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           leadingWidth: 56,
-          leading: Center(
+          leading: const Center(
             child: BackButton(
               color: Colors.black,
             ),
           ),
+
           title: Text(
             "회원 탈퇴",
             style: TextStyle(color: Colors.black, fontSize: 20),
@@ -293,6 +294,7 @@ class _SecessionPageState extends State<SecessionPage> {
                 ),
               ],
             ),
+
           ),
         ),
       ),

@@ -27,7 +27,6 @@ class ChatroomPage extends StatefulWidget {
   final String gender;
 
 
-
   /// 생성자
   const ChatroomPage(
       {Key? key,
@@ -41,6 +40,9 @@ class ChatroomPage extends StatefulWidget {
   @override
   State<ChatroomPage> createState() => _ChatroomPageState();
 }
+
+
+
 
 class _ChatroomPageState extends State<ChatroomPage> {
   /// 채팅 메시지 스트림
@@ -385,7 +387,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               Text(
                                 '$memberName 님',
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: Colors.black,
                                 ),
                               ),
@@ -419,7 +421,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               "${startTime.month}월 ${startTime.day}일 ${startTime
                                   .hour}시 ${startTime.minute}분",
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -443,7 +445,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             Text(
                               startPoint,
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -480,7 +482,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             Text(
                               endPoint,
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -534,7 +536,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 decoration: const InputDecoration(
                                   hintText: "메시지 보내기...",
                                   hintStyle: TextStyle(
-                                      color: Colors.white, fontSize: 15),
+                                      color: Colors.white, fontSize: 13),
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -589,8 +591,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
         if (snapshot.hasData) {
           List<ChatMessage> fireStoreChats = snapshot.data!.docs
               .map<ChatMessage>((e) =>
-              ChatMessage.fromMap(
-                  e.data() as Map<String, dynamic>, widget.carId))
+              ChatMessage.fromMap(e.data() as Map<String, dynamic>, widget.carId))
               .toList();
           if (localChats != null) {
             fireStoreChats.addAll(localChats!);
@@ -599,8 +600,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
           if (fireStoreChats.length > previousItemCount) {
             previousItemCount = fireStoreChats.length;
             WidgetsBinding.instance?.addPostFrameCallback((_) {
-              _scrollController
-                  .jumpTo(_scrollController.position.maxScrollExtent);
+              _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
             });
           }
 
@@ -617,8 +617,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
             itemCount: fireStoreChats.length,
             itemBuilder: (context, index) {
               final currentChat = fireStoreChats[index]; // 현재 채팅 메시지
-              final previousChat =
-              index > 0 ? fireStoreChats[index - 1] : null; // 이전 채팅 메시지
+              final previousChat = index > 0 ? fireStoreChats[index - 1] : null; // 이전 채팅 메시지
 
               // 채팅에 포함된 시간을 DateTime으로 변환
               final currentDate =
@@ -645,8 +644,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "${currentDate.year}-${currentDate.month}-${currentDate
-                            .day}",
+                        "${currentDate.year}-${currentDate.month}-${currentDate.day}",
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -660,6 +658,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         : MessageType.other),
                     time: fireStoreChats[index].time,
                   ),
+
                 ],
               );
             },
@@ -729,14 +728,14 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
               padding: const EdgeInsets.all(10.0),
               margin: const EdgeInsets.all(10.0),
               alignment: Alignment.center,
-              child: Text('프로필 조회',
+              child: const Text('프로필 조회',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            Divider(
+            const Divider(
               height: 1,
               color: Colors.grey,
             ),
@@ -746,15 +745,15 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                   padding: const EdgeInsets.all(8.0),
                   margin: const EdgeInsets.fromLTRB(20, 5, 0, 0),
                   alignment: Alignment.centerLeft,
-                  child: Icon(
+                  child: const Icon(
                     Icons.person_search, size: 120,),
                 ),
                 const SizedBox(width: 10,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('$userName', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                    Text('$memberGender',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),),
+                    Text('$userName', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    Text('$memberGender',style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey),),
                     ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -764,12 +763,12 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 254, 112, 2),
+                            backgroundColor: const Color.fromARGB(255, 254, 112, 2),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0)
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.warning_rounded,color: Colors.white),

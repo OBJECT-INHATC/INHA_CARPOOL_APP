@@ -120,7 +120,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
       child: Scaffold(
         appBar: AppBar(
           titleTextStyle: const TextStyle(
-            fontSize: 18,
+            fontSize: 17,
             fontWeight: FontWeight.bold,
           ),
           centerTitle: true,
@@ -218,7 +218,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       const Text(
                                         "출발 지점",
                                         style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 11,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -237,7 +237,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           child: Text(
                                             widget.startPointName,
                                             style: const TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 11,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black, // 텍스트 색상
                                             ),
@@ -259,7 +259,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       const Text(
                                         "도착 지점",
                                         style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 11,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -278,7 +278,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           child: Text(
                                             widget.endPointName,
                                             style: const TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 11,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black, // 텍스트 색상
                                             ),
@@ -301,7 +301,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       const Text(
                                         "출발 시간",
                                         style: TextStyle(
-                                          fontSize: 12,
+                                          fontSize: 11,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
@@ -320,7 +320,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           child: Text(
                                             widget.startTime,
                                             style: const TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 11,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black, // 텍스트 색상
                                             ),
@@ -377,7 +377,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
                                 textStyle: const TextStyle(
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -387,7 +387,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 child: const Text(
                                   '카풀 참가하기',
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
