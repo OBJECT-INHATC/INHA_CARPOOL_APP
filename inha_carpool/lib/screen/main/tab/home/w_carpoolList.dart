@@ -41,6 +41,7 @@ String _truncateText(String text, int maxLength) {
 class _CarpoolListWidgetState extends State<CarpoolListWidget> {
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus(); // 키보드 감추기
@@ -62,6 +63,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             DocumentSnapshot carpool = widget.snapshot.data![index];
             Map<String, dynamic> carpoolData =
                 carpool.data() as Map<String, dynamic>;
+
 
             DateTime startTime =
                 DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
