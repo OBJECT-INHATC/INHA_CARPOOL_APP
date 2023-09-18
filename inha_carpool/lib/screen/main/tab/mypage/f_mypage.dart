@@ -14,7 +14,6 @@ import 'f_logout_confirmation.dart';
 import 'f_secession.dart';
 import 'notificationButton/w_switch_menu.dart';
 
-
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
 
@@ -64,8 +63,8 @@ class _MyPageState extends State<MyPage> {
                 title: const Text('이용기록'),
                 onTap: () {
                   // 이용기록 페이지로 이동
-                  Navigator.of(Nav.globalContext).push(
-                      MaterialPageRoute(builder: (context) => const RecordList()));
+                  Navigator.of(Nav.globalContext).push(MaterialPageRoute(
+                      builder: (context) => const RecordList()));
                 },
               ),
               ListTile(
@@ -135,14 +134,22 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
 
-                Obx(
-                      () => Switchmenu('푸쉬 알림', Prefs.isPushOnRx.get(), onChanged: (isOn) {
-                    Prefs.isPushOnRx.set(isOn);
-                  }),
-                ),
+              Obx(
+                () => Switchmenu('푸쉬 알림', Prefs.isPushOnRx.get(),
+                    onChanged: (isOn) async {
+                  Prefs.isPushOnRx.set(isOn);
+                  if(isOn){
+                    print('푸쉬 알림 on');
+                    /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독해버려
+                  }else{
+                    print('푸쉬 알림 off');
+                    /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독 해제해버려  -> 유저이름으로 카풀Id 리스트
+                    /// 만들어오는 api 필요 0919
+                  }
+                }),
+              ),
               //Todo : Prefs.isPushOnRx.get() 이 값은 bool 타입으로
               //Todo : 현재 알림 설정이 off 면 false 반환 on 이면 true 반환 -상훈
-
 
               // 기타 항목
               Container(
@@ -164,9 +171,6 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
 
-
-
-
               ListTile(
                 leading: const Icon(
                   Icons.cached_outlined,
@@ -177,7 +181,6 @@ class _MyPageState extends State<MyPage> {
                   final manager = DefaultCacheManager();
                   await manager.emptyCache();
                   if (mounted) {
-
                     MessageDialog('clear_cache_done'.tr()).show();
                   }
                 },
