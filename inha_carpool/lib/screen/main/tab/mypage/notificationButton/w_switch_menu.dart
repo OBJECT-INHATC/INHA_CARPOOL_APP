@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import '../../common/widget/w_empty_expanded.dart';
+import '../../../../../common/widget/w_empty_expanded.dart';
 import 'w_os_switch.dart';
 
 class Switchmenu extends StatelessWidget {
@@ -15,8 +15,9 @@ class Switchmenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        title.text.bold.make(),
-        EmptyExpanded(),
+        Icon(Icons.notifications).pOnly(right: 15),
+        title.text.size(17).make(),
+        const EmptyExpanded(),
         OsSwitch(value: isOn, onChanged: onChanged,),
 
       ],
