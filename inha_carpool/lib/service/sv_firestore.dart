@@ -107,7 +107,6 @@ class FireStoreService {
 
     // FCM 메시지 전송
     FcmService().sendMessage(
-      tokenList: tokenList,
       title: "새로운 채팅이 도착했습니다.",
       body: "${chatMessageData['sender']} : ${chatMessageData['message']}",
       chatMessage: ChatMessage(

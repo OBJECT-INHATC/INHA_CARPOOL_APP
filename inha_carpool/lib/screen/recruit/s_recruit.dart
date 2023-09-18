@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -281,7 +282,6 @@ class _RecruitPageState extends State<RecruitPage> {
                             isButtonDisabled = false;
                             return;
                           }
-
                           /// 조건 충족 시 파이어베이스에 카풀 정보 저장
                           await FirebaseCarpool.addDataToFirestore(
                             selectedDate: _selectedDate,
