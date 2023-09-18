@@ -32,23 +32,23 @@ class _MyPageState extends State<MyPage> {
       body: ListView( // 스크롤 가능한 ListView로 변경
         children: [
           // 내 정보 위젯 ProFile()
-          const ProFile(),
-          const SizedBox(height: 10),
+          ProFile(),
+          SizedBox(height: 10),
           Column(
             children: [
 
               // 계정 항목
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                margin: EdgeInsets.symmetric(horizontal: 6.0),
                 color: Colors.grey[100],
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
                   children: [
                     Text(
                       '계정',
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 17.5,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -56,16 +56,16 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.lock,
                   color: Colors.blue,
                 ),
-                title: const Text('비밀번호 변경', style: TextStyle(fontSize: 15)),
+                title: Text('비밀번호 변경'),
                 onTap: () {
                   // 비밀번호 변경 페이지로 이동
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const ChangePasswordPage(), // ChangePasswordPage로 이동
+                      builder: (context) => ChangePasswordPage(), // ChangePasswordPage로 이동
                     ),
                   );
                 },
@@ -73,11 +73,11 @@ class _MyPageState extends State<MyPage> {
 
 
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.logout,
                   color: Colors.red,
                 ),
-                title: const Text('로그아웃', style: TextStyle(fontSize: 15)),
+                title: Text('로그아웃'),
                 onTap: () {
                   // 로그아웃 다이얼로그를 표시
                   showDialog(
@@ -89,11 +89,11 @@ class _MyPageState extends State<MyPage> {
 
 
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.delete,
                   color: Colors.black,
                 ),
-                title: const Text('회원탈퇴', style: TextStyle(fontSize: 15)),
+                title: Text('회원탈퇴'),
                 onTap: () {
                   // 회원탈퇴 페이지로 이동하
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => SecessionPage()));
@@ -103,16 +103,16 @@ class _MyPageState extends State<MyPage> {
 
               // 알림 항목
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                margin: EdgeInsets.symmetric(horizontal: 6.0),
                 color: Colors.grey[100],
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
                       '알림',
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 17.5,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -120,11 +120,11 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.alarm_rounded,
                   color: Colors.blueGrey,
                 ),
-                title: const Text('알림 설정', style: TextStyle(fontSize: 15)),
+                title: Text('알림 설정'),
                 trailing: Switch(
                   value: isEventAdsAllowed,
                   onChanged: (value) {
@@ -137,16 +137,16 @@ class _MyPageState extends State<MyPage> {
 
               // 기타 항목
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                margin: EdgeInsets.symmetric(horizontal: 6.0),
                 color: Colors.grey[100],
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
                   children: [
                     Text(
                       '기타',
                       style: TextStyle(
-                        fontSize: 17,
+                        fontSize: 17.5,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -154,24 +154,24 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.history_toggle_off_rounded,
                   color: Colors.black,
                 ),
-                title: const Text('이용기록' , style: TextStyle(fontSize: 15)),
+                title: Text('이용기록'),
                 onTap: () {
                   // 이용기록 페이지로 이동
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => const recordList()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => recordList()));
                 },
               ),
 
 
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.nightlight_round,
                   color: Colors.deepPurple
                 ),
-                title: const Text('야간모드', style: TextStyle(fontSize: 15)),
+                title: Text('야간모드'),
                 trailing: Switch(
                   value: isEventAdsAllowed,
                   onChanged: (value) {
@@ -183,11 +183,11 @@ class _MyPageState extends State<MyPage> {
               ),
 
               ListTile(
-                leading: const Icon(
+                leading: Icon(
                   Icons.ad_units,
                   color: Colors.orange,
                 ),
-                title: const Text('이벤트 및 광고 수신동의', style: TextStyle(fontSize: 15)),
+                title: Text('이벤트 및 광고 수신동의'),
                 trailing: Switch(
                   value: isEventAdsAllowed,
                   onChanged: (value) {

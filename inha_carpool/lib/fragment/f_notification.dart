@@ -63,8 +63,8 @@ class _NotificationListState extends State<NotificationList> {
           ),
         ),
         titleTextStyle: const TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          fontWeight: FontWeight.normal,
         ),
         leading: const BackButton(
           color: Colors.black,
@@ -140,7 +140,7 @@ class _NotificationListState extends State<NotificationList> {
                                 Container(
                                   alignment: Alignment.centerRight,
                                   child: Text(notificationList[i].title,
-                                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold)),
+                                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                                 ),
                                 Container(
                                   alignment: Alignment.centerRight,
@@ -148,7 +148,7 @@ class _NotificationListState extends State<NotificationList> {
                                     DateFormat('yyyy-MM-dd HH:mm')
                                         .format(DateTime.fromMillisecondsSinceEpoch(notificationList[i].time!))
                                         .toString(),
-                                    style: const TextStyle(fontSize: 11 , color: Colors.grey),
+                                    style: const TextStyle(fontSize: 12 , color: Colors.grey),
                                   ),
                                 ),
                               ],

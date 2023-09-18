@@ -7,8 +7,8 @@ import 'home/f_home.dart';
 
 enum TabItem {
   carpool(Icons.directions_car, '카풀', CarpoolList()),
-  home(Icons.home, '홈', Home()),
-  myPage(Icons.person, '마이', MyPage()),
+  home(Icons.home, 'Home', Home()),
+  myPage(Icons.person, 'My', MyPage()),
   test(Icons.access_time, 'test', PopUpFragment());
 
   final IconData activeIcon;

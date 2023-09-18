@@ -34,7 +34,7 @@ String _truncateText(String text, int maxLength) {
   if (text.length <= maxLength) {
     return text;
   } else {
-    return '${text.substring(0, maxLength - 3)}...';
+    return text.substring(0, maxLength - 3) + '...';
   }
 }
 
@@ -191,7 +191,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                       color: Colors.grey, size: 25),
                                   Text('${carpoolData['admin'].split('_')[1]}',
                                       style: const TextStyle(
-                                          fontSize: 15,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold)),
                                 ],
                               ),
@@ -201,7 +201,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                   const Icon(Icons.directions_car_outlined),
                                   Text(
                                       '${carpoolData['nowMember']}/${carpoolData['maxMember']}명',
-                                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                                      style: const TextStyle(fontSize: 20)),
                                 ],
                               ),
                               //방장 평점
@@ -209,106 +209,109 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                       ),
                     ),
                   ]),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.all(7.0),
-                                width: context.width(0.02),
-                                height: context.height(0.04),
-                                decoration: BoxDecoration(
-                                  color: carpoolData['gender'] == '무관'
-                                      ? Colors.grey
-                                      : carpoolData['gender'] == '남성'
-                                      ? Colors.lightBlueAccent
-                                      : Colors.red[100],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                padding: const EdgeInsets.all(8.0),
-                                child: const Center(),
-                              ),
-                              const SizedBox(width: 5),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    _truncateText(carpoolData['startDetailPoint'], 35),
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    _truncateText(carpoolData['startPointName'], 35),
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(left: 0, top: 5, bottom: 5),
-                            child: const Column(
+                  Container(
+                    // margin: const EdgeInsets.all(7.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
                               children: [
-                                Icon(Icons.arrow_drop_down_outlined),
+                                Container(
+                                  margin: const EdgeInsets.all(7.0),
+                                  width: context.width(0.02),
+                                  height: context.height(0.04),
+                                  decoration: BoxDecoration(
+                                    color: carpoolData['gender'] == '무관'
+                                        ? Colors.grey
+                                        : carpoolData['gender'] == '남성'
+                                        ? Colors.lightBlueAccent
+                                        : Colors.red[100],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: const Center(),
+                                ),
+                                const SizedBox(width: 5),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _truncateText(carpoolData['startDetailPoint'], 35),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      _truncateText(carpoolData['startPointName'], 35),
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.all(7.0),
-                                width: context.width(0.02),
-                                height: context.height(0.04),
-                                decoration: BoxDecoration(
-                                  color: carpoolData['gender'] == '무관'
-                                      ? Colors.grey
-                                      : carpoolData['gender'] == '남성'
-                                      ? Colors.lightBlueAccent
-                                      : Colors.red[100],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                padding: const EdgeInsets.all(8.0),
-                                child: Center(),
-                              ),
-                              const SizedBox(width: 5),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                            Container(
+                              margin: const EdgeInsets.only(left: 0, top: 5, bottom: 5),
+                              child: const Column(
                                 children: [
-                                  Text(
-                                    _truncateText(carpoolData['endDetailPoint'], 35),
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    _truncateText(carpoolData['endPointName'], 35),
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  Icon(Icons.arrow_drop_down_outlined),
                                 ],
                               ),
-                              const SizedBox(width: 5),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(7.0),
+                                  width: context.width(0.02),
+                                  height: context.height(0.04),
+                                  decoration: BoxDecoration(
+                                    color: carpoolData['gender'] == '무관'
+                                        ? Colors.grey
+                                        : carpoolData['gender'] == '남성'
+                                        ? Colors.lightBlueAccent
+                                        : Colors.red[100],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(),
+                                ),
+                                const SizedBox(width: 5),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _truncateText(carpoolData['endDetailPoint'], 35),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      _truncateText(carpoolData['endPointName'], 35),
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 5),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                   Column(
                     children: [
@@ -331,11 +334,11 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                               Row(
                                 children: [
                                   const Icon(Icons.calendar_today_outlined,
-                                      size: 18),
+                                      size: 14),
                                   Text(
                                       '${startTime.month}월 ${startTime.day}일 ${startTime.hour}시 ${startTime.minute}분 출발',
                                       style: const TextStyle(
-                                          fontSize: 15, color: Colors.black)),
+                                          fontSize: 16, color: Colors.black)),
                                 ],
                               ),
 
@@ -344,18 +347,18 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                 children: [
                                   const Icon(
                                     Icons.perm_identity_outlined,
-                                    size: 20,
+                                    size: 12,
                                   ),
                                   Text((carpoolData['gender']),
                                       style: const TextStyle(
-                                        fontSize: 15,
+                                        fontSize: 12,
                                         color: Colors.black,
                                       )),
                                 ],
                               ),
                               Text(formattedTime,
                                   style: const TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 17,
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold)),
                             ]),

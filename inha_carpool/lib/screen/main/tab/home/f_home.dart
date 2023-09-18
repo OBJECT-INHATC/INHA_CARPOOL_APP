@@ -148,11 +148,7 @@ class _HomeState extends State<Home> {
                           value: option,
                           // DropdownMenuItem의 child는 Text 위젯입니다.
                           child: Text(
-                            option == FilteringOption.Time ? '시간순' : '거리순',
-                            style: const TextStyle(
-                              fontSize: 13,
-                            ),
-                          ),
+                              option == FilteringOption.Time ? '시간순' : '거리순'),
                         );
                       }).toList(),
                     ),

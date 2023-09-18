@@ -223,8 +223,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        backgroundColor: Colors.white,
-                        surfaceTintColor: Colors.white,
                         title: const Text('카풀 나가기'),
                         content: const Text('정말로 카풀을 나가시겠습니까?'),
                         actions: [
@@ -265,8 +263,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        backgroundColor: Colors.white,
-                        surfaceTintColor: Colors.white,
                         title: const Text('카풀 나가기'),
                         content:
                         const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
@@ -308,8 +304,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      backgroundColor: Colors.white,
-                      surfaceTintColor: Colors.white,
                       title: const Text('카풀 나가기 불가'),
                       content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
                       actions: [
@@ -387,7 +381,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             Text(
                               '$memberName 님',
                               style: const TextStyle(
-                                fontSize: 13,
+                                fontSize: 12,
                                 color: Colors.black,
                               ),
                             ),
@@ -421,7 +415,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             "${startTime.month}월 ${startTime.day}일 ${startTime
                                 .hour}시 ${startTime.minute}분",
                             style: const TextStyle(
-                              fontSize: 13,
+                              fontSize: 14,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
@@ -445,7 +439,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                           Text(
                             startPoint,
                             style: const TextStyle(
-                              fontSize: 15,
+                              fontSize: 14,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
@@ -461,7 +455,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         children: [
                           Icon(
                             Icons.arrow_downward_outlined,
-                            size: 15,
+                            size: 20,
                             color: Colors.black,
                           ),
                         ],
@@ -482,7 +476,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                           Text(
                             endPoint,
                             style: const TextStyle(
-                              fontSize: 15,
+                              fontSize: 14,
                               color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
@@ -579,7 +573,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
     return StreamBuilder(
       stream: chats,
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (snapshot.hasError) return const Text("오류가 발생했습니다.");
+        if (snapshot.hasError) return const Text("Something went wrong");
 
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
@@ -648,7 +642,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                       child: Text(
                         "${currentDate.year}-${currentDate.month}-${currentDate
                             .day}",
-                        style: const TextStyle(color: Colors.grey, fontSize: 11),
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     ),
                   MessageTile(
@@ -730,14 +724,14 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
               padding: const EdgeInsets.all(10.0),
               margin: const EdgeInsets.all(10.0),
               alignment: Alignment.center,
-              child: const Text('프로필 조회',
+              child: Text('프로필 조회',
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            const Divider(
+            Divider(
               height: 1,
               color: Colors.grey,
             ),
@@ -747,15 +741,15 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                   padding: const EdgeInsets.all(8.0),
                   margin: const EdgeInsets.fromLTRB(20, 5, 0, 0),
                   alignment: Alignment.centerLeft,
-                  child: const Icon(
+                  child: Icon(
                     Icons.person_search, size: 120,),
                 ),
                 const SizedBox(width: 10,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(userName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                    Text(memberGender,style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey),),
+                    Text('$userName', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                    Text('$memberGender',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),),
                     ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
@@ -765,12 +759,12 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                            backgroundColor : const Color.fromARGB(255, 254, 112, 2),
+                            primary: Color.fromARGB(255, 254, 112, 2),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0)
                           ),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.warning_rounded,color: Colors.white),
