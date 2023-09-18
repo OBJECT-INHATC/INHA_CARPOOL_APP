@@ -266,13 +266,13 @@ class _SecessionPageState extends State<SecessionPage> {
                               borderRadius: BorderRadius.circular(90.0),
                             ),
                           ),
-                          child: Expanded(
+
                             child: const Text('탈퇴하기',
                                 style: TextStyle(
                                     fontSize: 20,
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold)),
-                          ),
+                   
                           onPressed: () async {
                             bool isValid = await validateCredentials(
                                 email + academy, password);
