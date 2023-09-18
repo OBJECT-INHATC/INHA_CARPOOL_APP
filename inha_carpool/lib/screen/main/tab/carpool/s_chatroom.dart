@@ -194,376 +194,381 @@ class _ChatroomPageState extends State<ChatroomPage> {
     bool isExitButtonDisabled = false; // 나가기 버튼 기본적으로 활성화
 
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        toolbarHeight: 45,
-        shape: Border(
-          bottom: BorderSide(
-            color: Colors.grey.shade200,
-            width: 1,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          toolbarHeight: 45,
+          shape: Border(
+            bottom: BorderSide(
+              color: Colors.grey.shade200,
+              width: 1,
+            ),
           ),
-        ),
-        actions: [
-          IconButton(
-            iconSize: 30,
-            onPressed: isExitButtonDisabled
-                ? null
-                : () async {
-              final currentTime = DateTime.now();
-              final timeDifference = agreedTime.difference(currentTime);
-              // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
-              final minutesDifference = timeDifference.inMinutes;
+          actions: [
+            IconButton(
+              iconSize: 30,
+              onPressed: isExitButtonDisabled
+                  ? null
+                  : () async {
+                final currentTime = DateTime.now();
+                final timeDifference = agreedTime.difference(currentTime);
+                // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
+                final minutesDifference = timeDifference.inMinutes;
 
-              if (minutesDifference > 10) {
-                // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
-                if (admin != widget.userName) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('카풀 나가기'),
-                        content: const Text('정말로 카풀을 나가시겠습니까?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('취소'),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              // 데이터베이스 작업을 비동기로 수행
-                              await FireStoreService().exitCarpool(
-                                  widget.carId,
-                                  widget.userName,
-                                  widget.uid,
-                                  widget.gender);
+                if (minutesDifference > 10) {
+                  // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
+                  if (admin != widget.userName) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('카풀 나가기'),
+                          content: const Text('정말로 카풀을 나가시겠습니까?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('취소'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                // 데이터베이스 작업을 비동기로 수행
+                                await FireStoreService().exitCarpool(
+                                    widget.carId,
+                                    widget.userName,
+                                    widget.uid,
+                                    widget.gender);
 
-                              // 데이터베이스 작업이 완료되면 다음 페이지로 이동
-                              if (!mounted) return;
-                              Navigator.pop(context);
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                  const MainScreen(),
-                                ),
-                              );
-                            },
-                            child: const Text('나가기'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text('카풀 나가기'),
-                        content:
-                        const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Text('취소'),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              await FireStoreService().exitCarpoolAsAdmin(
-                                  widget.carId,
-                                  widget.userName,
-                                  widget.uid,
-                                  widget.gender);
-
-                              if (!mounted) return;
-                              Navigator.pop(context);
-                              Navigator.pop(context);
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
+                                // 데이터베이스 작업이 완료되면 다음 페이지로 이동
+                                if (!mounted) return;
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
                                     builder: (context) =>
-                                    const MainScreen()),
-                              );
+                                    const MainScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text('나가기'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('카풀 나가기'),
+                          content:
+                          const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: const Text('취소'),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await FireStoreService().exitCarpoolAsAdmin(
+                                    widget.carId,
+                                    widget.userName,
+                                    widget.uid,
+                                    widget.gender);
+
+                                if (!mounted) return;
+                                Navigator.pop(context);
+                                Navigator.pop(context);
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                      const MainScreen()),
+                                );
+                              },
+                              child: const Text('나가기'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                } else {
+                  // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('카풀 나가기 불가'),
+                        content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
                             },
-                            child: const Text('나가기'),
+                            child: const Text('확인'),
                           ),
                         ],
                       );
                     },
                   );
                 }
-              } else {
-                // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('카풀 나가기 불가'),
-                      content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('확인'),
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-            },
-            icon: const Icon(
-              Icons.exit_to_app,
-              color: Colors.black,
-              size: 30,
-            ),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Container(
-            height: context.height(0.15),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.grey,
-                  width: 1.0,
-                ),
+              },
+              icon: const Icon(
+                Icons.exit_to_app,
+                color: Colors.black,
+                size: 30,
               ),
             ),
-            child: Row(
-              children: [
-                // 좌측
-                Container(
-                  padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                  width: context.width(0.45),
-                  alignment: Alignment.center,
-                  child: ListView.builder(
-                    itemCount: membersList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String memberName =
-                      getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
-                      String memberGender =
-                      getGender(membersList[index]); //회원 성별 가져오는 부분
+          ],
+        ),
+        body: Column(
+          children: [
+            Container(
+              height: context.height(0.15),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  bottom: BorderSide(
+                    color: Colors.grey,
+                    width: 1.0,
+                  ),
+                ),
+              ),
+              child: Row(
+                children: [
+                  // 좌측
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                    width: context.width(0.45),
+                    alignment: Alignment.center,
+                    child: ListView.builder(
+                      itemCount: membersList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        String memberName =
+                        getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
+                        String memberGender =
+                        getGender(membersList[index]); //회원 성별 가져오는 부분
 
-                      return TextButton(
-                        onPressed: () {
-                          _showProfileModal(
-                              context, '$memberName 님', memberGender);
-                        },
-                        style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                          backgroundColor: admin == memberName
-                              ? Colors.blue
-                              : Colors.grey.shade300,
-                          // 방장인 경우 파란색, 아닌 경우 회색
-                          padding: const EdgeInsets.all(10.0),
-                          iconColor:
-                          admin == memberName ? Colors.white : Colors.black,
+                        return TextButton(
+                          onPressed: () {
+                            _showProfileModal(
+                                context, '$memberName 님', memberGender);
+                          },
+                          style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            backgroundColor: admin == memberName
+                                ? Colors.blue
+                                : Colors.grey.shade300,
+                            // 방장인 경우 파란색, 아닌 경우 회색
+                            padding: const EdgeInsets.all(10.0),
+                            iconColor:
+                            admin == memberName ? Colors.white : Colors.black,
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.person,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                '$memberName 님',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  // 우측
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const SizedBox(height: 5),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300], // 회색 배경색
+                          borderRadius: BorderRadius.circular(20), // 동그란 모양 설정
                         ),
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             const Icon(
-                              Icons.person,
-                              size: 18,
+                              Icons.access_time,
+                              size: 20,
+                              color: Colors.blue,
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              '$memberName 님',
+                              "${startTime.month}월 ${startTime.day}일 ${startTime
+                                  .hour}시 ${startTime.minute}분",
                               style: const TextStyle(
-                                fontSize: 12,
+                                fontSize: 14,
                                 color: Colors.black,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
                           ],
                         ),
-                      );
-                    },
-                  ),
-                ),
-                // 우측
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    const SizedBox(height: 5),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300], // 회색 배경색
-                        borderRadius: BorderRadius.circular(20), // 동그란 모양 설정
                       ),
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Icon(
-                            Icons.access_time,
-                            size: 20,
-                            color: Colors.blue,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            "${startTime.month}월 ${startTime.day}일 ${startTime
-                                .hour}시 ${startTime.minute}분",
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
+                      SizedBox(height: context.height(0.01)),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                        width: context.width(0.5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Icon(
+                              Icons.location_on,
+                              size: 20,
+                              color: Colors.blue,
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: context.height(0.01)),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                      width: context.width(0.5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Icon(
-                            Icons.location_on,
-                            size: 20,
-                            color: Colors.blue,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            startPoint,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
+                            const SizedBox(width: 5),
+                            Text(
+                              startPoint,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                      width: context.width(0.45),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Icon(
-                            Icons.arrow_downward_outlined,
-                            size: 20,
-                            color: Colors.black,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                      width: context.width(0.45),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Icon(
-                            Icons.location_on,
-                            size: 20,
-                            color: Colors.blue,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            endPoint,
-                            style: const TextStyle(
-                              fontSize: 14,
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                        width: context.width(0.45),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(
+                              Icons.arrow_downward_outlined,
+                              size: 20,
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              ],
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                        width: context.width(0.45),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            const Icon(
+                              Icons.location_on,
+                              size: 20,
+                              color: Colors.blue,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              endPoint,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: Stack(
-              children: <Widget>[
+            Expanded(
+              child: Stack(
+                children: <Widget>[
 
-                /// 채팅 메시지 스트림
-                chatMessages(),
-                Container(
-                  alignment: Alignment.bottomCenter,
-                  width: MediaQuery
-                      .of(context)
-                      .size
-                      .width,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 10),
+                  /// 채팅 메시지 스트림
+                  chatMessages(),
+                  Container(
+                    alignment: Alignment.bottomCenter,
                     width: MediaQuery
                         .of(context)
                         .size
                         .width,
-                    color: Colors.grey[200],
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                            constraints: const BoxConstraints(
-                              minHeight: 38, // Minimum height for the input field
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: TextField(
-                              cursorColor: Colors.white,
-                              controller: messageController,
-                              style: const TextStyle(color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                              maxLines: null,
-                              decoration: const InputDecoration(
-                                hintText: "메시지 보내기...",
-                                hintStyle: TextStyle(
-                                    color: Colors.white, fontSize: 15),
-                                border: InputBorder.none,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 10),
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      color: Colors.grey[200],
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                              constraints: const BoxConstraints(
+                                minHeight: 38, // Minimum height for the input field
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[400],
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: TextField(
+                                cursorColor: Colors.white,
+                                controller: messageController,
+                                style: const TextStyle(color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                                maxLines: null,
+                                decoration: const InputDecoration(
+                                  hintText: "메시지 보내기...",
+                                  hintStyle: TextStyle(
+                                      color: Colors.white, fontSize: 15),
+                                  border: InputBorder.none,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        GestureDetector(
-                          onTap: () {
-                            sendMessage();
-                          },
-                          child: Container(
-                            height: 45,
-                            width: 45,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: const Center(
-                              child: Icon(
-                                Icons.send,
-                                color: Colors.white,
+                          const SizedBox(width: 12),
+                          GestureDetector(
+                            onTap: () {
+                              sendMessage();
+                            },
+                            child: Container(
+                              height: 45,
+                              width: 45,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: const Center(
+                                child: Icon(
+                                  Icons.send,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

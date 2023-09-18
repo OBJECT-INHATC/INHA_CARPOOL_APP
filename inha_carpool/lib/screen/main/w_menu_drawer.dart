@@ -93,13 +93,6 @@ class _MenuDrawerState extends State<MenuDrawer> {
           const Height(10),
           const Line(),
           _MenuWidget(
-            'LogOut'.tr(),
-            onTap: () async {
-              await showLogoutDialog(context);
-            },
-          ),
-          const Line(),
-          _MenuWidget(
             'opensource'.tr(),
             onTap: () async {
               Nav.push(const OpensourceScreen());
@@ -116,6 +109,9 @@ class _MenuDrawerState extends State<MenuDrawer> {
               }
             },
           ),
+
+
+
           const Line(),
           isSmallScreen(context) ? const Height(10) : const EmptyExpanded(),
           MouseRegion(
@@ -134,24 +130,10 @@ class _MenuDrawerState extends State<MenuDrawer> {
           ),
           const Height(10),
           getLanguageOption(context),
+
+
           const Height(10),
-          Row(
-            children: [
-              Expanded(
-                child: Tap(
-                  child: Container(
-                      height: 30,
-                      width: 100,
-                      padding: const EdgeInsets.only(left: 15),
-                      child: '© 2023. INHAtc 전공 동아리  Object.'
-                          .selectableText
-                          .size(10)
-                          .makeWithDefaultFont()),
-                  onTap: () async {},
-                ),
-              ),
-            ],
-          )
+
         ],
       ),
     );
@@ -242,33 +224,6 @@ class _MenuDrawerState extends State<MenuDrawer> {
     );
   }
 
-  Future<void> showLogoutDialog(BuildContext context) async {
-    final result = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: 'LogOut'.tr().text.make(),
-          content: Text('로그아웃 하시겠습니까?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text('네'),
-            ),
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text('아니오'),
-            ),
-          ],
-        );
-      },
-    );
-
-    if (result == true) {
-      Nav.push(LoginPage());
-      // 로그아웃 로직 실행
-      // 예를 들어, 로그아웃 버튼을 눌렀을 때 수행할 동작을 여기에 추가
-    }
-  }
 }
 
 class _MenuWidget extends StatelessWidget {

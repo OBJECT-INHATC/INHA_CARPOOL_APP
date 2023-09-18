@@ -305,6 +305,7 @@ class _ProFileState extends State<ProFile> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: Colors.transparent,
           title: const Text("닉네임 변경"),
           content: Column(
             mainAxisSize: MainAxisSize.min,

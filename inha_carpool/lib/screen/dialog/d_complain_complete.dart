@@ -8,6 +8,7 @@ class ComplainComplete extends StatelessWidget {
     var width = MediaQuery.of(context).size.width;
 
     return AlertDialog(
+      surfaceTintColor: Colors.transparent,
       insetPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       content: SizedBox(

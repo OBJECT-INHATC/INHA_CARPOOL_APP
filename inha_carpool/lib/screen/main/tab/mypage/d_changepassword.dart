@@ -20,138 +20,144 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        leadingWidth: 56,
-        leading: Center(
-          child: BackButton(
-            color: Colors.black,
+    return GestureDetector(
+      onTap: () {
+        // 텍스트 포커스 해제
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          leadingWidth: 56,
+          leading: Center(
+            child: BackButton(
+              color: Colors.black,
+            ),
           ),
+          title: Text(
+            "비밀번호 변경",
+            style: TextStyle(color: Colors.black, fontSize: 20,),
+          ),
+          centerTitle: true,
         ),
-        title: Text(
-          "비밀번호 변경",
-          style: TextStyle(color: Colors.black, fontSize: 20,),
-        ),
-        centerTitle: true,
-      ),
-      body: Form(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 20),
-              Text(
-                '학번',
-                style: TextStyle(fontSize: 16),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: '학번 입력',
+        body: Form(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  '학번',
+                  style: TextStyle(fontSize: 16),
                 ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                '현재 비밀번호',
-                style: TextStyle(fontSize: 16),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: '현재 비밀번호 입력',
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: '학번 입력',
+                  ),
                 ),
-                obscureText: true,
-                onChanged: (text) async {
-                  // 텍스트 필드 값 변경 시 실행할 코드 작성
-                  oldPassword = text;
-                },
-              ),
-              SizedBox(height: 10),
-              Text(
-                '새 비밀번호',
-                style: TextStyle(fontSize: 16),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: '새로운 비밀번호 입력',
+                SizedBox(height: 20),
+                Text(
+                  '현재 비밀번호',
+                  style: TextStyle(fontSize: 16),
                 ),
-                obscureText: true,
-                onChanged: (text) {
-                  // 텍스트 필드 값 변경 시 실행할 코드 작성
-                  newPassword = text;
-                },
-              ),
-              SizedBox(height: 10),
-              Text(
-                '새 비밀번호 확인',
-                style: TextStyle(fontSize: 16),
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  hintText: '새로운 비밀번호 다시 입력',
-                  suffix: Text(passwordCheck,
-                      style: (passwordCheck == "비밀번호가 일치하지 않습니다.")
-                          ? TextStyle(color: Colors.red)
-                          : TextStyle(color: Colors.green)),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: '현재 비밀번호 입력',
+                  ),
+                  obscureText: true,
+                  onChanged: (text) async {
+                    // 텍스트 필드 값 변경 시 실행할 코드 작성
+                    oldPassword = text;
+                  },
                 ),
-                obscureText: true,
-                onChanged: (text) {
-                  // 텍스트 필드 값 변경 시 실행할 코드 작성
-                  checkPassword = text;
-                  if (newPassword == checkPassword) {
-                    setState(() {
-                      passwordCheck = "비밀번호가 일치합니다!";
-                    });
-                  } else {
-                    setState(() {
-                      passwordCheck = "비밀번호가 일치하지 않습니다.";
-                    });
-                  }
-                },
-              ),
-              SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () async {
-                  // 비밀번호 변경 로직 구현 예정
-                  String isValid =
-                  await AuthService().validatePassword(oldPassword);
-
-                  if (isValid == 'Invalid') {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('현재 비밀번호가 틀립니다.')),
-                    );
-                  } else {
-                    String result = await AuthService().passwordUpdate(
-                        oldPassword: oldPassword, newPassword: newPassword);
-                    if (result == 'Success') {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('성공적으로 변경되었습니다.')),
-                      );
-
-                      AuthService().signOut().then((value) {
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                              (Route<dynamic> route) => false,
-                        );
+                SizedBox(height: 10),
+                Text(
+                  '새 비밀번호',
+                  style: TextStyle(fontSize: 16),
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: '새로운 비밀번호 입력',
+                  ),
+                  obscureText: true,
+                  onChanged: (text) {
+                    // 텍스트 필드 값 변경 시 실행할 코드 작성
+                    newPassword = text;
+                  },
+                ),
+                SizedBox(height: 10),
+                Text(
+                  '새 비밀번호 확인',
+                  style: TextStyle(fontSize: 16),
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    hintText: '새로운 비밀번호 다시 입력',
+                    suffix: Text(passwordCheck,
+                        style: (passwordCheck == "비밀번호가 일치하지 않습니다.")
+                            ? TextStyle(color: Colors.red)
+                            : TextStyle(color: Colors.green)),
+                  ),
+                  obscureText: true,
+                  onChanged: (text) {
+                    // 텍스트 필드 값 변경 시 실행할 코드 작성
+                    checkPassword = text;
+                    if (newPassword == checkPassword) {
+                      setState(() {
+                        passwordCheck = "비밀번호가 일치합니다!";
                       });
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('비밀번호 변경에 실패했습니다.')),
-                      );
+                      setState(() {
+                        passwordCheck = "비밀번호가 일치하지 않습니다.";
+                      });
                     }
-                  }
-                },
-                child: Text('비밀번호 변경'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                  primary: Colors.grey,
+                  },
                 ),
-              ),
-            ],
+                SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: () async {
+                    // 비밀번호 변경 로직 구현 예정
+                    String isValid =
+                    await AuthService().validatePassword(oldPassword);
+
+                    if (isValid == 'Invalid') {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('현재 비밀번호가 틀립니다.')),
+                      );
+                    } else {
+                      String result = await AuthService().passwordUpdate(
+                          oldPassword: oldPassword, newPassword: newPassword);
+                      if (result == 'Success') {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('성공적으로 변경되었습니다.')),
+                        );
+
+                        AuthService().signOut().then((value) {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginPage()),
+                                (Route<dynamic> route) => false,
+                          );
+                        });
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('비밀번호 변경에 실패했습니다.')),
+                        );
+                      }
+                    }
+                  },
+                  child: Text('비밀번호 변경'),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                    primary: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
