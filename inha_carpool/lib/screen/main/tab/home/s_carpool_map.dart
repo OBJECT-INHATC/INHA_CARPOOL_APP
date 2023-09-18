@@ -1,14 +1,18 @@
 import 'dart:ui' as ui;
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/service/api/Api_Topic.dart';
 
+import '../../../../common/data/preference/prefs.dart';
 import '../../../../common/util/carpool.dart';
 import '../../../../common/util/addMember_Exception.dart';
+import '../../../../dto/TopicDTO.dart';
 import '../../s_main.dart';
 
 class CarpoolMap extends StatefulWidget {
@@ -21,7 +25,8 @@ class CarpoolMap extends StatefulWidget {
   final String admin;
   final String roomGender;
 
-  const CarpoolMap({super.key,
+  const CarpoolMap({
+    super.key,
     required this.startPoint,
     required this.startPointName,
     required this.startTime,
@@ -69,22 +74,25 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
   /// 커스텀 아이콘 이미지 추가 - 0915 한승완
   void addCustomIcon() async {
-
-    final Uint8List? starticon = await getBytesFromAsset('assets/image/startmarker.png', 200);
+    final Uint8List? starticon =
+        await getBytesFromAsset('assets/image/startmarker.png', 200);
     setState(() {
       startCustomIcon = BitmapDescriptor.fromBytes(starticon!);
     });
 
-    final Uint8List? endicon = await getBytesFromAsset('assets/image/endmarker.png', 200);
+    final Uint8List? endicon =
+        await getBytesFromAsset('assets/image/endmarker.png', 200);
     setState(() {
       endCustomIcon = BitmapDescriptor.fromBytes(endicon!);
     });
   }
 
   /// 중간 지점 계산 및 카메라 이동 - 0914 한승완
-  _moveCamera() async{
-    final double midLat = (widget.startPoint.latitude + widget.endPoint.latitude) / 2;
-    final double midLng = (widget.startPoint.longitude + widget.endPoint.longitude) / 2;
+  _moveCamera() async {
+    final double midLat =
+        (widget.startPoint.latitude + widget.endPoint.latitude) / 2;
+    final double midLng =
+        (widget.startPoint.longitude + widget.endPoint.longitude) / 2;
     midPoint = LatLng(midLat, midLng);
     // 뒤로가기 제한 해제
     handlePageLoadComplete();
@@ -140,7 +148,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
             Padding(
               padding: EdgeInsets.only(bottom: context.height(0.25)),
               child: GoogleMap(
-                onMapCreated: (controller) { mapController = controller; },
+                onMapCreated: (controller) {
+                  mapController = controller;
+                },
                 myLocationButtonEnabled: false,
                 initialCameraPosition: CameraPosition(
                   target: midPoint!,
@@ -159,6 +169,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                       title: "출발 지점 : ${widget.startPointName}",
                     ),
                   ),
+
                   /// 도착 지점 마커
                   Marker(
                     markerId: const MarkerId('end'),
@@ -173,7 +184,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
               ),
             ),
             Positioned(
-              bottom : context.height(0),
+              bottom: context.height(0),
               // 가운데 위치
               child: Container(
                 height: context.height(0.25),
@@ -247,11 +258,12 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       ),
                                     ],
                                   ),
-                                ),Container(
+                                ),
+                                Container(
                                   padding: const EdgeInsets.all(5),
                                   child: Row(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.center,
+                                        CrossAxisAlignment.center,
                                     children: [
                                       const Icon(Icons.location_on,
                                           color: Colors.lightGreenAccent),
@@ -266,7 +278,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       Expanded(
                                         child: Container(
                                           margin:
-                                          const EdgeInsets.only(left: 10),
+                                              const EdgeInsets.only(left: 10),
                                           padding: const EdgeInsets.symmetric(
                                               vertical: 3, horizontal: 8),
                                           // 내부 패딩
@@ -355,6 +367,20 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       token!,
                                       selectedRoomGender);
                                   if (!mounted) return;
+
+                                  ///  해당 카풀 알림 토픽 추가 0919 이상훈
+                                  if (Prefs.isPushOnRx.get() == true) {
+                                    await FirebaseMessaging.instance
+                                        .subscribeToTopic(carId);
+                                  }
+                                  ApiTopic apiTopic = ApiTopic();
+                                  TopicRequstDTO topicRequstDTO =
+                                      TopicRequstDTO(
+                                          uid: memberID, carId: carId);
+                                  await apiTopic.saveTopoic(topicRequstDTO);
+                                  ///--------------------------------------------
+
+
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(
                                       Nav.globalContext,
@@ -413,8 +439,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
                   _moveCameraTo(widget.startPoint);
                 },
                 // 도착지점을 나타내는 아이콘
-                child: const Icon(Icons.location_on_outlined,
-                    color: Colors.white),
+                child:
+                    const Icon(Icons.location_on_outlined, color: Colors.white),
               ),
             ),
             Positioned(
@@ -428,8 +454,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
                   _moveCameraTo(widget.endPoint);
                 },
                 // 도착지점을 나타내는 아이콘
-                child: const Icon(Icons.location_on_outlined,
-                    color: Colors.white),
+                child:
+                    const Icon(Icons.location_on_outlined, color: Colors.white),
               ),
             ),
           ],
@@ -501,9 +527,11 @@ class _CarpoolMapState extends State<CarpoolMap> {
   /// 이미지 크기 조정 메서드- 0915 한승완
   Future<Uint8List?> getBytesFromAsset(String path, int width) async {
     ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
     ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))?.buffer.asUint8List();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
+        ?.buffer
+        .asUint8List();
   }
-
 }

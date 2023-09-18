@@ -7,15 +7,19 @@ import 'package:flutter/material.dart';
 
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
+import 'package:inha_Carpool/dto/TopicDTO.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
 
 import '../../screen/main/s_main.dart';
+import '../../service/api/Api_Topic.dart';
 import '../data/preference/prefs.dart';
 import 'addMember_Exception.dart';
 
 class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static ApiTopic apiTopic = ApiTopic();
+
 
   static const storage = FlutterSecureStorage();
   late String nickName = ""; // 기본값으로 초기화
@@ -114,6 +118,10 @@ class FirebaseCarpool {
       /// 0918 해당 카풀 알림 토픽 추가
       if(Prefs.isPushOnRx.get() == true){
         await FirebaseMessaging.instance.subscribeToTopic(carpoolDocRef.id);
+      }
+      TopicRequstDTO topicRequstDTO = TopicRequstDTO(uid: memberID, carId: carpoolDocRef.id);
+      await apiTopic.saveTopoic(topicRequstDTO);
+
         print("토픽 추가");
 
       }

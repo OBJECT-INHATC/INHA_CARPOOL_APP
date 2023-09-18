@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
-import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/service/api/ApiService.dart';
+import 'package:inha_Carpool/service/api/Api_Topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
-import 'package:inha_Carpool/screen/dialog/d_complain.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../common/data/preference/prefs.dart';
 import '../../../dialog/d_complainAlert.dart';
 
 /// 0828 서은율, 한승완
@@ -240,6 +240,15 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             ),
                             TextButton(
                               onPressed: () async {
+                                /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
+                                if (Prefs.isPushOnRx.get() == true) {
+                                  await FirebaseMessaging.instance
+                                      .unsubscribeFromTopic(widget.carId);
+                                }
+                                ApiTopic apiTopic = ApiTopic();
+                               await apiTopic.deleteTopic(widget.uid, widget.carId);
+                               ///--------------------------------------------------------------------
+
                                 // 데이터베이스 작업을 비동기로 수행
                                 await FireStoreService().exitCarpool(
                                     widget.carId,
