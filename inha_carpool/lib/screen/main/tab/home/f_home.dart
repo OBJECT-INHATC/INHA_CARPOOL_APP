@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/main/tab/home/emptySearchedCarpool.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
@@ -35,10 +36,11 @@ class _HomeState extends State<Home> {
   late String gender = "";
   late String email = "";
 
-  // 페이징 처리를 위한 변수 초기화
+  // 페이징 처리를 위한 변수
   int _visibleItemCount = 0;
   final ScrollController _scrollController = ScrollController();
-  final limit = 5;
+  final limit = 5; // 한번에 불러올 데이터 갯수
+  bool _isLoading = false; // 추가 데이터 로딩 중을 표시할 변수
 
   // 검색어 필터링
   String _searchKeyword = "";
@@ -48,13 +50,12 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    initMyPoint();
-    carPoolList = _timeByFunction(5);
-    _loadUserData();
-    _refreshCarpoolList();
-    // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
-    _scrollController.addListener(_scrollListener);
-  } //initState
+    initMyPoint(); // 내 위치 받아오기
+    carPoolList = FirebaseCarpool.timeByFunction(limit, null); // 초기에 시간순 정렬
+    _loadUserData(); // 유저 정보 불러오기
+    _refreshCarpoolList(); // 새로고침
+    _scrollController.addListener(_scrollListener); // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +162,27 @@ class _HomeState extends State<Home> {
                 child: RefreshIndicator(
                   onRefresh: _refreshCarpoolList,
                   // 카풀 리스트 불러오기
-                  child: _buildCarpoolList(),
+                  child: Stack(
+                    children: [
+                      _buildCarpoolList(), // 카풀 리스트 빌드
+                      if (_isLoading) // 인디케이터를 표시하는 조건
+                        const Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: 12,
+                          child: Center(
+                            child: SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -225,25 +246,16 @@ class _HomeState extends State<Home> {
             visibleItemCount: _visibleItemCount,
             nickName: nickName,
             // 닉네임 전달
-            uid: uid, // UID 전달
-            gender: gender,
+            uid: uid,
+            // uid 전달
+            gender: gender, // 성별 전달
           );
         }
       },
     );
   }
 
-  // 필터링 옵션
-  void _handleFilterChange(FilteringOption? newValue) {
-    setState(() {
-      selectedFilter = newValue ?? FilteringOption.Time;
-      carPoolList = (selectedFilter == FilteringOption.Time)
-          ? _timeByFunction(limit)
-          : _nearByFunction();
-    });
-  }
-
-  // 유저 정보 받아오기
+  /// 유저 정보 받아오기
   Future<void> _loadUserData() async {
     nickName = await storage.read(key: "nickName") ?? "";
     uid = await storage.read(key: "uid") ?? "";
@@ -254,29 +266,22 @@ class _HomeState extends State<Home> {
     });
   }
 
-  // 내 위치 받아오기
+  /// 내 위치 받아오기
   Future<void> initMyPoint() async {
     myPoint = (await Location_handler.getCurrentLatLng(context))!;
   }
 
-  // 시간순 정렬
-  Future<List<DocumentSnapshot>> _timeByFunction(int limit) async {
-    List<DocumentSnapshot> carpools = await FirebaseCarpool.getCarpoolsTimeby(5);
-    return carpools;
-  }
+  // // 시간순 정렬
+  // Future<List<DocumentSnapshot>> _timeByFunction(int limit) async {
+  //   List<DocumentSnapshot> carpools =
+  //       await FirebaseCarpool.getCarpoolsTimeby(5);
+  //   return carpools;
+  // }
 
-  // 거리순 정렬
-  Future<List<DocumentSnapshot>> _nearByFunction() async {
-    await initMyPoint();
-    List<DocumentSnapshot> carpools = await FirebaseCarpool.nearByCarpool(
-        myPoint.latitude, myPoint.longitude);
-    return carpools;
-  }
-
-  // 새로고침 로직
+  /// 새로고침 로직
   Future<void> _refreshCarpoolList() async {
     if (selectedFilter == FilteringOption.Time) {
-      carPoolList = _timeByFunction(limit);
+      carPoolList = FirebaseCarpool.timeByFunction(limit, null);
     } else {
       carPoolList = _nearByFunction();
     }
@@ -296,21 +301,67 @@ class _HomeState extends State<Home> {
     setState(() {});
   }
 
+  /// 필터링 옵션
+  void _handleFilterChange(FilteringOption? newValue) {
+    setState(() {
+      selectedFilter = newValue ?? FilteringOption.Time;
+      carPoolList = (selectedFilter == FilteringOption.Time)
+          ? FirebaseCarpool.timeByFunction(limit, null)
+          : _nearByFunction();
+    });
+  }
+
+  /// 거리순 정렬
+  Future<List<DocumentSnapshot>> _nearByFunction() async {
+    await initMyPoint();
+    List<DocumentSnapshot> carpools = await FirebaseCarpool.nearByCarpool(
+        myPoint.latitude, myPoint.longitude);
+    return carpools;
+  }
+
+  /// 스크롤 감지 이벤트
   void _scrollListener() {
     if (_scrollController.position.atEdge) {
       if (_scrollController.position.pixels == 0) {
         // 맨 위에 도달했을 경우
         print('맨 위');
-      } else if (_scrollController.position.extentAfter == 0) {
-        // 맨 아래에 도달했을 경우
-        ///딜레이가 없어서 처음에 다 로드해오는 것처럼 보였음.
+      } else if (_scrollController.position.extentAfter == 0 && !_isLoading) {
+        // 추가 데이터를 로드할 조건: 맨 아래에 도달하고 로딩 중이 아닐 때
+        setState(() {
+          _isLoading = true; // 데이터 로드 중에 인디케이터를 표시
+        });
         Future.delayed(const Duration(seconds: 1), () {
-          // 500 밀리초(0.5초) 딜레이 후 데이터 로드
-          setState(() {
-            carPoolList.then((list) {
-              _visibleItemCount = (_visibleItemCount + 5).clamp(0, list.length);
-              print('리스트 갯수: $_visibleItemCount');
-            });
+          carPoolList.then((list) {
+            if (list.isNotEmpty) {
+              // 시간순일 때
+              if (selectedFilter == FilteringOption.Time) {
+                FirebaseCarpool.timeByFunction(10, list.last)
+                    .then((newCarpools) {
+                  if (newCarpools.isEmpty) {
+                    // 추가적으로 로드할 카풀이 없을 때
+                    context.showSnackbar('카풀이 더 이상 없습니다!');
+                    _isLoading = false;
+                  }
+                  list.addAll(newCarpools);
+                  _visibleItemCount =
+                      (_visibleItemCount + 5).clamp(0, list.length);
+                  print('스크롤 후 리스트 갯수(timeBy): $_visibleItemCount');
+
+                  setState(() {
+                    _isLoading = false; // 데이터 로드가 완료되면 인디케이터를 숨김
+                  });
+                });
+                // (거리순은 페이징 최적화 보류. 현재는 모든 리스트를 가져와서 정렬 후 5개씩 보여주는 방식)
+              } else if (selectedFilter == FilteringOption.Distance) {
+                _visibleItemCount =
+                    (_visibleItemCount + 5).clamp(0, list.length);
+                print('스크롤 후 리스트 갯수(nearBy): $_visibleItemCount');
+
+                setState(() {
+                  _isLoading = false; // 데이터 로드가 완료되면 인디케이터를 숨김
+                });
+              }
+            }
           });
         });
       }

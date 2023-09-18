@@ -26,42 +26,41 @@ class FirebaseCarpool {
   late String uid = "";
   late String gender = "";
 
-
-  ///출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
-  static Future<List<DocumentSnapshot>> getCarpoolsTimeby(int limit) async {
-    CollectionReference carpoolCollection = _firestore.collection('carpool');
-    QuerySnapshot querySnapshot = await carpoolCollection
-        .where('startTime',
-            isGreaterThan: DateTime.now().millisecondsSinceEpoch)
-        .orderBy('startTime')
-        .limit(limit)
-        .get();
-
-    List<DocumentSnapshot> sortedCarpools = [];
-    print("조회된 카풀 수(getCarpoolsTimeby): ${querySnapshot.docs.length}");
-
-    // 현재 시간을 가져옵니다.
-    DateTime currentTime = DateTime.now();
-
-    querySnapshot.docs.forEach((doc) {
-      DateTime startTime =
-          DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
-
-      // 현재 시간보다 미래의 시간인 경우만 추가
-      if (startTime.isAfter(currentTime)) {
-        sortedCarpools.add(doc);
-      }
-    });
-
-    sortedCarpools.sort((a, b) {
-      DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
-      DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b['startTime']);
-
-      return startTimeA.compareTo(startTimeB);
-    });
-
-    return sortedCarpools;
-  }
+  // ///출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
+  // static Future<List<DocumentSnapshot>> getCarpoolsTimeby(int limit) async {
+  //   CollectionReference carpoolCollection = _firestore.collection('carpool');
+  //   QuerySnapshot querySnapshot = await carpoolCollection
+  //       .where('startTime',
+  //           isGreaterThan: DateTime.now().millisecondsSinceEpoch)
+  //       .orderBy('startTime')
+  //       .limit(limit)
+  //       .get();
+  //
+  //   List<DocumentSnapshot> sortedCarpools = [];
+  //   print("조회된 카풀 수(getCarpoolsTimeby): ${querySnapshot.docs.length}");
+  //
+  //   // 현재 시간을 가져옵니다.
+  //   DateTime currentTime = DateTime.now();
+  //
+  //   querySnapshot.docs.forEach((doc) {
+  //     DateTime startTime =
+  //         DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+  //
+  //     // 현재 시간보다 미래의 시간인 경우만 추가
+  //     if (startTime.isAfter(currentTime)) {
+  //       sortedCarpools.add(doc);
+  //     }
+  //   });
+  //
+  //   sortedCarpools.sort((a, b) {
+  //     DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
+  //     DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b['startTime']);
+  //
+  //     return startTimeA.compareTo(startTimeB);
+  //   });
+  //
+  //   return sortedCarpools;
+  // }
 
   /// 카풀 저장
   static Future<void> addDataToFirestore({
@@ -123,6 +122,11 @@ class FirebaseCarpool {
       TopicRequstDTO topicRequstDTO = TopicRequstDTO(uid: memberID, carId: carpoolDocRef.id);
       await apiTopic.saveTopoic(topicRequstDTO);
 
+        print("토픽 추가");
+
+      }
+      /// 취소하기
+      //await FirebaseMessaging.instance.unsubscribeFromTopic('news');
 
 
       /// 0830 한승완 추가 : carId의 Token 저장
@@ -150,8 +154,14 @@ class FirebaseCarpool {
     }
   }
 
-  static Future<void> addMemberToCarpool(String carpoolID, String memberID,
-      String memberName, String memberGender, String token, String roomGender) async {
+  /// 카풀에 멤버 추가
+  static Future<void> addMemberToCarpool(
+      String carpoolID,
+      String memberID,
+      String memberName,
+      String memberGender,
+      String token,
+      String roomGender) async {
     CollectionReference carpoolCollection = _firestore.collection('carpool');
     DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
 
@@ -169,7 +179,8 @@ class FirebaseCarpool {
 
         if (nowMember < maxMember) {
           transaction.update(carpoolDocRef, {
-            'members': FieldValue.arrayUnion(['${memberID}_${memberName}_$memberGender']),
+            'members': FieldValue.arrayUnion(
+                ['${memberID}_${memberName}_$memberGender']),
             'nowMember': FieldValue.increment(1),
           });
           FireStoreService().saveToken(
@@ -205,14 +216,53 @@ class FirebaseCarpool {
     }
   }
 
-  ///거리순 조회
+  /// 시간순으로 조회, 정렬
+  static Future<List<DocumentSnapshot>> timeByFunction(
+      int limit, DocumentSnapshot? startAfter) async {
+    CollectionReference carpoolCollection =
+        FirebaseFirestore.instance.collection('carpool');
+    Query query = carpoolCollection
+        .where('startTime',
+            isGreaterThan:
+                DateTime.now().millisecondsSinceEpoch) // 현재 시간보다 미래의 시간인 경우만 추가
+        .orderBy('startTime') // 출발 시간순으로 정렬
+        .limit(limit); // limit 만큼만 가져옴
+
+    if (startAfter != null) {
+      query = query.startAfterDocument(startAfter);
+    }
+
+    QuerySnapshot querySnapshot = await query.get();
+
+    List<DocumentSnapshot> sortedCarpools = [];
+    print("추가된 카풀 수(시간순): ${querySnapshot.docs.length}");
+
+    // 현재 시간 가져옴
+    DateTime currentTime = DateTime.now();
+
+    querySnapshot.docs.forEach((doc) {
+      DateTime startTime =
+          DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+
+      // 현재 시간보다 미래의 시간인 경우만 추가
+      if (startTime.isAfter(currentTime)) {
+        sortedCarpools.add(doc);
+      }
+    });
+    return sortedCarpools;
+  }
+
+  /// 거리순 정렬
   static Future<List<DocumentSnapshot>> nearByCarpool(
       double myLat, double myLon) async {
-    QuerySnapshot querySnapshot =
-        await _firestore.collection('carpool').get();
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('carpool')
+        .where('startTime',
+            isGreaterThan: DateTime.now().millisecondsSinceEpoch)
+        .get();
 
     List<Map<String, dynamic>> sortedCarpools = [];
-    print("조회된 카풀 수(nearByCarpool): ${querySnapshot.docs.length}");
+    print("조회된 카풀 총 개수(nearBy): ${querySnapshot.docs.length}");
 
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
@@ -250,7 +300,7 @@ class FirebaseCarpool {
     }).toList();
   }
 
-  ///거리 계산
+  /// 거리 계산
   static double calculateDistance(
     double myLat,
     double myLon,
@@ -272,7 +322,8 @@ class FirebaseCarpool {
       String memberID, String memberName, String memberGender) async {
     QuerySnapshot querySnapshot = await _firestore
         .collection('carpool')
-        .where('members', arrayContains: '${memberID}_${memberName}_$memberGender')
+        .where('members',
+            arrayContains: '${memberID}_${memberName}_$memberGender')
         .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
