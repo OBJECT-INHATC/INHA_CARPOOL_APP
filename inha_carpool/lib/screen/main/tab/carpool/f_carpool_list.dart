@@ -371,6 +371,12 @@ class _CarpoolListState extends State<CarpoolList> {
                                                 DocumentSnapshot lastMessage = snapshot.data!;
                                                 String content = lastMessage['message'];
                                                 String sender = lastMessage['sender'];
+
+                                                // 글자가 16글자 이상인 경우, 17글자부터는 '...'로 대체
+                                                if (content.length > 16) {
+                                                  content = content.substring(0, 16) + '...';
+                                                }
+
                                                 return Row(
                                                   children: [
                                                     Container(

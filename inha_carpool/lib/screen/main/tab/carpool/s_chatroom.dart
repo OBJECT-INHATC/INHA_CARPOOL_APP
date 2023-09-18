@@ -27,7 +27,6 @@ class ChatroomPage extends StatefulWidget {
   final String gender;
 
 
-
   /// 생성자
   const ChatroomPage(
       {Key? key,
@@ -41,6 +40,9 @@ class ChatroomPage extends StatefulWidget {
   @override
   State<ChatroomPage> createState() => _ChatroomPageState();
 }
+
+
+
 
 class _ChatroomPageState extends State<ChatroomPage> {
   /// 채팅 메시지 스트림
@@ -589,8 +591,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
         if (snapshot.hasData) {
           List<ChatMessage> fireStoreChats = snapshot.data!.docs
               .map<ChatMessage>((e) =>
-              ChatMessage.fromMap(
-                  e.data() as Map<String, dynamic>, widget.carId))
+              ChatMessage.fromMap(e.data() as Map<String, dynamic>, widget.carId))
               .toList();
           if (localChats != null) {
             fireStoreChats.addAll(localChats!);
@@ -599,8 +600,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
           if (fireStoreChats.length > previousItemCount) {
             previousItemCount = fireStoreChats.length;
             WidgetsBinding.instance?.addPostFrameCallback((_) {
-              _scrollController
-                  .jumpTo(_scrollController.position.maxScrollExtent);
+              _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
             });
           }
 
@@ -617,8 +617,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
             itemCount: fireStoreChats.length,
             itemBuilder: (context, index) {
               final currentChat = fireStoreChats[index]; // 현재 채팅 메시지
-              final previousChat =
-              index > 0 ? fireStoreChats[index - 1] : null; // 이전 채팅 메시지
+              final previousChat = index > 0 ? fireStoreChats[index - 1] : null; // 이전 채팅 메시지
 
               // 채팅에 포함된 시간을 DateTime으로 변환
               final currentDate =
@@ -645,8 +644,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "${currentDate.year}-${currentDate.month}-${currentDate
-                            .day}",
+                        "${currentDate.year}-${currentDate.month}-${currentDate.day}",
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ),
@@ -660,6 +658,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         : MessageType.other),
                     time: fireStoreChats[index].time,
                   ),
+
                 ],
               );
             },
