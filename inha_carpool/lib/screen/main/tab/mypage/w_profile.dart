@@ -14,7 +14,7 @@ class ProFile extends StatefulWidget {
 }
 
 class _ProFileState extends State<ProFile> {
-  var storage = const FlutterSecureStorage();
+  final storage = FlutterSecureStorage();
   late Future<String> nickNameFuture;
   late Future<String> uidFuture;
   late Future<String> genderFuture;
@@ -100,7 +100,8 @@ class _ProFileState extends State<ProFile> {
                                     return Text('Error: ${snapshot.error}');
                                   } else {
                                     return Text(
-                                      snapshot.data ?? '',
+                                      // nickNameFuture의 닉네임 값
+                                      snapshot.data ?? ' ',
                                       style: const TextStyle(
                                         fontSize: 17,
                                         color: Colors.black,
@@ -242,7 +243,7 @@ class _ProFileState extends State<ProFile> {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           return Text(
-                            snapshot.data ?? '',
+                            snapshot.data ?? ' ',
                             style: const TextStyle(
                                 fontSize: 14,
                                 color: Colors.black),
@@ -333,18 +334,17 @@ class _ProFileState extends State<ProFile> {
                 String newNickname = nicknameController.text;
                 if (newNickname.isNotEmpty && newNickname.length > 1) {
                   int result =
-                  await updateNickname(newNickname, email);
+                  await updateNickname(newNickname, email, storage);
 
                   if (result == 1) {
                     // 업데이트 성공 팝업
                     if (!mounted) return;
                     Navigator.of(context).pop();
                     _showResultPopup(context, "수정 완료", "닉네임이 성공적으로 수정되었습니다.");
-
-                    // 업데이트된 닉네임으로 상단의 닉네임 다시 빌드
                     setState(() {
                       nickNameFuture = _loadUserDataForKey("nickName");
                     });
+
 
                   }
                   else if (result == 2) {
@@ -378,7 +378,6 @@ class _ProFileState extends State<ProFile> {
   }
 }
 
-void setState(Null Function() param0) {}
 
 void _showResultPopup(BuildContext context, String title, String content) {
   showDialog(
@@ -400,7 +399,7 @@ void _showResultPopup(BuildContext context, String title, String content) {
   );
 }
 
-Future<int> updateNickname(String newNickname, String email) async {
+Future<int> updateNickname(String newNickname, String email, FlutterSecureStorage storage) async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final CollectionReference users = firestore.collection('users');
 
@@ -423,10 +422,12 @@ Future<int> updateNickname(String newNickname, String email) async {
         final DocumentReference userRef = users.doc(documentId);
         await userRef.update({'nickName': newNickname});
 
-        // FlutterSecureStorage에 닉네임 업데이트
-        const storage = FlutterSecureStorage();
+        // FlutterSecureStorage에 닉네임 기존 거 삭제
+        await storage.delete(key: 'nickName');
 
-        await storage.write(key: 'nickname', value: newNickname);
+        // FlutterSecureStorage에 닉네임 업데이트
+        await storage.write(key: 'nickName', value: newNickname);
+
         print('파베 닉네임이 업데이트되었습니다. => $newNickname');
         return 1;
       } else {
