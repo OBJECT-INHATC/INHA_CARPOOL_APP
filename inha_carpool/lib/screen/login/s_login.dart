@@ -331,6 +331,8 @@ class _LoginPageState extends State<LoginPage> {
                                     value: snapshot.docs[0].get('userName'),
                                   );
                                   //유저 정보저장
+                                  // Todo: 이미 저장한 uid가 있으면 저장 안하는 로직 추가하기 - 상훈 0919
+                                  // Todo: 별거 아닌데 여기 누가 작업한데서 빨리 비켜줘야되서 냅둠
                                   userSaveAPi(snapshot.docs[0].get('uid'),
                                       snapshot.docs[0].get('nickName'),
                                       snapshot.docs[0].get('email'));
