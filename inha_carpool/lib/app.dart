@@ -80,7 +80,14 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     return CustomThemeApp(
       child: Builder(builder: (context) {
         return MaterialApp(
-
+          /// 0916 한승완 - 텍스트의 전체적인 크기를 고정
+          builder: (context, child) {
+            final MediaQueryData data = MediaQuery.of(context);
+            return MediaQuery(
+              data: data.copyWith(textScaleFactor: 1.0),
+              child: child!,
+            );
+          },
           //네비게이터 관리
           navigatorKey: App.navigatorKey,
           //언어 영역
