@@ -118,11 +118,11 @@ class FirebaseCarpool {
       /// 0918 해당 카풀 알림 토픽 추가
       if(Prefs.isPushOnRx.get() == true){
         await FirebaseMessaging.instance.subscribeToTopic(carpoolDocRef.id);
+        print("토픽 추가");
       }
       TopicRequstDTO topicRequstDTO = TopicRequstDTO(uid: memberID, carId: carpoolDocRef.id);
       await apiTopic.saveTopoic(topicRequstDTO);
 
-        print("토픽 추가");
       /// 0830 한승완 추가 : carId의 Token 저장
       await FireStoreService().saveToken(token!, carpoolDocRef.id);
 

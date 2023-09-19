@@ -67,7 +67,7 @@ class FcmService {
               'time': chatMessage.time.toString() ,
             },
             // 상대방 토큰 값, to -> 단일, registration_ids -> 여러명
-            'to': '/topics/${chatMessage.carId}',
+            'to': chatMessage.carId,
            // 'registration_ids': tokenList
           }));
     } catch (e) {
