@@ -38,4 +38,16 @@ class ApiUser {
     print('API Response: ${utf8.decode(response.body.runes.toList())}');
     return response; // API 응답을 반환
   }
+
+  Future<List<String>> getAllCarIdsForUser(String userId) async {
+    String apiUrl = '$LocalHoonUrl/user/selectList/$userId';
+
+    final response = await http.get(Uri.parse(apiUrl));
+    final List<String> carIds = List<String>.from(json.decode(response.body));
+    print('API Response: ${utf8.decode(response.body.runes.toList())}');
+
+    return carIds; // API 응답을 반환
+
+
+  }
 }

@@ -13,9 +13,11 @@ class Switchmenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    IconData iconData = title == "채팅 알림" ? Icons.chat : Icons.notifications;
+
     return Row(
       children: [
-        Icon(Icons.notifications).pOnly(right: 15),
+        Icon(iconData).pOnly(right: 15),
         title.text.size(17).make(),
         const EmptyExpanded(),
         OsSwitch(value: isOn, onChanged: onChanged,),

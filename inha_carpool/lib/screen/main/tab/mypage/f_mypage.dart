@@ -1,10 +1,13 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/velocityx_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_profile.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_recordList.dart';
+import 'package:inha_Carpool/service/api/Api_user.dart';
 
 import '../../../../common/data/preference/prefs.dart';
 import '../../../dialog/d_message.dart';
@@ -22,6 +25,19 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  final storage = FlutterSecureStorage();
+  late String uid;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUid();
+  }
+
+  Future<void> _loadUid() async {
+    uid = await storage.read(key: 'uid') ?? "";
+  }
+
   bool isEventAdsAllowed = true; // 스위치의 초기 상태를 설정
   bool isEvent = true; // 스위치의 초기 상태를 설정
 
@@ -135,21 +151,37 @@ class _MyPageState extends State<MyPage> {
               ),
 
               Obx(
-                () => Switchmenu('푸쉬 알림', Prefs.isPushOnRx.get(),
+                () => Switchmenu('채팅 알림', Prefs.isPushOnRx.get(),
                     onChanged: (isOn) async {
                   Prefs.isPushOnRx.set(isOn);
-                  if(isOn){
-                    print('푸쉬 알림 on');
-                    /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독해버려
-                  }else{
-                    print('푸쉬 알림 off');
-                    /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독 해제해버려  -> 유저이름으로 카풀Id 리스트
-                    /// 만들어오는 api 필요 0919
+                  ApiUser apiUser = ApiUser();
+                  List<String> topicList =
+                      await apiUser.getAllCarIdsForUser(uid);
+                  if (isOn) {
+                    print('채팅 알림 on');
+
+                    /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독
+                    for (String carId in topicList) {
+                      await FirebaseMessaging.instance.subscribeToTopic(carId);
+                      print('채팅 구독 완료: $carId');
+                    }
+                  } else {
+                    /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독 해제
+                    print('채팅 알림 off');
+                    for (String carId in topicList) {
+                      await FirebaseMessaging.instance.unsubscribeFromTopic(carId);
+                      print('채팅 구독 취소: $carId');
+                    }
                   }
                 }),
               ),
-              //Todo : Prefs.isPushOnRx.get() 이 값은 bool 타입으로
-              //Todo : 현재 알림 설정이 off 면 false 반환 on 이면 true 반환 -상훈
+              Obx(
+                    () => Switchmenu('광고 및 마케팅 알림', Prefs.isAdPushOnRx.get(),
+                    onChanged: (isOn) async {
+                      Prefs.isAdPushOnRx.set(isOn);
+                      }
+                    ),
+              ),
 
               // 기타 항목
               Container(
