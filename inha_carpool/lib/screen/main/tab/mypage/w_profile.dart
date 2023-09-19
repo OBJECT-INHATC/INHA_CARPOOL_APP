@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/service/api/Api_user.dart';
 
 //import 'package:inha_Carpool/lib/common/constants.dart';
 
@@ -16,11 +17,11 @@ class ProFile extends StatefulWidget {
 class _ProFileState extends State<ProFile> {
   final storage = FlutterSecureStorage();
   late Future<String> nickNameFuture;
-  late Future<String> uidFuture;
   late Future<String> genderFuture;
   late Future<String> emailFuture;
   late Future<String> userNameFuture;
   late String email;
+  late String uid;
 
   @override
   void initState() {
@@ -30,10 +31,10 @@ class _ProFileState extends State<ProFile> {
 
   Future<void> _loadUserData() async {
     nickNameFuture = _loadUserDataForKey("nickName");
-    uidFuture = _loadUserDataForKey("uid");
     genderFuture = _loadUserDataForKey("gender");
     emailFuture = _loadUserDataForKey("email");
     userNameFuture = _loadUserDataForKey("userName");
+    uid = await storage.read(key: 'uid') ?? "";
   }
 
   Future<String> _loadUserDataForKey(String key) async {
@@ -335,6 +336,10 @@ class _ProFileState extends State<ProFile> {
                 if (newNickname.isNotEmpty && newNickname.length > 1) {
                   int result =
                   await updateNickname(newNickname, email, storage);
+
+                  ApiUser apiUser = ApiUser();
+                  print('uid : $uid, newNickname : $newNickname');
+                  apiUser.updateUserNickname(uid, newNickname);
 
                   if (result == 1) {
                     // 업데이트 성공 팝업

@@ -12,9 +12,9 @@ class ApiUser {
   /// 신고 하기 (저장)
   Future<http.Response> updateUserNickname(
       String myUid, String newNickName) async {
-    final String apiUrl = '$LocalHoonUrl/user/$myUid/$newNickName';
+    final String apiUrl = '$LocalHoonUrl/user/update/$myUid/$newNickName';
 
-    final response = await http.get(
+    final response = await http.put(
       Uri.parse(apiUrl),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
