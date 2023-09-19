@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
+import 'package:inha_Carpool/service/sv_firestore.dart';
 
 //import 'package:inha_Carpool/lib/common/constants.dart';
 
@@ -23,6 +25,9 @@ class _ProFileState extends State<ProFile> {
   late String email;
   late String uid;
 
+  String? nickName;
+  String? gender;
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +40,8 @@ class _ProFileState extends State<ProFile> {
     emailFuture = _loadUserDataForKey("email");
     userNameFuture = _loadUserDataForKey("userName");
     uid = await storage.read(key: 'uid') ?? "";
+    nickName = await storage.read(key: "nickName");
+    gender = await storage.read(key: "gender");
   }
 
   Future<String> _loadUserDataForKey(String key) async {
@@ -119,7 +126,7 @@ class _ProFileState extends State<ProFile> {
                           bottom: 15,
                           child: GestureDetector(
                             onTap: () {
-                              _showEditNicknameDialog(context);
+                              _showEditNicknameDialog(context,uid,nickName!,gender!);
                             },
                             child: const Row(
                               children: [
@@ -302,84 +309,89 @@ class _ProFileState extends State<ProFile> {
     );
   }
 
-  Future<void> _showEditNicknameDialog(BuildContext context) async {
+  Future<void> _showEditNicknameDialog(BuildContext context, String uid, String nickName, String gender) async {
     TextEditingController nicknameController = TextEditingController();
 
-    await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          surfaceTintColor: Colors.transparent,
-          title: const Text("닉네임 변경"),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nicknameController,
-                maxLength: 10,
-                decoration: const InputDecoration(
-                  hintText: "새로운 닉네임을 입력하세요",
+    bool userBool = await FireStoreService().isUserInCarpool(uid, nickName, gender);
+    if(!mounted) return;
+
+    if (userBool) {
+      context.showErrorSnackbar('카풀에 참여중인 유저는 닉네임을 변경할 수 없습니다.');
+    }else {
+      await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            surfaceTintColor: Colors.transparent,
+            title: const Text("닉네임 변경"),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nicknameController,
+                  maxLength: 10,
+                  decoration: const InputDecoration(
+                    hintText: "새로운 닉네임을 입력하세요",
+                  ),
                 ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("취소"),
+              ),
+              TextButton(
+                onPressed: () async {
+                  String newNickname = nicknameController.text;
+                  if (newNickname.isNotEmpty && newNickname.length > 1) {
+                    int result =
+                    await updateNickname(newNickname, email, storage);
+
+                    ApiUser apiUser = ApiUser();
+                    print('uid : $uid, newNickname : $newNickname');
+                    apiUser.updateUserNickname(uid, newNickname);
+
+                    if (result == 1) {
+                      // 업데이트 성공 팝업
+                      if (!mounted) return;
+                      Navigator.of(context).pop();
+                      _showResultPopup(context, "수정 완료", "닉네임이 성공적으로 수정되었습니다.");
+                      setState(() {
+                        nickNameFuture = _loadUserDataForKey("nickName");
+                      });
+                    }
+                    else if (result == 2) {
+                      // 중복된 닉네임 팝업
+                      if (!mounted) return;
+                      _showResultPopup(
+                          context, "오류", "중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.");
+                    } else if (result == 0) {
+                      // 이메일 일치 문서 없음 팝업
+                      if (!mounted) return;
+                      _showResultPopup(context, "오류", "해당 이메일과 일치하는 문서가 없습니다.");
+                    } else {
+                      // 업데이트 실패 팝업
+                      if (!mounted) return;
+                      _showResultPopup(context, "오류", "닉네임 업데이트에 실패했습니다.");
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('2글자 이상 입력해주세요.'),
+                      ),
+                    );
+                  }
+                },
+                child: const Text("저장"),
               ),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("취소"),
-            ),
-            TextButton(
-              onPressed: () async {
-                String newNickname = nicknameController.text;
-                if (newNickname.isNotEmpty && newNickname.length > 1) {
-                  int result =
-                  await updateNickname(newNickname, email, storage);
-
-                  ApiUser apiUser = ApiUser();
-                  print('uid : $uid, newNickname : $newNickname');
-                  apiUser.updateUserNickname(uid, newNickname);
-
-                  if (result == 1) {
-                    // 업데이트 성공 팝업
-                    if (!mounted) return;
-                    Navigator.of(context).pop();
-                    _showResultPopup(context, "수정 완료", "닉네임이 성공적으로 수정되었습니다.");
-                    setState(() {
-                      nickNameFuture = _loadUserDataForKey("nickName");
-                    });
-                    ///Todo : 서버 디비에도 업데이트문 날려주기 0919 상훈
-
-                  }
-                  else if (result == 2) {
-                    // 중복된 닉네임 팝업
-                    if(!mounted) return;
-                    _showResultPopup(
-                        context, "오류", "중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.");
-                  } else if (result == 0) {
-                    // 이메일 일치 문서 없음 팝업
-                    if(!mounted) return;
-                    _showResultPopup(context, "오류", "해당 이메일과 일치하는 문서가 없습니다.");
-                  } else {
-                    // 업데이트 실패 팝업
-                    if(!mounted) return;
-                    _showResultPopup(context, "오류", "닉네임 업데이트에 실패했습니다.");
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('2글자 이상 입력해주세요.'),
-                    ),
-                  );
-                }
-              },
-              child: const Text("저장"),
-            ),
-          ],
-        );
-      },
-    );
+          );
+        },
+      );
+    }
   }
 }
 

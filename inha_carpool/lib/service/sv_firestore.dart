@@ -322,6 +322,15 @@ class FireStoreService {
   }
 
 
+  /// 0919 한승완, 사용자가 현재 참가한 카풀이 존재하는지 확인하는 메서드
+  Future<bool> isUserInCarpool(String uid, String nickName, String gender) async {
+    QuerySnapshot snapshot = await carpoolCollection.where("members", arrayContains: "${uid}_${nickName}_$gender").where("status", isEqualTo: false).limit(1).get();
+    for (QueryDocumentSnapshot doc in snapshot.docs) {
+      print(doc.id);
+    }
+    return snapshot.docs.isNotEmpty;
+  }
+
 
 
 
