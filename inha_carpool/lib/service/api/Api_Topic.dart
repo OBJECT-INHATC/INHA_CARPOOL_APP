@@ -8,7 +8,8 @@ import '../../common/constants.dart';
 /// 0918 이상훈 - 서버 db에 Topic 정보 관련 api
 class ApiTopic {
   Future<http.Response> saveTopoic(TopicRequstDTO topicRequstDTO) async {
-    String apiUrl = '$LocalHoonUrl/topic/save';
+    String apiUrl = '$baseUrl/topic/save';
+    print(baseUrl);
     final String requestBody = jsonEncode(topicRequstDTO);
 
     final response = await http.post(
@@ -23,7 +24,7 @@ class ApiTopic {
   }
 
   Future<http.Response> deleteTopic(String uid, String carId) async {
-    String apiUrl = '$LocalHoonUrl/topic/delete';
+    String apiUrl = '$baseUrl/topic/delete';
 
     final response = await http.delete(
       Uri.parse('$apiUrl?uid=$uid&carId=$carId'),

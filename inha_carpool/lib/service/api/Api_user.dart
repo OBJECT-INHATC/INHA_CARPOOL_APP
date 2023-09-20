@@ -12,7 +12,7 @@ class ApiUser {
   /// 신고 하기 (저장)
   Future<http.Response> updateUserNickname(
       String myUid, String newNickName) async {
-    final String apiUrl = '$LocalHoonUrl/user/update/$myUid/$newNickName';
+    final String apiUrl = '$baseUrl/user/update/$myUid/$newNickName';
 
     final response = await http.put(
       Uri.parse(apiUrl),
@@ -25,7 +25,7 @@ class ApiUser {
   }
 
   Future<http.Response> saveUser(UserRequstDTO userDTO) async {
-     String apiUrl = '$LocalHoonUrl/user/save';
+     String apiUrl = '$baseUrl/user/save';
     final String requestBody = jsonEncode(userDTO);
 
     final response = await http.post(
@@ -40,7 +40,7 @@ class ApiUser {
   }
 
   Future<List<String>> getAllCarIdsForUser(String userId) async {
-    String apiUrl = '$LocalHoonUrl/user/selectList/$userId';
+    String apiUrl = '$baseUrl/user/selectList/$userId';
 
     final response = await http.get(Uri.parse(apiUrl));
     final List<String> carIds = List<String>.from(json.decode(response.body));

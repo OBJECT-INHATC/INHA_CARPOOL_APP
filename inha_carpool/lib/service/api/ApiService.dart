@@ -23,7 +23,7 @@ class ApiService {
 
 
   Future<http.Response> saveReport(ReportRequstDTO reportRequstDTO) async {
-    const String apiUrl = '$LocalHoonUrl/report/save';
+    const String apiUrl = '$baseUrl/report/save';
 
     // ReportRequstDTO 객체를 JSON 문자열로 변환
     final String requestBody = jsonEncode(reportRequstDTO);
