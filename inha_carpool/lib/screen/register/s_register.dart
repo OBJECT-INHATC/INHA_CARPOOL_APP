@@ -7,7 +7,7 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 
 /// 0824 서은율 한승완
 /// 회원 가입 페이지
-/// 0830 / 0907 / 0910 최은우
+/// 0830 / 0907 / 0910 / 0922 최은우
 /// 디자인 수정
 
 class RegisterPage extends StatefulWidget {
@@ -70,7 +70,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    // 파스텔톤 하늘색 정의
     const Color pastelSkyBlue = Color(0xff6CC0FF);
     return isLoading
         ? Center(
@@ -94,11 +93,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   iconSize: 30,
                 ),
                 title: const Text(
-                  '회원가입', // AppBar에 표시할 글씨
+                  '회원가입',
                   style: TextStyle(
-                    fontSize: 18, // 원하는 글씨 크기로 조정하세요
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black, // 원하는 글씨 색상으로 조정하세요
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -115,6 +114,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Stack(
                             alignment: Alignment.centerRight,
                             children: [
+                              // Container 위젯 안에 있는 TextFormField 부분 수정
                               Container(
                                 // 학번 입력 필드
                                 height: inputFieldHeight, // 높이 변수 적용
@@ -130,7 +130,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                     Expanded(
                                       child: TextFormField(
                                         decoration: const InputDecoration(
-                                          labelText: '학번',
+                                          labelText: null,  // labelText를 null로 설정하고 힌트 텍스트 숨김
+                                          hintText: '학번',
                                           border: InputBorder.none,
                                           prefixIcon: Icon(
                                             Icons.school,
@@ -204,7 +205,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             child: TextFormField(
                               decoration: const InputDecoration(
-                                labelText: '이름',
+                                labelText: null,
+                                hintText: '이름',
                                 border: InputBorder.none,
                                 prefixIcon: Icon(
                                   Icons.person,
@@ -239,7 +241,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             child: TextFormField(
                               decoration: const InputDecoration(
-                                labelText: '닉네임',
+                                labelText: null,
+                                hintText: '닉네임',
                                 border: InputBorder.none,
                                 prefixIcon: Icon(
                                   Icons.person,
@@ -275,7 +278,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               obscureText: true,
                               decoration: const InputDecoration(
-                                labelText: '비밀번호',
+                                labelText: null,
+                                hintText: '비밀번호',
                                 border: InputBorder.none,
                                 prefixIcon: Icon(
                                   Icons.lock,
@@ -314,7 +318,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               obscureText: true,
                               decoration: InputDecoration(
-                                labelText: '비밀번호 확인',
+                                labelText: null,
+                                hintText: '비밀번호 확인',
                                 border: InputBorder.none,
                                 prefixIcon: const Icon(
                                   Icons.lock,
@@ -379,7 +384,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(
-                              40, 15, 40, 0), // 수정된 패딩 값
+                              40, 15, 40, 0),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 11),

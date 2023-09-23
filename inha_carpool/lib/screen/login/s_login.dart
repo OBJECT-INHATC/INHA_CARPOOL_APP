@@ -390,7 +390,7 @@ class _LoginPageState extends State<LoginPage> {
                           '가입하기',
                           style: TextStyle(
                             fontSize: subTitleFontSize,
-                            color: Colors.blue,
+                            color: Colors.black,
                             decoration: TextDecoration.underline,
                           ),
                         ),
