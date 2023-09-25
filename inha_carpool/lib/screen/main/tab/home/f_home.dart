@@ -64,7 +64,7 @@ class _HomeState extends State<Home> {
     String myGender = gender;
 
     List<DocumentSnapshot> carpools =
-    await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
+        await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
 
     if (carpools.isNotEmpty) {
       return carpools[0];
@@ -77,7 +77,8 @@ class _HomeState extends State<Home> {
     DocumentSnapshot? firstCarpool = await _loadFirstCarpool();
 
     if (firstCarpool != null) {
-      Map<String, dynamic> carpoolData = firstCarpool.data() as Map<String, dynamic>;
+      Map<String, dynamic> carpoolData =
+          firstCarpool.data() as Map<String, dynamic>;
       Navigator.push(
         Nav.globalContext,
         MaterialPageRoute(
@@ -95,40 +96,91 @@ class _HomeState extends State<Home> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         floatingActionButton: Container(
-          width: context.width(0.92),
-          height: context.height(0.08),
-
-          child: FloatingActionButton(
-            elevation: 5,
-            mini: false,
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(120),
-              side: const BorderSide(color: Colors.grey, width: 1),
-            ),
-              onPressed: _handleFloatingActionButton,
-            child: Container(
-              child: Column(
-                children: [
-                  Row(mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                    Text("곧 시작되는 카풀 : 주안 -> 인하대 (홀란드)" , style: TextStyle(fontSize: 15, color: Colors.black,fontWeight: FontWeight.bold),),
-
-
-                  ],),
-                  Text("2023/10/23 18:00" , style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold),),
-                  Text("10분 전" , style: TextStyle(fontSize: 13, color: Colors.red, fontWeight: FontWeight.bold),),
-                ],
+            width: context.width(0.92),
+            height: context.height(0.08),
+            child: FloatingActionButton(
+              elevation: 5,
+              mini: false,
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(120),
+                side: const BorderSide(color: Colors.grey, width: 1),
               ),
-            )
-          ),
-        ),
+              onPressed: _handleFloatingActionButton,
+              child: Container(
+                child: FutureBuilder<DocumentSnapshot?>(
+                    future: _loadFirstCarpool(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (!snapshot.hasData || snapshot.data == null) {
+                        return Text('아직 시작되는 카풀이 없습니다.');
+                      } else {
+                        Map<String, dynamic> carpoolData =
+                            snapshot.data!.data() as Map<String, dynamic>;
+
+                        String startToEnd =
+                            '${carpoolData['startPointName']} -> ${carpoolData['endPointName']}';
+                        DateTime startTime =
+                        DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
+                        DateTime currentTime = DateTime.now();
+                        Duration difference = startTime.difference(currentTime);
+
+                        String formattedTime;
+                        if (difference.inDays >= 365) {
+                          formattedTime = '${difference.inDays ~/ 365}년 후';
+                        } else if (difference.inDays >= 30) {
+                          formattedTime = '${difference.inDays ~/ 30}달 후';
+                        } else if (difference.inDays >= 1) {
+                          formattedTime = '${difference.inDays}일 후';
+                        } else if (difference.inHours >= 1) {
+                          formattedTime = '${difference.inHours}시간 후';
+                        } else {
+                          formattedTime = '${difference.inMinutes}분 후';
+                        }
+                        String admin = carpoolData['admin'].split('_')[1];
+
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  " ${startToEnd}(${admin})",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Text(
+                              "${startTime}",
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              formattedTime,
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        );
+                      }
+                    }),
+              ),
+            )),
         body: Container(
           decoration: BoxDecoration(
             color: Colors.grey[100],
@@ -226,12 +278,10 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
-
                     ],
                   ),
                 ),
               ),
-
             ],
           ),
         ),
