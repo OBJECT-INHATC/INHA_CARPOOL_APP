@@ -123,9 +123,6 @@ class FirebaseCarpool {
       TopicRequstDTO topicRequstDTO = TopicRequstDTO(uid: memberID, carId: carpoolDocRef.id);
       await apiTopic.saveTopoic(topicRequstDTO);
 
-      /// 0830 한승완 추가 : carId의 Token 저장
-      await FireStoreService().saveToken(token!, carpoolDocRef.id);
-
       /// 0903 한승완 추가 : 참가 메시지 전송
       await FireStoreService().sendCreateMessage(carpoolDocRef.id, memberName);
       print('Data added to Firestore.');
@@ -176,10 +173,6 @@ class FirebaseCarpool {
                 ['${memberID}_${memberName}_$memberGender']),
             'nowMember': FieldValue.increment(1),
           });
-          FireStoreService().saveToken(
-            token,
-            carpoolID,
-          );
           FireStoreService().sendEntryMessage(carpoolID, memberName);
         } else {
           // 최대 인원 초과 시 처리
