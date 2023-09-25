@@ -61,27 +61,41 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          heroTag: "recruit_from_home",
-          elevation: 5,
-          mini: false,
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-            side: const BorderSide(color: Colors.grey, width: 1),
-          ),
-          onPressed: () {
-            Navigator.push(
-              Nav.globalContext,
-              MaterialPageRoute(
-                builder: (context) => const RecruitPage(),
+        floatingActionButton: Container(
+          width: context.width(0.92),
+          height: context.height(0.08),
+
+          child: FloatingActionButton(
+            heroTag: "recruit_from_home",
+            elevation: 5,
+            mini: false,
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(120),
+              side: const BorderSide(color: Colors.grey, width: 1),
+            ),
+            onPressed: () {
+              Navigator.push(
+                Nav.globalContext,
+                MaterialPageRoute(
+                  builder: (context) => const RecruitPage(),
+                ),
+              );
+            },
+            child: Container(
+              child: Column(
+                children: [
+                  Row(mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    Text("곧 시작되는 카풀 : 주안 -> 인하대 (홀란드)" , style: TextStyle(fontSize: 15, color: Colors.black,fontWeight: FontWeight.bold),),
+
+
+                  ],),
+                  Text("2023/10/23 18:00" , style: TextStyle(fontSize: 13, color: Colors.black, fontWeight: FontWeight.bold),),
+                  Text("10분 전" , style: TextStyle(fontSize: 13, color: Colors.red, fontWeight: FontWeight.bold),),
+                ],
               ),
-            );
-          },
-          child: const Icon(
-            Icons.add,
-            color: Colors.blue,
-            size: 50,
+            )
           ),
         ),
         body: Container(
@@ -181,6 +195,7 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
+
                     ],
                   ),
                 ),

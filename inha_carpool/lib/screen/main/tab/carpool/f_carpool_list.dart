@@ -102,6 +102,7 @@ class _CarpoolListState extends State<CarpoolList> {
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return SafeArea(
               child: Center(
+
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -135,197 +136,171 @@ class _CarpoolListState extends State<CarpoolList> {
           } else {
             List<DocumentSnapshot> myCarpools = snapshot.data!;
 
-            return Align(
-              alignment: Alignment.center,
-              child: ListView.builder(
-                itemCount: myCarpools.length,
-                itemBuilder: (context, i) {
+            return Scaffold(
+              floatingActionButton: FloatingActionButton(
+                heroTag: "recruit_from_home",
+                elevation: 5,
+                // mini: false,
+                backgroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                  side: const BorderSide(color: Colors.grey, width: 1),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    Nav.globalContext,
+                    MaterialPageRoute(
+                      builder: (context) => const RecruitPage(),
+                    ),
+                  );
+                },
+                child: const Icon(
+                  Icons.add,
+                  color: Colors.blue,
+                  size: 50,
+                ),
+              ),
+              body: Align(
 
-                  DocumentSnapshot carpool = myCarpools[i];
-                  // DocumentSnapshot carpool = widget.snapshot.data![index];
-                  Map<String, dynamic> carpoolData =
-                  carpool.data() as Map<String, dynamic>;
-                  String startPointName = carpool['startPointName'];
+                alignment: Alignment.center,
+                child: ListView.builder(
+                  itemCount: myCarpools.length,
+                  itemBuilder: (context, i) {
 
-                  //카풀 날짜 및 시간 변환
-                  DateTime startTime =
-                      DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
-                  DateTime currentTime = DateTime.now();
-                  Duration difference = startTime.difference(currentTime);
+                    DocumentSnapshot carpool = myCarpools[i];
+                    // DocumentSnapshot carpool = widget.snapshot.data![index];
+                    Map<String, dynamic> carpoolData =
+                    carpool.data() as Map<String, dynamic>;
+                    String startPointName = carpool['startPointName'];
 
-                  String formattedStartTime =
-                      startTime.formattedDateMyCarpool; // 날짜 형식으로 변환
+                    //카풀 날짜 및 시간 변환
+                    DateTime startTime =
+                        DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
+                    DateTime currentTime = DateTime.now();
+                    Duration difference = startTime.difference(currentTime);
 
-                  //String formattedTime;
-                  //if (difference.inDays >= 365) {
-                    //formattedTime = '${difference.inDays ~/ 365}년 전';
-                  //} else if (difference.inDays >= 30) {
-                    //formattedTime =
-                        //'${difference.inDays ~/ 30}달 ${difference.inDays.remainder(30)}일 전';
-                  //} else if (difference.inDays >= 1) {
-                   // formattedTime =
-                     //   '${difference.inDays}일 ${difference.inHours.remainder(24)}시간 전';
-                 // } else if (difference.inHours >= 1) {
-                   // formattedTime =
-                   //     '${difference.inHours}시간 ${difference.inMinutes.remainder(60)}분 전';
-                 // } else {
-                  //  formattedTime = '${difference.inMinutes}분 전';
-                 // }
+                    String formattedStartTime =
+                        startTime.formattedDateMyCarpool; // 날짜 형식으로 변환
 
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        Nav.globalContext,
-                        MaterialPageRoute(
-                            builder: (context) => ChatroomPage(
-                                carId: carpool['carId'],
-                                groupName: '카풀네임',
-                                userName: nickName,
-                                uid: uid,
-                                gender: gender,)),
-                      );
-                    },
-                    child: Card(
-                      color: Colors.white,
-                      surfaceTintColor: Colors.transparent,
-                      elevation: 1,
-                      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-                        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              child: Row(
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Expanded(
-                                    child: Container(
-                                      color: Colors.transparent,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.only(bottom: 3),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          Nav.globalContext,
+                          MaterialPageRoute(
+                              builder: (context) => ChatroomPage(
+                                  carId: carpool['carId'],
+                                  groupName: '카풀네임',
+                                  userName: nickName,
+                                  uid: uid,
+                                  gender: gender,)),
+                        );
+                      },
+                      child: Card(
+                        color: Colors.white,
+                        surfaceTintColor: Colors.transparent,
+                        elevation: 1,
+                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+                          margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Row(
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+
+                                      child: Container(
+
+                                        color: Colors.transparent,
+                                        child: Column(
+
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                              margin: const EdgeInsets.only(bottom: 3),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        // child: Text(formattedTime)
+                                                        //   .text
+                                                        //    .size(15)
+                                                        //   .bold
+                                                        //  .color(context.appColors.text)
+                                                        //    .make(),
+                                                      ),
+                                                      Text(
+                                                        formattedStartTime,
+                                                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(right: 10.0),
+                                                    child: Container(
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              const Icon(Icons.person, color: Colors.grey, size: 22),
+                                                              SizedBox(width: 5), // 왼쪽으로 이동
+                                                              Text(
+                                                                '${carpoolData['admin'].split('_')[1]}',
+                                                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            SizedBox(height: 8), // 날짜 아래 여백 추가
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
                                               children: [
                                                 Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Container(
-                                                      // child: Text(formattedTime)
-                                                      //   .text
-                                                      //    .size(15)
-                                                      //   .bold
-                                                      //  .color(context.appColors.text)
-                                                      //    .make(),
-                                                    ),
-                                                    Text(
-                                                      formattedStartTime,
-                                                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.grey),
-                                                    ),
-                                                  ],
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(right: 10.0),
-                                                  child: Container(
-                                                    child: Column(
+                                                    Row(
                                                       children: [
                                                         Row(
                                                           children: [
-                                                            const Icon(Icons.person, color: Colors.grey, size: 22),
-                                                            SizedBox(width: 5), // 왼쪽으로 이동
-                                                            Text(
-                                                              '${carpoolData['admin'].split('_')[1]}',
-                                                              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                                                            Container(
+                                                              margin: const EdgeInsets.all(7.0),
+                                                              width: context.width(0.015),
+                                                              height: context.height(0.01),
+                                                              // desired height
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.brown[100], // 출발지 포인트
+                                                                borderRadius: BorderRadius.circular(10),
+                                                              ),
+                                                              padding: const EdgeInsets.all(8.0),
+                                                              child: const Center(),
                                                             ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(height: 8), // 날짜 아래 여백 추가
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          Container(
-                                                            margin: const EdgeInsets.all(7.0),
-                                                            width: context.width(0.015),
-                                                            height: context.height(0.01),
-                                                            // desired height
-                                                            decoration: BoxDecoration(
-                                                              color: Colors.brown[100], // 출발지 포인트
-                                                              borderRadius: BorderRadius.circular(10),
-                                                            ),
-                                                            padding: const EdgeInsets.all(8.0),
-                                                            child: const Center(),
-                                                          ),
-                                                          const SizedBox(width: 5),
-                                                          Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Row(
-                                                                children: [
-                                                                  Container(
-                                                                    child: Column(
-                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                      children: [
-                                                                        Text(
-                                                                          "${carpoolData['startDetailPoint']}  ",
-                                                                          style: const TextStyle(
-                                                                            color: Colors.brown,
-                                                                            fontSize: 15,
-                                                                            fontWeight: FontWeight.bold,
-                                                                          ),
-                                                                        ),
-                                                                        Text(
-                                                                          shortenText(carpoolData['startPointName'], 16),
-                                                                          style: TextStyle(
-                                                                            color: Colors.grey[600],
-                                                                            fontSize: 11,
-                                                                            fontWeight: FontWeight.bold,
-                                                                          ),
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                  ),
-                                                                  Container(
-                                                                    margin: const EdgeInsets.only(left: 10, top: 0, bottom: 10, right: 10),
-                                                                    child: Icon(Icons.arrow_circle_right_outlined, size: 20, color: Colors.grey[700]),
-                                                                  ),
-                                                                  Row(
-                                                                    children: [
-                                                                      Container(
-                                                                        margin: const EdgeInsets.all(7.0),
-                                                                        width: context.width(0.015),
-                                                                        height: context.height(0.01),
-                                                                        decoration: BoxDecoration(
-                                                                          color: Colors.brown[100], //목적지 포인트
-                                                                          borderRadius: BorderRadius.circular(10),
-                                                                        ),
-                                                                        padding: const EdgeInsets.all(8.0),
-                                                                        child: Center(),
-                                                                      ),
-                                                                      const SizedBox(width: 5),
-                                                                      Column(
+                                                            const SizedBox(width: 5),
+                                                            Column(
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Container(
+                                                                      child: Column(
                                                                         crossAxisAlignment: CrossAxisAlignment.start,
                                                                         children: [
                                                                           Text(
-                                                                            "${carpoolData['endDetailPoint']}",
+                                                                            "${carpoolData['startDetailPoint']}  ",
                                                                             style: const TextStyle(
                                                                               color: Colors.brown,
                                                                               fontSize: 15,
@@ -333,7 +308,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                             ),
                                                                           ),
                                                                           Text(
-                                                                            shortenText(carpoolData['endPointName'], 16),
+                                                                            shortenText(carpoolData['startPointName'], 16),
                                                                             style: TextStyle(
                                                                               color: Colors.grey[600],
                                                                               fontSize: 11,
@@ -342,70 +317,111 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                           ),
                                                                         ],
                                                                       ),
-                                                                    ],
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 13),
-                                          Container(
-                                            child: StreamBuilder<DocumentSnapshot?>(
-                                              stream: FireStoreService().getLatestMessageStream(carpool['carId']),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState == ConnectionState.waiting) {
-                                                  return CircularProgressIndicator();
-                                                } else if (snapshot.hasError) {
-                                                  return Text('Error: ${snapshot.error}');
-                                                } else if (!snapshot.hasData || snapshot.data == null) {
-                                                  return Text('아직 채팅이 시작되지 않은 채팅방입니다!', style: TextStyle(color: Colors.grey));
-                                                }
-                                                DocumentSnapshot lastMessage = snapshot.data!;
-                                                String content = lastMessage['message'];
-                                                String sender = lastMessage['sender'];
-
-                                                // 글자가 16글자 이상인 경우, 17글자부터는 '...'로 대체
-                                                if (content.length > 16) {
-                                                  content = content.substring(0, 16) + '...';
-                                                }
-
-                                                return Row(
-                                                  children: [
-                                                    Container(
-                                                      margin: EdgeInsets.only(bottom: 8.0), // 채팅 밑 여백
-                                                      padding: EdgeInsets.only(left: 3.0), // 채팅 왼쪽 여백
-                                                      child: Text(
-                                                        '$sender : $content',
-                                                        style: TextStyle(fontSize: 13, color: Colors.grey),
-                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      margin: const EdgeInsets.only(left: 10, top: 0, bottom: 10, right: 10),
+                                                                      child: Icon(Icons.arrow_circle_right_outlined, size: 20, color: Colors.grey[700]),
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        Container(
+                                                                          margin: const EdgeInsets.all(7.0),
+                                                                          width: context.width(0.015),
+                                                                          height: context.height(0.01),
+                                                                          decoration: BoxDecoration(
+                                                                            color: Colors.brown[100], //목적지 포인트
+                                                                            borderRadius: BorderRadius.circular(10),
+                                                                          ),
+                                                                          padding: const EdgeInsets.all(8.0),
+                                                                          child: Center(),
+                                                                        ),
+                                                                        const SizedBox(width: 5),
+                                                                        Column(
+                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                          children: [
+                                                                            Text(
+                                                                              "${carpoolData['endDetailPoint']}",
+                                                                              style: const TextStyle(
+                                                                                color: Colors.brown,
+                                                                                fontSize: 15,
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                            Text(
+                                                                              shortenText(carpoolData['endPointName'], 16),
+                                                                              style: TextStyle(
+                                                                                color: Colors.grey[600],
+                                                                                fontSize: 11,
+                                                                                fontWeight: FontWeight.bold,
+                                                                              ),
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
                                                     ),
                                                   ],
-                                                );
-                                              },
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                        ],
+                                            SizedBox(height: 13),
+                                            Container(
+                                              child: StreamBuilder<DocumentSnapshot?>(
+                                                stream: FireStoreService().getLatestMessageStream(carpool['carId']),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                                    return CircularProgressIndicator();
+                                                  } else if (snapshot.hasError) {
+                                                    return Text('Error: ${snapshot.error}');
+                                                  } else if (!snapshot.hasData || snapshot.data == null) {
+                                                    return Text('아직 채팅이 시작되지 않은 채팅방입니다!', style: TextStyle(color: Colors.grey));
+                                                  }
+                                                  DocumentSnapshot lastMessage = snapshot.data!;
+                                                  String content = lastMessage['message'];
+                                                  String sender = lastMessage['sender'];
+
+                                                  // 글자가 16글자 이상인 경우, 17글자부터는 '...'로 대체
+                                                  if (content.length > 16) {
+                                                    content = content.substring(0, 16) + '...';
+                                                  }
+
+                                                  return Row(
+                                                    children: [
+                                                      Container(
+                                                        margin: EdgeInsets.only(bottom: 8.0), // 채팅 밑 여백
+                                                        padding: EdgeInsets.only(left: 3.0), // 채팅 왼쪽 여백
+                                                        child: Text(
+                                                          '$sender : $content',
+                                                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
 
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             );
           }
