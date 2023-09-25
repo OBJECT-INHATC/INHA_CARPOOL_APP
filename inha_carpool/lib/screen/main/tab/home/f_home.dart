@@ -11,6 +11,7 @@ import 'package:inha_Carpool/screen/main/tab/home/w_emptyCarpool.dart';
 
 import '../../../../common/util/carpool.dart';
 import '../../../recruit/s_recruit.dart';
+import '../carpool/s_chatroom.dart';
 import 'carpoolFilter.dart';
 
 class Home extends StatefulWidget {
@@ -57,6 +58,44 @@ class _HomeState extends State<Home> {
     _scrollController.addListener(_scrollListener); // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
   }
 
+  Future<DocumentSnapshot?> _loadFirstCarpool() async {
+    String myID = uid;
+    String myNickName = nickName;
+    String myGender = gender;
+
+    List<DocumentSnapshot> carpools =
+    await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
+
+    if (carpools.isNotEmpty) {
+      return carpools[0];
+    }
+
+    return null;
+  }
+
+  void _handleFloatingActionButton() async {
+    DocumentSnapshot? firstCarpool = await _loadFirstCarpool();
+
+    if (firstCarpool != null) {
+      Map<String, dynamic> carpoolData = firstCarpool.data() as Map<String, dynamic>;
+      Navigator.push(
+        Nav.globalContext,
+        MaterialPageRoute(
+          builder: (context) => ChatroomPage(
+            carId: carpoolData['carId'],
+            groupName: '카풀네임',
+            userName: nickName,
+            uid: uid,
+            gender: gender,
+          ),
+        ),
+      );
+    } else {
+      // Handle the case where no carpools are available
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -66,7 +105,6 @@ class _HomeState extends State<Home> {
           height: context.height(0.08),
 
           child: FloatingActionButton(
-            heroTag: "recruit_from_home",
             elevation: 5,
             mini: false,
             backgroundColor: Colors.white,
@@ -74,14 +112,7 @@ class _HomeState extends State<Home> {
               borderRadius: BorderRadius.circular(120),
               side: const BorderSide(color: Colors.grey, width: 1),
             ),
-            onPressed: () {
-              Navigator.push(
-                Nav.globalContext,
-                MaterialPageRoute(
-                  builder: (context) => const RecruitPage(),
-                ),
-              );
-            },
+              onPressed: _handleFloatingActionButton,
             child: Container(
               child: Column(
                 children: [
