@@ -92,7 +92,21 @@ class _HomeState extends State<Home> {
         ),
       );
     } else {
-      // Handle the case where no carpools are available
+     SnackBar snackBar = SnackBar(
+        content: Text('아직 카풀이 없습니다.'),
+        action: SnackBarAction(
+          label: '카풀 생성',
+          onPressed: () {
+            Navigator.push(
+              Nav.globalContext,
+              MaterialPageRoute(
+                builder: (context) => RecruitPage(),
+              ),
+            );
+          },
+        ),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
