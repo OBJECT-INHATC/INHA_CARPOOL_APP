@@ -215,7 +215,7 @@ class _HomeState extends State<Home> {
                                 children: [
                                   Text(
                                     // 카풀이 xx : xx 이후에 출발 예정이에요!
-                                    '카풀이 ${_formatTime(diffTime)} 후에 출발 예정이에요!',
+                                    '카풀이 ${formatDuration(diff)} 후에 출발 예정이에요!',
                                     style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
@@ -538,10 +538,11 @@ class _HomeState extends State<Home> {
     }
   }
 
-  String _formatTime(DateTime time) {
-    final hours = time.hour.toString().padLeft(2, '0');
-    final minutes = time.minute.toString().padLeft(2, '0');
-    final seconds = time.second.toString().padLeft(2, '0');
+  String formatDuration(Duration duration) {
+    final hours = duration.inHours.toString().padLeft(2, '0');
+    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
     return '$hours:$minutes:$seconds';
   }
+
 }
