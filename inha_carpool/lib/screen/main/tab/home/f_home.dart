@@ -29,6 +29,20 @@ class _HomeState extends State<Home> {
   // 내 위치
   late LatLng myPoint;
 
+  // Declare a StreamController for DateTime
+  final  _timeStreamController = StreamController<DateTime>.broadcast();
+
+  // 현재 시간을 1초마다 스트림에 추가 -> init
+  _HomeState() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      //현재시간을 Duration으로 변환해서 add
+      _timeStreamController.sink.add(DateTime.now());
+    });
+  }
+
+  Stream<DateTime>? _timeStream;
+
+
 //Future.value([]); 는 비동기를 알려주는 것
   late Future<List<DocumentSnapshot>> carPoolList = Future.value([]);
 
@@ -46,7 +60,7 @@ class _HomeState extends State<Home> {
   // 검색어 필터링
   String _searchKeyword = "";
   final TextEditingController _searchKeywordController =
-      TextEditingController();
+  TextEditingController();
 
   @override
   void initState() {
@@ -56,7 +70,24 @@ class _HomeState extends State<Home> {
     _loadUserData(); // 유저 정보 불러오기
     _refreshCarpoolList(); // 새로고침
     _scrollController.addListener(_scrollListener); // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
+    _HomeState(); // 현재 시간을 1초마다 스트림에 추가
+    _subscribeToTimeStream(); // 스트림 구독
+
   }
+
+  void _subscribeToTimeStream() {
+    print('스트림 구독');
+    _timeStream = _timeStreamController.stream;
+  }
+
+  @override
+  void dispose() {
+    // Dispose of the StreamController when no longer needed
+    _timeStreamController.close();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
 
   Future<DocumentSnapshot?> _loadFirstCarpool() async {
     String myID = uid;
@@ -64,7 +95,7 @@ class _HomeState extends State<Home> {
     String myGender = gender;
 
     List<DocumentSnapshot> carpools =
-        await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
+    await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
 
     if (carpools.isNotEmpty) {
       return carpools[0];
@@ -78,7 +109,8 @@ class _HomeState extends State<Home> {
 
     if (firstCarpool != null) {
       Map<String, dynamic> carpoolData =
-          firstCarpool.data() as Map<String, dynamic>;
+      firstCarpool.data() as Map<String, dynamic>;
+      if(!mounted) return;
       Navigator.push(
         Nav.globalContext,
         MaterialPageRoute(
@@ -92,8 +124,8 @@ class _HomeState extends State<Home> {
         ),
       );
     } else {
-     SnackBar snackBar = SnackBar(
-        content: Text('아직 카풀이 없습니다.'),
+      SnackBar snackBar = SnackBar(
+        content: const Text('아직 카풀이 없습니다.'),
         action: SnackBarAction(
           label: '카풀 생성',
           onPressed: () {
@@ -106,6 +138,7 @@ class _HomeState extends State<Home> {
           },
         ),
       );
+      if(!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -114,87 +147,113 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: Container(
-            width: context.width(0.92),
-            height: context.height(0.08),
-            child: FloatingActionButton(
-              elevation: 5,
-              mini: false,
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(120),
-                side: const BorderSide(color: Colors.grey, width: 1),
-              ),
-              onPressed: _handleFloatingActionButton,
-              child: Container(
-                child: FutureBuilder<DocumentSnapshot?>(
-                    future: _loadFirstCarpool(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else if (!snapshot.hasData || snapshot.data == null) {
-                        return Text('아직 시작되는 카풀이 없습니다.');
-                      } else {
-                        Map<String, dynamic> carpoolData =
-                            snapshot.data!.data() as Map<String, dynamic>;
+        floatingActionButton: // 카풀이 존재하면 생기고 없으면 안되게 만들어줘야함
+        SizedBox(
+          width: context.width(0.9),
+          height: context.height(0.07),
+          child: FutureBuilder<DocumentSnapshot?>(
+            future: _loadFirstCarpool(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                // 데이터 로딩 중
+                return const SizedBox.shrink(); // 아무 것도 표시 하지 않음
+              } else if (snapshot.hasError) {
+                // 에러가 발생한 경우 에러 메시지 표시
+                return Text('Error: ${snapshot.error}');
+              } else if (!snapshot.hasData || snapshot.data == null) {
+                // 데이터가 없는 경우 혹은 null인 경우 로딩 중으로 표시
+                return const SizedBox.shrink();
+              } else {
+                Map<String, dynamic> carpoolData = snapshot.data!.data() as Map<String, dynamic>;
+                DateTime startTime = DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
+                // 해당 startTime을 몇월 몇일 몇시로 변경
+                // 데이터가 있는 경우 플로팅 액션 버튼 생성
 
-                        String startToEnd =
-                            '${carpoolData['startPointName']} -> ${carpoolData['endPointName']}';
-                        DateTime startTime =
-                        DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
-                        DateTime currentTime = DateTime.now();
-                        Duration difference = startTime.difference(currentTime);
-
-                        String formattedTime;
-                        if (difference.inDays >= 365) {
-                          formattedTime = '${difference.inDays ~/ 365}년 후';
-                        } else if (difference.inDays >= 30) {
-                          formattedTime = '${difference.inDays ~/ 30}달 후';
-                        } else if (difference.inDays >= 1) {
-                          formattedTime = '${difference.inDays}일 후';
-                        } else if (difference.inHours >= 1) {
-                          formattedTime = '${difference.inHours}시간 후';
+                // 오늘 날짜가 아닐 경우 플로팅 액션 버튼 생성하지 않음
+                if(startTime.year != DateTime.now().year ||
+                    startTime.month != DateTime.now().month ||
+                    startTime.day != DateTime.now().day) {
+                  return const SizedBox.shrink();
+                }else {
+                  // 오늘 날짜일 경우 플로팅 액션 버튼 생성
+                  return FloatingActionButton(
+                    elevation: 3,
+                    mini: false,
+                    backgroundColor: Colors.grey[800],
+                    splashColor: Colors.transparent,
+                    // 클릭 모션 효과 삭제
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      side: const BorderSide(color: Colors.black38, width: 1),
+                    ),
+                    onPressed: () {
+                      // Handle button press here and update the stream data
+                      _handleFloatingActionButton();
+                    },
+                    child: StreamBuilder<DateTime>(
+                      stream: _timeStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Text('Loading...');
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
                         } else {
-                          formattedTime = '${difference.inMinutes}분 후';
-                        }
-                        String admin = carpoolData['admin'].split('_')[1];
+                          final data = snapshot.data;
+                          Duration diff = startTime.difference(data!);
 
-                        return Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  " ${startToEnd}(${admin})",
-                                  style: TextStyle(
+                          DateTime diffTime = DateTime
+                              .fromMillisecondsSinceEpoch(diff.inMilliseconds);
+
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(width: context.width(0.05)),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    // 카풀이 xx : xx 이후에 출발 예정이에요!
+                                    '카풀이 ${_formatTime(diffTime)} 후에 출발 예정이에요!',
+                                    style: const TextStyle(
                                       fontSize: 15,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                            Text(
-                              "${startTime}",
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              formattedTime,
-                              style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        );
-                      }
-                    }),
-              ),
-            )),
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${carpoolData['startPointName']} - ${carpoolData['endPointName']}',
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Spacer(),
+                              const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.arrow_forward_ios_rounded,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                ],
+                              ),
+                              SizedBox(width: context.width(0.05)),
+                            ],
+                          );
+                        }
+                      },
+                    ),
+                  );
+                }
+              }
+            },
+          ),
+        ),
         body: Container(
           decoration: BoxDecoration(
             color: Colors.grey[100],
@@ -222,7 +281,7 @@ class _HomeState extends State<Home> {
                               border: const OutlineInputBorder(
                                 borderSide: BorderSide.none, // 외곽선 없음
                                 borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
+                                BorderRadius.all(Radius.circular(20)),
                               ),
                               // 글씨의 위치를 가운데 정렬
                               contentPadding: const EdgeInsets.symmetric(
@@ -323,13 +382,13 @@ class _HomeState extends State<Home> {
           final filteredCarpools = snapshot.data!.where((carpool) {
             final carpoolData = carpool.data() as Map<String, dynamic>;
             final startPointName =
-                carpoolData['startPointName'].toString().toLowerCase();
+            carpoolData['startPointName'].toString().toLowerCase();
             final startDetailPointName =
-                carpoolData['startDetailPoint'].toString().toLowerCase();
+            carpoolData['startDetailPoint'].toString().toLowerCase();
             final endPointName =
-                carpoolData['endPointName'].toString().toLowerCase();
+            carpoolData['endPointName'].toString().toLowerCase();
             final endDetailPointName =
-                carpoolData['endDetailPoint'].toString().toLowerCase();
+            carpoolData['endDetailPoint'].toString().toLowerCase();
             final keyword = _searchKeyword.toLowerCase();
 
             return startPointName.contains(keyword) ||
@@ -477,5 +536,12 @@ class _HomeState extends State<Home> {
         });
       }
     }
+  }
+
+  String _formatTime(DateTime time) {
+    final hours = time.hour.toString().padLeft(2, '0');
+    final minutes = time.minute.toString().padLeft(2, '0');
+    final seconds = time.second.toString().padLeft(2, '0');
+    return '$hours:$minutes:$seconds';
   }
 }
