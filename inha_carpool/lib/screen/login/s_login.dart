@@ -353,8 +353,7 @@ class _LoginPageState extends State<LoginPage> {
                                     sound: true,
                                   );
 
-                                  final token = await FirebaseMessaging.instance.getAPNSToken();
-                                  if (Prefs.isAdPushOnRx.get() == true && token != null) {
+                                  if (Prefs.isAdPushOnRx.get() == true) {
                                     await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
                                   } else {
                                     print('APNS token is not available');
