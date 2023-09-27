@@ -229,6 +229,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
+                          surfaceTintColor: Colors.transparent,
                           title: const Text('카풀 나가기'),
                           content: const Text('정말로 카풀을 나가시겠습니까?'),
                           actions: [

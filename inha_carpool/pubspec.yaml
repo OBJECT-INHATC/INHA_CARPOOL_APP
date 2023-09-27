@@ -97,6 +97,7 @@ dependencies:
   animations: ^2.0.7
   sembast: ^3.5.0+1 # 로컬 데이터베이스 관련 패키지
   path_provider: ^2.0.5 # 로컬 데이터베이스 관련 패키지
+  flutter_chat_bubble: ^2.0.2
   
 dev_dependencies:
   flutter_test:
