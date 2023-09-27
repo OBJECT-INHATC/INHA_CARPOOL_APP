@@ -63,15 +63,15 @@ void initializeNotification() async {
 
   DarwinInitializationSettings iosInitializationSettings =
   const DarwinInitializationSettings(
-    requestAlertPermission: false,
-    requestBadgePermission: false,
-    requestSoundPermission: false,
+    requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,
   );
 
   // 플랫폼별 초기화 설정
    InitializationSettings initializationSettings = InitializationSettings(
     android: const AndroidInitializationSettings("@mipmap/ic_launcher"),
-    iOS: iosInitializationSettings, // IOS는 추후 아이디 구매해서 연결 해야함
+    iOS: iosInitializationSettings,
   );
 
   await flutterLocalNotificationsPlugin.initialize(

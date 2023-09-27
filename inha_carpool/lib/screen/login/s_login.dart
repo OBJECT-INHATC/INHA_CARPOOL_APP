@@ -341,8 +341,22 @@ class _LoginPageState extends State<LoginPage> {
                                   // 유저 정보 서저에 저장
                                   userSaveAPi(uid, nickname, email);
                                   // 광고성 마케팅 토픽 저장
+
+                                  // 토픽 저장 전 - IOS APNS 권한 요청
+                                  await FirebaseMessaging.instance.requestPermission(
+                                    alert: true,
+                                    announcement: false,
+                                    badge: true,
+                                    carPlay: false,
+                                    criticalAlert: false,
+                                    provisional: false,
+                                    sound: true,
+                                  );
+
                                   if (Prefs.isAdPushOnRx.get() == true) {
                                     await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
+                                  } else {
+                                    print('APNS token is not available');
                                   }
                                   ///---------- ---------- ------------ ---------------
 
