@@ -12,14 +12,14 @@ class LogoutConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       surfaceTintColor: Colors.transparent,
-      title: Text('로그아웃'),
-      content: Text('정말 로그아웃 하시겠습니까?'),
+      title: const Text('로그아웃'),
+      content: const Text('정말 로그아웃 하시겠습니까?'),
       actions: <Widget>[
         TextButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text('아니오'),
+          child: const Text('아니오'),
         ),
         TextButton(
           onPressed: () {

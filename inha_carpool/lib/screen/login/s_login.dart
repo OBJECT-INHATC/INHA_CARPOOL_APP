@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
@@ -340,7 +338,6 @@ class _LoginPageState extends State<LoginPage> {
                                   // Todo: 별거 아닌데 여기 누가 작업한데서 빨리 비켜줘야되서 냅둠
                                   // 유저 정보 서저에 저장
                                   userSaveAPi(uid, nickname, email);
-                                  // 광고성 마케팅 토픽 저장
 
                                   // 토픽 저장 전 - IOS APNS 권한 요청
                                   await FirebaseMessaging.instance.requestPermission(
@@ -353,8 +350,16 @@ class _LoginPageState extends State<LoginPage> {
                                     sound: true,
                                   );
 
+                                  // 광고성 마케팅 토픽 저장
                                   if (Prefs.isAdPushOnRx.get() == true) {
                                     await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
+                                  } else {
+                                    print('APNS token is not available');
+                                  }
+
+                                  // 학교 공지사항 토픽 저장
+                                  if (Prefs.isSchoolPushOnRx.get() == true) {
+                                    await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
                                   } else {
                                     print('APNS token is not available');
                                   }

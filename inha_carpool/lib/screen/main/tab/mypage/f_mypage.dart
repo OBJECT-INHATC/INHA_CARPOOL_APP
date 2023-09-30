@@ -48,13 +48,13 @@ class _MyPageState extends State<MyPage> {
         // 스크롤 가능한 ListView로 변경
         children: [
           // 내 정보 위젯 ProFile()
-          ProFile(),
-          SizedBox(height: 10),
+          const ProFile(),
+          const SizedBox(height: 10),
           Column(
             children: [
               // 계정 항목
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 6.0),
+                margin: const EdgeInsets.symmetric(horizontal: 6.0),
                 color: Colors.grey[100],
                 padding: const EdgeInsets.symmetric(
                     horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
@@ -151,36 +151,57 @@ class _MyPageState extends State<MyPage> {
               ),
 
               Obx(
-                () => Switchmenu('채팅 알림', Prefs.isPushOnRx.get(),
+                    () => Switchmenu('채팅 알림', Prefs.isPushOnRx.get(),
                     onChanged: (isOn) async {
-                  Prefs.isPushOnRx.set(isOn);
-                  ApiUser apiUser = ApiUser();
-                  List<String> topicList =
+                      Prefs.isPushOnRx.set(isOn);
+                      ApiUser apiUser = ApiUser();
+                      List<String> topicList =
                       await apiUser.getAllCarIdsForUser(uid);
-                  if (isOn) {
-                    print('채팅 알림 on');
+                      if (isOn) {
+                        print('채팅 알림 on');
 
-                    /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독
-                    for (String carId in topicList) {
-                      await FirebaseMessaging.instance.subscribeToTopic(carId);
-                      print('채팅 구독 완료: $carId');
-                    }
-                  } else {
-                    /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독 해제
-                    print('채팅 알림 off');
-                    for (String carId in topicList) {
-                      await FirebaseMessaging.instance.unsubscribeFromTopic(carId);
-                      print('채팅 구독 취소: $carId');
-                    }
-                  }
-                }),
+                        /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독
+                        for (String carId in topicList) {
+                          await FirebaseMessaging.instance.subscribeToTopic(carId);
+                          print('채팅 구독 완료: $carId');
+                        }
+                      } else {
+                        /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독 해제
+                        print('채팅 알림 off');
+                        for (String carId in topicList) {
+                          await FirebaseMessaging.instance
+                              .unsubscribeFromTopic(carId);
+                          print('채팅 구독 취소: $carId');
+                        }
+                      }
+                    }),
               ),
               Obx(
-                    () => Switchmenu('광고 및 마케팅 알림', Prefs.isAdPushOnRx.get(),
+                    () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
                     onChanged: (isOn) async {
                       Prefs.isAdPushOnRx.set(isOn);
+                      if (isOn) {
+                        print('광고 및 마케팅 알림 on');
+                        await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
+                      } else {
+                        print('광고 및 마케팅 알림 off');
+                        await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
                       }
-                    ),
+                    }),
+              ),
+
+              Obx(
+                    () => Switchmenu('학교 공지사항', Prefs.isSchoolPushOnRx.get(),
+                    onChanged: (isOn) async {
+                      Prefs.isSchoolPushOnRx.set(isOn);
+                      if (isOn) {
+                        print('학교 공지사항 알림 on');
+                        await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
+                      } else {
+                        print('학교 공지사항 알림 off');
+                        await FirebaseMessaging.instance.unsubscribeFromTopic("SchoolNotification");
+                      }
+                    }),
               ),
 
               // 기타 항목
