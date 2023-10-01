@@ -374,7 +374,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         return TextButton(
                           onPressed: () {
                             _showProfileModal(
-                                context, '$memberName 님', memberGender);
+                                context, memberName, memberGender);
                           },
                           style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -762,8 +762,8 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('$userName', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                    Text('$memberGender',style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey),),
+                    Text(userName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    Text(memberGender,style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey),),
                     ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);

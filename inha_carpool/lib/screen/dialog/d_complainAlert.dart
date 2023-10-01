@@ -118,12 +118,12 @@ class _ComplainAlertState extends State<ComplainAlert> {
                   final reportRequstDTO = ReportRequstDTO(
                     content: _controller.text,
                     carpoolId: widget.carpoolId,
-                    userName: widget.reportedUserNickName,
+                    reportedUser: widget.reportedUserNickName,
                     reporter: widget.myId,
                     reportType: getCheckedItems().toString(),
                     reportDate: DateTime.now().toString(),
                   );
-
+                  
                   // API 호출
                   final response = await apiService.saveReport(reportRequstDTO);
                   print(response.statusCode);
