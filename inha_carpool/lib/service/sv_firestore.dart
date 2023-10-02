@@ -102,6 +102,7 @@ class FireStoreService {
         sender: chatMessageData['sender'],
         time: chatMessageData['time'],
       ),
+      type: NotificationType.chat,
     );
   }
 
@@ -135,6 +136,12 @@ class FireStoreService {
 
     ChatDao().insert(chatMessage);
     await carpoolCollection.doc(carId).collection("messages").add(chatMessageMap);
+    FcmService().sendMessage(
+        title: "카풀에 새로운 멤버가 참가했습니다.",
+        body: "$userName님과 채팅을 시작해보세요!",
+        chatMessage: chatMessage,
+        type: NotificationType.status);
+
   }
 
   /// 0905 한승완

@@ -32,9 +32,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           body: notification?.body as String,
           time: nowTime,
         )
-    ).then((value){
-      print("백그라운드 저장");
-    });
+    );
   }
 
   return;
