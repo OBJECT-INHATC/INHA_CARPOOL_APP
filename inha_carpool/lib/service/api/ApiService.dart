@@ -7,7 +7,7 @@ import '../../dto/ReportRequstDTO.dart';
 
 class ApiService {
 
-  /// 신고 하기 (저장)
+
   Future<http.Response> selectReportList(String myId) async {
     final String apiUrl = '$baseUrl/report/select/$myId';
 
@@ -21,7 +21,7 @@ class ApiService {
     return response;
   }
 
-
+  /// 신고 하기 (저장)
   Future<http.Response> saveReport(ReportRequstDTO reportRequstDTO) async {
     const String apiUrl = '$baseUrl/report/save';
 
@@ -35,13 +35,10 @@ class ApiService {
       },
       body: requestBody,
     );
+    // 성공적으로 API 요청을 보냈을 때 처리할 코드
 
-      // 성공적으로 API 요청을 보냈을 때 처리할 코드
-
-      print('API Response: ${utf8.decode(response.body.runes.toList())}');
-      return response; // API 응답을 반환
-
-
+    print('API Response: ${utf8.decode(response.body.runes.toList())}');
+    return response; // API 응답을 반환
   }
 
 

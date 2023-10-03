@@ -13,7 +13,9 @@ class Switchmenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    IconData iconData = title == "채팅 알림" ? Icons.chat : Icons.notifications;
+    IconData iconData = title == "채팅 알림" ? Icons.chat :
+    title == "광고 및 마케팅" ? Icons.notifications :
+    title == "학교 공지사항" ? Icons.school : Icons.school;
 
     return Row(
       children: [

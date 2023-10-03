@@ -2,7 +2,7 @@
 class ReportRequstDTO {
   final String content;
   final String carpoolId;
-  final String userName;
+  final String reportedUser;
   final String reporter;
   final String reportType;
   final String reportDate;
@@ -10,7 +10,7 @@ class ReportRequstDTO {
   ReportRequstDTO({
     required this.content,
     required this.carpoolId,
-    required this.userName,
+    required this.reportedUser,
     required this.reporter,
     required this.reportType,
     required this.reportDate,
@@ -20,7 +20,7 @@ class ReportRequstDTO {
     return {
       'content': content,
       'carpoolId': carpoolId,
-      'userName': userName,
+      'reportedUser': reportedUser,
       'reporter': reporter,
       'reportType': reportType,
       'reportDate': reportDate,

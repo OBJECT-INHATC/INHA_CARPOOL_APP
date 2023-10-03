@@ -786,32 +786,8 @@ void _showProfileModal(BuildContext context, String memberId ,String userName, S
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('$userName', style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                    Text('$memberGender',style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey),),
-                    // ElevatedButton(
-                    //     onPressed: () {
-                    //       Navigator.pop(context);
-                    //       showDialog(
-                    //         context: context,
-                    //         builder: (context) => ComplainAlert(reportedUserNickName: userName, myId: widget.userName, carpoolId: widget.carId),
-                    //       );
-                    //     },
-                    //     style: ElevatedButton.styleFrom(
-                    //         backgroundColor: const Color.fromARGB(255, 254, 112, 2),
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(5.0)
-                    //       ),
-                    //     ),
-                    //     child: const Row(
-                    //       mainAxisSize: MainAxisSize.min,
-                    //       children: [
-                    //         Icon(Icons.warning_rounded,color: Colors.white),
-                    //         SizedBox(width: 8,),
-                    //         Text("신고하기",style: TextStyle(color: Colors.white),)
-                    //       ],
-                    //     )
-                    // ),
-                    //uid,memberId비교
+                    Text(userName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    Text(memberGender,style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey),),
                     ElevatedButton(
                       onPressed: () {
                         viewProfile(context, uid, memberId);

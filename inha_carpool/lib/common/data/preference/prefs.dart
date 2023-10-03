@@ -8,7 +8,7 @@ class Prefs {
   static final appTheme = NullablePreferenceItem<CustomTheme>('appTheme');
   static final isPushOnRx = RxPreferenceItem<bool, RxBool>('isPushOnRx', true);
   static final isAdPushOnRx = RxPreferenceItem<bool, RxBool>('isAdPushOnRx', true);
-  static final sliderPosition = RxPreferenceItem<double, RxDouble>('sliderPosition', 0.0);
-  static final birthday = RxnPreferenceItem<DateTime, Rxn<DateTime>>('birthday');
+  static final isSchoolPushOnRx = RxPreferenceItem<bool, RxBool>('isSchoolPushOnRx', true);
+
 
 }

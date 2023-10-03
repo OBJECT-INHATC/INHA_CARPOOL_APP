@@ -20,6 +20,11 @@ version: 1.0.0+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+flutter_native_splash:
+  color: "#FFFFFF" # white color
+  image: assets/splash.png
+
+
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -33,7 +38,12 @@ dependencies:
 
 
   #splash creator
-  flutter_native_splash: ^2.3.0
+  flutter_native_splash: ^2.3.3
+
+  # Run commands to generate splash screen_brightness
+  # 1) flutter clean
+  # 2) flutter pub get
+  # 3) flutter pub run flutter_native_splash:create
 
   #dart
   meta: ^1.4.0
@@ -139,6 +149,7 @@ flutter:
     - assets/
     - assets/image/splash/
     - assets/config/.env
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -15,11 +15,6 @@ import 'common/data/preference/app_preferences.dart';
 
 /// 0829 한승완 - FCM 기본 연결 및 알림 설정
 
-
-/// 현재 접속한 플랫폼이 웹인지 확인 => 웹 true, 모바일 false
-import 'package:flutter/foundation.dart'
-    show kIsWeb;
-
 /// 백그라운드 메시지 수신 호출 콜백 함수
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -63,15 +58,15 @@ void initializeNotification() async {
 
   DarwinInitializationSettings iosInitializationSettings =
   const DarwinInitializationSettings(
-    requestAlertPermission: false,
-    requestBadgePermission: false,
-    requestSoundPermission: false,
+    requestAlertPermission: true,
+    requestBadgePermission: true,
+    requestSoundPermission: true,
   );
 
   // 플랫폼별 초기화 설정
    InitializationSettings initializationSettings = InitializationSettings(
     android: const AndroidInitializationSettings("@mipmap/ic_launcher"),
-    iOS: iosInitializationSettings, // IOS는 추후 아이디 구매해서 연결 해야함
+    iOS: iosInitializationSettings,
   );
 
   await flutterLocalNotificationsPlugin.initialize(
@@ -81,7 +76,7 @@ void initializeNotification() async {
 
   // 포그라운드 상태에서 알림을 받을 수 있도록 설정
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
+    alert: false,
     badge: true,
     sound: true,
   );

@@ -31,7 +31,7 @@ class ApiUser {
     final response = await http.post(
       Uri.parse(apiUrl),
       headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+        'Content-Type': 'application/json; charset=UTF-8',  
       },
       body: requestBody,
     );
