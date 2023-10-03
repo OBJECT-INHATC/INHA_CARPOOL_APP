@@ -142,10 +142,12 @@ class _CarpoolListState extends State<CarpoolList> {
                   heroTag: "recruit_from_home",
                   elevation: 5,
                   // mini: false,
+                  //backgroundColor: //Colors.black54,
+                  //Color.fromARGB(255, 70, 100, 192),
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    side: const BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.circular(40),
+                    side: const BorderSide(color: Colors.white, width: 1),
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -156,8 +158,9 @@ class _CarpoolListState extends State<CarpoolList> {
                     );
                   },
                   child: const Icon(
-                    Icons.add,
-                    color: Colors.blue,
+                    Icons.add_outlined,
+                    color: //Colors.white,
+                    Color.fromARGB(255, 70, 100, 192),
                     size: 50,
                   ),
                 ),
@@ -251,7 +254,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                           children: [
                                                             Row(
                                                               children: [
-                                                                const Icon(Icons.person, color: Colors.grey, size: 22),
+                                                                const Icon(Icons.person, color: Color.fromARGB(255, 70, 100, 192), size: 22),
                                                                 SizedBox(width: 5), // 왼쪽으로 이동
                                                                 Text(
                                                                   '${carpoolData['admin'].split('_')[1]}',
