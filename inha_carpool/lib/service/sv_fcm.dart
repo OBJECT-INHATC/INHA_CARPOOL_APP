@@ -15,7 +15,6 @@ class FcmService {
 
   /// 알림 전송 메서드
   Future<void> sendMessage({
-    required List tokenList,
     required String title,
     required String body,
     required ChatMessage chatMessage,
@@ -68,8 +67,8 @@ class FcmService {
               'time': chatMessage.time.toString() ,
             },
             // 상대방 토큰 값, to -> 단일, registration_ids -> 여러명
-            //'to': userToken
-            'registration_ids': tokenList
+            'to': "/topics/${chatMessage.carId}",
+           // 'registration_ids': tokenList
           }));
     } catch (e) {
       print('error $e');

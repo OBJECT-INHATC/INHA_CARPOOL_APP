@@ -22,10 +22,6 @@ class FireStoreService {
   final CollectionReference carpoolCollection =
   FirebaseFirestore.instance.collection("carpool");
 
-  /// CollectionReference - FcmTokens Collection
-  final CollectionReference fcmTokensCollection =
-  FirebaseFirestore.instance.collection("fcmTokens");
-
   final User? user = FirebaseAuth.instance.currentUser;
 
   /// 0824 서은율
@@ -94,20 +90,10 @@ class FireStoreService {
       'unreadCount': FieldValue.increment(1), ///0909 서은율 읽지않은 메시지 카운트
     });
 
-    // 사용자 FCM 토큰 get
-    var myToken = await FirebaseMessaging.instance.getToken();
-
-    // 다른 유저의 FCM 토큰 get
-    QuerySnapshot tokensSnapshot = await fcmTokensCollection.where("carId", isEqualTo: carId).get();
-    List<String> tokenList = tokensSnapshot.docs.map((doc) => doc['token'] as String).toList();
-
-    tokenList.remove(myToken);
-
     await carpoolDocRef.collection("messages").add(chatMessageData);
 
     // FCM 메시지 전송
     FcmService().sendMessage(
-      tokenList: tokenList,
       title: "새로운 채팅이 도착했습니다.",
       body: "${chatMessageData['sender']} : ${chatMessageData['message']}",
       chatMessage: ChatMessage(
@@ -185,45 +171,6 @@ class FireStoreService {
     );
 
     ChatDao().insert(chatMessage);
-  }
-
-
-  /// 0829 한승완 - 서버에 Fcm 토큰 저장
-  Future<void> saveToken(String token, String carId) async {
-    // 이미 해당 carId로 저장된 토큰이 있는지 확인
-    QuerySnapshot existingTokens = await fcmTokensCollection.where("carId", isEqualTo: carId).get();
-    bool tokenExists = false;
-
-    for (QueryDocumentSnapshot tokenDoc in existingTokens.docs) {
-      if (tokenDoc["token"] == token) {
-        tokenExists = true;
-        break;
-      }
-    }
-
-    // 이미 저장된 토큰이 없는 경우에만 저장
-    if (!tokenExists) {
-      await fcmTokensCollection.add(
-        {
-          "token": token,
-          "carId": carId,
-        },
-      );
-    }
-  }
-
-  /// 0829 한승완 - 서버에 Fcm 토큰 삭제
-  /// TODO : 추후에 방 나가기 기능이 생겼을 때 연결 해야 함
-  Future deleteTokenByCarId(String token, String carId) async {
-    return await fcmTokensCollection
-        .where("token", isEqualTo: token)
-        .where("carId", isEqualTo: carId)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        element.reference.delete();
-      });
-    });
   }
 
 
@@ -322,6 +269,15 @@ class FireStoreService {
         .map((snapshot) => snapshot.docs.isNotEmpty ? snapshot.docs.first : null);
   }
 
+
+  /// 0919 한승완, 사용자가 현재 참가한 카풀이 존재하는지 확인하는 메서드
+  Future<bool> isUserInCarpool(String uid, String nickName, String gender) async {
+    QuerySnapshot snapshot = await carpoolCollection.where("members", arrayContains: "${uid}_${nickName}_$gender").where("status", isEqualTo: false).limit(1).get();
+    for (QueryDocumentSnapshot doc in snapshot.docs) {
+      print(doc.id);
+    }
+    return snapshot.docs.isNotEmpty;
+  }
 
 
 

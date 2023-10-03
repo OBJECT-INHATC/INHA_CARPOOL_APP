@@ -3,12 +3,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/dto/UserDTO.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
+import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 import 'package:nav/nav.dart';
 
+import '../../common/data/preference/prefs.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
 import '../register/s_findregister.dart';
@@ -22,6 +24,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
   // FCM 관련 설정 및 알림 처리를 위한 메서드
   Future<void> setupInteractedMessage() async {
     // 앱이 백그라운드 상태에서 푸시 알림 클릭하여 열릴 경우
@@ -74,6 +77,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+
+
   // 이메일
   String email = "";
 
@@ -121,6 +126,7 @@ class _LoginPageState extends State<LoginPage> {
     // 로그인 여부 확인
     checkLogin();
 
+
     super.initState();
   }
 
@@ -133,6 +139,12 @@ class _LoginPageState extends State<LoginPage> {
     // 화면 비율에 따라 폰트 크기 조정
     final titleFontSize = screenWidth * 0.1;
     final subTitleFontSize = screenWidth * 0.04;
+
+    Future<void> userSaveAPi(String uid, String nickName, String email) async {
+      final ApiUser apiUser = ApiUser();
+      UserRequstDTO userDTO = UserRequstDTO(uid: uid, nickname: nickName, email: email);
+      await apiUser.saveUser(userDTO);
+    }
 
     return GestureDetector(
       onTap: () {
@@ -296,14 +308,17 @@ class _LoginPageState extends State<LoginPage> {
 
                                   getMyDeviceToken();
 
+                                  String nickname = snapshot.docs[0]
+                                      .get("nickName");
+                                  String uid = snapshot.docs[0].get("uid");
+
                                   storage.write(
                                     key: "nickName",
-                                    value: snapshot.docs[0]
-                                        .get("nickName"),
+                                    value: nickname,
                                   );
                                   storage.write(
                                     key: "uid",
-                                    value: snapshot.docs[0].get("uid"),
+                                    value: uid,
                                   );
                                   storage.write(
                                     key: "gender",
@@ -311,20 +326,45 @@ class _LoginPageState extends State<LoginPage> {
                                   );
                                   storage.write(
                                     key: "email",
-                                    value: snapshot.docs[0].get('email'),
+                                    value: email,
                                   );
                                   storage.write(
                                     key: "userName",
                                     value: snapshot.docs[0].get('userName'),
                                   );
-                                  storage.write(
-                                    key: "email",
-                                    value: snapshot.docs[0].get('email'),
+                                  ///유저 정보저장 ------------ Topic 발급 - logout or 알림 Off 시 해제
+                                  // Todo: 이미 저장한 uid가 있으면 저장 안하는 로직 추가하기 - 상훈 0919
+                                  // Todo: 광고성 알림 Topic on/off 기능 추가하기 - 상훈 0919
+                                  // Todo: 별거 아닌데 여기 누가 작업한데서 빨리 비켜줘야되서 냅둠
+                                  // 유저 정보 서저에 저장
+                                  userSaveAPi(uid, nickname, email);
+
+                                  // 토픽 저장 전 - IOS APNS 권한 요청
+                                  await FirebaseMessaging.instance.requestPermission(
+                                    alert: true,
+                                    announcement: false,
+                                    badge: true,
+                                    carPlay: false,
+                                    criticalAlert: false,
+                                    provisional: false,
+                                    sound: true,
                                   );
-                                  storage.write(
-                                    key: "userName",
-                                    value: snapshot.docs[0].get('userName'),
-                                  );
+
+                                  // 광고성 마케팅 토픽 저장
+                                  if (Prefs.isAdPushOnRx.get() == true) {
+                                    await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
+                                  } else {
+                                    print('APNS token is not available');
+                                  }
+
+                                  // 학교 공지사항 토픽 저장
+                                  if (Prefs.isSchoolPushOnRx.get() == true) {
+                                    await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
+                                  } else {
+                                    print('APNS token is not available');
+                                  }
+                                  ///---------- ---------- ------------ ---------------
+
 
                                   if (context.mounted) {
                                     Navigator.push(

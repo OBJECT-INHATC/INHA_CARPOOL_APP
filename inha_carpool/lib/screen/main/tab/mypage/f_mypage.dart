@@ -1,25 +1,21 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/velocityx_extension.dart';
-import 'package:inha_Carpool/screen/main/tab/mypage/w_Menu.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_profile.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_recordList.dart';
+import 'package:inha_Carpool/service/api/Api_user.dart';
 
-import 'package:inha_Carpool/common/data/preference/prefs.dart';
-import '../../../../common/theme/theme_util.dart';
-import '../../../../common/widget/w_mode_switch.dart';
-import '../../../../common/widget/w_tap.dart';
+import '../../../../common/data/preference/prefs.dart';
 import '../../../dialog/d_message.dart';
 import '../../../opensource/s_opensource.dart';
-import '../../../setting/w_switch_menu.dart';
 import 'd_changepassword.dart';
 import 'f_logout_confirmation.dart';
 import 'f_secession.dart';
-
-import '../../../../dto/ReportRequstDTO.dart';
-import '../../../../service/api/ApiService.dart';
+import 'notificationButton/w_switch_menu.dart';
 
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -29,6 +25,19 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+  final storage = FlutterSecureStorage();
+  late String uid;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUid();
+  }
+
+  Future<void> _loadUid() async {
+    uid = await storage.read(key: 'uid') ?? "";
+  }
+
   bool isEventAdsAllowed = true; // 스위치의 초기 상태를 설정
   bool isEvent = true; // 스위치의 초기 상태를 설정
 
@@ -39,23 +48,23 @@ class _MyPageState extends State<MyPage> {
         // 스크롤 가능한 ListView로 변경
         children: [
           // 내 정보 위젯 ProFile()
-          ProFile(),
-          SizedBox(height: 10),
+          const ProFile(),
+          const SizedBox(height: 10),
           Column(
             children: [
               // 계정 항목
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 6.0),
+                margin: const EdgeInsets.symmetric(horizontal: 6.0),
                 color: Colors.grey[100],
                 padding: const EdgeInsets.symmetric(
                     horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
                   children: [
                     Text(
                       '계정',
                       style: TextStyle(
-                        fontSize: 17.5,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -63,26 +72,26 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.history_toggle_off_rounded,
                   color: Colors.black,
                 ),
-                title: Text('이용기록'),
+                title: const Text('이용기록'),
                 onTap: () {
                   // 이용기록 페이지로 이동
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => recordList()));
+                  Navigator.of(Nav.globalContext).push(MaterialPageRoute(
+                      builder: (context) => const RecordList()));
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.lock,
                   color: Colors.blue,
                 ),
-                title: Text('비밀번호 변경'),
+                title: const Text('비밀번호 변경'),
                 onTap: () {
                   // 비밀번호 변경 페이지로 이동
-                  Navigator.of(context).push(
+                  Navigator.of(Nav.globalContext).push(
                     MaterialPageRoute(
                       builder: (context) =>
                           ChangePasswordPage(), // ChangePasswordPage로 이동
@@ -92,11 +101,11 @@ class _MyPageState extends State<MyPage> {
               ),
 
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.logout,
                   color: Colors.red,
                 ),
-                title: Text('로그아웃'),
+                title: const Text('로그아웃'),
                 onTap: () {
                   // 로그아웃 다이얼로그를 표시
                   showDialog(
@@ -109,56 +118,95 @@ class _MyPageState extends State<MyPage> {
               ),
 
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.delete,
                   color: Colors.black,
                 ),
-                title: Text('회원탈퇴'),
+                title: const Text('회원탈퇴'),
                 onTap: () {
                   // 회원탈퇴 페이지로 이동하
-                  Navigator.of(context).push(
+                  Navigator.of(Nav.globalContext).push(
                       MaterialPageRoute(builder: (context) => SecessionPage()));
                 },
               ),
 
               // 알림 항목
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 6.0),
+                margin: const EdgeInsets.symmetric(horizontal: 6.0),
                 color: Colors.grey[100],
                 padding: const EdgeInsets.symmetric(
                     horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
                       '알림',
                       style: TextStyle(
-                        fontSize: 17.5,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                   ],
                 ),
               ),
-              ListTile(
-                leading: Icon(
-                  Icons.alarm_rounded,
-                  color: Colors.blueGrey,
-                ),
-                title: Text('알림 설정'),
-                trailing: Switch(
-                  value: isEventAdsAllowed,
-                  onChanged: (value) {
-                    setState(() {
-                      isEventAdsAllowed = value;
-                    });
-                  },
-                ),
+
+              Obx(
+                    () => Switchmenu('채팅 알림', Prefs.isPushOnRx.get(),
+                    onChanged: (isOn) async {
+                      Prefs.isPushOnRx.set(isOn);
+                      ApiUser apiUser = ApiUser();
+                      List<String> topicList =
+                      await apiUser.getAllCarIdsForUser(uid);
+                      if (isOn) {
+                        print('채팅 알림 on');
+
+                        /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독
+                        for (String carId in topicList) {
+                          await FirebaseMessaging.instance.subscribeToTopic(carId);
+                          print('채팅 구독 완료: $carId');
+                        }
+                      } else {
+                        /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독 해제
+                        print('채팅 알림 off');
+                        for (String carId in topicList) {
+                          await FirebaseMessaging.instance
+                              .unsubscribeFromTopic(carId);
+                          print('채팅 구독 취소: $carId');
+                        }
+                      }
+                    }),
+              ),
+              Obx(
+                    () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
+                    onChanged: (isOn) async {
+                      Prefs.isAdPushOnRx.set(isOn);
+                      if (isOn) {
+                        print('광고 및 마케팅 알림 on');
+                        await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
+                      } else {
+                        print('광고 및 마케팅 알림 off');
+                        await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
+                      }
+                    }),
+              ),
+
+              Obx(
+                    () => Switchmenu('학교 공지사항', Prefs.isSchoolPushOnRx.get(),
+                    onChanged: (isOn) async {
+                      Prefs.isSchoolPushOnRx.set(isOn);
+                      if (isOn) {
+                        print('학교 공지사항 알림 on');
+                        await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
+                      } else {
+                        print('학교 공지사항 알림 off');
+                        await FirebaseMessaging.instance.unsubscribeFromTopic("SchoolNotification");
+                      }
+                    }),
               ),
 
               // 기타 항목
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 6.0),
+                margin: const EdgeInsets.symmetric(horizontal: 6.0),
                 color: Colors.grey[100],
                 padding: const EdgeInsets.symmetric(
                     horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
@@ -168,7 +216,7 @@ class _MyPageState extends State<MyPage> {
                     Text(
                       '기타',
                       style: TextStyle(
-                        fontSize: 17.5,
+                        fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -176,11 +224,8 @@ class _MyPageState extends State<MyPage> {
                 ),
               ),
 
-
-
-
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.cached_outlined,
                   color: Colors.grey,
                 ),
@@ -189,13 +234,12 @@ class _MyPageState extends State<MyPage> {
                   final manager = DefaultCacheManager();
                   await manager.emptyCache();
                   if (mounted) {
-
                     MessageDialog('clear_cache_done'.tr()).show();
                   }
                 },
               ),
               ListTile(
-                leading: Icon(
+                leading: const Icon(
                   Icons.code_rounded,
                   color: Colors.grey,
                 ),

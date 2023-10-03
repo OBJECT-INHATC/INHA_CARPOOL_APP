@@ -5,9 +5,9 @@ import '../../service/api/ApiService.dart';
 import 'd_complain_complete.dart';
 
 class ComplainAlert extends StatefulWidget {
-  const ComplainAlert({super.key, required this.userName, required this.myId, required this.carpoolId});
+  const ComplainAlert({super.key, required this.reportedUserNickName, required this.myId, required this.carpoolId});
 
-  final String userName; // 이름 따라보내기
+  final String reportedUserNickName; // 이름 따라보내기
   final String myId;
   final String carpoolId; // 카풀 ID 따라보내기
 
@@ -64,7 +64,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                         color: Colors.grey,
                       ),
                       Text(
-                        widget.userName.replaceFirst(' ', '').toString(),
+                        widget.reportedUserNickName.replaceFirst(' ', '').toString(),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -118,12 +118,12 @@ class _ComplainAlertState extends State<ComplainAlert> {
                   final reportRequstDTO = ReportRequstDTO(
                     content: _controller.text,
                     carpoolId: widget.carpoolId,
-                    userName: widget.userName,
+                    reportedUser: widget.reportedUserNickName,
                     reporter: widget.myId,
                     reportType: getCheckedItems().toString(),
                     reportDate: DateTime.now().toString(),
                   );
-
+                  
                   // API 호출
                   final response = await apiService.saveReport(reportRequstDTO);
                   print(response.statusCode);

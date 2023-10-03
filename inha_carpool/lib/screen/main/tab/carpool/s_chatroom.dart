@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
-import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/service/api/ApiService.dart';
+import 'package:inha_Carpool/service/api/Api_Topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
-import 'package:inha_Carpool/screen/dialog/d_complain.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../common/data/preference/prefs.dart';
 import '../../../dialog/d_complainAlert.dart';
 
 /// 0828 서은율, 한승완
@@ -229,6 +229,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
+                          surfaceTintColor: Colors.transparent,
                           title: const Text('카풀 나가기'),
                           content: const Text('정말로 카풀을 나가시겠습니까?'),
                           actions: [
@@ -240,6 +241,15 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             ),
                             TextButton(
                               onPressed: () async {
+                                /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
+                                if (Prefs.isPushOnRx.get() == true) {
+                                  await FirebaseMessaging.instance
+                                      .unsubscribeFromTopic(widget.carId);
+                                }
+                                ApiTopic apiTopic = ApiTopic();
+                               await apiTopic.deleteTopic(widget.uid, widget.carId);
+                               ///--------------------------------------------------------------------
+
                                 // 데이터베이스 작업을 비동기로 수행
                                 await FireStoreService().exitCarpool(
                                     widget.carId,
@@ -364,7 +374,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         return TextButton(
                           onPressed: () {
                             _showProfileModal(
-                                context, '$memberName 님', memberGender);
+                                context, memberName, memberGender);
                           },
                           style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -387,7 +397,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               Text(
                                 '$memberName 님',
                                 style: const TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   color: Colors.black,
                                 ),
                               ),
@@ -421,7 +431,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               "${startTime.month}월 ${startTime.day}일 ${startTime
                                   .hour}시 ${startTime.minute}분",
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -445,7 +455,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             Text(
                               startPoint,
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -482,7 +492,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             Text(
                               endPoint,
                               style: const TextStyle(
-                                fontSize: 14,
+                                fontSize: 13,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -536,7 +546,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 decoration: const InputDecoration(
                                   hintText: "메시지 보내기...",
                                   hintStyle: TextStyle(
-                                      color: Colors.white, fontSize: 15),
+                                      color: Colors.white, fontSize: 13),
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -728,14 +738,14 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
               padding: const EdgeInsets.all(10.0),
               margin: const EdgeInsets.all(10.0),
               alignment: Alignment.center,
-              child: Text('프로필 조회',
+              child: const Text('프로필 조회',
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            Divider(
+            const Divider(
               height: 1,
               color: Colors.grey,
             ),
@@ -745,30 +755,30 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                   padding: const EdgeInsets.all(8.0),
                   margin: const EdgeInsets.fromLTRB(20, 5, 0, 0),
                   alignment: Alignment.centerLeft,
-                  child: Icon(
+                  child: const Icon(
                     Icons.person_search, size: 120,),
                 ),
                 const SizedBox(width: 10,),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('$userName', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
-                    Text('$memberGender',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.grey),),
+                    Text(userName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                    Text(memberGender,style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey),),
                     ElevatedButton(
                         onPressed: () {
                           Navigator.pop(context);
                           showDialog(
                             context: context,
-                            builder: (context) => ComplainAlert(userName: userName, myId: widget.userName, carpoolId: widget.carId),
+                            builder: (context) => ComplainAlert(reportedUserNickName: userName, myId: widget.userName, carpoolId: widget.carId),
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                            primary: Color.fromARGB(255, 254, 112, 2),
+                            backgroundColor: const Color.fromARGB(255, 254, 112, 2),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0)
                           ),
                         ),
-                        child: Row(
+                        child: const Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.warning_rounded,color: Colors.white),

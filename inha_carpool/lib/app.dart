@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
@@ -36,7 +37,10 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
       RemoteNotification? notification = message.notification;
       var nowTime = DateTime.now().millisecondsSinceEpoch; // 알림 도착 시각
 
-      if(notification != null){
+      const secureStorage = FlutterSecureStorage();
+      String? nickName = await secureStorage.read(key: 'nickName');
+
+      if(notification != null && message.data['sender'] != nickName){
         final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
         await flutterLocalNotificationsPlugin.show(
           notification.hashCode,
@@ -80,7 +84,14 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     return CustomThemeApp(
       child: Builder(builder: (context) {
         return MaterialApp(
-
+          /// 0916 한승완 - 텍스트의 전체적인 크기를 고정
+          builder: (context, child) {
+            final MediaQueryData data = MediaQuery.of(context);
+            return MediaQuery(
+              data: data.copyWith(textScaleFactor: 1.0),
+              child: child!,
+            );
+          },
           //네비게이터 관리
           navigatorKey: App.navigatorKey,
           //언어 영역

@@ -21,6 +21,7 @@ class _DeleteAuthDialogState extends State<DeleteAuthDialog> {
     var width = MediaQuery.of(context).size.width; //화면의 가로길이
 
     return AlertDialog(
+      surfaceTintColor: Colors.white,
       //경고창
       insetPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
       //경고창의 내부여백

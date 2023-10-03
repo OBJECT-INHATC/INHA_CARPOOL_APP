@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -24,10 +25,10 @@ class _RecruitPageState extends State<RecruitPage> {
   var _selectedTime =
       DateTime.now().add(const Duration(minutes: 15)); // 시간 값 초기화 (현재시간 + 15분)
   //인하대 후문 cu
-  LatLng endPoint = LatLng(37.4514982, 126.6570261);
+  LatLng endPoint = const LatLng(37.4514982, 126.6570261);
 
   // 주안역 (초기 출발 위치)
-  LatLng startPoint = LatLng(37.4650414, 126.6807024);
+  LatLng startPoint = const LatLng(37.4650414, 126.6807024);
   String startPointName = "주안역 택시 승강장";
   String endPointName = "인하대 후문 CU";
 
@@ -36,7 +37,7 @@ class _RecruitPageState extends State<RecruitPage> {
   late final TextEditingController _endPointDetailController =
       TextEditingController();
 
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
   late String gender = "";
@@ -115,8 +116,8 @@ class _RecruitPageState extends State<RecruitPage> {
                     startPoint = LatLng(
                         Location_handler.parseDoubleBeforeUnderscore(value),
                         Location_handler.getDoubleAfterSecondUnderscore(value));
-                    print("출발지 주소 : ${startPointName}");
-                    print("출발지 위도경도 : ${startPoint}");
+                    print("출발지 주소 : $startPointName");
+                    print("출발지 위도경도 : $startPoint");
                   });
                 },
                 detailPoint: '요약 주소 (ex 주안역)',
@@ -133,8 +134,8 @@ class _RecruitPageState extends State<RecruitPage> {
                     endPoint = LatLng(
                         Location_handler.parseDoubleBeforeUnderscore(value),
                         Location_handler.getDoubleAfterSecondUnderscore(value));
-                    print("도착지 주소 : ${endPointName}");
-                    print("도착지 위도경도 : ${endPoint}");
+                    print("도착지 주소 : $endPointName");
+                    print("도착지 위도경도 : $endPoint");
                   });
                 },
                 detailPoint: '요약 주소 (ex 인하대 후문)',
@@ -169,58 +170,53 @@ class _RecruitPageState extends State<RecruitPage> {
 
                   Column(
                     children: [
-                      Container(
-                        child: Column(// 제한인원 영역
-                            children: [
-                          Container(
-                            width: double.infinity,
-                            margin: EdgeInsets.all(15),
-                            padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-                            child: '인원'
-                                .text
-                                .size(16)
-                                .bold
-                                .align(TextAlign.left)
-                                .make(),
-                          ),
-                          LimitSelectorWidget(
-                            options: ['2인', '3인'],
-                            selectedValue: selectedLimit,
-                            onOptionSelected: (value) {
-                              FocusScopeNode currentFocus = FocusScope.of(context);
-                              if (!currentFocus.hasPrimaryFocus) {
-                                currentFocus.unfocus();
-                              }
+                      Column(// 제한인원 영역
+                          children: [
+                        Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                          child: '인원'
+                              .text
+                              .size(16)
+                              .bold
+                              .align(TextAlign.left)
+                              .make(),
+                        ),
+                        LimitSelectorWidget(
+                          options: const ['2인', '3인'],
+                          selectedValue: selectedLimit,
+                          onOptionSelected: (value) {
+                            FocusScopeNode currentFocus = FocusScope.of(context);
+                            if (!currentFocus.hasPrimaryFocus) {
+                              currentFocus.unfocus();
+                            }
 
-                              setState(() {
-                                selectedLimit = value;
-                                print("선택된 인원: $selectedLimit");
-                              });
-                            },
-                          ),
-                        ]),
-                      ),
-                      Container(
-                        child: Column(// 성별 영역
-                            children: [
-                          // 성별 선택 버튼
-                          GenderSelectorWidget(
-                            selectedGender: selectedGender,
-                            gender: gender,
-                            onGenderSelected: (value) {
-                              FocusScopeNode currentFocus = FocusScope.of(context);
-                              if (!currentFocus.hasPrimaryFocus) {
-                                currentFocus.unfocus();
-                              }
-                              setState(() {
-                                selectedGender = value;
-                                print("선택된 성별: $selectedGender");
-                              });
-                            },
-                          ),
-                        ]),
-
-                      ),
+                            setState(() {
+                              selectedLimit = value;
+                              print("선택된 인원: $selectedLimit");
+                            });
+                          },
+                        ),
+                      ]),
+                      Column(// 성별 영역
+                          children: [
+                        // 성별 선택 버튼
+                        GenderSelectorWidget(
+                          selectedGender: selectedGender,
+                          gender: gender,
+                          onGenderSelected: (value) {
+                            FocusScopeNode currentFocus = FocusScope.of(context);
+                            if (!currentFocus.hasPrimaryFocus) {
+                              currentFocus.unfocus();
+                            }
+                            setState(() {
+                              selectedGender = value;
+                              print("선택된 성별: $selectedGender");
+                            });
+                          },
+                        ),
+                      ]),
                     ],
                   ),
 
@@ -286,7 +282,6 @@ class _RecruitPageState extends State<RecruitPage> {
                             isButtonDisabled = false;
                             return;
                           }
-
                           /// 조건 충족 시 파이어베이스에 카풀 정보 저장
                           await FirebaseCarpool.addDataToFirestore(
                             selectedDate: _selectedDate,
@@ -306,10 +301,11 @@ class _RecruitPageState extends State<RecruitPage> {
                           );
 
                           ///TODO 채팅창으로 넘기기
+                          if(!mounted) return;
                           Nav.pop(context);
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => MainScreen()),
+                            MaterialPageRoute(builder: (context) => const MainScreen()),
                           );
                           setState(() {
                             isButtonDisabled = false;
