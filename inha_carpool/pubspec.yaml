@@ -24,6 +24,8 @@ flutter_native_splash:
   color: "#FFFFFF" # white color
   image: assets/splash.png
 
+
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -147,6 +149,7 @@ flutter:
     - assets/
     - assets/image/splash/
     - assets/config/.env
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
