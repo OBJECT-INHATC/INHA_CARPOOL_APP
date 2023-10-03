@@ -193,7 +193,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                 //방장 정보 가져오기
                                 Row(
                                   children: [
-                                    const Icon(Icons.person,
+                                    const Icon(Icons.person ,
                                         color: Colors.grey, size: 20),
                                     SizedBox(
                                       width: context.width(0.01),

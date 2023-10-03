@@ -7,13 +7,15 @@ import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
+import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/f_mypage.dart';
 import 'package:inha_Carpool/service/api/ApiService.dart';
 import 'package:inha_Carpool/service/api/Api_Topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
+
 import '../../../../common/data/preference/prefs.dart';
-import '../../../dialog/d_complainAlert.dart';
 
 /// 0828 서은율, 한승완
 /// 채팅방 페이지 - 채팅방 정보 표시, 채팅 메시지 스트림, 메시지 입력, 메시지 전송
@@ -60,10 +62,16 @@ class _ChatroomPageState extends State<ChatroomPage> {
   /// 로컬 저장소 SS
   final storage = const FlutterSecureStorage();
 
+  //0927강지윤
+  User? user = FirebaseAuth.instance.currentUser;
+
   /// 관리자 이름, 토큰, 사용자 Auth 정보
   String admin = "";
   String token = "";
-  User? user;
+  // User? user;
+
+  //0927강지윤
+  String? get uid => user?.uid; //uid가져오기
 
   int previousItemCount = 0;
   bool canSend = true;
@@ -162,13 +170,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
     return gender;
   }
 
-  // String getGender(String adminField) {
-  //   return adminField.substring(adminField.lastIndexOf("_")+1);
-  // }
-  // String getGender(String adminField) {
-  //   List<String> parts = adminField.split('_');
-  //   return parts.length > 2 ? parts[2] : 'Unknown';
-  // }
+  // 1002,memberId
+  String getMemberId(String res) {
+    int start = 0;
+    int end = res.indexOf("_");
+    return res.substring(start, end);
+  }
 
 
   /// 토큰, 사용자 Auth 정보 호출 메서드
@@ -195,6 +202,10 @@ class _ChatroomPageState extends State<ChatroomPage> {
   Widget build(BuildContext context) {
     bool isExitButtonDisabled = false; // 나가기 버튼 기본적으로 활성화
 
+    //인원수 맞춰 크기 조절, 10/01 강지윤 추가
+    double containerHeight =
+    membersList.length > 2 ? context.height(0.18) / 4 : context.height(0.12) / 4;
+
 
     return GestureDetector(
       onTap: () {
@@ -207,7 +218,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
           toolbarHeight: 45,
           shape: Border(
             bottom: BorderSide(
-              color: Colors.grey.shade200,
+              color: //Colors.grey.shade200,
+              Colors.white,
               width: 1,
             ),
           ),
@@ -346,12 +358,15 @@ class _ChatroomPageState extends State<ChatroomPage> {
         body: Column(
           children: [
             Container(
-              height: context.height(0.15),
+              //height: context.height(0.15),
+              height: membersList.length > 2 ? context.height(0.20) : context.height(0.15), //높이 조절
+              margin: EdgeInsets.fromLTRB(5, 0, 8, 0),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
                   bottom: BorderSide(
-                    color: Colors.grey,
+                    color: Color.fromARGB(255, 224, 224, 224),
+                    //Colors.white,
                     width: 1.0,
                   ),
                 ),
@@ -370,17 +385,20 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
                         String memberGender =
                         getGender(membersList[index]); //회원 성별 가져오는 부분
+                        String memberId =
+                        getMemberId(membersList[index]); //회원 memberId가져오는 부분
+
 
                         return TextButton(
                           onPressed: () {
-                            _showProfileModal(
-                                context, memberName, memberGender);
+                             _showProfileModal(
+                                context, memberId ,'$memberName 님', memberGender);
                           },
                           style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
+                                borderRadius: BorderRadius.circular(15)),
                             backgroundColor: admin == memberName
-                                ? Colors.blue
+                                ? Color.fromARGB(255, 70, 100, 192)//Color.fromARGB(255, 2, 41, 104) //Colors.blue
                                 : Colors.grey.shade300,
                             // 방장인 경우 파란색, 아닌 경우 회색
                             padding: const EdgeInsets.all(10.0),
@@ -396,9 +414,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               const SizedBox(width: 5),
                               Text(
                                 '$memberName 님',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 11,
-                                  color: Colors.black,
+                                  color: admin == memberName ? Colors.white : Colors.black,
                                 ),
                               ),
                             ],
@@ -408,30 +426,32 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     ),
                   ),
                   // 우측
+                  SizedBox(width: 5),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       const SizedBox(height: 5),
                       Container(
-                        decoration: BoxDecoration(
-                          color: Colors.grey[300], // 회색 배경색
-                          borderRadius: BorderRadius.circular(20), // 동그란 모양 설정
-                        ),
+                        height: containerHeight,
+                        // decoration: BoxDecoration(
+                        //   color: Colors.grey[300], // 회색 배경색
+                        //   borderRadius: BorderRadius.circular(10), // 동그란 모양 설정
+                        // ),
                         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const Icon(
-                              Icons.access_time,
+                              Icons.access_time_sharp,
                               size: 20,
-                              color: Colors.blue,
+                              color: Color.fromARGB(255, 70, 100, 192),
                             ),
                             const SizedBox(width: 5),
                             Text(
                               "${startTime.month}월 ${startTime.day}일 ${startTime
                                   .hour}시 ${startTime.minute}분",
                               style: const TextStyle(
-                                fontSize: 13,
+                                fontSize: 15,
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -441,15 +461,16 @@ class _ChatroomPageState extends State<ChatroomPage> {
                       ),
                       SizedBox(height: context.height(0.01)),
                       Container(
+                        height: containerHeight,
                         padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                        width: context.width(0.5),
+                        width: context.width(0.45),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const Icon(
                               Icons.location_on,
                               size: 20,
-                              color: Colors.blue,
+                              color: Color.fromARGB(255, 253, 205, 3),
                             ),
                             const SizedBox(width: 5),
                             Text(
@@ -464,29 +485,31 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         ),
                       ),
                       Container(
+                        height: containerHeight,
                         padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
                         width: context.width(0.45),
                         child: const Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.arrow_downward_outlined,
-                              size: 20,
-                              color: Colors.black,
-                            ),
+                                Icon(
+                                  Icons.arrow_drop_down_sharp,
+                                  size: 20,
+                                  color: Colors.black,
+                                ),
                           ],
                         ),
                       ),
                       Container(
+                        height: containerHeight,
                         padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
                         width: context.width(0.45),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const Icon(
                               Icons.location_on,
                               size: 20,
-                              color: Colors.blue,
+                              color: Color.fromARGB(255, 253, 205, 3),
                             ),
                             const SizedBox(width: 5),
                             Text(
@@ -501,7 +524,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
@@ -524,7 +547,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                           .of(context)
                           .size
                           .width,
-                      color: Colors.grey[200],
+                      color: //Colors.grey[200],
+                      Colors.white,
                       child: Row(
                         children: [
                           Expanded(
@@ -561,7 +585,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               height: 45,
                               width: 45,
                               decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: Color.fromARGB(255, 70, 100, 192),
                                 borderRadius: BorderRadius.circular(30),
                               ),
                               child: const Center(
@@ -714,7 +738,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
     }
   }
 
-void _showProfileModal(BuildContext context, String userName, String memberGender) {
+void _showProfileModal(BuildContext context, String memberId ,String userName, String memberGender) {
   showModalBottomSheet(
     context: context,
     builder: (BuildContext context) {
@@ -727,8 +751,8 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(15), 
-            topRight: Radius.circular(15), 
+            topLeft: Radius.circular(15),
+            topRight: Radius.circular(15),
           ),
         ),
         child: Column(
@@ -765,28 +789,44 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
                     Text(userName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
                     Text(memberGender,style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey),),
                     ElevatedButton(
-                        onPressed: () {
+                      onPressed: () {
+                        viewProfile(context, uid, memberId);
+                        if(uid != memberId) {
+                          // UID와 MemberId가 다르면 ComplainAlert 다이얼로그 표시
                           Navigator.pop(context);
                           showDialog(
                             context: context,
-                            builder: (context) => ComplainAlert(reportedUserNickName: userName, myId: widget.userName, carpoolId: widget.carId),
+                            builder: (context) => ComplainAlert(
+                                reportedUserNickName: userName,
+                                myId: widget.userName,
+                                carpoolId: widget.carId
+                            ),
                           );
-                        },
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color.fromARGB(255, 254, 112, 2),
-                          shape: RoundedRectangleBorder(
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:  Color.fromARGB(255, 255, 167, 2),
+                        shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5.0)
-                          ),
                         ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.warning_rounded,color: Colors.white),
-                            SizedBox(width: 8,),
-                            Text("신고하기",style: TextStyle(color: Colors.white),)
-                          ],
-                        )
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          //Icon(Icons.warning_rounded, color: (uid == memberId) ? Colors.grey : Colors.white),
+                          Icon(
+                              (uid == memberId) ? Icons.double_arrow_rounded : Icons.warning_rounded,
+                              color: (uid == memberId) ? Colors.white : Colors.white
+                          ),
+                          SizedBox(width: 8,),
+                          Text(
+                            (uid == memberId) ? "프로필로 이동" : "신고하기",
+                            style: TextStyle(color: (uid == memberId) ? Colors.white : Colors.white, fontWeight: FontWeight.bold),
+                          )
+                        ],
+                      ),
                     ),
+
                   ],
                 ),
               ],
@@ -797,5 +837,18 @@ void _showProfileModal(BuildContext context, String userName, String memberGende
     },
   );
 }
+
+//uid와 memberID비교
+void viewProfile(BuildContext context, String? uid, String memberId){
+    if( uid == memberId){
+      Navigator.push(context,
+      MaterialPageRoute(builder: (context) => MyPage()));
+    }else{
+
+    }
+}
+
   
 }
+
+
