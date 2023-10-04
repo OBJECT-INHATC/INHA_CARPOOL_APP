@@ -1,5 +1,10 @@
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/image/splash/splash_big.png
+  image: assets/image/splash/splash.png
+  branding: assets/image/splash/school_logo.png
+  branding_mode: bottom
+
   android_12:
-    image: assets/image/splash/splash_small.png
+    image: assets/image/splash/splash.png
+    branding: assets/image/splash/school_logo.png
+    branding_mode: bottom
