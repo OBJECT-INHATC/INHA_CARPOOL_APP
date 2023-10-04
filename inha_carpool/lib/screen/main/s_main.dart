@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
@@ -44,6 +45,14 @@ class MainScreenState extends State<MainScreen>
     super.initState();
     // 각 텝의 네비게이터 초기화
     initNavigatorKeys();
+    removeSplash();
+  }
+
+  void removeSplash() async{
+    // 1.5초 후에 스플래시 제거
+    await Future.delayed(const Duration(milliseconds: 1500));
+    print("removeSplash");
+    FlutterNativeSplash.remove();
   }
 
   @override

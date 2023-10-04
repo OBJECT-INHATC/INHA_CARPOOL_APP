@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
@@ -74,6 +75,9 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
       Navigator.push(context, MaterialPageRoute(builder: (context) => const MainScreen()));
       await setupInteractedMessage();
+    }else{
+      print("로그인 안됨 + 스플래시 제거");
+      FlutterNativeSplash.remove();
     }
   }
 

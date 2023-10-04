@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
@@ -78,7 +79,7 @@ void initializeNotification() async {
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: false,
     badge: true,
-    sound: true,
+    sound: false,
   );
 
   // 알림 권한 요청
@@ -97,7 +98,8 @@ void initializeNotification() async {
 
 void main() async {
   //태 변화와 렌더링을 관리하는 바인딩 초기화 => 추 후 백그라운드 및 포어그라운드 상태관리에 따라 기능 리팩토링
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   //다국어 지원을 위해 필요한 초기화 과정
   await EasyLocalization.ensureInitialized();
