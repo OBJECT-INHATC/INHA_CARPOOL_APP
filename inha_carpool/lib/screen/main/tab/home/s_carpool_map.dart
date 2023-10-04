@@ -370,8 +370,15 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
                                   ///  해당 카풀 알림 토픽 추가 0919 이상훈
                                   if (Prefs.isPushOnRx.get() == true) {
+
+                                    /// 채팅 토픽
                                     await FirebaseMessaging.instance
                                         .subscribeToTopic(carId);
+
+                                    /// 카풀 정보 토픽 - 서버 저장 X
+                                    await FirebaseMessaging.instance
+                                        .subscribeToTopic("${carId}_info");
+
                                   }
                                   ApiTopic apiTopic = ApiTopic();
                                   TopicRequstDTO topicRequstDTO =
@@ -379,7 +386,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           uid: memberID, carId: carId);
                                   await apiTopic.saveTopoic(topicRequstDTO);
                                   ///--------------------------------------------
-
 
                                   Navigator.pop(context);
                                   Navigator.pushReplacement(

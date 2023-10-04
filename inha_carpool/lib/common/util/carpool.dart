@@ -119,6 +119,10 @@ class FirebaseCarpool {
       if(Prefs.isPushOnRx.get() == true){
         await FirebaseMessaging.instance.subscribeToTopic(carpoolDocRef.id);
         print("토픽 추가");
+
+        /// 카풀 정보 토픽 추가
+        await FirebaseMessaging.instance.subscribeToTopic("${carpoolDocRef.id}_info");
+
       }
       TopicRequstDTO topicRequstDTO = TopicRequstDTO(uid: memberID, carId: carpoolDocRef.id);
       await apiTopic.saveTopoic(topicRequstDTO);

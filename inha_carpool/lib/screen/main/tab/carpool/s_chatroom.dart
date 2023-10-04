@@ -257,6 +257,10 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 if (Prefs.isPushOnRx.get() == true) {
                                   await FirebaseMessaging.instance
                                       .unsubscribeFromTopic(widget.carId);
+
+                                  await FirebaseMessaging.instance
+                                      .unsubscribeFromTopic("${widget.carId}_info");
+
                                 }
                                 ApiTopic apiTopic = ApiTopic();
                                await apiTopic.deleteTopic(widget.uid, widget.carId);
@@ -303,6 +307,18 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             ),
                             TextButton(
                               onPressed: () async {
+
+                                if (Prefs.isPushOnRx.get() == true) {
+                                  await FirebaseMessaging.instance
+                                      .unsubscribeFromTopic(widget.carId);
+
+                                  await FirebaseMessaging.instance
+                                      .unsubscribeFromTopic("${widget.carId}_info");
+
+                                }
+                                ApiTopic apiTopic = ApiTopic();
+                                await apiTopic.deleteTopic(widget.uid, widget.carId);
+
                                 await FireStoreService().exitCarpoolAsAdmin(
                                     widget.carId,
                                     widget.userName,

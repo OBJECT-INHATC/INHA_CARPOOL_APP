@@ -102,6 +102,7 @@ class FireStoreService {
         sender: chatMessageData['sender'],
         time: chatMessageData['time'],
       ),
+      type: NotificationType.chat,
     );
   }
 
@@ -135,6 +136,12 @@ class FireStoreService {
 
     ChatDao().insert(chatMessage);
     await carpoolCollection.doc(carId).collection("messages").add(chatMessageMap);
+    FcmService().sendMessage(
+        title: "카풀에 새로운 멤버가 참가했습니다.",
+        body: "$userName님과 즐거운 카풀 되세요!",
+        chatMessage: chatMessage,
+        type: NotificationType.status);
+
   }
 
   /// 0905 한승완
@@ -150,8 +157,21 @@ class FireStoreService {
       "time": currentTime,
     };
 
+    final ChatMessage chatMessage = ChatMessage(
+      carId: carId,
+      message: chatMessageMap['message'],
+      sender: chatMessageMap['sender'],
+      time: chatMessageMap['time'],
+    );
+
     // 메시지 전송
     await carpoolCollection.doc(carId).collection("messages").add(chatMessageMap);
+    FcmService().sendMessage(
+        title: "카풀에서 멤버가 퇴장했습니다.",
+        body: "$userName님이 퇴장하였습니다.",
+        chatMessage: chatMessage,
+        type: NotificationType.status);
+
     //5초 후
     await Future.delayed(const Duration(seconds: 5));
     // 로컬 DB 삭제

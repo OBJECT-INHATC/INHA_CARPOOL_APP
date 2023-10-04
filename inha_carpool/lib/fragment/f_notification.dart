@@ -92,16 +92,11 @@ class _NotificationListState extends State<NotificationList> {
                 return GestureDetector(
                   onTap: () {
                     // 알림 타입이 1이면 해당 채팅방 이동
-                    if (notificationList![i].type == "1") {
-
-                      // 해당 알림 삭제
+                    if (notificationList![i].type == "chat" || notificationList[i].type == "status") {
                       AlarmDao().deleteById(
-                        notificationList[i].title! + notificationList[i].body! + notificationList[i].time.toString(),
-                      );
-
+                        notificationList[i].title! + notificationList[i].body! + notificationList[i].time.toString(),);
                       // 알림 리스트 스택 제거
                       Navigator.pop(context);
-
                       // 특정 채팅방 이동
                       Navigator.push(
                         context,
@@ -133,9 +128,9 @@ class _NotificationListState extends State<NotificationList> {
                             ),
                             tileColor: Colors.white,
                             // 알림 타입이 1이면 채팅 아이콘, 나머지 차량 아이콘
-                            leading: notificationList![i].type == "1"
+                            leading: notificationList![i].type == "chat"
                                 ? const Icon(Icons.chat, color: Colors.blue)
-                                : const Icon(Icons.car_crash_rounded, color: Colors.blue),
+                                : const Icon(Icons.notifications, color: Colors.blue),
                             title: Column(
                               children: [
                                 Container(

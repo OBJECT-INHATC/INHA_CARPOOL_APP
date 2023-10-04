@@ -4,6 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 
+enum NotificationType { chat, status }
+
 /// 0829 한승완 - FCM 서비스 클래스
 class FcmService {
 
@@ -18,7 +20,11 @@ class FcmService {
     required String title,
     required String body,
     required ChatMessage chatMessage,
+    required NotificationType type,
   }) async {
+
+    String notiStatus = "chat";
+    String notiTopic = "/topics/${chatMessage.carId}";
 
     http.Response response;
 
@@ -44,6 +50,16 @@ class FcmService {
       print('User declined or has not accepted permission');
     }
 
+    /// 어떤 알림 인지 구분
+    if ( type == NotificationType.chat) {
+      notiStatus = "chat";
+      notiTopic = "/topics/${chatMessage.carId}";
+    } else if ( type == NotificationType.status) {
+      notiStatus = "status";
+      /// TODO : 카풀 내용 수신 토픽 이름 바뀌면 수정 해야함
+      notiTopic = "/topics/${chatMessage.carId}_info";
+    }
+
     try {
       /// FCM 서버에 알림 전송
       response = await http.post(
@@ -58,16 +74,15 @@ class FcmService {
             "content_available": true,
             'data': {
               'click_action': 'FLUTTER_NOTIFICATION_CLICK',
-              'id': '1',
+              'id': notiStatus,
               'status': 'done',
               "action": '테스트',
               'groupId': chatMessage.carId,
-              'message': chatMessage.message,
               'sender': chatMessage.sender,
               'time': chatMessage.time.toString() ,
             },
             // 상대방 토큰 값, to -> 단일, registration_ids -> 여러명
-            'to': "/topics/${chatMessage.carId}",
+            'to': notiTopic,
            // 'registration_ids': tokenList
           }));
     } catch (e) {
