@@ -61,6 +61,7 @@ class MainScreenState extends State<MainScreen>
       onWillPop: _handleBackPressed,
       child: Scaffold(
         appBar: AppBar(
+
           toolbarHeight: 45,
           // 해당 선을 내릴때만 나오게 해줘
           elevation: 0,
@@ -72,8 +73,39 @@ class MainScreenState extends State<MainScreen>
           ),
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
-          title: 'titleSTR'.tr().text.white.make(),
-          leading: const SizedBox(),
+          // title:GestureDetector(
+          //   onTap: () {
+          //     // TODO: 이미지가 클릭되었을 때 수행할 동작
+          //     // 여기에 클릭 시 수행할 작업을 추가하세요.
+          //   },
+          //   Padding(
+          //             padding: const EdgeInsets.all(5.0),
+          //             child: Image.asset(
+          //               'assets/image/splash/banner.png',
+          //               width: 400,  // 원하는 이미지 너비로 설정
+          //               height: 60,   // 원하는 이미지 높이로 설정
+          //               fit: BoxFit.contain,  // 이미지를 너비와 높이에 맞게 유지
+          //             ),
+          //           ),
+          // ),
+
+          leading:
+          GestureDetector(
+              onTap: () {
+                
+              },
+            child:
+              Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Image.asset(
+                          'assets/image/splash/banner.png',
+                          width: 400,  // 원하는 이미지 너비로 설정
+                          height: 60,   // 원하는 이미지 높이로 설정
+                          fit: BoxFit.contain,  // 이미지를 너비와 높이에 맞게 유지
+                        ),
+                      ),
+            ),
+          leadingWidth: 170,
           actions: [
             FutureBuilder<bool>(
               future: AlarmDao().checkAlarms(),
