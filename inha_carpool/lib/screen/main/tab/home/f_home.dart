@@ -223,7 +223,7 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                   Text(
-                                    '${carpoolData['startPointName']} - ${carpoolData['endPointName']}',
+                                    '${carpoolData['startDetailPoint']} - ${carpoolData['endDetailPoint']}',
                                     style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w700,

@@ -61,6 +61,7 @@ class MainScreenState extends State<MainScreen>
       onWillPop: _handleBackPressed,
       child: Scaffold(
         appBar: AppBar(
+
           toolbarHeight: 45,
           // 해당 선을 내릴때만 나오게 해줘
           elevation: 0,
@@ -72,7 +73,20 @@ class MainScreenState extends State<MainScreen>
           ),
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
-          title: 'titleSTR'.tr().text.white.make(),
+          title: GestureDetector(
+            onTap: () {
+              // TODO: 이미지가 클릭되었을 때 수행할 동작
+              // 여기에 클릭 시 수행할 작업을 추가하세요.
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Image.asset(
+                'assets/image/splash/banner.png',
+                width: 200,
+                height: 40,
+              ),
+            ),
+          ),
           leading: const SizedBox(),
           actions: [
             FutureBuilder<bool>(
