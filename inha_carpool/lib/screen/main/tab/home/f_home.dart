@@ -36,7 +36,9 @@ class _HomeState extends State<Home> {
   _HomeState() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       //현재시간을 Duration으로 변환해서 add
-      _timeStreamController.sink.add(DateTime.now());
+      if (!_timeStreamController.isClosed) {
+        _timeStreamController.sink.add(DateTime.now());
+      }
     });
   }
 
