@@ -119,7 +119,11 @@ class _CarpoolListState extends State<CarpoolList> {
                     FloatingActionButton(
                       heroTag: "recruit_from_myCarpool",
                       elevation: 10,
-                      backgroundColor: context.appColors.appBar,
+                      backgroundColor: Colors.white,
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(40),
+                        //side: const BorderSide(color: Colors.white, width: 1),
+                      ),
                       onPressed: () {
                         Navigator.push(
                           Nav.globalContext,
@@ -127,7 +131,7 @@ class _CarpoolListState extends State<CarpoolList> {
                               builder: (context) => const RecruitPage()),
                         );
                       },
-                      child: '+'.text.size(50).color(Colors.white).make(),
+                      child: '+'.text.size(50).color(Color.fromARGB(255, 70, 100, 192),).make(),
                     ),
                   ],
                 ),
@@ -139,30 +143,21 @@ class _CarpoolListState extends State<CarpoolList> {
             return SafeArea(
               child: Scaffold(
                 floatingActionButton: FloatingActionButton(
-                  heroTag: "recruit_from_home",
-                  elevation: 5,
-                  // mini: false,
-                  //backgroundColor: //Colors.black54,
-                  //Color.fromARGB(255, 70, 100, 192),
+                  heroTag: "recruit_from_myCarpool",
+                  elevation: 10,
                   backgroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
+                  shape: ContinuousRectangleBorder(
                     borderRadius: BorderRadius.circular(40),
-                    side: const BorderSide(color: Colors.white, width: 1),
+                    //side: const BorderSide(color: Colors.white, width: 1),
                   ),
                   onPressed: () {
                     Navigator.push(
                       Nav.globalContext,
                       MaterialPageRoute(
-                        builder: (context) => const RecruitPage(),
-                      ),
+                          builder: (context) => const RecruitPage()),
                     );
                   },
-                  child: const Icon(
-                    Icons.add_outlined,
-                    color: //Colors.white,
-                    Color.fromARGB(255, 70, 100, 192),
-                    size: 50,
-                  ),
+                  child: '+'.text.size(50).color(Color.fromARGB(255, 70, 100, 192),).make(),
                 ),
                 body: Align(
                   alignment: Alignment.center,

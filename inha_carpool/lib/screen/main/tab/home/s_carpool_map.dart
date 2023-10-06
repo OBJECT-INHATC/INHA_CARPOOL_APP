@@ -187,10 +187,11 @@ class _CarpoolMapState extends State<CarpoolMap> {
               bottom: context.height(0),
               // 가운데 위치
               child: Container(
-                height: context.height(0.25),
+                height: context.height(0.26),
                 width: context.width(1),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  //color: Colors.grey.shade100,
+                  color: Colors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.blue.withOpacity(0.3),
@@ -200,7 +201,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                     ),
                   ],
                   border: Border.all(
-                    color: Colors.blue,
+                    color: Colors.white,
                     width: 1,
                   ),
                 ),
