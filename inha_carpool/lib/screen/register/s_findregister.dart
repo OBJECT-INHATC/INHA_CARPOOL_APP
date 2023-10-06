@@ -20,25 +20,30 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Colors.blue, Colors.black];
-  List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
+  List<Color> selectedBackgroundColors = [Color.fromARGB(255, 70, 100, 192)];
+  List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
 
+// 토글 배경색 업데이트 메서드
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [Colors.blue, Colors.white]
-        : [Colors.white, Colors.black];
+        ? [Color.fromARGB(255, 70, 100, 192)]
+        : [Color.fromARGB(255, 70, 100, 192)];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.white, Colors.black]
-        : [Colors.blue, Colors.white];
+        ? [Colors.black54, Colors.black]
+        : [Colors.black54, Colors.black];
   }
 
   var onChanged =false;
 
   @override
   Widget build(BuildContext context) {
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return GestureDetector(
       onTap: () {
         // 텍스트 포커스 해제
@@ -56,13 +61,15 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                 color: Colors.black,
               )),
         ),
-        body: Center(
-          child: Form(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                 Container(
+        body: Align(
+          alignment: Alignment.topCenter,
+          child: SingleChildScrollView(
+            child: Form(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Container(
                     padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
                     child: const Text(
                       '비밀번호를 재설정 하기 위해 \n학번을 입력해주세요!',
@@ -72,127 +79,135 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                Container(
-                  padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
-                  child: const Text(
-                    '학교 이메일로 비밀번호 재설정 코드가 전송됩니다. 확인해주세요!',
-                    style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(40, 20, 40, 0),
+                    child: const Text(
+                      '학교 이메일로 비밀번호 재설정 코드가 전송됩니다.',
+                      style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
 
-                Container(
-                  padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                  child: Stack(
-                    alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
-                    children: [
-                      TextFormField(
-                          decoration: InputDecoration(
-                            enabledBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.black),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                    child: Stack(
+                      alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
+                      children: [
+                        TextFormField(
+                            decoration: InputDecoration(
+                              enabledBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              focusedBorder: const UnderlineInputBorder(
+                                borderSide: BorderSide(color: Colors.blue),
+                              ),
+                              labelText: null,  // labelText를 null로 설정하고 힌트 텍스트 숨김
+                              hintText: '학번',
+                              hintStyle: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.grey,
+                              ),
                             ),
-                            focusedBorder: const UnderlineInputBorder(
-                              borderSide: BorderSide(color: Colors.blue),
-                            ),
-                            labelText: '학번',
-                          ),
-                          onChanged: (text) {
-                            // 텍스트 필드 값 변경 시 실행할 코드 작성
-                            email = text + academy;
-                            if(text!=""){
-                            setState(() {
-                              onChanged = true;
-                            });
-                          }else{
-                              setState(() {
-                                onChanged = false;
-                              });
-                            }},
-                          validator: (val) {
-                            if (val!.isNotEmpty) {
-                              return null;
-                            } else {
-                              return "학번이 비어있습니다.";
-                            }
-                          }),
-                      Positioned(
-                        // 중간 텍스트를 겹쳐서 배치
-                        right: 140,
-                        //bottom
-                        bottom: 15,
-                        child: Text(academy),
-                      ),
-                      Positioned(
-                        // 중간 텍스트를 겹쳐서 배치
-                        right: 0,
-                        child: FlutterToggleTab(
-                          width: 30,
-                          borderRadius: 30,
-                          height: 40,
-                          // initialIndex: 0,
-                          selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700),
-                          unSelectedTextStyle: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500),
-                          labels: const ["인하공전", "인하대"],
-                          selectedLabelIndex: (index) {
-                            setState(() {
-                              if (index == 0) {
-                                academy = "@itc.ac.kr";
+                            onChanged: (text) {
+                              // 텍스트 필드 값 변경 시 실행할 코드 작성
+                              email = text + academy;
+                              if(text!=""){
+                                setState(() {
+                                  onChanged = true;
+                                });
+                              }else{
+                                setState(() {
+                                  onChanged = false;
+                                });
+                              }},
+                            validator: (val) {
+                              if (val!.isNotEmpty) {
+                                return null;
                               } else {
-                                academy = "@inha.ac.kr";
+                                return "학번이 비어있습니다.";
                               }
-                              selectedIndex = index;
-                              updateBackgroundColors();
-                            });
-                          },
-                          selectedBackgroundColors: const [
-                            Colors.blue,
-                            Colors.black
-                          ],
-                          unSelectedBackgroundColors: const [
-                            Colors.white,
-                            Colors.white
-                          ],
-                          isScroll: false,
-                          selectedIndex: selectedIndex,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: context.height(0.09),
-                  padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size.fromHeight(50),
-                        backgroundColor: (onChanged != false)?Colors.blue:Colors.grey[300],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(90.0),
-                        ),
-                      ),
-                      child: const Text('비밀번호 재설정 요청',
-                          style: TextStyle(
-                              fontSize: 20,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        auth.sendPasswordResetEmail(email: email);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('비밀번호 재설정 메일을 보냈습니다.'),
+                            }),
+                        Positioned(
+                          // 중간 텍스트를 겹쳐서 배치
+                          right: 110,
+                          //bottom
+                          bottom: 15,
+                          child: Text(academy,
+                            style: TextStyle(
+                                fontSize: 13
+                            ),
                           ),
-                        );
-                      }),
-                ),
-              ],
+                        ),
+                        Positioned(
+                          // 중간 텍스트를 겹쳐서 배치
+                          right: 0,
+                          child: FlutterToggleTab(
+                            width: 30,
+                            borderRadius: 30,
+                            height: 40,
+                            // initialIndex: 0,
+                            selectedTextStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700),
+                            unSelectedTextStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500),
+                            labels: const ["인하공전", "인하대"],
+                            selectedLabelIndex: (index) {
+                              setState(() {
+                                if (index == 0) {
+                                  academy = "@itc.ac.kr";
+                                } else {
+                                  academy = "@inha.ac.kr";
+                                }
+                                selectedIndex = index;
+                                updateBackgroundColors();
+                              });
+                            },
+                            selectedBackgroundColors: const [Color.fromARGB(255, 70, 100, 192)],
+                            unSelectedBackgroundColors: const [
+                              Colors.black54,
+                              Colors.black
+                            ],
+                            isScroll: false,
+                            selectedIndex: selectedIndex,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: screenHeight * 0.125,
+                    padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(50),
+                          backgroundColor: (onChanged != false)? Color.fromARGB(255, 70, 100, 192) : Colors.grey[400],
+                          shape: ContinuousRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0)
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 12.0), //버튼 위아래 패딩 크기 늘리기
+                        ),
+                        child: const Text('비밀번호 재설정 요청',
+                            style: TextStyle(
+                                fontSize: 18.5,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                        onPressed: () {
+                          auth.sendPasswordResetEmail(email: email);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('비밀번호 재설정 메일을 보냈습니다.'),
+                            ),
+                          );
+                        }),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
