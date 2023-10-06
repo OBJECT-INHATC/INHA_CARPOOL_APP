@@ -81,23 +81,55 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
 
                 ),
+                /*---*/
+                // Container(
+                //   color: Colors.white,
+                //   padding: const EdgeInsets.all(8.0),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //     children: [
+                //       Text(
+                //         selectedLocation,
+                //         style: const TextStyle(color: Colors.black, fontSize: 15),
+                //       ),
+                //       const Icon(
+                //         Icons.arrow_forward_ios,
+                //         color: Colors.black,
+                //         size: 15,)
+                //     ],
+                //   ),
+                // )
                 Container(
                   color: Colors.white,
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        selectedLocation,
-                        style: const TextStyle(color: Colors.black, fontSize: 15),
+                      Expanded(
+                        child: RichText(
+                          //overflow: TextOverflow.ellipsis,
+                          maxLines: 2, // 최대 2줄
+                          text: TextSpan(
+                            style: TextStyle(color: Colors.black, fontSize: 15),
+                            text: selectedLocation,
+                            children: [
+                              TextSpan(
+                                //text: "...", // 초과될 경우 '...' 표시
+                                style: TextStyle(fontSize: 12), // 초과될 경우 글자 크기(작게)
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                       const Icon(
                         Icons.arrow_forward_ios,
                         color: Colors.black,
-                        size: 15,)
+                        size: 15,
+                      ),
                     ],
                   ),
                 )
+
               ],
             ),
           ),
