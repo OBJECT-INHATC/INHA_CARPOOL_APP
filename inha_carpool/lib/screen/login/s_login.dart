@@ -125,6 +125,8 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+
+
   @override
   void initState() {
     // 로그인 여부 확인
@@ -186,43 +188,48 @@ class _LoginPageState extends State<LoginPage> {
                     //   ),
                     // ),
                     SizedBox(height: screenHeight * 0.1),
+                    // 학번 입력 필드
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
                       child: Stack(
                         alignment: Alignment.centerRight,
                         children: [
-                          TextFormField(
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.only(top: 15, left: 10, bottom: 15),//텍스트 필드 위치 수정
-                                    enabledBorder: const UnderlineInputBorder(
-                                      borderSide:
-                                      BorderSide(color: Colors.black),
-                                    ),
-                                    focusedBorder: const UnderlineInputBorder(
-                                      borderSide:
-                                      BorderSide(color: Colors.blue),
-                                    ),
-                                    //labelText: '',
-                                    labelText: null,  // labelText를 null로 설정하고 힌트 텍스트 숨김
-                                    hintText: '학번을 입력해주세요',
-                                    hintStyle: TextStyle(
-                                      fontSize: 12.0,
-                                      color: Colors.grey,
-                                    ),
-                                    prefixIcon: Icon(Icons.email),
-                                  ),
-                                  onChanged: (text) {
-                                    // 학번 부분을 입력한 텍스트에 더해줌
-                                    email = text + academy;
-                                  },
-                                  validator: (val) {
-                                    if (val!.isNotEmpty) {
-                                      return null;
-                                    } else {
-                                      return "학번이 비어있습니다.";
-                                    }
-                                  }),
-                              // 학교 선택 토글 버튼
+                          Container(
+                           // height: inputFieldHeight, // 높이 변수 적용
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey[300]!, // 연한 회색 테두리
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey[200], // 연한 회색 배경색
+                            ),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                labelText: null,
+                                hintText: '학번',
+                                hintStyle: TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.grey,
+                                ),
+                                prefixIcon: Icon(Icons.school, color: Colors.grey),
+                              ),
+                              onChanged: (text) {
+                                email = text + academy;
+                              },
+                              validator: (val) {
+                                if (val!.isNotEmpty) {
+                                  return null;
+                                } else {
+                                  return "학번이 비어있습니다.";
+                                }
+                              },
+                            ),
+                          ),
+
+                          // 학교 선택 토글 버튼
                           Positioned(
                             right: 0,
                             child: FlutterToggleTab(
@@ -257,33 +264,46 @@ class _LoginPageState extends State<LoginPage> {
                               selectedIndex: selectedIndex,
                             ),
                           ),
-
                         ],
-                          ),
-                        ),
+                      ),
+                    ),
+
+                    // 비밀번호 입력 필드
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.01, screenWidth * 0.1, 0),
-                      child: TextFormField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.only(bottom: 15), //텍스트필드 위치 조정
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                              ),
-                              labelText: '',
-                              prefixIcon: Icon(Icons.lock),
-                            ),
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                            onChanged: (text) {
-                              password = text;
-                            },
+                      child: Container(
+                        //height: inputFieldHeight,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey[300]!, // 연한 회색 테두리
                           ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[200], // 연한 회색 배경색
                         ),
+                        child: TextFormField(
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            labelText: null,
+                            hintText: '비밀번호',
+                            hintStyle: TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.grey,
+                            ),
+                            prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                          ),
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                          onChanged: (text) {
+                            password = text;
+                          },
+                        ),
+                      ),
+                    ),
+
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
                       child: ElevatedButton(
@@ -335,7 +355,7 @@ class _LoginPageState extends State<LoginPage> {
                               ///유저 정보저장 ------------ Topic 발급 - logout or 알림 Off 시 해제
                               // Todo: 이미 저장한 uid가 있으면 저장 안하는 로직 추가하기 - 상훈 0919
                               // Todo: 광고성 알림 Topic on/off 기능 추가하기 - 상훈 0919
-                              // Todo: 별거 아닌데 여기 누가 작업한데서 빨리 비켜줘야되서 냅둠
+                              // Todo: 별거 아닌데 여기 누가 작업한대서 빨리 비켜줘야돼서 냅둠
                               // 유저 정보 서저에 저장
                               userSaveAPi(uid, nickname, email);
 
@@ -437,10 +457,15 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    //비번찾기
-                    Container(
-                      child: TextButton(
-                        onPressed: () {
+              // 비밀번호찾기
+              Expanded(
+                child:
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: screenHeight * 0.01),
+                    child: TextButton(
+                      onPressed: () {
                           Navigator.of(context).push(
                             PageRouteBuilder(
                               // secondaryAnimation: 화면 전환시 사용되는 보조 애니메이션 효과
@@ -457,18 +482,17 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           );
                         },
-                        child:Center(
-                          child: Text(
-                            '비밀번호찾기',
-                            style: TextStyle(
-                              fontSize: subTitleFontSize - 1,
-                              color: Colors.blue[700],
-                              decoration: TextDecoration.underline,
-                              decorationColor: Colors.blue[700],
+                      child: Text(
+                        '비밀번호찾기',
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Color(0xFF1976D2),
+                        ),
+                        ),
                             ),
                         ),
                       ),
-                    ),
                     ),
                   ],
                 ),
