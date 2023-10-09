@@ -266,7 +266,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-
                     // 비밀번호 입력 필드
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.01, screenWidth * 0.1, 0),
@@ -300,6 +299,8 @@ class _LoginPageState extends State<LoginPage> {
                             password = text;
                           },
                         ),
+                      ),
+                    ),
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
                       child: ElevatedButton(
@@ -314,7 +315,7 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: () async{
                           
                            if(loginButtonEnabled){ // 로그인 버튼이 활성화 되어 있는지 확인
-                                    loginButtonEnabled = false;
+                             loginButtonEnabled = false;
                           
                           // 로그인 버튼 기능 추가
                           AuthService()
@@ -401,11 +402,11 @@ class _LoginPageState extends State<LoginPage> {
                           });
                              
                              // 로그인 버튼 활성화
-                                  setState(() {
-                                    loginButtonEnabled = true;
-                                  });
+                             setState(() {
+                               loginButtonEnabled = true;
+                             });
 
-                                  }
+                           }
                         },
                         child: const Center(
                           child: Text('로그인',
