@@ -95,20 +95,20 @@ class _LoginPageState extends State<LoginPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Color(0xff6CC0FF), Colors.black];
-  List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
+  List<Color> selectedBackgroundColors = [Color.fromARGB(255, 70, 100, 192)];
+  List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
 
 // 토글 배경색 업데이트 메서드
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [Color(0xff6CC0FF), Colors.black]
-        : [Color(0xff6CC0FF), Colors.black];
+        ? [Color.fromARGB(255, 70, 100, 192)]
+        : [Color.fromARGB(255, 70, 100, 192)];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.white, Colors.white]
-        : [Colors.white, Colors.white];
+        ? [Colors.black54, Colors.black]
+        : [Colors.black54, Colors.black];
   }
 
 
@@ -125,6 +125,8 @@ class _LoginPageState extends State<LoginPage> {
       storage.write(key: 'token', value: value.toString());
     });
   }
+
+
 
   @override
   void initState() {
@@ -163,66 +165,75 @@ class _LoginPageState extends State<LoginPage> {
               child: Form(
                 key: formKey,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.2, 0, 0), // 위쪽 패딩을 늘림
-                      child: Text(
-                        'LOGIN',
-                        style: TextStyle(
-                          fontSize: titleFontSize - 5,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Circular',
-                        ),
+                      padding: EdgeInsets.fromLTRB(0, screenHeight * 0.2, 0, 0), // 위쪽 패딩을 늘림
+                      child: Image.asset(
+                        'assets/image/splash/banner.png',
+                        width: 200,
+                        height: 100,
                       ),
                     ),
 
-                    Container(
-                      padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.01, screenWidth * 0.08, 0),
-                      child: Text(
-                        '로그인이 필요한 서비스입니다.',
-                        style: TextStyle(
-                          fontSize: subTitleFontSize,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.01, screenWidth * 0.1, 0),
+                    //   child: Text(
+                    //     '로그인 후 이용바랍니다.',
+                    //     style: TextStyle(
+                    //       fontSize: subTitleFontSize,
+                    //       color: Colors.grey,
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(height: screenHeight * 0.1),
+                    // 학번 입력 필드
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
                       child: Stack(
                         alignment: Alignment.centerRight,
                         children: [
-                          TextFormField(
-                                  decoration: InputDecoration(
-                                    enabledBorder: const UnderlineInputBorder(
-                                      borderSide:
-                                      BorderSide(color: Colors.black),
-                                    ),
-                                    focusedBorder: const UnderlineInputBorder(
-                                      borderSide:
-                                      BorderSide(color: Colors.blue),
-                                    ),
-                                    labelText: '',
-                                    prefixIcon: Icon(Icons.email),
-                                  ),
-                                  onChanged: (text) {
-                                    // 학번 부분을 입력한 텍스트에 더해줌
-                                    email = text + academy;
-                                  },
-                                  validator: (val) {
-                                    if (val!.isNotEmpty) {
-                                      return null;
-                                    } else {
-                                      return "학번이 비어있습니다.";
-                                    }
-                                  }),
-                              // 학교 선택 토글 버튼
+                          Container(
+                           // height: inputFieldHeight, // 높이 변수 적용
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey[300]!, // 연한 회색 테두리
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey[200], // 연한 회색 배경색
+                            ),
+                            child: TextFormField(
+                              decoration: InputDecoration(
+                                contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                labelText: null,
+                                hintText: '학번',
+                                hintStyle: TextStyle(
+                                  fontSize: 12.0,
+                                  color: Colors.grey,
+                                ),
+                                prefixIcon: Icon(Icons.school, color: Colors.grey),
+                              ),
+                              onChanged: (text) {
+                                email = text + academy;
+                              },
+                              validator: (val) {
+                                if (val!.isNotEmpty) {
+                                  return null;
+                                } else {
+                                  return "학번이 비어있습니다.";
+                                }
+                              },
+                            ),
+                          ),
+
+                          // 학교 선택 토글 버튼
                           Positioned(
                             right: 0,
                             child: FlutterToggleTab(
                               width: 30,
-                              borderRadius: 30,
+                              borderRadius: 40,
                               height: 40,
                               selectedTextStyle: const TextStyle(
                                 color: Colors.white,
@@ -230,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
                                 fontWeight: FontWeight.w700,
                               ),
                               unSelectedTextStyle: const TextStyle(
-                                color: Colors.black87,
+                                color: Colors.white,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -252,206 +263,242 @@ class _LoginPageState extends State<LoginPage> {
                               selectedIndex: selectedIndex,
                             ),
                           ),
-
                         ],
+                      ),
+                    ),
+
+                    // 비밀번호 입력 필드
+                    Container(
+                      padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.01, screenWidth * 0.1, 0),
+                      child: Container(
+                        //height: inputFieldHeight,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey[300]!, // 연한 회색 테두리
                           ),
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.grey[200], // 연한 회색 배경색
+                        ),
+                        child: TextFormField(
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            labelText: null,
+                            hintText: '비밀번호',
+                            hintStyle: TextStyle(
+                              fontSize: 12.0,
+                              color: Colors.grey,
+                            ),
+                            prefixIcon: Icon(Icons.lock, color: Colors.grey),
+                          ),
+                          style: TextStyle(
+                            fontSize: 15,
+                          ),
+                          onChanged: (text) {
+                            password = text;
+                          },
                         ),
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
-                      child: TextFormField(
-                            obscureText: true,
-                            decoration: InputDecoration(
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black),
-                              ),
-                              focusedBorder: const UnderlineInputBorder(
-                                borderSide: BorderSide(color: Colors.blue),
-                              ),
-                              labelText: '',
-                              prefixIcon: Icon(Icons.lock),
-                              suffixIcon: TextButton(
-                                onPressed: () {
-                                  Nav.push(const FindRegisterPage());
-                                },
-                                child: Text(
-                                  '비밀번호 찾기',
-                                  style: TextStyle(color: Colors.blue[700]),
-                                ),
-                              ),
-                            ),
-                            style: TextStyle(
-                              fontSize: 15,
-                            ),
-                            onChanged: (text) {
-                              password = text;
-                            },
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 5,
+                          backgroundColor: Color.fromARGB(255, 50, 113, 190),
+                          shape: ContinuousRectangleBorder(
+                            borderRadius: BorderRadius.circular(16.0)
                           ),
+                          padding: EdgeInsets.symmetric(vertical: 12.0), //버튼 위아래 패딩 크기 늘리기
                         ),
-                    Container(
-                      padding: EdgeInsets.fromLTRB(screenWidth * 0.12, screenHeight * 0.01, screenWidth * 0.04, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          ElevatedButton(
-                                key: const Key('main_login_button'),
-                                style: ElevatedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 25, vertical: 35),
-                                  primary: Colors.transparent,
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(90.0),
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  if(loginButtonEnabled){ // 로그인 버튼이 활성화 되어 있는지 확인
+                        onPressed: () async{
+                          
+                           if(loginButtonEnabled){ // 로그인 버튼이 활성화 되어 있는지 확인
                                     loginButtonEnabled = false;
-                                  // 로그인 버튼 기능 추가
-                                  await AuthService()
-                                      .loginWithUserNameandPassword(
-                                      email, password)
-                                      .then((value) async {
-                                    if (value == true) {
-                                      QuerySnapshot snapshot =
-                                      await FireStoreService()
-                                          .gettingUserData(email);
+                          
+                          // 로그인 버튼 기능 추가
+                          AuthService()
+                              .loginWithUserNameandPassword(
+                              email, password)
+                              .then((value) async {
+                            if (value == true) {
+                              QuerySnapshot snapshot =
+                              await FireStoreService()
+                                  .gettingUserData(email);
 
-                                      getMyDeviceToken();
+                              getMyDeviceToken();
 
-                                      String nickname = snapshot.docs[0]
-                                          .get("nickName");
-                                      String uid = snapshot.docs[0].get("uid");
+                              String nickname = snapshot.docs[0]
+                                  .get("nickName");
+                              String uid = snapshot.docs[0].get("uid");
 
-                                      storage.write(
-                                        key: "nickName",
-                                        value: nickname,
-                                      );
-                                      storage.write(
-                                        key: "uid",
-                                        value: uid,
-                                      );
-                                      storage.write(
-                                        key: "gender",
-                                        value: snapshot.docs[0].get('gender'),
-                                      );
-                                      storage.write(
-                                        key: "email",
-                                        value: email,
-                                      );
-                                      storage.write(
-                                        key: "userName",
-                                        value: snapshot.docs[0].get('userName'),
-                                      );
-                                      ///유저 정보저장 ------------ Topic 발급 - logout or 알림 Off 시 해제
-                                      // Todo: 이미 저장한 uid가 있으면 저장 안하는 로직 추가하기 - 상훈 0919
-                                      // Todo: 광고성 알림 Topic on/off 기능 추가하기 - 상훈 0919
-                                      // Todo: 별거 아닌데 여기 누가 작업한데서 빨리 비켜줘야되서 냅둠
-                                      // 유저 정보 서저에 저장
-                                      userSaveAPi(uid, nickname, email);
+                              storage.write(
+                                key: "nickName",
+                                value: nickname,
+                              );
+                              storage.write(
+                                key: "uid",
+                                value: uid,
+                              );
+                              storage.write(
+                                key: "gender",
+                                value: snapshot.docs[0].get('gender'),
+                              );
+                              storage.write(
+                                key: "email",
+                                value: email,
+                              );
+                              storage.write(
+                                key: "userName",
+                                value: snapshot.docs[0].get('userName'),
+                              );
+                              ///유저 정보저장 ------------ Topic 발급 - logout or 알림 Off 시 해제
+                              // Todo: 이미 저장한 uid가 있으면 저장 안하는 로직 추가하기 - 상훈 0919
+                              // Todo: 광고성 알림 Topic on/off 기능 추가하기 - 상훈 0919
+                              // Todo: 별거 아닌데 여기 누가 작업한대서 빨리 비켜줘야돼서 냅둠
+                              // 유저 정보 서저에 저장
+                              userSaveAPi(uid, nickname, email);
 
-                                      // 토픽 저장 전 - IOS APNS 권한 요청
-                                      await FirebaseMessaging.instance.requestPermission(
-                                        alert: true,
-                                        announcement: false,
-                                        badge: true,
-                                        carPlay: false,
-                                        criticalAlert: false,
-                                        provisional: false,
-                                        sound: true,
-                                      );
+                              // 토픽 저장 전 - IOS APNS 권한 요청
+                              await FirebaseMessaging.instance.requestPermission(
+                                alert: true,
+                                announcement: false,
+                                badge: true,
+                                carPlay: false,
+                                criticalAlert: false,
+                                provisional: false,
+                                sound: true,
+                              );
 
-                                      // 광고성 마케팅 토픽 저장
-                                      if (Prefs.isAdPushOnRx.get() == true) {
-                                        await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
-                                      } else {
-                                        print('APNS token is not available');
-                                      }
+                              // 광고성 마케팅 토픽 저장
+                              if (Prefs.isAdPushOnRx.get() == true) {
+                                await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
+                              } else {
+                                print('APNS token is not available');
+                              }
 
-                                      // 학교 공지사항 토픽 저장
-                                      if (Prefs.isSchoolPushOnRx.get() == true) {
-                                        await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
-                                      } else {
-                                        print('APNS token is not available');
-                                      }
-                                      ///---------- ---------- ------------ ---------------
+                              // 학교 공지사항 토픽 저장
+                              if (Prefs.isSchoolPushOnRx.get() == true) {
+                                await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
+                              } else {
+                                print('APNS token is not available');
+                              }
+                              ///---------- ---------- ------------ ---------------
 
-                                      if (context.mounted) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                            const MainScreen(),
-                                          ),
-                                        );
-                                      }
-                                    } else {
-                                      context.showErrorSnackbar(value);
-                                    }
-                                  });
 
-                                  // 로그인 버튼 활성화
+                              if (context.mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                    const MainScreen(),
+                                  ),
+                                );
+                              }
+                            } else {
+                              context.showErrorSnackbar(value);
+                            }
+                          });
+                             
+                             // 로그인 버튼 활성화
                                   setState(() {
                                     loginButtonEnabled = true;
                                   });
 
                                   }
-                                },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [Color(0xff6CC0FF), Colors.black],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                                borderRadius: BorderRadius.circular(90.0),
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  '  로그인  ',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-
+                        },
+                        child: const Center(
+                          child: Text('로그인',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.5,
+                            color: Colors.white,
+                          ),),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 5,
+                          backgroundColor: Colors.black,
+                          shape: ContinuousRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0)
                           ),
-                            ],
+                          padding: EdgeInsets.symmetric(vertical: 12.0),
+                        ),
+                        // onPressed: () {
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const RegisterPage(),
+                        //     ),
+                        //   );
+                        // },
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              // secondaryAnimation: 화면 전환시 사용되는 보조 애니메이션 효과
+                              // child: 화면이 전환되는 동안 표시할 위젯 의미함
+                              pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0); //0ffset에서 x값 1은 오른쪽 끝, y값 1은 아래쪽 끝
+                                const end = Offset.zero; //애니메이션이 부드럽게 동작하도록 명령
+                                const curve = Curves.easeInOut; //애니메이션의 시작과 끝 담당
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var offsetAnimation = animation.drive(tween);
+                                return SlideTransition(position: offsetAnimation, child: child);
+                              },
+                            ),
+                          );
+                        },
+                        child: const Center(
+                          child: Text('회원가입',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.5,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                    Spacer(), // 화면 아래에 여백을 추가
-                    Container(
-                      padding: EdgeInsets.fromLTRB(screenWidth * 0.09, 0, screenWidth * 0.09, screenHeight * 0.04),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '회원이 아니신가요? ',
-                            style: TextStyle(
-                              color: Colors.grey[700],
+                      ),
+                    ),
+              // 비밀번호찾기
+              Expanded(
+                child:
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: screenHeight * 0.01),
+                    child: TextButton(
+                      onPressed: () {
+                          Navigator.of(context).push(
+                            PageRouteBuilder(
+                              // secondaryAnimation: 화면 전환시 사용되는 보조 애니메이션 효과
+                              // child: 화면이 전환되는 동안 표시할 위젯 의미함
+                              pageBuilder: (context, animation, secondaryAnimation) => FindRegisterPage(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                const begin = Offset(1.0, 0.0); //0ffset에서 x값 1은 오른쪽 끝, y값 1은 아래쪽 끝
+                                const end = Offset.zero; //애니메이션이 부드럽게 동작하도록 명령
+                                const curve = Curves.easeInOut; //애니메이션의 시작과 끝 담당
+                                var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+                                var offsetAnimation = animation.drive(tween);
+                                return SlideTransition(position: offsetAnimation, child: child);
+                              },
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const RegisterPage(),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              '가입하기',
-                              style: TextStyle(
-                                fontSize: subTitleFontSize,
-                                color: Colors.black,
-                                decoration: TextDecoration.underline,
-                              ),
+                          );
+                        },
+                      child: Text(
+                        '비밀번호찾기',
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Color(0xFF1976D2),
+                        ),
+                        ),
                             ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
