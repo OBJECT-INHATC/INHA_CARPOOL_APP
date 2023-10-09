@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
     String? gender = await storage.read(key: "gender");
 
     // 한승완 TODO: 알림의 id에 따라서 이동 경로 구분 기능
-    if (message.data['id'] == '1' && nickName != null) {
+    if ( ( message.data['id'] == 'status' ||message.data['id'] == 'chat') && nickName != null) {
       if (!mounted) return;
       Navigator.push(
         context,
@@ -81,7 +81,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
+  // 버튼 활성화 여부
+  bool loginButtonEnabled = true;
 
   // 이메일
   String email = "";
@@ -131,8 +132,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // 로그인 여부 확인
     checkLogin();
-
-
     super.initState();
   }
 
@@ -267,7 +266,6 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                       ),
                     ),
-
                     // 비밀번호 입력 필드
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.01, screenWidth * 0.1, 0),
@@ -303,7 +301,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
                       child: ElevatedButton(
@@ -315,7 +312,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           padding: EdgeInsets.symmetric(vertical: 12.0), //버튼 위아래 패딩 크기 늘리기
                         ),
-                        onPressed: () {
+                        onPressed: () async{
+                          
+                           if(loginButtonEnabled){ // 로그인 버튼이 활성화 되어 있는지 확인
+                             loginButtonEnabled = false;
+                          
                           // 로그인 버튼 기능 추가
                           AuthService()
                               .loginWithUserNameandPassword(
@@ -399,6 +400,13 @@ class _LoginPageState extends State<LoginPage> {
                               context.showErrorSnackbar(value);
                             }
                           });
+                             
+                             // 로그인 버튼 활성화
+                             setState(() {
+                               loginButtonEnabled = true;
+                             });
+
+                           }
                         },
                         child: const Center(
                           child: Text('로그인',
