@@ -240,6 +240,10 @@ class _RecruitPageState extends State<RecruitPage> {
                             isButtonDisabled = true;
                           });
 
+                          context.showSnackbar(
+                            "카풀을 생성하는 중입니다. 잠시만 기다려주세요.",
+                          );
+
                           // 버튼 동작
                           String startDetailPoint =
                               _startPointDetailController.text;

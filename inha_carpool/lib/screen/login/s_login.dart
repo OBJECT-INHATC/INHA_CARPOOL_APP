@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
     String? gender = await storage.read(key: "gender");
 
     // 한승완 TODO: 알림의 id에 따라서 이동 경로 구분 기능
-    if (message.data['id'] == '1' && nickName != null) {
+    if ( ( message.data['id'] == 'status' ||message.data['id'] == 'chat') && nickName != null) {
       if (!mounted) return;
       Navigator.push(
         context,
@@ -81,7 +81,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
+  // 버튼 활성화 여부
+  bool loginButtonEnabled = true;
 
   // 이메일
   String email = "";
@@ -129,8 +130,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // 로그인 여부 확인
     checkLogin();
-
-
     super.initState();
   }
 
@@ -294,6 +293,7 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           ElevatedButton(
+                                key: const Key('main_login_button'),
                                 style: ElevatedButton.styleFrom(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 25, vertical: 35),
@@ -303,9 +303,11 @@ class _LoginPageState extends State<LoginPage> {
                                     borderRadius: BorderRadius.circular(90.0),
                                   ),
                                 ),
-                                onPressed: () {
+                                onPressed: () async {
+                                  if(loginButtonEnabled){ // 로그인 버튼이 활성화 되어 있는지 확인
+                                    loginButtonEnabled = false;
                                   // 로그인 버튼 기능 추가
-                                  AuthService()
+                                  await AuthService()
                                       .loginWithUserNameandPassword(
                                       email, password)
                                       .then((value) async {
@@ -373,7 +375,6 @@ class _LoginPageState extends State<LoginPage> {
                                       }
                                       ///---------- ---------- ------------ ---------------
 
-
                                       if (context.mounted) {
                                         Navigator.push(
                                           context,
@@ -387,6 +388,13 @@ class _LoginPageState extends State<LoginPage> {
                                       context.showErrorSnackbar(value);
                                     }
                                   });
+
+                                  // 로그인 버튼 활성화
+                                  setState(() {
+                                    loginButtonEnabled = true;
+                                  });
+
+                                  }
                                 },
                             child: Container(
                               decoration: BoxDecoration(
