@@ -49,8 +49,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Colors.lightBlueAccent, Colors.black];
-  List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
+  List<Color> selectedBackgroundColors = [Color.fromARGB(255, 70, 100, 192)];
+  List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
 
   // 입력 필드 높이 설정
   double inputFieldHeight = 50.0;
@@ -59,13 +59,13 @@ class _RegisterPageState extends State<RegisterPage> {
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [const Color(0xff6CC0FF), Colors.black]
-        : [const Color(0xff6CC0FF), Colors.black];
+        ? [Color.fromARGB(255, 70, 100, 192)]
+        : [Color.fromARGB(255, 70, 100, 192)];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.white, Colors.white]
-        : [Colors.white, Colors.white];
+        ? [Colors.black54, Colors.black]
+        : [Colors.black54, Colors.black];
   }
 
   @override
@@ -153,18 +153,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                       ),
                                     ),
                                     FlutterToggleTab(
-                                      width: 28,
-                                      borderRadius: 10,
+                                      width: 30,
+                                      borderRadius: 40,
                                       height: inputFieldHeight,
-                                      // 높이 변수 적용
                                       selectedTextStyle: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w700),
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                       unSelectedTextStyle: const TextStyle(
-                                          color: Colors.black87,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w500),
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500,
+                                      ),
                                       labels: const ["인하공전", "인하대"],
                                       selectedLabelIndex: (index) {
                                         setState(() {
@@ -177,10 +178,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                           updateBackgroundColors();
                                         });
                                       },
-                                      selectedBackgroundColors:
-                                          selectedBackgroundColors,
-                                      unSelectedBackgroundColors:
-                                          unSelectedBackgroundColors,
+                                      selectedBackgroundColors: selectedBackgroundColors,
+                                      unSelectedBackgroundColors: unSelectedBackgroundColors,
                                       isScroll: false,
                                       selectedIndex: selectedIndex,
                                     ),
@@ -389,7 +388,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 11),
                               // 버튼 높이
-                              backgroundColor: pastelSkyBlue,
+                              backgroundColor: Color.fromARGB(255, 70, 100, 192),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),

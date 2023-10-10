@@ -149,7 +149,10 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: // 카풀이 존재하면 생기고 없으면 안되게 만들어줘야함
+
+          resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
+
+        floatingActionButton:
         SizedBox(
           width: context.width(0.9),
           height: context.height(0.07),
@@ -204,9 +207,6 @@ class _HomeState extends State<Home> {
                           final data = snapshot.data;
                           Duration diff = startTime.difference(data!);
 
-                          DateTime diffTime = DateTime
-                              .fromMillisecondsSinceEpoch(diff.inMilliseconds);
-
                           return Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -217,7 +217,7 @@ class _HomeState extends State<Home> {
                                 children: [
                                   Text(
                                     // 카풀이 xx : xx 이후에 출발 예정이에요!
-                                    '카풀이 ${formatDuration(diff)} 후에 출발 예정이에요!',
+                                    '🚕 카풀이 ${formatDuration(diff)} 후에 출발 예정이에요',
                                     style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
@@ -461,10 +461,10 @@ class _HomeState extends State<Home> {
 
     // 새로고침 후 보여지는 리스트 갯수 : 5개 보다 적을시 리스트의 갯수, 이상일 시 5개
     carPoolList.then((list) {
-      setState(() {
+      // setState(() {
         _visibleItemCount = list.length < 5 ? list.length : 5;
         print('초기 리스트 갯수: $_visibleItemCount');
-      });
+      // });
     });
 
     // 로딩과정

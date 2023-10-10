@@ -92,6 +92,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
   // 도착지
   String endPoint = "";
 
+  // 나가기 중복 방지
+  bool exitButtonDisabled = true;
+
   @override
   void initState() {
     getChatandAdmin();
@@ -267,32 +270,46 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             ),
                             TextButton(
                               onPressed: () async {
-                                /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
-                                if (Prefs.isPushOnRx.get() == true) {
-                                  await FirebaseMessaging.instance
-                                      .unsubscribeFromTopic(widget.carId);
+                                if(exitButtonDisabled) {
+                                  exitButtonDisabled = false;
+
+                                  /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
+                                  if (Prefs.isPushOnRx.get() == true) {
+                                    await FirebaseMessaging.instance
+                                        .unsubscribeFromTopic(widget.carId);
+
+                                    await FirebaseMessaging.instance
+                                        .unsubscribeFromTopic(
+                                        "${widget.carId}_info");
+                                  }
+                                  ApiTopic apiTopic = ApiTopic();
+                                  await apiTopic.deleteTopic(
+                                      widget.uid, widget.carId);
+
+                                  ///--------------------------------------------------------------------
+
+                                  // 데이터베이스 작업을 비동기로 수행
+                                  await FireStoreService().exitCarpool(
+                                      widget.carId,
+                                      widget.userName,
+                                      widget.uid,
+                                      widget.gender);
+
+                                  // 데이터베이스 작업이 완료되면 다음 페이지로 이동
+                                  if (!mounted) return;
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                      const MainScreen(),
+                                    ),
+                                  );
+
+                                  setState(() {
+                                    exitButtonDisabled = true;
+                                  });
                                 }
-                                ApiTopic apiTopic = ApiTopic();
-                                await apiTopic.deleteTopic(widget.uid, widget.carId);
-                                ///--------------------------------------------------------------------
-
-                                // 데이터베이스 작업을 비동기로 수행
-                                await FireStoreService().exitCarpool(
-                                    widget.carId,
-                                    widget.userName,
-                                    widget.uid,
-                                    widget.gender);
-
-                                // 데이터베이스 작업이 완료되면 다음 페이지로 이동
-                                if (!mounted) return;
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                    const MainScreen(),
-                                  ),
-                                );
                               },
                               child: const Text('나가기'),
                             ),
@@ -317,21 +334,40 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             ),
                             TextButton(
                               onPressed: () async {
-                                await FireStoreService().exitCarpoolAsAdmin(
-                                    widget.carId,
-                                    widget.userName,
-                                    widget.uid,
-                                    widget.gender);
+                                if(exitButtonDisabled) {
+                                  exitButtonDisabled = false;
 
-                                if (!mounted) return;
-                                Navigator.pop(context);
-                                Navigator.pop(context);
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                      const MainScreen()),
-                                );
+                                  if (Prefs.isPushOnRx.get() == true) {
+                                    await FirebaseMessaging.instance
+                                        .unsubscribeFromTopic(widget.carId);
+
+                                    await FirebaseMessaging.instance
+                                        .unsubscribeFromTopic(
+                                        "${widget.carId}_info");
+                                  }
+                                  ApiTopic apiTopic = ApiTopic();
+                                  await apiTopic.deleteTopic(
+                                      widget.uid, widget.carId);
+
+                                  await FireStoreService().exitCarpoolAsAdmin(
+                                      widget.carId,
+                                      widget.userName,
+                                      widget.uid,
+                                      widget.gender);
+
+                                  if (!mounted) return;
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                        const MainScreen()),
+                                  );
+                                  setState(() {
+                                    exitButtonDisabled = true;
+                                  });
+                                }
                               },
                               child: const Text('나가기'),
                             ),
