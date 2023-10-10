@@ -176,11 +176,9 @@ class _HomeState extends State<Home> {
 
                 // 오늘 날짜가 아닐 경우 플로팅 액션 버튼 생성하지 않음
                 if(startTime.year != DateTime.now().year ||
-                    startTime.month != DateTime.now().month ||
-                    startTime.day != DateTime.now().day) {
+                    startTime.month != DateTime.now().month || startTime.day == DateTime.now().day) {
                   return const SizedBox.shrink();
                 }else {
-                  // 오늘 날짜일 경우 플로팅 액션 버튼 생성
                   return FloatingActionButton(
                     elevation: 3,
                     mini: false,
@@ -216,7 +214,6 @@ class _HomeState extends State<Home> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    // 카풀이 xx : xx 이후에 출발 예정이에요!
                                     '🚕 카풀이 ${formatDuration(diff)} 후에 출발 예정이에요',
                                     style: const TextStyle(
                                       fontSize: 15,
