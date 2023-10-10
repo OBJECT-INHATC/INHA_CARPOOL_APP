@@ -67,7 +67,8 @@ class MainScreenState extends State<MainScreen>
           elevation: 0,
           shape: Border(
             bottom: BorderSide(
-              color: Colors.grey.shade200,
+              color: //Colors.grey.shade200,
+              Colors.white,
               width: 1,
             ),
           ),

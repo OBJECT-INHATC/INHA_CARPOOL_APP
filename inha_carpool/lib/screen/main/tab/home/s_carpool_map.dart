@@ -25,6 +25,7 @@ class CarpoolMap extends StatefulWidget {
   final String admin;
   final String roomGender;
 
+
   const CarpoolMap({
     super.key,
     required this.startPoint,
@@ -194,7 +195,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blue.withOpacity(0.3),
+                      color: Colors.black54.withOpacity(0.3),
                       spreadRadius: 2,
                       blurRadius: 5,
                       offset: const Offset(0, 3),
@@ -418,7 +419,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 width: context.width(0.8),
                                 alignment: Alignment.center,
                                 child: const Text(
-                                  '카풀 참가하기',
+                                  '입장하기',
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.white,
