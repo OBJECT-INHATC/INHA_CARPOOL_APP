@@ -44,230 +44,233 @@ class _MyPageState extends State<MyPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView(
-        // 스크롤 가능한 ListView로 변경
-        children: [
-          // 내 정보 위젯 ProFile()
-          const ProFile(),
-          const SizedBox(height: 10),
-          Column(
-            children: [
-              // 계정 항목
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 6.0),
-                color: Colors.grey[100],
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
-                  children: [
-                    Text(
-                      '계정',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 10),
+            const ProFile(),
+            const SizedBox(height: 10),
+            Column(
+              children: [
+                // 계정 항목
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                  color: Colors.grey[100],
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
+                    children: [
+                      Text(
+                        '계정',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.history_toggle_off_rounded,
-                  color: Colors.black,
+                ListTile(
+                  leading: const Icon(
+                    Icons.history_toggle_off_rounded,
+                    color: Colors.black,
+                  ),
+                  title: const Text('이용기록'),
+                  onTap: () {
+                    // 이용기록 페이지로 이동
+                    Navigator.of(Nav.globalContext).push(MaterialPageRoute(
+                        builder: (context) => const RecordList()));
+                  },
                 ),
-                title: const Text('이용기록'),
-                onTap: () {
-                  // 이용기록 페이지로 이동
-                  Navigator.of(Nav.globalContext).push(MaterialPageRoute(
-                      builder: (context) => const RecordList()));
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.lock,
-                  color: Colors.blue,
-                ),
-                title: const Text('비밀번호 변경'),
-                onTap: () {
-                  // 비밀번호 변경 페이지로 이동
-                  Navigator.of(Nav.globalContext).push(
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          ChangePasswordPage(), // ChangePasswordPage로 이동
-                    ),
-                  );
-                },
-              ),
-
-              ListTile(
-                leading: const Icon(
-                  Icons.logout,
-                  color: Colors.red,
-                ),
-                title: const Text('로그아웃'),
-                onTap: () {
-                  // 로그아웃 다이얼로그를 표시
-                  showDialog(
-                    context: context,
-                    builder: (context) => LogoutConfirmationDialog(
-                      onConfirm: () {},
-                    ),
-                  );
-                },
-              ),
-
-              ListTile(
-                leading: const Icon(
-                  Icons.delete,
-                  color: Colors.black,
-                ),
-                title: const Text('회원탈퇴'),
-                onTap: () {
-                  // 회원탈퇴 페이지로 이동하
-                  Navigator.of(Nav.globalContext).push(
-                      MaterialPageRoute(builder: (context) => SecessionPage()));
-                },
-              ),
-
-              // 알림 항목
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 6.0),
-                color: Colors.grey[100],
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      '알림',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                ListTile(
+                  leading: const Icon(
+                    Icons.lock,
+                    color: Colors.blue,
+                  ),
+                  title: const Text('비밀번호 변경'),
+                  onTap: () {
+                    // 비밀번호 변경 페이지로 이동
+                    Navigator.of(Nav.globalContext).push(
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ChangePasswordPage(), // ChangePasswordPage로 이동
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              ),
 
-              Obx(
-                    () => Switchmenu('채팅 알림', Prefs.isPushOnRx.get(),
-                    onChanged: (isOn) async {
-                      Prefs.isPushOnRx.set(isOn);
-                      ApiUser apiUser = ApiUser();
-                      List<String> topicList =
-                      await apiUser.getAllCarIdsForUser(uid);
-                      if (isOn) {
-                        print('채팅 알림 on');
+                ListTile(
+                  leading: const Icon(
+                    Icons.logout,
+                    color: Colors.red,
+                  ),
+                  title: const Text('로그아웃'),
+                  onTap: () {
+                    // 로그아웃 다이얼로그를 표시
+                    showDialog(
+                      context: context,
+                      builder: (context) => LogoutConfirmationDialog(
+                        onConfirm: () {},
+                      ),
+                    );
+                  },
+                ),
 
-                        /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독
-                        for (String carId in topicList) {
-                          await FirebaseMessaging.instance.subscribeToTopic(carId);
-                          print('채팅 구독 완료: $carId');
+                ListTile(
+                  leading: const Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                  ),
+                  title: const Text('회원탈퇴'),
+                  onTap: () {
+                    // 회원탈퇴 페이지로 이동하
+                    Navigator.of(Nav.globalContext).push(
+                        MaterialPageRoute(builder: (context) => SecessionPage()));
+                  },
+                ),
+
+                // 알림 항목
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                  color: Colors.grey[100],
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        '알림',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Obx(
+                      () => Switchmenu('채팅 알림', Prefs.isPushOnRx.get(),
+                      onChanged: (isOn) async {
+                        Prefs.isPushOnRx.set(isOn);
+                        ApiUser apiUser = ApiUser();
+                        List<String> topicList =
+                        await apiUser.getAllCarIdsForUser(uid);
+                        if (isOn) {
+                          print('채팅 알림 on');
+
+                          /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독
+                          for (String carId in topicList) {
+                            await FirebaseMessaging.instance.subscribeToTopic(carId);
+                            print('채팅 구독 완료: $carId');
+                          }
+                        } else {
+                          /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독 해제
+                          print('채팅 알림 off');
+                          for (String carId in topicList) {
+                            await FirebaseMessaging.instance
+                                .unsubscribeFromTopic(carId);
+                            print('채팅 구독 취소: $carId');
+                          }
                         }
-                      } else {
-                        /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독 해제
-                        print('채팅 알림 off');
-                        for (String carId in topicList) {
-                          await FirebaseMessaging.instance
-                              .unsubscribeFromTopic(carId);
-                          print('채팅 구독 취소: $carId');
+                      }),
+                ),
+                Obx(
+                      () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
+                      onChanged: (isOn) async {
+                        Prefs.isAdPushOnRx.set(isOn);
+                        if (isOn) {
+                          print('광고 및 마케팅 알림 on');
+                          await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
+                        } else {
+                          print('광고 및 마케팅 알림 off');
+                          await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
                         }
-                      }
-                    }),
-              ),
-              Obx(
-                    () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
-                    onChanged: (isOn) async {
-                      Prefs.isAdPushOnRx.set(isOn);
-                      if (isOn) {
-                        print('광고 및 마케팅 알림 on');
-                        await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
-                      } else {
-                        print('광고 및 마케팅 알림 off');
-                        await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
-                      }
-                    }),
-              ),
+                      }),
+                ),
 
-              Obx(
-                    () => Switchmenu('학교 공지사항', Prefs.isSchoolPushOnRx.get(),
-                    onChanged: (isOn) async {
-                      Prefs.isSchoolPushOnRx.set(isOn);
-                      if (isOn) {
-                        print('학교 공지사항 알림 on');
-                        await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
-                      } else {
-                        print('학교 공지사항 알림 off');
-                        await FirebaseMessaging.instance.unsubscribeFromTopic("SchoolNotification");
-                      }
-                    }),
-              ),
+                Obx(
+                      () => Switchmenu('학교 공지사항', Prefs.isSchoolPushOnRx.get(),
+                      onChanged: (isOn) async {
+                        Prefs.isSchoolPushOnRx.set(isOn);
+                        if (isOn) {
+                          print('학교 공지사항 알림 on');
+                          await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
+                        } else {
+                          print('학교 공지사항 알림 off');
+                          await FirebaseMessaging.instance.unsubscribeFromTopic("SchoolNotification");
+                        }
+                      }),
+                ),
 
-              // 기타 항목
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 6.0),
-                color: Colors.grey[100],
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
-                  children: [
-                    Text(
-                      '기타',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                // 기타 항목
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 6.0),
+                  color: Colors.grey[100],
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
+                  child: const Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
+                    children: [
+                      Text(
+                        '기타',
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
 
-              ListTile(
-                leading: const Icon(
-                  Icons.cached_outlined,
-                  color: Colors.grey,
+                ListTile(
+                  leading: const Icon(
+                    Icons.cached_outlined,
+                    color: Colors.grey,
+                  ),
+                  title: 'clear_cache'.tr().text.make(),
+                  onTap: () async {
+                    final manager = DefaultCacheManager();
+                    await manager.emptyCache();
+                    if (mounted) {
+                      MessageDialog('clear_cache_done'.tr()).show();
+                    }
+                  },
                 ),
-                title: 'clear_cache'.tr().text.make(),
-                onTap: () async {
-                  final manager = DefaultCacheManager();
-                  await manager.emptyCache();
-                  if (mounted) {
-                    MessageDialog('clear_cache_done'.tr()).show();
-                  }
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.code_rounded,
-                  color: Colors.grey,
+                ListTile(
+                  leading: const Icon(
+                    Icons.code_rounded,
+                    color: Colors.grey,
+                  ),
+                  title: 'opensource'.tr().text.make(),
+                  onTap: () async {
+                    Nav.push(const OpensourceScreen());
+                  },
                 ),
-                title: 'opensource'.tr().text.make(),
-                onTap: () async {
-                  Nav.push(const OpensourceScreen());
-                },
-              ),
-            ],
-          ),
-          const Line(),
-          const Height(10),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                    height: 30,
-                    width: 100,
-                    padding: const EdgeInsets.only(left: 15),
-                    child: '  © INHAtc 컴퓨터시스템과 Object 2023 beta 1.0'
-                        .text
-                        .size(15)
-                        .semiBold
-                        .makeWithDefaultFont()),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+            const Line(),
+            const Height(10),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                      height: 30,
+                      width: 100,
+                      padding: const EdgeInsets.only(left: 15),
+                      child: '  © INHAtc 컴퓨터시스템과 Object 2023 beta 1.0'
+                          .text
+                          .size(15)
+                          .semiBold
+                          .makeWithDefaultFont()),
+                ),
+              ],
+            ),
+            const Height(90),
+
+          ],
+        ),
       ),
     );
   }

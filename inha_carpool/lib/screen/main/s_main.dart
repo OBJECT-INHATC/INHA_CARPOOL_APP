@@ -61,7 +61,6 @@ class MainScreenState extends State<MainScreen>
       onWillPop: _handleBackPressed,
       child: Scaffold(
         appBar: AppBar(
-
           toolbarHeight: 45,
           // 해당 선을 내릴때만 나오게 해줘
           elevation: 0,
