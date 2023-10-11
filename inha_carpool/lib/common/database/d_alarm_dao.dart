@@ -22,7 +22,7 @@ class AlarmDao {
     await _alarmFolder.delete(await _db, finder: finder);
   }
 
-  /// 일괄 삭제
+  /// 로컬 디비 일괄 삭제
   Future deleteAll() async {
     await _alarmFolder.delete(await _db);
   }
