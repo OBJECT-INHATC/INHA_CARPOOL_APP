@@ -73,6 +73,8 @@ class MainScreenState extends State<MainScreen>
           ),
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
+          foregroundColor: Colors.white,
+          shadowColor: Colors.white,
           // title:GestureDetector(
           //   onTap: () {
           //     // TODO: 이미지가 클릭되었을 때 수행할 동작

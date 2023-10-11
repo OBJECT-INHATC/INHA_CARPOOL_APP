@@ -70,11 +70,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    const Color pastelSkyBlue = Color(0xff6CC0FF);
+      //const Color pastelSkyBlue = Color(0xff6CC0FF);
     return isLoading
         ? Center(
             child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor,
+             // color: Theme.of(context).primaryColor,
             ),
           )
         : GestureDetector(
@@ -83,6 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
         FocusScope.of(context).unfocus();
       },
           child: Scaffold(
+            backgroundColor: Colors.white,
               appBar: AppBar(
                 automaticallyImplyLeading: false,
                 leading: IconButton(
@@ -100,6 +101,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     color: Colors.black,
                   ),
                 ),
+                backgroundColor: Colors.white,
+                surfaceTintColor: Colors.white,
+                foregroundColor: Colors.white,
+                shadowColor: Colors.white,
               ),
               body: Form(
                 key: formKey,
@@ -114,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           child: Stack(
                             alignment: Alignment.centerRight,
                             children: [
-                              // Container 위젯 안에 있는 TextFormField 부분 수정
+                              // Container 위젯 안에 있는 TextFormField 부분
                               Container(
                                 // 학번 입력 필드
                                 height: inputFieldHeight, // 높이 변수 적용
@@ -152,42 +157,46 @@ class _RegisterPageState extends State<RegisterPage> {
                                         },
                                       ),
                                     ),
-                                    FlutterToggleTab(
-                                      width: 30,
-                                      borderRadius: 40,
-                                      height: inputFieldHeight,
-                                      selectedTextStyle: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                      unSelectedTextStyle: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                      labels: const ["인하공전", "인하대"],
-                                      selectedLabelIndex: (index) {
-                                        setState(() {
-                                          if (index == 0) {
-                                            academy = "@itc.ac.kr";
-                                          } else {
-                                            academy = "@inha.edu";
-                                          }
-                                          selectedIndex = index;
-                                          updateBackgroundColors();
-                                        });
-                                      },
-                                      selectedBackgroundColors: selectedBackgroundColors,
-                                      unSelectedBackgroundColors: unSelectedBackgroundColors,
-                                      isScroll: false,
-                                      selectedIndex: selectedIndex,
-                                    ),
                                   ],
                                 ),
                               ),
+                              Positioned(
+                                right: 4,
+                                child: FlutterToggleTab(
+                                  width: 30,
+                                  borderRadius: 10,
+                                  height: 38,
+                                  selectedTextStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  unSelectedTextStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  labels: const ["인하공전", "인하대"],
+                                  selectedLabelIndex: (index) {
+                                    setState(() {
+                                      if (index == 0) {
+                                        academy = "@itc.ac.kr";
+                                      } else {
+                                        academy = "@inha.edu";
+                                      }
+                                      selectedIndex = index;
+                                      updateBackgroundColors();
+                                    });
+                                  },
+                                  selectedBackgroundColors: selectedBackgroundColors,
+                                  unSelectedBackgroundColors: unSelectedBackgroundColors,
+                                  isScroll: false,
+                                  selectedIndex: selectedIndex,
+                                ),
+                              ),
                             ],
-                          ),
+                          )
+
                         ),
                         const SizedBox(height: 15), // 15 아래로 이동
                         Container(
@@ -350,7 +359,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           height: 15,
                         ),
                         Container(
-                          padding: const EdgeInsets.fromLTRB(15, 20, 40, 0),
+                          padding: const EdgeInsets.symmetric(vertical: 5,horizontal: 20),
                           child: Column(
                             children: [
                               RadioListTile(
@@ -383,7 +392,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(
-                              40, 15, 40, 0),
+                              40, 0, 40, 20),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 11),
