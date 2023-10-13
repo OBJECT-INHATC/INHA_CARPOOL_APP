@@ -176,9 +176,9 @@ class _HomeState extends State<Home> {
 
                 // 오늘 날짜가 아닐 경우 플로팅 액션 버튼 생성하지 않음
                 if(startTime.year != DateTime.now().year ||
-                    startTime.month != DateTime.now().month || startTime.day == DateTime.now().day) {
+                    startTime.month != DateTime.now().month) {
                   return const SizedBox.shrink();
-                }else {
+                }else if(startTime.day - DateTime.now().day < 2){
                   return FloatingActionButton(
                     elevation: 3,
                     mini: false,
@@ -248,6 +248,8 @@ class _HomeState extends State<Home> {
                       },
                     ),
                   );
+                }else{
+                  return const SizedBox.shrink();
                 }
               }
             },
