@@ -210,7 +210,8 @@ class _ComplainAlertState extends State<ComplainAlert> {
             ),
         ],
       );
-    });
+    }
+    );
   }
 
   // 체크된 리스트 확인
@@ -225,8 +226,5 @@ class _ComplainAlertState extends State<ComplainAlert> {
 
     return checkedItems;
   }
-
-
-// 신고완료 알림 다이얼로그
 
 }

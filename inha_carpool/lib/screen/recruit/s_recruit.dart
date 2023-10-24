@@ -7,6 +7,7 @@ import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_dateTime.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
@@ -240,6 +241,10 @@ class _RecruitPageState extends State<RecruitPage> {
                             isButtonDisabled = true;
                           });
 
+                          context.showSnackbar(
+                            "카풀을 생성하는 중입니다. 잠시만 기다려주세요.",
+                          );
+
                           // 버튼 동작
                           String startDetailPoint =
                               _startPointDetailController.text;
@@ -283,7 +288,7 @@ class _RecruitPageState extends State<RecruitPage> {
                             return;
                           }
                           /// 조건 충족 시 파이어베이스에 카풀 정보 저장
-                          await FirebaseCarpool.addDataToFirestore(
+                          String carId = await FirebaseCarpool.addDataToFirestore(
                             selectedDate: _selectedDate,
                             selectedTime: _selectedTime,
                             startPoint: startPoint,
@@ -300,13 +305,29 @@ class _RecruitPageState extends State<RecruitPage> {
                             endDetailPoint: endPointInput.detailController.text,
                           );
 
-                          ///TODO 채팅창으로 넘기기
                           if(!mounted) return;
                           Nav.pop(context);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => const MainScreen()),
                           );
+
+                          if(carId == ""){
+                            context.showErrorSnackbar("카풀 생성에 실패했습니다.");
+                          }else{
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatroomPage(
+                                    carId: carId,
+                                    groupName: '카풀네임',
+                                    userName: nickName,
+                                    uid: uid,
+                                    gender: gender,
+                                  )),
+                            );
+                          }
+
                           setState(() {
                             isButtonDisabled = false;
                           });

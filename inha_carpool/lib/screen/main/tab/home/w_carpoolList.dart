@@ -55,6 +55,7 @@ String _truncateText(String text, int maxLength) {
 class _CarpoolListWidgetState extends State<CarpoolListWidget> {
   @override
   Widget build(BuildContext context) {
+
     // 화면의 너비와 높이를 가져 와서 화면 비율 계산함
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -63,6 +64,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
     double listViewHeight = screenHeight * 0.75;
     // 각 카드의 높이
     double cardHeight = listViewHeight * 0.53;
+
 
     return GestureDetector(
       onTap: () {
@@ -86,7 +88,8 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             //     index < widget.snapshot.data!.length) {
             DocumentSnapshot carpool = widget.snapshot.data![index];
             Map<String, dynamic> carpoolData =
-            carpool.data() as Map<String, dynamic>;
+
+                carpool.data() as Map<String, dynamic>;
 
             DateTime startTime =
             DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
@@ -105,6 +108,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             } else {
               formattedTime = '${difference.inMinutes}분 후';
             }
+
 
             String amPm;
             if (startTime.hour < 12) {
@@ -129,7 +133,8 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 int nowMember = carpoolData['nowMember'];
                 int maxMember = carpoolData['maxMember'];
 
-                String currentUser = '${widget.uid}_${widget.nickName}_${widget.gender}';
+                String currentUser =
+                    '${widget.uid}_${widget.nickName}_${widget.gender}';
                 if (carpoolData['members'].contains(currentUser)) {
                   // 이미 참여한 경우
                   if (carpoolData['admin'] == currentUser) {
@@ -191,7 +196,8 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 // color: Colors.blue[100],
                 color: Colors.white,
                 elevation: 1,
-                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 // shape: RoundedRectangleBorder(
                 //   side: BorderSide(width: 2, color: borderColor),
                 //   borderRadius: BorderRadius.circular(10),
@@ -240,12 +246,14 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                 //방장 정보 가져오기
                                 Row(
                                   children: [
+
                                     const Icon(Icons.calendar_today_outlined ,
                                         color: Colors.black, size: 18),
                                     SizedBox(
                                       width: context.width(0.01),
                                     ),
                                     Text('${startTime.month}월 ${startTime.day}일 ${startTime.hour} : ${startTime.minute} 예정',
+
                                         style: const TextStyle(
                                           fontSize: 13,
                                         )),
@@ -263,12 +271,14 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                       width: context.width(0.01),
                                     ),
                                     Text(
+
                                       '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명 ',
                                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                     ),
                                     Text(
                                       carpoolData['gender'],
                                       style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color:Colors.grey),
+
                                     ),
                                   ],
                                 ),
@@ -278,7 +288,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                         ),
                       ),
                     ]),
-                    Row(
+          Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Column(
@@ -315,6 +325,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                 ],
                               ),
 
+
                               Container(
                                 margin: const EdgeInsets.symmetric(vertical: 13), // 여백을 위아래로 5픽셀 추가
                                 child: Container(
@@ -322,10 +333,13 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                   width: screenWidth - 100,
                                   height: 0.5,
                                   color: Colors.grey,
+
                                 ),
                               ),
 
-                              Row(
+
+                             //방 생성시 설정했던 성별 표시
+                                Row(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(left: 12), // 목적지 아이콘의 왼쪽 여백 추가
@@ -386,6 +400,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                                       fontWeight: FontWeight.bold,
                                     )
             )))]),
+
                             ),
                           ),
                           )]),

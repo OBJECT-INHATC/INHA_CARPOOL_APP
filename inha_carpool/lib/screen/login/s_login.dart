@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
     String? gender = await storage.read(key: "gender");
 
     // 한승완 TODO: 알림의 id에 따라서 이동 경로 구분 기능
-    if (message.data['id'] == '1' && nickName != null) {
+    if ( ( message.data['id'] == 'status' ||message.data['id'] == 'chat') && nickName != null) {
       if (!mounted) return;
       Navigator.push(
         context,
@@ -81,7 +81,8 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
+  // 버튼 활성화 여부
+  bool loginButtonEnabled = true;
 
   // 이메일
   String email = "";
@@ -131,8 +132,6 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // 로그인 여부 확인
     checkLogin();
-
-
     super.initState();
   }
 
@@ -159,7 +158,6 @@ class _LoginPageState extends State<LoginPage> {
       },
       child: Scaffold(
         body: SingleChildScrollView(
-
           child: Container(
             height: MediaQuery.of(context).size.height,
             child: Center(
@@ -176,24 +174,48 @@ class _LoginPageState extends State<LoginPage> {
                         height: 100,
                       ),
                     ),
-
-                    // Container(
-                    //   padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.01, screenWidth * 0.1, 0),
-                    //   child: Text(
-                    //     '로그인 후 이용바랍니다.',
-                    //     style: TextStyle(
-                    //       fontSize: subTitleFontSize,
-                    //       color: Colors.grey,
-                    //     ),
-                    //   ),
-                    // ),
-                    SizedBox(height: screenHeight * 0.1),
+                    SizedBox(height: screenHeight * 0.08),
+                    Container(
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
+                            screenHeight * 0.007, screenWidth * 0.1, 0),
+                       // 학교 선택 토글 버튼
+                      child: FlutterToggleTab(
+                      width: 30,
+                      borderRadius: 40,
+                      height: 30,
+                      selectedTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      unSelectedTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      labels: const ["인하공전", "인하대"],
+                      selectedLabelIndex: (index) {
+                        setState(() {
+                          if (index == 0) {
+                            academy = "@itc.ac.kr";
+                          } else {
+                            academy = "@inha.edu";
+                          }
+                          selectedIndex = index;
+                          updateBackgroundColors();
+                        });
+                      },
+                      selectedBackgroundColors: selectedBackgroundColors,
+                      unSelectedBackgroundColors: unSelectedBackgroundColors,
+                      isScroll: false,
+                      selectedIndex: selectedIndex,
+                    ),
+                    ),
                     // 학번 입력 필드
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
-                      child: Stack(
-                        alignment: Alignment.centerRight,
-                        children: [
+                      child:
                           Container(
                            // height: inputFieldHeight, // 높이 변수 적용
                             decoration: BoxDecoration(
@@ -228,46 +250,7 @@ class _LoginPageState extends State<LoginPage> {
                               },
                             ),
                           ),
-
-                          // 학교 선택 토글 버튼
-                          Positioned(
-                            right: 0,
-                            child: FlutterToggleTab(
-                              width: 30,
-                              borderRadius: 40,
-                              height: 40,
-                              selectedTextStyle: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              unSelectedTextStyle: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              labels: const ["인하공전", "인하대"],
-                              selectedLabelIndex: (index) {
-                                setState(() {
-                                  if (index == 0) {
-                                    academy = "@itc.ac.kr";
-                                  } else {
-                                    academy = "@inha.edu";
-                                  }
-                                  selectedIndex = index;
-                                  updateBackgroundColors();
-                                });
-                              },
-                              selectedBackgroundColors: selectedBackgroundColors,
-                              unSelectedBackgroundColors: unSelectedBackgroundColors,
-                              isScroll: false,
-                              selectedIndex: selectedIndex,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
-
                     // 비밀번호 입력 필드
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.01, screenWidth * 0.1, 0),
@@ -303,7 +286,6 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
                       child: ElevatedButton(
@@ -315,7 +297,11 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           padding: EdgeInsets.symmetric(vertical: 12.0), //버튼 위아래 패딩 크기 늘리기
                         ),
-                        onPressed: () {
+                        onPressed: () async{
+                          
+                           if(loginButtonEnabled){ // 로그인 버튼이 활성화 되어 있는지 확인
+                             loginButtonEnabled = false;
+                          
                           // 로그인 버튼 기능 추가
                           AuthService()
                               .loginWithUserNameandPassword(
@@ -399,6 +385,13 @@ class _LoginPageState extends State<LoginPage> {
                               context.showErrorSnackbar(value);
                             }
                           });
+                             
+                             // 로그인 버튼 활성화
+                             setState(() {
+                               loginButtonEnabled = true;
+                             });
+
+                           }
                         },
                         child: const Center(
                           child: Text('로그인',

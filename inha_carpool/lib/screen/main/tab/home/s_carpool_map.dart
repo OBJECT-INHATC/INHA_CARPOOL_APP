@@ -25,6 +25,7 @@ class CarpoolMap extends StatefulWidget {
   final String admin;
   final String roomGender;
 
+
   const CarpoolMap({
     super.key,
     required this.startPoint,
@@ -62,6 +63,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
   BitmapDescriptor startCustomIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor endCustomIcon = BitmapDescriptor.defaultMarker;
+
+  bool joinButtonEnabled = true;
 
   @override
   void initState() {
@@ -187,20 +190,21 @@ class _CarpoolMapState extends State<CarpoolMap> {
               bottom: context.height(0),
               // 가운데 위치
               child: Container(
-                height: context.height(0.25),
+                height: context.height(0.26),
                 width: context.width(1),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
+                  //color: Colors.grey.shade100,
+                  color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.blue.withOpacity(0.3),
+                      color: Colors.black54.withOpacity(0.3),
                       spreadRadius: 2,
                       blurRadius: 5,
                       offset: const Offset(0, 3),
                     ),
                   ],
                   border: Border.all(
-                    color: Colors.blue,
+                    color: Colors.white,
                     width: 1,
                   ),
                 ),
@@ -352,6 +356,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 String memberName = nickName;
                                 String selectedRoomGender = widget.roomGender;
 
+                                if(joinButtonEnabled){
+                                  joinButtonEnabled = false;
+
                                 if (gender != selectedRoomGender &&
                                     selectedRoomGender != '무관') {
                                   context.showErrorSnackbar(
@@ -393,6 +400,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               const MainScreen()));
+
                                 } catch (error) {
                                   if (error is DeletedRoomException) {
                                     // 방 삭제 예외 처리
@@ -405,6 +413,15 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                     print('카풀 참가 실패 (다른 예외): $error');
                                   }
                                 }
+
+                                  setState(() {
+                                    joinButtonEnabled = true;
+                                  });
+
+                                }else{
+                                  context.showErrorSnackbar('참가 중입니다. 잠시만 기다려주세요.');
+                                }
+
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
@@ -417,7 +434,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 width: context.width(0.8),
                                 alignment: Alignment.center,
                                 child: const Text(
-                                  '카풀 참가하기',
+                                  '입장하기',
                                   style: TextStyle(
                                     fontSize: 15,
                                     color: Colors.white,

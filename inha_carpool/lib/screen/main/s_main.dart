@@ -61,18 +61,20 @@ class MainScreenState extends State<MainScreen>
       onWillPop: _handleBackPressed,
       child: Scaffold(
         appBar: AppBar(
-
           toolbarHeight: 45,
           // 해당 선을 내릴때만 나오게 해줘
           elevation: 0,
           shape: Border(
             bottom: BorderSide(
-              color: Colors.grey.shade200,
+              color: //Colors.grey.shade200,
+              Colors.white,
               width: 1,
             ),
           ),
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
+          foregroundColor: Colors.white,
+          shadowColor: Colors.white,
           // title:GestureDetector(
           //   onTap: () {
           //     // TODO: 이미지가 클릭되었을 때 수행할 동작
