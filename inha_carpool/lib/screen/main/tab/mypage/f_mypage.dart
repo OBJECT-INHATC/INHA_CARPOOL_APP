@@ -86,7 +86,7 @@ class _MyPageState extends State<MyPage> {
                 ListTile(
                   leading: const Icon(
                     Icons.lock,
-                    color: Colors.blue,
+                    color: Colors.black,
                   ),
                   title: const Text('비밀번호 변경'),
                   onTap: () {
@@ -176,19 +176,20 @@ class _MyPageState extends State<MyPage> {
                         }
                       }),
                 ),
-                Obx(
-                      () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
-                      onChanged: (isOn) async {
-                        Prefs.isAdPushOnRx.set(isOn);
-                        if (isOn) {
-                          print('광고 및 마케팅 알림 on');
-                          await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
-                        } else {
-                          print('광고 및 마케팅 알림 off');
-                          await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
-                        }
-                      }),
-                ),
+                // 광고부분 일단 주석처리
+                //Obx(
+                  //    () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
+                    //  onChanged: (isOn) async {
+                      //  Prefs.isAdPushOnRx.set(isOn);
+                        //if (isOn) {
+                          //print('광고 및 마케팅 알림 on');
+                          //await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
+                        //} else {
+                         // print('광고 및 마케팅 알림 off');
+                         // await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
+                        //}
+                      //}),
+                //),
 
                 Obx(
                       () => Switchmenu('학교 공지사항', Prefs.isSchoolPushOnRx.get(),
