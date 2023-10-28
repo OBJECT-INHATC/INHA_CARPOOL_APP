@@ -125,6 +125,17 @@ class _NotificationListState extends State<NotificationList> {
                           ),
                         ),
                       );
+                    // 알람 타입이 카풀 완료 알람일 시
+                    } else if (notificationList[i].type == "carpoolDone") {
+                      AlarmDao().deleteById(
+                        notificationList[i].title! +
+                            notificationList[i].body! +
+                            notificationList[i].time.toString(),
+                      );
+                      // 알림 리스트 스택 제거
+                      Navigator.pop(context);
+                      // 이용기록 페이지로 이동
+
                     }
                   },
                   child: Column(
