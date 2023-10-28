@@ -141,10 +141,9 @@ class _ProFileState extends State<ProFile> {
 
                 //이메일란 원래 위치
 
-                Positioned(
-                  right: 25,
-                  bottom: 15,
-                  child: GestureDetector(
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child:GestureDetector(
                     onTap: () {
                       _showEditNicknameDialog(context, uid, nickName!, gender!);
                     },
@@ -177,9 +176,8 @@ class _ProFileState extends State<ProFile> {
                         ),
                       ),
                     ),
-                  ),
+                  ) ,
                 ),
-
 
               ],
             ),
