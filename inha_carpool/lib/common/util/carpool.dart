@@ -63,7 +63,7 @@ class FirebaseCarpool {
   // }
 
   /// 카풀 저장
-  static Future<void> addDataToFirestore({
+  static Future<String> addDataToFirestore({
     required DateTime selectedDate,
     required DateTime selectedTime,
     required LatLng startPoint,
@@ -130,9 +130,13 @@ class FirebaseCarpool {
       /// 0903 한승완 추가 : 참가 메시지 전송
       await FireStoreService().sendCreateMessage(carpoolDocRef.id, memberName);
       print('Data added to Firestore.');
+
+      return carpoolDocRef.id;
+
     } catch (e) {
       print('Error adding data to Firestore: $e');
     }
+    return "";
   }
 
   ///0907 새 채팅 카운트 업데이트

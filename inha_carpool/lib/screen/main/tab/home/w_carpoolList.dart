@@ -89,7 +89,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             DocumentSnapshot carpool = widget.snapshot.data![index];
             Map<String, dynamic> carpoolData =
 
-            carpool.data() as Map<String, dynamic>;
+                carpool.data() as Map<String, dynamic>;
 
             DateTime startTime =
             DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
@@ -109,6 +109,14 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
               formattedTime = '${difference.inHours}시간 후';
             } else {
               formattedTime = '${difference.inMinutes}분 후';
+            }
+
+
+            String amPm;
+            if (startTime.hour < 12) {
+              amPm = "오전";
+            } else {
+              amPm = "오후";
             }
 
             Color borderColor;
@@ -191,7 +199,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 color: Colors.white,
                 elevation: 1,
                 margin:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 // shape: RoundedRectangleBorder(
                 //   side: BorderSide(width: 2, color: borderColor),
                 //   borderRadius: BorderRadius.circular(10),
@@ -247,7 +255,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                       width: context.width(0.01),
                                     ),
                                     Text('${startTime.month}월 ${startTime.day}일 '+ formattedDate + ' 예정',
-
                                         style: const TextStyle(
                                           fontSize: 13,
                                         )),
@@ -282,7 +289,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                         ),
                       ),
                     ]),
-                    Row(
+          Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Column(
@@ -318,8 +325,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                   ),
                                 ],
                               ),
-
-
                               Container(
                                 margin: const EdgeInsets.symmetric(vertical: 13), // 여백을 위아래로 5픽셀 추가
                                 child: Container(
@@ -330,7 +335,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
 
                                 ),
                               ),
-
 
                               //방 생성시 설정했던 성별 표시
                               Row(

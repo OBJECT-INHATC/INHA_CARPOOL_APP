@@ -48,8 +48,15 @@ class _ProFileState extends State<ProFile> {
     return await storage.read(key: key) ?? "";
   }
 
+
   @override
   Widget build(BuildContext context) {
+
+    surfaceTintColor: Colors.transparent; // 틴트 제외
+    //프로필 수정 버튼 screenWidth,screenHeight 변수 선언
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Container(
       color: const Color(0x00000000),
       child: Column(
@@ -57,27 +64,8 @@ class _ProFileState extends State<ProFile> {
           Center(
             child: Column(
               children: [
-                // 기본정보 항목
-                Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 6.0),
-                  color: Colors.grey[100],
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 15.0, vertical: 13.0), // vertical 값을 조정
-                  child: const Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
-                    children: [
-                      Text(
-                        '기본 정보',
-                        style: TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 const SizedBox(height: 10),
-                // 기본정보 학목 중 프로필사진, 닉네임 부분
+                // 기본정보 항목 중 프로필사진, 닉네임 부분
                 Row(
                   children: [
                     Stack(
@@ -91,7 +79,7 @@ class _ProFileState extends State<ProFile> {
                                 padding: EdgeInsets.only(left: 5.0),
                                 child: Icon(
                                   Icons.account_circle,
-                                  size: 50,
+                                  size: 60,
                                   color: Colors.black,
                                 ),
                               ),
@@ -111,8 +99,31 @@ class _ProFileState extends State<ProFile> {
                                       // nickNameFuture의 닉네임 값
                                       snapshot.data ?? ' ',
                                       style: const TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.black,
+                                        fontSize: 21,
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    );
+                                  }
+                                },
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              FutureBuilder<String?>(
+                                future: userNameFuture,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const CircularProgressIndicator();
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else {
+                                    return Text(
+                                      snapshot.data ?? '',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey, // 이름 색 변경
                                       ),
                                     );
                                   }
@@ -121,193 +132,64 @@ class _ProFileState extends State<ProFile> {
                             ],
                           ),
                         ),
-                        Positioned(
-                          right: 25,
-                          bottom: 15,
-                          child: GestureDetector(
-                            onTap: () {
-                              _showEditNicknameDialog(context,uid,nickName!,gender!);
-                            },
-                            child: const Row(
-                              children: [
-                                Icon(Icons.edit, size: 15, color: Colors.grey),
-                                SizedBox(width: 5),
-                                Text(
-                                  "수정",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                // SizedBox(width: 5),
 
-                              ],
-                            ),
-                          ),
-                        ),
                       ],
                     ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      "이메일",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 28,
-                    ),
-                    FutureBuilder<String?>(
-                      future: emailFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          email = snapshot.data ?? '';
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            // 텍스트를 약간 내림
-                            child: Text(
-                              snapshot.data ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                              ),
+
+                //이메일란 원래 위치
+
+                Positioned(
+                  right: 25,
+                  bottom: 15,
+                  child: GestureDetector(
+                    onTap: () {
+                      _showEditNicknameDialog(context, uid, nickName!, gender!);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05), // 좌우 여백 반응형으로 지정
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          elevation: 5,
+                          primary: Colors.blue[100], // 버튼 배경색
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12), // 조금 둥글게
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: screenHeight * 0.01, // 위아래 여백 반응형으로 지정
+                            horizontal: screenWidth * 0.05, // 좌우 여백 반응형으로 지정
+                          ),
+                        ),
+                        onPressed: () {
+                          _showEditNicknameDialog(context, uid, nickName!, gender!); // 프로필 수정 버튼 클릭 시 _showEditNicknameDialog 함수 호출
+                        },
+                        child: const Center(
+                          child: Text(
+                            '닉네임 수정',
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      "이름",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
+                          ),
+                        ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                    FutureBuilder<String?>(
-                      future: userNameFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return Text(
-                            snapshot.data ?? '',
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.black),
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                  ),
                 ),
 
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      "닉네임",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 27,
-                    ),
-                    FutureBuilder<String?>(
-                      future: nickNameFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return Text(
-                            snapshot.data ?? ' ',
-                            style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black),
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    const Text(
-                      "성별",
-                      style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                    FutureBuilder<String?>(
-                      future: genderFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const CircularProgressIndicator();
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            // 텍스트를 약간 내림
-                            child: Text(
-                              snapshot.data ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ],
-                ),
+
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
+
+
 
   Future<void> _showEditNicknameDialog(BuildContext context, String uid, String nickName, String gender) async {
     TextEditingController nicknameController = TextEditingController();

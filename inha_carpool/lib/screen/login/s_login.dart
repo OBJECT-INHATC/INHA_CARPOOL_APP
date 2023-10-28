@@ -158,7 +158,6 @@ class _LoginPageState extends State<LoginPage> {
       },
       child: Scaffold(
         body: SingleChildScrollView(
-
           child: Container(
             height: MediaQuery.of(context).size.height,
             child: Center(
@@ -175,24 +174,48 @@ class _LoginPageState extends State<LoginPage> {
                         height: 100,
                       ),
                     ),
-
-                    // Container(
-                    //   padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.01, screenWidth * 0.1, 0),
-                    //   child: Text(
-                    //     '로그인 후 이용바랍니다.',
-                    //     style: TextStyle(
-                    //       fontSize: subTitleFontSize,
-                    //       color: Colors.grey,
-                    //     ),
-                    //   ),
-                    // ),
-                    SizedBox(height: screenHeight * 0.1),
+                    SizedBox(height: screenHeight * 0.08),
+                    Container(
+                        alignment: Alignment.centerRight,
+                        padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
+                            screenHeight * 0.007, screenWidth * 0.1, 0),
+                       // 학교 선택 토글 버튼
+                      child: FlutterToggleTab(
+                      width: 30,
+                      borderRadius: 40,
+                      height: 30,
+                      selectedTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      unSelectedTextStyle: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      labels: const ["인하공전", "인하대"],
+                      selectedLabelIndex: (index) {
+                        setState(() {
+                          if (index == 0) {
+                            academy = "@itc.ac.kr";
+                          } else {
+                            academy = "@inha.edu";
+                          }
+                          selectedIndex = index;
+                          updateBackgroundColors();
+                        });
+                      },
+                      selectedBackgroundColors: selectedBackgroundColors,
+                      unSelectedBackgroundColors: unSelectedBackgroundColors,
+                      isScroll: false,
+                      selectedIndex: selectedIndex,
+                    ),
+                    ),
                     // 학번 입력 필드
                     Container(
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
-                      child: Stack(
-                        alignment: Alignment.centerRight,
-                        children: [
+                      child:
                           Container(
                            // height: inputFieldHeight, // 높이 변수 적용
                             decoration: BoxDecoration(
@@ -227,44 +250,6 @@ class _LoginPageState extends State<LoginPage> {
                               },
                             ),
                           ),
-
-                          // 학교 선택 토글 버튼
-                          Positioned(
-                            right: 0,
-                            child: FlutterToggleTab(
-                              width: 30,
-                              borderRadius: 40,
-                              height: 40,
-                              selectedTextStyle: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              unSelectedTextStyle: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              labels: const ["인하공전", "인하대"],
-                              selectedLabelIndex: (index) {
-                                setState(() {
-                                  if (index == 0) {
-                                    academy = "@itc.ac.kr";
-                                  } else {
-                                    academy = "@inha.edu";
-                                  }
-                                  selectedIndex = index;
-                                  updateBackgroundColors();
-                                });
-                              },
-                              selectedBackgroundColors: selectedBackgroundColors,
-                              unSelectedBackgroundColors: unSelectedBackgroundColors,
-                              isScroll: false,
-                              selectedIndex: selectedIndex,
-                            ),
-                          ),
-                        ],
-                      ),
                     ),
                     // 비밀번호 입력 필드
                     Container(

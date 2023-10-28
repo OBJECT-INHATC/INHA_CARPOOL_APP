@@ -69,7 +69,12 @@ class FcmService {
             'Authorization': 'key=$_serverKey'
           },
           body: jsonEncode({
-            'notification': {'title': title, 'body': body, 'sound': 'false'},
+            'notification': {
+              'title': title,
+              'body': body,
+              'sound': 'false',
+              "priority": "high",
+              "android_channel_id": "high_importance_channel"},
             'ttl': '60s',
             "content_available": true,
             'data': {
