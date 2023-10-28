@@ -237,7 +237,7 @@ class _HomeState extends State<Home> {
                                 children: [
                                   Icon(Icons.arrow_forward_ios_rounded,
                                     color: Colors.white,
-                                    size: 30,
+                                    size: 25,
                                   ),
                                 ],
                               ),
@@ -257,7 +257,8 @@ class _HomeState extends State<Home> {
         ),
         body: Container(
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            color: //Colors.grey[100],
+            Colors.white
           ),
           child: Column(
             children: [
@@ -275,7 +276,7 @@ class _HomeState extends State<Home> {
                             controller: _searchKeywordController,
                             decoration: InputDecoration(
                               hintText: '검색어 입력',
-                              fillColor: Colors.grey[300],
+                              fillColor: Colors.grey[200],
                               // 배경색 설정
                               filled: true,
                               // 배경색을 활성화
@@ -303,7 +304,7 @@ class _HomeState extends State<Home> {
                                       _searchKeywordController.text;
                                 });
                               },
-                              icon: const Icon(Icons.search),
+                              icon: const Icon(Icons.search_rounded),
                             ),
                           ),
                         ],

@@ -6,7 +6,7 @@ import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
 import 'package:nav/nav.dart';
-
+import 'package:intl/intl.dart';
 import '../carpool/s_chatroom.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
 
 class CarpoolListWidget extends StatefulWidget {
@@ -95,6 +95,8 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
             DateTime currentTime = DateTime.now();
             Duration difference = startTime.difference(currentTime);
+
+            String formattedDate = DateFormat('HH:mm').format(startTime);
 
             String formattedTime;
             if (difference.inDays >= 365) {
@@ -252,8 +254,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                     SizedBox(
                                       width: context.width(0.01),
                                     ),
-                                    Text('${startTime.month}월 ${startTime.day}일 ${startTime.hour} : ${startTime.minute} 예정',
-
+                                    Text('${startTime.month}월 ${startTime.day}일 '+ formattedDate + ' 예정',
                                         style: const TextStyle(
                                           fontSize: 13,
                                         )),
@@ -305,7 +306,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        _truncateText(carpoolData['startDetailPoint'], 35),
+                                        _truncateText(carpoolData['startDetailPoint'], 32),
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 15,
@@ -313,7 +314,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                         ),
                                       ),
                                       Text(
-                                        _truncateText(carpoolData['startPointName'], 35),
+                                        _truncateText(carpoolData['startPointName'], 32),
                                         style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 13,
@@ -324,8 +325,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                   ),
                                 ],
                               ),
-
-
                               Container(
                                 margin: const EdgeInsets.symmetric(vertical: 13), // 여백을 위아래로 5픽셀 추가
                                 child: Container(
@@ -337,9 +336,8 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                 ),
                               ),
 
-
-                             //방 생성시 설정했던 성별 표시
-                                Row(
+                              //방 생성시 설정했던 성별 표시
+                              Row(
                                 children: [
                                   Padding(
                                     padding: const EdgeInsets.only(left: 12), // 목적지 아이콘의 왼쪽 여백 추가
@@ -350,7 +348,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        _truncateText(carpoolData['endDetailPoint'], 35),
+                                        _truncateText(carpoolData['endDetailPoint'], 32),
                                         style: const TextStyle(
                                           color: Colors.black,
                                           fontSize: 15,
@@ -358,7 +356,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                         ),
                                       ),
                                       Text(
-                                        _truncateText(carpoolData['endPointName'], 35),
+                                        _truncateText(carpoolData['endPointName'], 32),
                                         style: TextStyle(
                                           color: Colors.grey[600],
                                           fontSize: 13,
@@ -371,39 +369,44 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                 ],
                               ),
 
-                          //화면 하단 **일 후 출발 박스
-                          Positioned(
-                              bottom: 0,
-                              left: MediaQuery.of(context).size.width * 0.05, // 왼쪽 여백
-                              right: MediaQuery.of(context).size.width * 0.05, // 오른쪽 여백
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 15), // 위 아래 여백
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 34),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(color: Color.fromARGB(255, 70, 100, 192), width: 2),
-                                  ),
-                                  height: MediaQuery.of(context).size.height * 0.065, // 세로 길이
-                                  width: MediaQuery.of(context).size.width * 0.75, // 가로 길이
-                                  child: Column(
+                              //화면 하단 **일 후 출발 박스
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 15),
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(horizontal: 34),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      border: Border.all(color: Color.fromARGB(255, 70, 100, 192), width: 2),
+                                    ),
+                                    height: MediaQuery.of(context).size.height * 0.065, // 세로 길이
+                                    width: MediaQuery.of(context).size.width * 0.75, // 가로 길이
+                                    child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
                                         Expanded(
-                                            child: Container(
-                                                alignment: Alignment.center,
-                                                child: Text(
-                                                    formattedTime + ' 출발',
-                                                    style: const TextStyle(
-                                                      fontSize: 17,
-                                                      color: Color.fromARGB(255, 70, 100, 192),
-                                                      fontWeight: FontWeight.bold,
-                                    )
-            )))]),
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                                formattedTime + ' 출발',
+                                                style: const TextStyle(
+                                                  fontSize: 17,
+                                                  color: Color.fromARGB(255, 70, 100, 192),
+                                                  fontWeight: FontWeight.bold,
+                                                )
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
 
-                            ),
-                          ),
-                          )]),
+                                  ),),
+                                ],
+                              ),
+
+                            ],
+                        ),
                       ],
                     ),
                   ],
