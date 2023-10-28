@@ -128,6 +128,20 @@ class _RecordListState extends State<RecordList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leadingWidth: 56,
+        leading: const Center(
+          child: BackButton(
+            color: Colors.black,
+          ),
+        ),
+        title: const Text(
+          "카풀 이용기록",
+          style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: FutureBuilder<List<DocumentSnapshot>>(
         future: _loadCarpools(),
         builder: (context, snapshot){

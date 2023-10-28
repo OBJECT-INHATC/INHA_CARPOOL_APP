@@ -38,8 +38,6 @@ class _MyPageState extends State<MyPage> {
     uid = await storage.read(key: 'uid') ?? "";
   }
 
-  bool isEventAdsAllowed = true; // 스위치의 초기 상태를 설정
-  bool isEvent = true; // 스위치의 초기 상태를 설정
 
   @override
   Widget build(BuildContext context) {

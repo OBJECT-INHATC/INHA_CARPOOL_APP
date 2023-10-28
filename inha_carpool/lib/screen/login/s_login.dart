@@ -18,7 +18,7 @@ import '../register/s_findregister.dart';
 import '../register/s_register.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+   const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -95,15 +95,15 @@ class _LoginPageState extends State<LoginPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Color.fromARGB(255, 70, 100, 192)];
+  List<Color> selectedBackgroundColors = [const Color.fromARGB(255, 70, 100, 192)];
   List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
 
 // 토글 배경색 업데이트 메서드
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [Color.fromARGB(255, 70, 100, 192)]
-        : [Color.fromARGB(255, 70, 100, 192)];
+        ? [const Color.fromARGB(255, 70, 100, 192)]
+        : [const Color.fromARGB(255, 70, 100, 192)];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0

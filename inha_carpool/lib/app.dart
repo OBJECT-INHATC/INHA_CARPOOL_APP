@@ -101,7 +101,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
           //언어 영역 끝
           title: 'Image Finder',
           theme: context.themeType.themeData,
-          home: const LoginPage(),
+          home:  const LoginPage(),
 
         );
       }),
