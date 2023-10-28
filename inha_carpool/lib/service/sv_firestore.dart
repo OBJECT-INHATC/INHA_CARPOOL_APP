@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
+import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 import '../common/models/m_chat.dart';
 
@@ -300,6 +301,17 @@ class FireStoreService {
   }
 
 
+  /// 1025 서은율, 해당 carId의 토픽 구독 취소, 로컬 DB 정보 삭제
+  Future<void> handleEndCarpoolSignal(String carId, String userName) async {
+    // 메시지 전송
+    final carpoolDocRef = carpoolCollection.doc(carId);
 
+    // FCM에서 해당 carId의 토픽 구독 취소
+    FirebaseMessaging.instance.unsubscribeFromTopic(carpoolDocRef.id);
+    FirebaseMessaging.instance.unsubscribeFromTopic("${carpoolDocRef.id}_info");
+
+    // 로컬 DB에서 해당 카풀 정보 삭제
+    ChatDao().deleteByCarId(carId);
+  }
 
 }
