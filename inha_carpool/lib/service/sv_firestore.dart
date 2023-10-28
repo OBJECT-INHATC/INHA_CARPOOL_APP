@@ -302,7 +302,7 @@ class FireStoreService {
 
 
   /// 1025 서은율, 해당 carId의 토픽 구독 취소, 로컬 DB 정보 삭제
-  Future<void> handleEndCarpoolSignal(String carId, String userName) async {
+  Future<void> handleEndCarpoolSignal(String carId) async {
     // 메시지 전송
     final carpoolDocRef = carpoolCollection.doc(carId);
 

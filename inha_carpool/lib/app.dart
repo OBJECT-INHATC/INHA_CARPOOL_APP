@@ -37,13 +37,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification? notification = message.notification;
       var nowTime = DateTime.now().millisecondsSinceEpoch; // 알림 도착 시각
-//알림이 carpoolDone이면 FCM에서 해당 carId의 토픽 구독 취소 로컬 DB에서 해당 카풀 정보 삭제
-      if(message.data['id'] == 'carpoolDone'){
 
-        String carId = message.data['carId'];
-        String userName = message.data['userName'];
-        FireStoreService().handleEndCarpoolSignal(carId, userName);
-      }
       const secureStorage = FlutterSecureStorage();
       String? nickName = await secureStorage.read(key: 'nickName');
 
@@ -74,6 +68,12 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
               time: nowTime,
             )
         );
+
+        if(message.data['id'] == 'carpoolDone'){
+          // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
+          String carId = message.data['groupId'];
+          FireStoreService().handleEndCarpoolSignal(carId);
+        }
       }
     });
 
