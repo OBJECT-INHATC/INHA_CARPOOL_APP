@@ -7,6 +7,7 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
+import 'package:inha_Carpool/screen/register/s_agreement.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 import 'package:nav/nav.dart';
@@ -427,7 +428,7 @@ class _LoginPageState extends State<LoginPage> {
                             PageRouteBuilder(
                               // secondaryAnimation: 화면 전환시 사용되는 보조 애니메이션 효과
                               // child: 화면이 전환되는 동안 표시할 위젯 의미함
-                              pageBuilder: (context, animation, secondaryAnimation) => RegisterPage(),
+                              pageBuilder: (context, animation, secondaryAnimation) => const Agreement(),
                               transitionsBuilder: (context, animation, secondaryAnimation, child) {
                                 const begin = Offset(1.0, 0.0); //0ffset에서 x값 1은 오른쪽 끝, y값 1은 아래쪽 끝
                                 const end = Offset.zero; //애니메이션이 부드럽게 동작하도록 명령
