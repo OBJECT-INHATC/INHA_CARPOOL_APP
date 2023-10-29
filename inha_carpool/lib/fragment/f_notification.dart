@@ -6,6 +6,7 @@ import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 
 import '../screen/main/tab/carpool/s_chatroom.dart';
+import '../screen/main/tab/mypage/w_recordList.dart';
 
 /// 0901 한승완 수정
 /// 알림 목록 페이지
@@ -135,6 +136,14 @@ class _NotificationListState extends State<NotificationList> {
                       // 알림 리스트 스택 제거
                       Navigator.pop(context);
                       // 이용기록 페이지로 이동
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RecordList(
+
+                          ),
+                        ),
+                      );
 
                     }
                   },
