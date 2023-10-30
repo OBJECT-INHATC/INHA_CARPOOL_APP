@@ -80,7 +80,7 @@ class _NotificationListState extends State<NotificationList> {
             onPressed: () async {
               await AlarmDao().deleteAll();
               setState(() {
-                 notificationListFuture = AlarmDao().getAllAlarms();
+                notificationListFuture = AlarmDao().getAllAlarms();
               });
             },
           ),
@@ -126,7 +126,7 @@ class _NotificationListState extends State<NotificationList> {
                           ),
                         ),
                       );
-                    // 알람 타입이 카풀 완료 알람일 시
+                      // 알람 타입이 카풀 완료 알람일 시
                     } else if (notificationList[i].type == "carpoolDone") {
                       AlarmDao().deleteById(
                         notificationList[i].title! +
@@ -136,14 +136,14 @@ class _NotificationListState extends State<NotificationList> {
                       // 알림 리스트 스택 제거
                       Navigator.pop(context);
                       // 이용기록 페이지로 이동
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RecordList(
-
-                          ),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (context) => RecordList(
+                      //
+                      //     ),
+                      //   ),
+                      // );
 
                     }
                   },
@@ -171,7 +171,7 @@ class _NotificationListState extends State<NotificationList> {
                             leading: notificationList![i].type == "chat"
                                 ? const Icon(Icons.chat, color: Colors.blue)
                                 : const Icon(Icons.notifications,
-                                    color: Colors.blue),
+                                color: Colors.blue),
                             title: Column(
                               children: [
                                 Container(
@@ -186,8 +186,8 @@ class _NotificationListState extends State<NotificationList> {
                                   child: Text(
                                     DateFormat('yyyy-MM-dd HH:mm')
                                         .format(
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                                notificationList[i].time!))
+                                        DateTime.fromMillisecondsSinceEpoch(
+                                            notificationList[i].time!))
                                         .toString(),
                                     style: const TextStyle(
                                         fontSize: 12, color: Colors.grey),
@@ -199,12 +199,12 @@ class _NotificationListState extends State<NotificationList> {
                               iconSize: 25,
                               alignment: Alignment.centerRight,
                               icon:
-                                  const Icon(Icons.delete, color: Colors.blue),
+                              const Icon(Icons.delete, color: Colors.blue),
                               onPressed: () {
                                 setState(() {
                                   // 알림 리스트 해당 알림 삭제
                                   final deletedItem =
-                                      notificationList.removeAt(i);
+                                  notificationList.removeAt(i);
                                   if (deletedItem != null) {
                                     // 알림 제거
                                     AlarmDao().deleteById(deletedItem.title! +
