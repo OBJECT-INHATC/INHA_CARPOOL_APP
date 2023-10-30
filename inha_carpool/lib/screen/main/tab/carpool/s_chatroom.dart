@@ -14,6 +14,7 @@ import 'package:inha_Carpool/screen/main/tab/mypage/f_mypage.dart';
 import 'package:inha_Carpool/service/api/ApiService.dart';
 import 'package:inha_Carpool/service/api/Api_Topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
+import 'package:quiver/collection.dart';
 
 
 import '../../../../common/data/preference/prefs.dart';
@@ -209,16 +210,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
     String formattedDate = DateFormat('HH:mm').format(startTime);
 
-
-    //인원수 맞춰 크기 조절, 10/01 강지윤 추가
-    // double containerHeight =
-    // membersList.length > 2 ? context.height(0.18) / 4 : context.height(0.12) / 4;
-
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
-
       },
       child: Scaffold(
         appBar: AppBar(
@@ -235,52 +229,30 @@ class _ChatroomPageState extends State<ChatroomPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                // "${startTime.month}월 ${startTime.day}일 ${startTime.hour.padLeft(2, '0')}:${startTime.minute.padLeft(2, '0')} 출발", //시간2자리 맞춤
-          formattedDate + " 출발",
-                style: const TextStyle(
-                  fontSize: 17,
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
+              Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: widget.userName,
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "님의 방",
+                      style: TextStyle(
+                        fontSize: 17,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
                 ),
-                //   startPoint,
-                //   style: const TextStyle(
-                //     fontSize: 11,
-                //     color: Colors.black,
-                //     fontWeight: FontWeight.bold,
-                //   ),
-
-
               ),
-              // Container(
-              //   //padding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-              //   child: Icon(
-              //     Icons.arrow_right_outlined,
-              //     size: 20,
-              //     color: Colors.black,
-              //   ),
-              // ),
-              // Text(
-              //   endPoint,
-              //   style: const TextStyle(
-              //     fontSize: 11,
-              //     color: Colors.black,
-              //     fontWeight: FontWeight.bold,
-              //   ),
-              // ),
             ],
           ),
-          // actions: [
-          //   IconButton(
-          //     onPressed: (){
-          //     },
-          //     icon: const Icon(
-          //       Icons.exit_to_app,
-          //       color: Colors.black,
-          //       size: 30,
-          //     ),
-          //   ),
-          // ],
         ),
         endDrawer: Drawer(
           shape: RoundedRectangleBorder(
@@ -293,12 +265,176 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 Align(
                   alignment: Alignment.centerLeft, // 왼쪽 정렬
                   child: Padding(
-                    padding: EdgeInsets.only(top: AppBar().preferredSize.height, left: 25),
-                    child: Text(
-                      "대화상대",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                    padding: EdgeInsets.only(top: AppBar().preferredSize.height, left: 15),
+                    child: ListTile(
+                      title: Text(
+                        "대화상대",
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      trailing: IconButton(
+                        iconSize: 30,
+                        onPressed: isExitButtonDisabled
+                            ? null
+                            : () async {
+                          final currentTime = DateTime.now();
+                          final timeDifference = agreedTime.difference(currentTime);
+                          // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
+                          final minutesDifference = timeDifference.inMinutes;
+
+                          if (minutesDifference > 10) {
+                            // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
+                            if (admin != widget.userName) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    surfaceTintColor: Colors.transparent,
+                                    title: const Text('카풀 나가기'),
+                                    content: const Text('정말로 카풀을 나가시겠습니까?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('취소'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          if(exitButtonDisabled) {
+                                            exitButtonDisabled = false;
+
+                                            /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
+                                            if (Prefs.isPushOnRx.get() == true) {
+                                              await FirebaseMessaging.instance
+                                                  .unsubscribeFromTopic(widget.carId);
+
+                                              await FirebaseMessaging.instance
+                                                  .unsubscribeFromTopic(
+                                                  "${widget.carId}_info");
+                                            }
+                                            ApiTopic apiTopic = ApiTopic();
+                                            await apiTopic.deleteTopic(
+                                                widget.uid, widget.carId);
+
+                                            ///--------------------------------------------------------------------
+
+                                            // 데이터베이스 작업을 비동기로 수행
+                                            await FireStoreService().exitCarpool(
+                                                widget.carId,
+                                                widget.userName,
+                                                widget.uid,
+                                                widget.gender);
+
+                                            // 데이터베이스 작업이 완료되면 다음 페이지로 이동
+                                            if (!mounted) return;
+                                            Navigator.pop(context);
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                const MainScreen(),
+                                              ),
+                                            );
+
+                                            setState(() {
+                                              exitButtonDisabled = true;
+                                            });
+                                          }
+                                        },
+                                        child: const Text('나가기'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('카풀 나가기'),
+                                    content:
+                                    const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('취소'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () async {
+                                          if(exitButtonDisabled) {
+                                            exitButtonDisabled = false;
+
+                                            if (Prefs.isPushOnRx.get() == true) {
+                                              await FirebaseMessaging.instance
+                                                  .unsubscribeFromTopic(widget.carId);
+
+                                              await FirebaseMessaging.instance
+                                                  .unsubscribeFromTopic(
+                                                  "${widget.carId}_info");
+                                            }
+                                            ApiTopic apiTopic = ApiTopic();
+                                            await apiTopic.deleteTopic(
+                                                widget.uid, widget.carId);
+
+                                            await FireStoreService().exitCarpoolAsAdmin(
+                                                widget.carId,
+                                                widget.userName,
+                                                widget.uid,
+                                                widget.gender);
+
+                                            if (!mounted) return;
+                                            Navigator.pop(context);
+                                            Navigator.pop(context);
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                  const MainScreen()),
+                                            );
+                                            setState(() {
+                                              exitButtonDisabled = true;
+                                            });
+                                          }
+                                        },
+                                        child: const Text('나가기'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            }
+                          } else {
+                            // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('카풀 나가기 불가'),
+                                  content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: const Text('확인'),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.exit_to_app,
+                          color: Colors.black,
+                          size: 25,
+                        ),
                       ),
                     ),
                   ),
@@ -353,11 +489,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 ),
               ],
             ),
-          )
-
-
+          ),
         ),
-
         body: Column(
           children: [
             Container(
@@ -374,214 +507,81 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   ),
                 ),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Column(
                 children: [
-
-                  /*--출/도착*/
                   Container(
-                    height: context.height(0.05),
-                    width: (screenWidth - 20) * 0.8,
-                    padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                    child:
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              // height: containerHeight,
-                              //padding: const EdgeInsets.only(left: 5),
-                              // width: context.width(0.4),
-                              child:
-                                  Text(
-                                    startPoint,
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // const Icon(Icons.calendar_today_outlined ,
+                        //     color: Colors.black, size: 18),
+                        // SizedBox(
+                        //   width: context.width(0.01),
+                        // ),
+                        Text('${startTime.month}월 ${startTime.day}일 '+ formattedDate + ' 출발',
 
-                            ),
-                            Container(
-                              //padding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-                              child: Icon(
-                                Icons.arrow_right_outlined,
-                                size: 20,
-                                color: Colors.black,
-                              ),
-                            ),
-                            Container(
-                              // height: containerHeight,
-                             // padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                              // width: context.width(0.4),
-                              child:
-                                  Text(
-                                    endPoint,
-                                    style: const TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-
-                            ),
-                          ],
-                        ),
-
+                            style: const TextStyle(
+                              fontSize: 13,
+                            )),
+                      ],
+                    ),
                   ),
-                  /*--출/도착*/
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      /*--출/도착*/
+                      Container(
+                        height: context.height(0.05),
+                        width: (screenWidth - 20) * 0.8,
+                        padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                        child:
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  // height: containerHeight,
+                                  padding: const EdgeInsets.only(left: 5),
+                                  // width: context.width(0.4),
+                                  child:
+                                      Text(
+                                        startPoint,
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
 
-                  // 좌측
-                  // Container(
-                  //   padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                  //   width: context.width(0.45),
-                  //   alignment: Alignment.center,
-                  //   child: ListView.builder(
-                  //     itemCount: membersList.length,
-                  //     itemBuilder: (BuildContext context, int index) {
-                  //       String memberName =
-                  //       getName(membersList[index]); // 회원 이름을 가져오는 부분입니다.
-                  //       String memberGender =
-                  //       getGender(membersList[index]); //회원 성별 가져오는 부분
-                  //       String memberId =
-                  //       getMemberId(membersList[index]); //회원 memberId가져오는 부분
-                  //
-                  //
-                  //       return TextButton(
-                  //         onPressed: () {
-                  //           _showProfileModal(
-                  //               context, memberId ,'$memberName 님', memberGender);
-                  //         },
-                  //         style: TextButton.styleFrom(
-                  //           shape: RoundedRectangleBorder(
-                  //               borderRadius: BorderRadius.circular(50)),
-                  //           backgroundColor: admin == memberName
-                  //               ? Color.fromARGB(255, 70, 100, 192)//Color.fromARGB(255, 2, 41, 104) //Colors.blue
-                  //               : Colors.grey.shade300,
-                  //           // 방장인 경우 파란색, 아닌 경우 회색
-                  //           padding: const EdgeInsets.all(10.0),
-                  //           iconColor:
-                  //           admin == memberName ? Colors.white : Colors.black,
-                  //         ),
-                  //         child: Row(
-                  //           children: [
-                  //             const Icon(
-                  //               Icons.person,
-                  //               size: 18,
-                  //             ),
-                  //             const SizedBox(width: 5),
-                  //             Text(
-                  //               '$memberName 님',
-                  //               style: TextStyle(
-                  //                 fontSize: 11,
-                  //                 color: admin == memberName ? Colors.white : Colors.black,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       );
-                  //     },
-                  //   ),
-                  // ),
+                                ),
+                                Container(
+                                  //padding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
+                                  child: Icon(
+                                    Icons.arrow_right_outlined,
+                                    size: 20,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                Container(
+                                  // height: containerHeight,
+                                 // padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                                  // width: context.width(0.4),
+                                  child:
+                                      Text(
+                                        endPoint,
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
 
-                  //우측
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.end,
-                  //   children: [
-                  //     //const SizedBox(height: 5),
-                  //     // Container(
-                  //     //   height: containerHeight,
-                  //     //   // decoration: BoxDecoration(
-                  //     //   //   color: Colors.grey[300], // 회색 배경색
-                  //     //   //   borderRadius: BorderRadius.circular(10), // 동그란 모양 설정
-                  //     //   // ),
-                  //     //   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  //     //   child: Row(
-                  //     //     mainAxisAlignment: MainAxisAlignment.start,
-                  //     //     children: [
-                  //     //       // const Icon(
-                  //     //       //   Icons.access_time_sharp,
-                  //     //       //   size: 20,
-                  //     //       //   color: Color.fromARGB(255, 70, 100, 192),
-                  //     //       // ),
-                  //     //       // const SizedBox(width: 5),
-                  //     //       Text(
-                  //     //         "${startTime.month}월 ${startTime.day}일 ${startTime.hour}:${startTime.minute} 출발",
-                  //     //         style: const TextStyle(
-                  //     //           fontSize: 15,
-                  //     //           color: Colors.black,
-                  //     //           fontWeight: FontWeight.bold,
-                  //     //         ),
-                  //     //       ),
-                  //     //     ],
-                  //     //   ),
-                  //     // ),
-                  //    // SizedBox(height: context.height(0.01)),
-                  //    //  Container(
-                  //    //    // height: containerHeight,
-                  //    //    padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                  //    //    width: context.width(0.45),
-                  //    //    child: Row(
-                  //    //      mainAxisAlignment: MainAxisAlignment.start,
-                  //    //      children: [
-                  //    //        const Icon(
-                  //    //          Icons.location_on,
-                  //    //          size: 20,
-                  //    //          color: Color.fromARGB(255, 253, 205, 3),
-                  //    //        ),
-                  //    //        const SizedBox(width: 5),
-                  //    //        Text(
-                  //    //          startPoint,
-                  //    //          style: const TextStyle(
-                  //    //            fontSize: 13,
-                  //    //            color: Colors.black,
-                  //    //            fontWeight: FontWeight.bold,
-                  //    //          ),
-                  //    //        ),
-                  //    //      ],
-                  //    //    ),
-                  //    //  ),
-                  //    //  Container(
-                  //    //    // height: containerHeight,
-                  //    //    padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                  //    //    width: context.width(0.45),
-                  //    //    child: const Row(
-                  //    //      mainAxisAlignment: MainAxisAlignment.start,
-                  //    //      children: [
-                  //    //        Icon(
-                  //    //          Icons.arrow_drop_down_sharp,
-                  //    //          size: 20,
-                  //    //          color: Colors.black,
-                  //    //        ),
-                  //    //      ],
-                  //    //    ),
-                  //    //  ),
-                  //    //  Container(
-                  //    //    // height: containerHeight,
-                  //    //    padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                  //    //    width: context.width(0.45),
-                  //    //    child: Row(
-                  //    //      mainAxisAlignment: MainAxisAlignment.start,
-                  //    //      children: [
-                  //    //        const Icon(
-                  //    //          Icons.location_on,
-                  //    //          size: 20,
-                  //    //          color: Color.fromARGB(255, 253, 205, 3),
-                  //    //        ),
-                  //    //        const SizedBox(width: 5),
-                  //    //        Text(
-                  //    //          endPoint,
-                  //    //          style: const TextStyle(
-                  //    //            fontSize: 13,
-                  //    //            color: Colors.black,
-                  //    //            fontWeight: FontWeight.bold,
-                  //    //          ),
-                  //    //        ),
-                  //    //      ],
-                  //    //    ),
-                  //    //  ),
-                  //   ],
-                  // ),
+                                ),
+                              ],
+                            ),
+                      ),
+                      /*--출/도착*/
+                    ],
+                  ),
                 ],
               ),
             ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/screen/dialog/d_complain_show.dart';
 
 import '../../dto/ReportRequstDTO.dart';
 import '../../service/api/ApiService.dart';
@@ -136,10 +137,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                     builder: (BuildContext context) => const ComplainComplete(),
                   );
                 }else{
-                    SnackBar snackBar = const SnackBar(
-                      content: Text("체크박스와 신고내용을 모두 입력 해주세요."),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    showDialog(context: context, builder: (BuildContext context) => const ComplainShow());
                 }
 
               },

@@ -190,7 +190,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
               bottom: context.height(0),
               // 가운데 위치
               child: Container(
-                height: context.height(0.26),
+                height: context.height(0.27),
                 width: context.width(1),
                 decoration: BoxDecoration(
                   //color: Colors.grey.shade100,
