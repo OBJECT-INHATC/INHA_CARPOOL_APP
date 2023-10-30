@@ -36,7 +36,7 @@ class MessageTile extends StatelessWidget {
         bubbleColor =
             //Colors.lightBlueAccent; //Color.fromARGB(255, 130, 11, 252);
             //Color.fromARGB(255, 253, 205, 3);
-            Color.fromARGB(255, 70, 100, 192);
+            const Color.fromARGB(255, 70, 100, 192);
         verticalPadding = 7.0;
         break;
 
@@ -94,7 +94,7 @@ class MessageTile extends StatelessWidget {
                       padding: const EdgeInsets.only(left: 5, top: 2),
                       child: Text(
                         sender,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.normal,
                           color: Colors.black,
@@ -102,21 +102,22 @@ class MessageTile extends StatelessWidget {
                       ),
                     ),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     mainAxisAlignment: messageType == MessageType.me
                         ? MainAxisAlignment.end
                         : MainAxisAlignment.start,
                     children: [
                       if (messageType == MessageType.me)
                         Container(
-                          margin: EdgeInsets.only(right: 10),
-                          padding: EdgeInsets.only(left: 20, top: 10),
+                          margin: const EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.only(left: 20, top: 10),
                           child: Text(
                             formattedTime,
-                            style: TextStyle(fontSize: 12),
+                            style: const TextStyle(fontSize: 12),
                           ),
                         ),
                       ChatBubble(
-                        padding: EdgeInsets.symmetric(
+                        padding: const EdgeInsets.symmetric(
                           horizontal: 20,
                           vertical: 10,
                         ),
@@ -154,13 +155,13 @@ class MessageTile extends StatelessWidget {
                       ),
                       if (messageType != MessageType.me)
                         Container(
-                          margin: EdgeInsets.only(left: 10),
-                          padding: EdgeInsets.only(right: 20, top: 30),
+                          margin: const EdgeInsets.only(left: 10),
+                          padding: const EdgeInsets.only(right: 20, top: 30),
                           child: Row(
                             children: [
                               Text(
                                 formattedTime,
-                                style: TextStyle(fontSize: 12),
+                                style: const TextStyle(fontSize: 12),
                               ),
                             ],
                           ),
