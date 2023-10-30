@@ -1,129 +1,28 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
-import 'package:inha_Carpool/common/extension/datetime_extension.dart';
-
-import 'package:inha_Carpool/common/util/carpool.dart';
-import 'package:inha_Carpool/screen/dialog/d_complain.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
-import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
-
-import 'package:inha_Carpool/service/sv_firestore.dart';
-
-import 'package:inha_Carpool/screen/main/tab/carpool/f_carpool_list.dart';
+import 'package:http/http.dart' as http;
+import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
+import 'package:inha_Carpool/service/api/ApiService.dart';
 
 class RecordList extends StatefulWidget {
-  const RecordList({super.key});
+  final String uid;
+  final String nickName;
+
+  const RecordList({Key? key, required this.uid, required this.nickName}) : super(key: key);
 
   @override
   State<RecordList> createState() => _RecordListState();
 }
 
 class _RecordListState extends State<RecordList> {
-
-  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  final storage = const FlutterSecureStorage();
-  late String nickName = ""; // Initialize with a default value
-  late String uid = "";
-  late String gender = "";
-
-  // static Future<List<DocumentSnapshot>> getCarpoolsWithMemberAndPastTime(String myID, String myNickName, int currentTime) async {
-  //   CollectionReference carpoolCollection = _firestore.collection('carpool');
-  //   QuerySnapshot querySnapshot = await carpoolCollection.get();
-
-    static Future<List<DocumentSnapshot>> getCarpoolsWithMemberAndPastTime(String memberID, String memberName, int currentTime
-    ) async {
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('carpool')
-          .where('members', arrayContains: '${memberID}_$memberName')
-          .get();
-
-    List<DocumentSnapshot> pastCarpools = [];
-
-    // 현재 시간 가져옴
-    DateTime currentTime = DateTime.now();
-
-    querySnapshot.docs.forEach((doc) {
-      if (doc['members'].contains(memberID) || doc['admin'].contains(memberName)) {
-        DateTime startTime =
-        DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
-
-        // 현재 시간보다 과거의 시간인 경우만 추가
-        if (startTime.isBefore(currentTime)) {
-          pastCarpools.add(doc);
-        }
-      }
-    });
-
-    //이용기록 리스트 정렬
-    pastCarpools.sort((a, b) {
-      DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
-      DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b['startTime']);
-
-      return startTimeB.compareTo(startTimeA); // 최근의 것부터 정렬
-    });
-
-    return pastCarpools;
-  }
-
-
+  final ApiService apiService = ApiService();
+  late Future<http.Response> _historyFuture;
 
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    _historyFuture = apiService.selectHistoryList(widget.uid, widget.nickName);
   }
-  // User data retrieval
-  Future<void> _loadUserData() async {
-    nickName = await storage.read(key: "nickName") ?? "";
-    uid = await storage.read(key: "uid") ?? "";
-    gender = await storage.read(key: "gender") ?? "";
-
-    setState(() {
-      // Update the state to trigger a UI refresh
-    });
-  }
-
-  // 카풀 컬렉션 이름 추출
-  // String getName(String res) {
-  //   return res.substring(res.indexOf("_") + 1);
-  // }
-  String getName(String res) {
-    int start = res.indexOf("_") + 1;
-    int end = res.lastIndexOf("_");
-    return res.substring(start, end);
-  }
-
-  // Retrieve carpools and apply FutureBuilder
-  Future<List<DocumentSnapshot>> _loadCarpools() async {
-    String myID = uid;
-    String myNickName = nickName;
-    print(myID);
-
-    //현재시간 가져오기
-    DateTime currentTime = DateTime.now();
-
-    List<DocumentSnapshot> carpools =
-    await _RecordListState.getCarpoolsWithMemberAndPastTime(myID, myNickName,currentTime.microsecondsSinceEpoch);
-
-    // for (DocumentSnapshot carpool in carpools) {
-    //   int numberOfMembers = carpool['members'].length;
-    //   print("Number of Members in the carpool: $numberOfMembers");
-    // }
-    //
-    // return carpools;
-
-    return carpools;
-
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -415,9 +314,8 @@ class _RecordListState extends State<RecordList> {
               ),
             );
           }
-        },//builder
+        },
       ),
-    );//FutureBuilder<List<DocumentSnapshot>>
+    );
   }
 }
-
