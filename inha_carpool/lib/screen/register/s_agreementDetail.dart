@@ -70,7 +70,7 @@ class AgreementDetailPage extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   surfaceTintColor: Colors.transparent,
-                  backgroundColor: const Color.fromARGB(255, 70, 100, 192),
+                  backgroundColor: context.appColors.logoColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

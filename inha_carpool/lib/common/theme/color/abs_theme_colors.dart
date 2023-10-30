@@ -30,7 +30,7 @@ abstract class AbstractThemeColors {
 
   Color get badgeBorder => Colors.transparent;
 
-  Color get divider => const Color.fromARGB(255, 228, 228, 228);
+  Color get divider => const Color.fromARGB(255, 210, 205, 205);
 
   Color get text => AppColors.darkGrey;
 
@@ -47,6 +47,8 @@ abstract class AbstractThemeColors {
   Color get drawerText => text;
 
   Color get appBar => const Color.fromARGB(255, 144, 202, 249);
+
+  Color get logoColor => const Color.fromARGB(255, 70, 100, 192);
 
   Color get snackbarBgColor => AppColors.mediumBlue;
 
