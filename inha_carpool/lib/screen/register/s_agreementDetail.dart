@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 
 class AgreementDetailPage extends StatelessWidget {
   final String title;
@@ -69,7 +70,7 @@ class AgreementDetailPage extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   surfaceTintColor: Colors.transparent,
-                  backgroundColor: Colors.grey[200],
+                  backgroundColor: const Color.fromARGB(255, 70, 100, 192),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

@@ -339,6 +339,7 @@ class _AgreementState extends State<Agreement> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
+                        print("object");
                         if (isAllAgreed) {
                           Navigator.of(context).push(
                             PageRouteBuilder(
