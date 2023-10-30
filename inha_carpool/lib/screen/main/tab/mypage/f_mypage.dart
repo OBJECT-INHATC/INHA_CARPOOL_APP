@@ -27,21 +27,17 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   final storage = FlutterSecureStorage();
   late String uid;
-  late String nickName;
 
   @override
   void initState() {
     super.initState();
     _loadUid();
-    _loadNickName();
   }
 
   Future<void> _loadUid() async {
     uid = await storage.read(key: 'uid') ?? "";
   }
-  
-  bool isEventAdsAllowed = true; // 스위치의 초기 상태를 설정
-  bool isEvent = true; // 스위치의 초기 상태를 설정
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +78,7 @@ class _MyPageState extends State<MyPage> {
                   onTap: () {
                     // 이용기록 페이지로 이동
                     Navigator.of(Nav.globalContext).push(MaterialPageRoute(
-                        builder: (context) => RecordList(uid: uid!, nickName: nickName!,)));
+                        builder: (context) => const RecordList()));
                   },
                 ),
                 ListTile(
@@ -180,17 +176,17 @@ class _MyPageState extends State<MyPage> {
                 ),
                 // 광고부분 일단 주석처리
                 //Obx(
-                  //    () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
-                    //  onChanged: (isOn) async {
-                      //  Prefs.isAdPushOnRx.set(isOn);
-                        //if (isOn) {
-                          //print('광고 및 마케팅 알림 on');
-                          //await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
-                        //} else {
-                         // print('광고 및 마케팅 알림 off');
-                         // await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
-                        //}
-                      //}),
+                //    () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
+                //  onChanged: (isOn) async {
+                //  Prefs.isAdPushOnRx.set(isOn);
+                //if (isOn) {
+                //print('광고 및 마케팅 알림 on');
+                //await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
+                //} else {
+                // print('광고 및 마케팅 알림 off');
+                // await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
+                //}
+                //}),
                 //),
 
                 Obx(
