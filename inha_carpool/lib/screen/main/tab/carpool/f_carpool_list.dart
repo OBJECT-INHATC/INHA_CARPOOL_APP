@@ -4,16 +4,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
-import 'package:inha_Carpool/common/extension/datetime_extension.dart';
-import 'package:intl/intl.dart';
+
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 import 'dart:math';
 import 'package:inha_Carpool/service/sv_firestore.dart';
-
-import '../home/s_carpool_map.dart';
 
 class CarpoolList extends StatefulWidget {
   const CarpoolList({Key? key}) : super(key: key);

@@ -204,6 +204,12 @@ class _HomeState extends State<Home> {
                         } else {
                           final data = snapshot.data;
                           Duration diff = startTime.difference(data!);
+                          // diff가 0초일 경우 페이지 새로고침
+                          if (diff.inSeconds <= 0) {
+                            _refreshCarpoolList();
+                            // return SizedBox.shrink(); // 혹은 다른 UI 요소
+                          }
+
 
                           return Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -442,14 +448,6 @@ class _HomeState extends State<Home> {
   Future<void> initMyPoint() async {
     myPoint = (await Location_handler.getCurrentLatLng(context))!;
   }
-
-  // // 시간순 정렬
-  // Future<List<DocumentSnapshot>> _timeByFunction(int limit) async {
-  //   List<DocumentSnapshot> carpools =
-  //       await FirebaseCarpool.getCarpoolsTimeby(5);
-  //   return carpools;
-  // }
-
   /// 새로고침 로직
   Future<void> _refreshCarpoolList() async {
     if (selectedFilter == FilteringOption.Time) {
@@ -469,7 +467,6 @@ class _HomeState extends State<Home> {
 
     // 로딩과정
     await Future.delayed(const Duration(seconds: 1));
-
     setState(() {});
   }
 

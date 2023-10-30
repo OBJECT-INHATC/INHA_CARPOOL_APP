@@ -57,6 +57,7 @@ class MainScreenState extends State<MainScreen>
 
   @override
   Widget build(BuildContext context) {
+    // WillPopScope : 뒤로가기 버튼을 눌렀을 때의 동작을 정의
     return WillPopScope(
       onWillPop: _handleBackPressed,
       child: Scaffold(

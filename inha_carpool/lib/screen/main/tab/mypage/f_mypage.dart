@@ -39,12 +39,7 @@ class _MyPageState extends State<MyPage> {
   Future<void> _loadUid() async {
     uid = await storage.read(key: 'uid') ?? "";
   }
-
-  Future<void> _loadNickName() async {
-    nickName = await storage.read(key: 'nickName') ?? "";
-    setState(() {});
-  }
-
+  
   bool isEventAdsAllowed = true; // 스위치의 초기 상태를 설정
   bool isEvent = true; // 스위치의 초기 상태를 설정
 

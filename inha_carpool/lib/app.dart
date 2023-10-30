@@ -7,6 +7,7 @@ import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
+import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import 'common/theme/custom_theme_app.dart';
 
@@ -67,6 +68,12 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
               time: nowTime,
             )
         );
+
+        if(message.data['id'] == 'carpoolDone'){
+          // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
+          String carId = message.data['groupId'];
+          FireStoreService().handleEndCarpoolSignal(carId);
+        }
       }
     });
 
@@ -101,7 +108,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
           //언어 영역 끝
           title: 'Image Finder',
           theme: context.themeType.themeData,
-          home: const LoginPage(),
+          home:  const LoginPage(),
 
         );
       }),
