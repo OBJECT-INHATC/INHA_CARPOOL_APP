@@ -89,7 +89,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             DocumentSnapshot carpool = widget.snapshot.data![index];
             Map<String, dynamic> carpoolData =
 
-                carpool.data() as Map<String, dynamic>;
+            carpool.data() as Map<String, dynamic>;
 
             DateTime startTime =
             DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
@@ -109,14 +109,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
               formattedTime = '${difference.inHours}시간 후';
             } else {
               formattedTime = '${difference.inMinutes}분 후';
-            }
-
-
-            String amPm;
-            if (startTime.hour < 12) {
-              amPm = "오전";
-            } else {
-              amPm = "오후";
             }
 
             Color borderColor;
@@ -199,7 +191,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 color: Colors.white,
                 elevation: 1,
                 margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 // shape: RoundedRectangleBorder(
                 //   side: BorderSide(width: 2, color: borderColor),
                 //   borderRadius: BorderRadius.circular(10),
@@ -255,6 +247,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                       width: context.width(0.01),
                                     ),
                                     Text('${startTime.month}월 ${startTime.day}일 '+ formattedDate + ' 예정',
+
                                         style: const TextStyle(
                                           fontSize: 13,
                                         )),
@@ -289,91 +282,94 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                         ),
                       ),
                     ]),
-          Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 12), // 출발지 아이콘 왼쪽 여백 추가
-                                    child: Icon(Icons.circle_outlined, color: Color.fromARGB(255, 70, 100, 192), size: 12),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _truncateText(carpoolData['startDetailPoint'], 32),
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        _truncateText(carpoolData['startPointName'], 32),
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Container(
-                                margin: const EdgeInsets.symmetric(vertical: 13), // 여백을 위아래로 5픽셀 추가
-                                child: Container(
-                                  margin: EdgeInsets.only(left: 10),
-                                  width: screenWidth - 100,
-                                  height: 0.5,
-                                  color: Colors.grey,
-
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12), // 출발지 아이콘 왼쪽 여백 추가
+                                  child: Icon(Icons.circle_outlined, color: Color.fromARGB(255, 70, 100, 192), size: 12),
                                 ),
-                              ),
-
-                              //방 생성시 설정했던 성별 표시
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 12), // 목적지 아이콘의 왼쪽 여백 추가
-                                    child: Icon(Icons.circle, color: Color.fromARGB(255, 70, 100, 192), size: 12),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _truncateText(carpoolData['endDetailPoint'], 32),
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                const SizedBox(width: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _truncateText(carpoolData['startDetailPoint'], 32),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                      Text(
-                                        _truncateText(carpoolData['endPointName'], 32),
-                                        style: TextStyle(
-                                          color: Colors.grey[600],
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                    ),
+                                    Text(
+                                      _truncateText(carpoolData['startPointName'], 32),
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 5),
-                                ],
-                              ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
 
-                              //화면 하단 **일 후 출발 박스
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 15),
+
+                            Container(
+                              margin: const EdgeInsets.symmetric(vertical: 13), // 여백을 위아래로 5픽셀 추가
+                              child: Container(
+                                margin: EdgeInsets.only(left: 10),
+                                width: screenWidth - 100,
+                                height: 0.5,
+                                color: Colors.grey,
+
+                              ),
+                            ),
+
+
+                            //방 생성시 설정했던 성별 표시
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12), // 목적지 아이콘의 왼쪽 여백 추가
+                                  child: Icon(Icons.circle, color: Color.fromARGB(255, 70, 100, 192), size: 12),
+                                ),
+                                const SizedBox(width: 10),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _truncateText(carpoolData['endDetailPoint'], 32),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      _truncateText(carpoolData['endPointName'], 32),
+                                      style: TextStyle(
+                                        color: Colors.grey[600],
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(width: 5),
+                              ],
+                            ),
+
+                            //화면 하단 **일 후 출발 박스
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 15),
                                   child: Container(
                                     margin: EdgeInsets.symmetric(horizontal: 34),
                                     decoration: BoxDecoration(
@@ -402,10 +398,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                     ),
 
                                   ),),
-                                ],
-                              ),
+                              ],
+                            ),
 
-                            ],
+                          ],
                         ),
                       ],
                     ),

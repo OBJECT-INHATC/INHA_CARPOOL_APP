@@ -63,6 +63,7 @@ class _MessageDialogState extends DialogState<MessageDialog> {
                                   height: 1.8,
                                   color: context.appColors.text),
                               textAlign: widget.textAlign,
+                              overflow: TextOverflow.visible, // 이 부분을 추가
                             ),
                           ),
                         ),
