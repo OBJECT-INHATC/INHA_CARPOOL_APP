@@ -58,33 +58,38 @@ class MessageTile extends StatelessWidget {
       child: messageType == MessageType.service
           ? Center(
               child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      vertical: verticalPadding, horizontal: 16),
-                  decoration: BoxDecoration(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: verticalPadding,
+                      horizontal: 16,
+                    ),
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
-                      color: bubbleColor),
-                  child: (messageType == MessageType.service)
-                      ? Text(message)
-                      : Column(
-                          crossAxisAlignment: (messageType == MessageType.me)
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
+                      color: bubbleColor,
+                    ),
+                    child: (messageType == MessageType.service)
+                        ? Text(message)
+                        : Column(
+                            crossAxisAlignment: (messageType == MessageType.me)
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
                               Text(sender.toUpperCase()),
                               Text(message),
-                            ]),
-                ),
-              ],
-            ))
+                            ],
+                          ),
+                  ),
+                ],
+              ),
+            )
           : Align(
               alignment: alignment,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (messageType != MessageType.me) //본인일 때 이름 표시 안함
+                  if (messageType != MessageType.me)
                     Padding(
                       padding: const EdgeInsets.only(left: 5, top: 2),
                       child: Text(
@@ -105,43 +110,46 @@ class MessageTile extends StatelessWidget {
                         Container(
                           margin: EdgeInsets.only(right: 10),
                           padding: EdgeInsets.only(left: 20, top: 10),
-                          child:
-                              Text(formattedTime, style: TextStyle(fontSize: 12)),
+                          child: Text(
+                            formattedTime,
+                            style: TextStyle(fontSize: 12),
+                          ),
                         ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxWidth: (message.length >= 13)
-                                ? MediaQuery.of(context).size.width * 0.6
-                                : double.infinity // 최대 너비를 화면 너비의 60%로 설정
-                            ),
-                        child: ChatBubble(
-                          padding: EdgeInsets.only(
-                              left: 20, right: 20, top: 10, bottom: 10),
-                          clipper: ChatBubbleClipper5(
-                              type: messageType == MessageType.me
-                                  ? BubbleType.sendBubble
-                                  : BubbleType.receiverBubble),
-                          backGroundColor: bubbleColor,
+                      ChatBubble(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 10,
+                        ),
+                        clipper: ChatBubbleClipper5(
+                          type: messageType == MessageType.me
+                              ? BubbleType.sendBubble
+                              : BubbleType.receiverBubble,
+                        ),
+                        backGroundColor: bubbleColor,
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.6,
+                          ),
                           child: Column(
-                              crossAxisAlignment: (messageType == MessageType.me)
-                                  ? CrossAxisAlignment.end
-                                  : CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  message,
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: messageType == MessageType.me
-                                        ? Colors.white
-                                        : Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: -1,
-                                  ),
-                                  maxLines: null,
-                                  softWrap: true,
+                            crossAxisAlignment: messageType == MessageType.me
+                                ? CrossAxisAlignment.end
+                                : CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                message,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: messageType == MessageType.me
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: -1,
                                 ),
-                              ]),
+                                softWrap: true, // 줄바꿈 처리
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       if (messageType != MessageType.me)
@@ -150,10 +158,13 @@ class MessageTile extends StatelessWidget {
                           padding: EdgeInsets.only(right: 20, top: 30),
                           child: Row(
                             children: [
-                              Text(formattedTime, style: TextStyle(fontSize: 12)),
+                              Text(
+                                formattedTime,
+                                style: TextStyle(fontSize: 12),
+                              ),
                             ],
                           ),
-                        )
+                        ),
                     ],
                   ),
                 ],

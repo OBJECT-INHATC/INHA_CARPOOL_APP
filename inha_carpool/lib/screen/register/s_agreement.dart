@@ -35,7 +35,7 @@ class _AgreementState extends State<Agreement> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.grey),
+          icon: const Icon(Icons.arrow_back_rounded, color: Colors.grey),
           onPressed: () {
             Navigator.of(context).pop();
           },
