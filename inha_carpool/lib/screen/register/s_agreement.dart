@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/register/s_agreementDetail.dart';
 import 'package:inha_Carpool/screen/register/s_register.dart';
+import 'package:inha_Carpool/screen/register/w_detailContent.dart';
 
 class Agreement extends StatefulWidget {
   const Agreement({Key? key}) : super(key: key);
@@ -183,7 +184,7 @@ class _AgreementState extends State<Agreement> {
                                     MaterialPageRoute(
                                       builder: (context) => AgreementDetailPage(
                                         title: _agreementList[0]['label'],
-                                        detail: '약관1 내용',
+                                        detail: DetailContent.serviceAgreement,
                                       ),
                                     ),
                                   );
@@ -240,7 +241,7 @@ class _AgreementState extends State<Agreement> {
                                     MaterialPageRoute(
                                       builder: (context) => AgreementDetailPage(
                                         title: _agreementList[1]['label'],
-                                        detail: '약관2 내용',
+                                        detail: DetailContent.privacyAgreement,
                                       ),
                                     ),
                                   );
@@ -296,7 +297,7 @@ class _AgreementState extends State<Agreement> {
                                     MaterialPageRoute(
                                       builder: (context) => AgreementDetailPage(
                                         title: _agreementList[2]['label'],
-                                        detail: '약관3 내용',
+                                        detail: DetailContent.locationAgreement,
                                       ),
                                     ),
                                   );
