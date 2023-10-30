@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/screen/dialog/d_complain_show.dart';
 
 import '../../dto/ReportRequstDTO.dart';
 import '../../service/api/ApiService.dart';
@@ -44,69 +45,71 @@ class _ComplainAlertState extends State<ComplainAlert> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10.0),
       ),
-      content: Builder(
-        builder: (context) {
-          return SizedBox(
-            height: height * heightPercentage,
-            width: width * widthPercentage,
-            child: Column(
-              children: [
-                SizedBox(
-                  width: 180,
-                  height: 60,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.person,
-                        size: 30,
-                        color: Colors.grey,
-                      ),
-                      Text(
-                        widget.reportedUserNickName.replaceFirst(' ', '').toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+      content: SingleChildScrollView(
+        child: Builder(
+          builder: (context) {
+            return SizedBox(
+              height: heightPercentage * height + 40,
+              width: width * widthPercentage,
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 180,
+                    height: 60,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.person,
+                          size: 30,
+                          color: Colors.grey,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Divider(
-                  height: 1,
-                  color: Colors.grey,
-                ),
-                Expanded(
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.only(top: 15),
-                        child: Column(
-                          children: _buildCheckBoxes(),
+                        Text(
+                          widget.reportedUserNickName.replaceFirst(' ', '').toString(),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: TextField(
-                    controller: _controller,
-                    maxLines: 3, // 크기를 조절하기 위해 maxLines를 3으로 설정
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      labelText: '신고내용',
-                      prefixIcon: const Icon(Icons.edit, size: 18),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                  const Divider(
+                    height: 1,
+                    color: Colors.grey,
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(top: 15),
+                          child: Column(
+                            children: _buildCheckBoxes(),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: TextField(
+                      controller: _controller,
+                      maxLines: 3, // 크기를 조절하기 위해 maxLines를 3으로 설정
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        labelText: '신고내용',
+                        prefixIcon: const Icon(Icons.edit, size: 18),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       ),
       actions: [
         Row(
@@ -134,10 +137,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                     builder: (BuildContext context) => const ComplainComplete(),
                   );
                 }else{
-                    SnackBar snackBar = const SnackBar(
-                      content: Text("체크박스와 신고내용을 모두 입력 해주세요."),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    showDialog(context: context, builder: (BuildContext context) => const ComplainShow());
                 }
 
               },

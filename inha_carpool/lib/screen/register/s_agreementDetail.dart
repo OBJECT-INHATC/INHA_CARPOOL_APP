@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 
 class AgreementDetailPage extends StatelessWidget {
   final String title;
@@ -15,6 +16,16 @@ class AgreementDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded, color: Colors.grey),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          iconSize: 30,
+        ),
         title: Text(
           newTitle,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -49,6 +60,31 @@ class AgreementDetailPage extends StatelessWidget {
                 child: Text(
                   detail,
                   style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(bottom: 20),
+              width: double.infinity,
+              height: 45,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  surfaceTintColor: Colors.transparent,
+                  backgroundColor: context.appColors.logoColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  '확인',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),

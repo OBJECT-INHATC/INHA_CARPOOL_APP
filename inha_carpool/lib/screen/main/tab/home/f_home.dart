@@ -335,7 +335,8 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
-              Container(height: 5, color: Colors.white),
+              Height(5),
+              Container(height: 2, color: context.appColors.divider),
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: _refreshCarpoolList,

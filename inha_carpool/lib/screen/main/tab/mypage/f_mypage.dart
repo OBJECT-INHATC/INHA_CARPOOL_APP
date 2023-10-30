@@ -176,17 +176,17 @@ class _MyPageState extends State<MyPage> {
                 ),
                 // 광고부분 일단 주석처리
                 //Obx(
-                  //    () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
-                    //  onChanged: (isOn) async {
-                      //  Prefs.isAdPushOnRx.set(isOn);
-                        //if (isOn) {
-                          //print('광고 및 마케팅 알림 on');
-                          //await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
-                        //} else {
-                         // print('광고 및 마케팅 알림 off');
-                         // await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
-                        //}
-                      //}),
+                //    () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
+                //  onChanged: (isOn) async {
+                //  Prefs.isAdPushOnRx.set(isOn);
+                //if (isOn) {
+                //print('광고 및 마케팅 알림 on');
+                //await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
+                //} else {
+                // print('광고 및 마케팅 알림 off');
+                // await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
+                //}
+                //}),
                 //),
 
                 Obx(

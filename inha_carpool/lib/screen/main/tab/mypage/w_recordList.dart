@@ -37,12 +37,12 @@ class _RecordListState extends State<RecordList> {
   //   CollectionReference carpoolCollection = _firestore.collection('carpool');
   //   QuerySnapshot querySnapshot = await carpoolCollection.get();
 
-    static Future<List<DocumentSnapshot>> getCarpoolsWithMemberAndPastTime(String memberID, String memberName, int currentTime
-    ) async {
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('carpool')
-          .where('members', arrayContains: '${memberID}_$memberName')
-          .get();
+  static Future<List<DocumentSnapshot>> getCarpoolsWithMemberAndPastTime(String memberID, String memberName, int currentTime
+      ) async {
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('carpool')
+        .where('members', arrayContains: '${memberID}_$memberName')
+        .get();
 
     List<DocumentSnapshot> pastCarpools = [];
 
@@ -153,20 +153,20 @@ class _RecordListState extends State<RecordList> {
             return Text('Error: ${snapshot.error}');
           } else if(!snapshot.hasData || snapshot.data!.isEmpty){
             return SafeArea(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      '카풀 이용기록이 없네요!\n카풀을 등록하여 이용해보세요.'
-                          .text
-                          .size(20)
-                          .bold
-                          .color(context.appColors.text)
-                          .align(TextAlign.center)
-                          .make(),
-                    ],
-                  ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    '카풀 이용기록이 없네요!\n카풀을 등록하여 이용해보세요.'
+                        .text
+                        .size(20)
+                        .bold
+                        .color(context.appColors.text)
+                        .align(TextAlign.center)
+                        .make(),
+                  ],
                 ),
+              ),
             );
           } else{
             List<DocumentSnapshot> myCarpools = snapshot.data!;
@@ -374,7 +374,7 @@ class _RecordListState extends State<RecordList> {
                                                                                     borderRadius: BorderRadius.circular(20)),
                                                                                 context: context,
                                                                                 builder: (BuildContext context) => Container(
-                                                                                  color: Colors.white,
+                                                                                    color: Colors.white,
                                                                                     padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
                                                                                     height:
                                                                                     MediaQuery.of(context).size.height * 0.35,
@@ -420,4 +420,3 @@ class _RecordListState extends State<RecordList> {
     );//FutureBuilder<List<DocumentSnapshot>>
   }
 }
-
