@@ -192,104 +192,113 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 }
               },
 
-
-              child: Card(
-                surfaceTintColor: Colors.transparent,
-                // color: Colors.blue[100],
-                color: Colors.white,
-                elevation: 1,
-                margin:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                // shape: RoundedRectangleBorder(
-                //   side: BorderSide(width: 2, color: borderColor),
-                //   borderRadius: BorderRadius.circular(10),
-                // ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: context.height(0.005),
-                    ),
-                    Row(children: [
-                      Expanded(
+                child: Stack(
+                    children: [
+                      Card(
+                        color: Color.fromARGB(255, 70, 100, 192),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        surfaceTintColor: Colors.transparent,
+                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        elevation: 3,
                         child: Container(
-                          // width: context.width(0.8),
+                          //width: screenWidth - 20,
+                          height: cardHeight - 60,
+                          decoration: BoxDecoration(
 
-                          // desired width
-                          padding: const EdgeInsets.all(8.0),
-                          margin: const EdgeInsets.all(8.0),
-                          decoration: const BoxDecoration(
-                            // border: Border(
-                            //   bottom: BorderSide(
-                            //     // POINT
-                            //     color: Colors.black,
-                            //   ),
-                            // ),
                           ),
-
-                          child:
-                          /*Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        ),
+                      ),
+                      Positioned(
+                          left: 0,
+                          right: 0,
+                          child: Container(
+                            color: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 4,
+                              horizontal: 0,
+                            ),
+                            margin: const EdgeInsets.only(
+                              top: 2,
+                              bottom: 5,
+                              left: 10,
+                              right: 10,
+                            ),
+                            child: Container(
+                              width: (screenWidth - 20) * 0.8,
+                              margin: const EdgeInsets.symmetric(horizontal: 3),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
                                       children: [
-                                        const Icon(Icons.calendar_today_outlined,
-                                            size: 14),
-                                        SizedBox(
-                                          width: context.width(0.01),
-                                        ),
-                                        Text(
-                                            '${startTime.month}월 ${startTime.day}일 ${startTime.hour}시 ${startTime.minute}분 예정',
-                                            style: const TextStyle(
-                                                fontSize: 13, color: Colors.black)),
-                                      ],
-                                    ), */
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                //방장 정보 가져오기
-                                Row(
-                                  children: [
+                                        Flexible(
+                                          child: Container(
+                                            width: (screenWidth - 20) * 0.8,
+                                            height: cardHeight * 0.15,
+                                            margin: const EdgeInsets.only(left: 5.0),
+                                            child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  // 방장 정보 가져오기
+                                                  Row(
+                                                    children: [
+                                                      Padding(
+                                                        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.02), // 왼쪽 여백을 화면 너비의 2%로 설정
+                                                        child: Icon(
+                                                          Icons.calendar_today_outlined,
+                                                          color: Colors.black,
+                                                          size: 18,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: MediaQuery.of(context).size.width * 0.02, // 아이콘과 텍스트 사이의 간격을 화면 너비의 2%로 설정
+                                                      ),
+                                                      Text(
+                                                        '${startTime.month}월 ${startTime.day}일 ' + formattedDate + ' 예정',
+                                                        style: TextStyle(
+                                                          fontSize: 13,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
 
-                                    const Icon(Icons.calendar_today_outlined ,
-                                        color: Colors.black, size: 18),
-                                    SizedBox(
-                                      width: context.width(0.01),
-                                    ),
-                                    Text('${startTime.month}월 ${startTime.day}일 '+ formattedDate + ' 예정',
-                                        style: const TextStyle(
-                                          fontSize: 13,
-                                        )),
-                                  ],
-                                ),
+                                                  // 방의 인원 및 성별
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.end, // 오른쪽 정렬
+                                                    children: [
+                                                      Padding(
+                                                        padding: EdgeInsets.only(
+                                                          left: MediaQuery.of(context).size.width * 0.1, // 왼쪽 여백 화면 너비의 10%로 설정
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.directions_car_outlined,
+                                                          color: getColorForGender(carpoolData['gender']),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: MediaQuery.of(context).size.width * 0.02, // 아이콘과 텍스트 사이의 간격 화면 너비의 2%로 설정
+                                                      ),
+                                                      Text(
+                                                        '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명 ',
+                                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                                      ),
+                                                      Text(
+                                                        carpoolData['gender'],
+                                                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.grey),
+                                                      ),
+                                                    ],
+                                                  )
 
-                                // 방의 인원 및 성별
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.directions_car_outlined,
-                                      color: getColorForGender(carpoolData['gender']),
-                                    ),
-                                    SizedBox(
-                                      width: context.width(0.01),
-                                    ),
-                                    Text(
 
-                                      '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명 ',
-                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      carpoolData['gender'],
-                                      style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color:Colors.grey),
 
-                                    ),
-                                  ],
-                                ),
-
-                                //방장 평점
+                                                  //방장 평점
                               ]),
                         ),
                       ),
                     ]),
-          Row(
+                  Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Column(
@@ -412,7 +421,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                   ],
                 ),
               ),
-            );
+            ))]));
             // } else {
             //   return null;
             // }

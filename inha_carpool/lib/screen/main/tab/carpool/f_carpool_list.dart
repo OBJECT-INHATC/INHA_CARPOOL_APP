@@ -114,7 +114,7 @@ class _CarpoolListState extends State<CarpoolList> {
     // 화면 높이의 70%를 ListView.builder의 높이로 사용
     double listViewHeight = screenHeight * 0.7;
     // 각 카드의 높이
-    double cardHeight = listViewHeight * 0.35;
+    double cardHeight = listViewHeight * 0.3;
     // 카드 높이의 1/2 사용
     double containerHeight = cardHeight / 2;
 
@@ -188,34 +188,39 @@ class _CarpoolListState extends State<CarpoolList> {
                     borderRadius: BorderRadius.circular(40),
                     //side: const BorderSide(color: Colors.white, width: 1),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      Nav.globalContext,
-                      MaterialPageRoute(
-                          builder: (context) => const RecruitPage()),
-                    );
-                  },
-                  child: '+'
-                      .text
-                      .size(50)
-                      .color(
-                    //Colors.blue[200],
-                        Color.fromARGB(255, 70, 100, 192),
-                      )
-                      .make(),
-                ),
-                body: Align(
-                  alignment: Alignment.center,
-                  child: ListView.builder(
-                    itemCount: myCarpools.length,
-                    itemBuilder: (context, i) {
-                      DocumentSnapshot carpool = myCarpools[i];
-                      // DocumentSnapshot carpool = widget.snapshot.data![index];
-                      Map<String, dynamic> carpoolData =
-                          carpool.data() as Map<String, dynamic>;
-                      String startPointName = carpool['startPointName'];
+          onPressed: () {
+          Navigator.push(
+          Nav.globalContext,
+          MaterialPageRoute(
+          builder: (context) => const RecruitPage()),
+          );
+          },
+          child: '+'
+              .text
+              .size(50)
+              .color(
+          //Colors.blue[200],
+          Color.fromARGB(255, 70, 100, 192),
+          )
+              .make(),
+          ),
+          body: Container( //이 부분 추가
+          /*컨테이너 배경색 추가*/
+          decoration: BoxDecoration(color: Colors.grey[100],
+          // Colors.white,
+          borderRadius: BorderRadius.circular(10),),
+          /*--------------*/
+          child: Align( alignment: Alignment.center,
+            child: ListView.builder(
+            itemCount: myCarpools.length,
+            itemBuilder: (context, i) {
+            DocumentSnapshot carpool = myCarpools[i];
+          // DocumentSnapshot carpool = widget.snapshot.data![index];
+          Map<String, dynamic> carpoolData =
+            carpool.data() as Map<String, dynamic>;
+            String startPointName = carpool['startPointName'];
 
-                      //카풀 날짜 및 시간 변환
+          //카풀 날짜 및 시간 변환
                       DateTime startTime = DateTime.fromMillisecondsSinceEpoch(
                           carpool['startTime']);
                       DateTime currentTime = DateTime.now();
@@ -244,37 +249,45 @@ class _CarpoolListState extends State<CarpoolList> {
                         child: Stack(
                           children: [
                             Card(
-                              color:
-                              //Colors.blue[200],
-                              Color.fromARGB(255, 70, 100, 192),
+                              color: Color.fromARGB(255, 70, 100, 192),
                               surfaceTintColor: Colors.transparent,
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 10, horizontal: 10),
-                              child: SizedBox(
+                              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                              elevation: 1, // 그림자 높이 설정
+                              child: Container(
                                 width: screenWidth - 20,
-                                height: cardHeight,
+                                height: cardHeight - 26,
+                                decoration: BoxDecoration(
+                                  border: Border(
+                                    bottom: BorderSide(
+                                      color: Colors.white,
+                                      width: 1.0,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
-
                             Positioned(
-                              top: (cardHeight - containerHeight) / 2 - 8,
+                              top: (cardHeight - containerHeight) / 2 - 22,
                               left: 0,
                               right: 0,
                               child: Container(
-                                color: Colors.grey[100],
+                                color: Colors.white,
                                 padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 0),
+                                  vertical: 8,
+                                  horizontal: 0,
+                                ),
                                 margin: const EdgeInsets.only(
-                                    top: 2, bottom: 5, left: 10, right: 10),
+                                  top: 2,
+                                  bottom: 5,
+                                  left: 10,
+                                  right: 10,
+                                ),
                                 child: Container(
                                   width: (screenWidth - 20) * 0.8,
-                                  // 카드의 너비의 4/5로 설정
-                                  margin:
-                                      const EdgeInsets.symmetric(horizontal: 3),
+                                  margin: const EdgeInsets.symmetric(horizontal: 3),
                                   height: containerHeight + 20,
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -282,12 +295,9 @@ class _CarpoolListState extends State<CarpoolList> {
                                             child: Container(
                                               width: (screenWidth - 20) * 0.8,
                                               height: cardHeight * 0.15,
-                                              margin: const EdgeInsets.only(
-                                                  left: 5.0),
+                                              margin: const EdgeInsets.only(left: 5.0),
                                               child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   // 날짜
                                                   Container(
@@ -296,41 +306,34 @@ class _CarpoolListState extends State<CarpoolList> {
                                                       children: [
                                                         Flexible(
                                                           flex: 1,
-                                                          child:
-                                                          Icon(
-                                                            Icons
-                                                                .calendar_today_rounded,
-                                                            size: 18,
-                                                            color: Colors.black,
+                                                          child: Align(
+                                                            alignment: Alignment.centerRight,
+                                                            child: Padding(
+                                                              padding: EdgeInsets.only(left: 40),
+                                                              child: Icon(
+                                                                Icons.calendar_today_rounded,
+                                                                size: 18,
+                                                                color: Colors.black54,
+                                                              ),
+                                                            ),
                                                           ),
-                                                         ),
+                                                        ),
                                                         Flexible(
                                                           flex: 2,
-                                                          child: Container(
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    left: 3),
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    right: 3),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors
-                                                                  .grey[300],
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          3.0),
-                                                            ),
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: Text(
-                                                              formattedStartTime,
-                                                              style: const TextStyle(
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                          child: Align(
+                                                            alignment: Alignment.centerRight,
+                                                            child: Container(
+                                                              margin: EdgeInsets.only(left: 5),
+                                                              padding: EdgeInsets.only(right: 3),
+                                                              alignment: Alignment.center,
+                                                              child: Text(
+                                                                formattedStartTime,
+                                                                style: const TextStyle(
+                                                                  fontSize: 15,
+                                                                  color : Colors.black54,
+                                                                  fontWeight: FontWeight.bold,
+                                                                ),
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
@@ -339,52 +342,41 @@ class _CarpoolListState extends State<CarpoolList> {
                                                   ),
                                                   // 시간
                                                   Container(
-                                                    width: (screenWidth - 20) *
-                                                        0.8 /
-                                                        2,
+                                                    width: (screenWidth - 20) * 0.8 / 2,
                                                     child: Row(
                                                       children: [
-                                                        Flexible(
-                                                          flex: 1, // 1/3 공간 차지
-                                                          child:
-                                                          Icon(
-                                                            Icons
-                                                                .access_time_rounded,
+                                                      Flexible(
+                                                      flex: 1,
+                                                      child: Align(
+                                                        alignment: Alignment.centerRight,
+                                                        child: Padding(
+                                                          padding: EdgeInsets.only(left: 10),
+                                                          child: Icon(
+                                                            Icons.access_time_rounded,
                                                             size: 20,
-                                                            color: Colors.black,
+                                                            color: Colors.black54,
                                                           ),
                                                         ),
-                                                        Flexible(
-                                                          flex: 2,
-                                                          child: Container(
-                                                            margin:
-                                                                EdgeInsets.only(
-                                                                    left: 3),
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    right: 8),
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors
-                                                                  .grey[300],
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          3.0),
-                                                            ),
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: Text(
-                                                              formattedDate,
-                                                              style: const TextStyle(
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
+                                                      ),
+                                                    ),
+                                                    Flexible(
+                                                      flex: 1,
+                                                      child: Align(
+                                                        alignment: Alignment.centerRight,
+                                                        child: Container(
+                                                          margin: EdgeInsets.only(left: 1),
+                                                          padding: EdgeInsets.only(right: 8),
+                                                          alignment: Alignment.center,
+                                                          child: Text(
+                                                            formattedDate,
+                                                            style: const TextStyle(
+                                                              fontSize: 15,
+                                                              color : Colors.black54,
+                                                              fontWeight: FontWeight.bold,
                                                             ),
                                                           ),
                                                         ),
-                                                      ],
+                                                    ))],
                                                     ),
                                                   ),
                                                 ],
@@ -393,123 +385,81 @@ class _CarpoolListState extends State<CarpoolList> {
                                           ),
                                         ],
                                       ),
+
                                       //출발지,도착지
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Container(
                                             width: (screenWidth - 20) * 0.8,
                                             height: cardHeight * 0.25,
-                                            margin:
-                                                EdgeInsets.fromLTRB(5, 5, 0, 0),
+                                            margin: EdgeInsets.fromLTRB(70, 8, 0, 0),
                                             child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
                                                 Row(
                                                   children: [
                                                     Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Row(
                                                           children: [
                                                             Container(
+                                                              padding: EdgeInsets.only(left: 10), // 왼쪽 여백 추가
                                                               child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .start,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                                 children: [
                                                                   //요약주소 6글자 이상이면 폰트 크기 작게
                                                                   Text(
                                                                     "${carpoolData['startDetailPoint']}",
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize: carpoolData['startDetailPoint'].toString().length >
-                                                                              4
+                                                                    style: TextStyle(
+                                                                      color: Colors.black,
+                                                                      fontSize: carpoolData['startDetailPoint'].toString().length > 4
                                                                           ? 12
-                                                                          : 15,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
+                                                                          : 17,
+                                                                      fontWeight: FontWeight.bold,
                                                                     ),
                                                                   ),
                                                                   Text(
-                                                                    shortenText(
-                                                                        carpoolData[
-                                                                            'startPointName'],
-                                                                        16),
-                                                                    style:
-                                                                        TextStyle(
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          11,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold,
+                                                                    shortenText(carpoolData['startPointName'], 16),
+                                                                    style: TextStyle(
+                                                                      color: Colors.black54,
+                                                                      fontSize: 11,
+                                                                      fontWeight: FontWeight.bold,
                                                                     ),
                                                                   ),
                                                                 ],
                                                               ),
                                                             ),
+                                                            // 세로선을 추가
                                                             Container(
-                                                              margin:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left: 10,
-                                                                      top: 0,
-                                                                      bottom:
-                                                                          10,
-                                                                      right:
-                                                                          10),
-                                                              child: Icon(
-                                                                  Icons
-                                                                      .double_arrow_outlined,
-                                                                  size: 20,
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      700]),
+                                                              margin: const EdgeInsets.only(left: 25, right: 25, top: 0, bottom: 0),
+                                                              width: 2, // 세로선의 너비
+                                                              height: 30, // 세로선의 높이를 설정, 필요에 따라 조절
+                                                              color: Colors.grey[300], // 세로선의 색상
                                                             ),
                                                             Row(
                                                               children: [
                                                                 Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
+                                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                                   children: [
                                                                     //요약주소 6글자 이상이면 폰트 크기 작게
                                                                     Text(
                                                                       "${carpoolData['endDetailPoint']}",
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize: carpoolData['endDetailPoint'].toString().length >
-                                                                                4
+                                                                      style: TextStyle(
+                                                                        color: Colors.black,
+                                                                        fontSize: carpoolData['endDetailPoint'].toString().length > 4
                                                                             ? 12
-                                                                            : 15,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
+                                                                            : 17,
+                                                                        fontWeight: FontWeight.bold,
                                                                       ),
                                                                     ),
                                                                     Text(
-                                                                      shortenText(
-                                                                          carpoolData[
-                                                                              'endPointName'],
-                                                                          16),
-                                                                      style:
-                                                                          TextStyle(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize:
-                                                                            11,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
+                                                                      shortenText(carpoolData['endPointName'], 16),
+                                                                      style: TextStyle(
+                                                                        color: Colors.black54,
+                                                                        fontSize: 11,
+                                                                        fontWeight: FontWeight.bold,
                                                                       ),
                                                                     ),
                                                                   ],
@@ -531,7 +481,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                         child: Container(
                                           width: (screenWidth - 20) * 0.8,
                                           margin:
-                                              const EdgeInsets.only(left: 5.0),
+                                              const EdgeInsets.only(left: 8.0),
                                           child:
                                               StreamBuilder<DocumentSnapshot?>(
                                             stream: FireStoreService()
@@ -569,8 +519,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                 children: [
                                                   Container(
                                                     //margin: EdgeInsets.only(bottom: 8.0), // 채팅 밑 여백
-                                                    padding: EdgeInsets.only(
-                                                        left: 3.0), // 채팅 왼쪽 여백
+                                                    padding: EdgeInsets.only(left: 10.0), // 채팅 왼쪽 여백
                                                     child: Text(
                                                       '$sender : $content',
                                                       style: TextStyle(
@@ -590,111 +539,6 @@ class _CarpoolListState extends State<CarpoolList> {
                               ),
                             ),
 
-                            //수직 점선
-                            Positioned(
-                              top: 18,
-                              // 점선 수직 위치 조정
-                              left: ((screenWidth - 20) * 4 / 5) + 10,
-                              // 카드를 1/5해서 가장 오른쪽 위치 계산
-                              child: CustomPaint(
-                                painter: DashedLinePainter(),
-                                child: Container(
-                                  width: 2,
-                                  height: cardHeight - 10,
-                                ),
-                              ),
-                            ),
-
-                            // 흰색 역삼각형
-                            Positioned(
-                              top: 5,
-                              left: ((screenWidth - 20) * 4 / 5) + 1,
-                              child: CustomPaint(
-                                size: Size(
-                                    (screenWidth - 20) / 16, cardHeight / 11),
-                                painter: dwonTrianglePainter(),
-                              ),
-                            ),
-
-                            //흰색 삼각형
-                            Positioned(
-                              bottom: 5, // 카드의 아래쪽에서 5의 위치에 배치
-                              left: ((screenWidth - 20) * 4 / 5) + 1,
-                              child: CustomPaint(
-                                size: Size(
-                                    (screenWidth - 20) / 16, cardHeight / 11),
-                                painter: UpTrianglePainter(),
-                              ),
-                            ),
-
-                            //지도 버튼
-                            Positioned(
-                              top: cardHeight / 2 -10, // 카드의 중앙에서 시작
-                              left: ((screenWidth - 20) * 4 / 5) +
-                                  ((screenWidth - 20) / 8) -
-                                  30, // 오른쪽으로 더 옮김
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  //   Navigator.push(
-                                  //     Nav.globalContext,
-                                  //     PageRouteBuilder(
-                                  //       //아래에서 위로 올라오는 효과
-                                  //       pageBuilder: (context, animation,
-                                  //               secondaryAnimation) =>
-                                  /// TODO : 한승완 - 지도 연결 해주세요
-                                  //           CarpoolMap(
-                                  //         startPoint: LatLng(
-                                  //             carpoolData['startPoint'].latitude,
-                                  //             carpoolData['startPoint']
-                                  //                 .longitude),
-                                  //         startPointName:
-                                  //             carpoolData['startPointName'],
-                                  //         endPoint: LatLng(
-                                  //             carpoolData['endPoint'].latitude,
-                                  //             carpoolData['endPoint'].longitude),
-                                  //         endPointName:
-                                  //             carpoolData['endPointName'],
-                                  //         startTime: formattedStartTime,
-                                  //         carId: carpoolData['carId'],
-                                  //         admin: carpoolData['admin'],
-                                  //         roomGender: carpoolData['gender'],
-                                  //       ),
-
-                                  //       transitionsBuilder: (context, animation,
-                                  //           secondaryAnimation, child) {
-                                  //         const begin = Offset(0.0, 1.0);
-                                  //         const end = Offset.zero;
-                                  //         const curve = Curves.easeInOut;
-                                  //         var tween = Tween(
-                                  //                 begin: begin, end: end)
-                                  //             .chain(CurveTween(curve: curve));
-                                  //         var offsetAnimation =
-                                  //             animation.drive(tween);
-                                  //         return SlideTransition(
-                                  //             position: offsetAnimation,
-                                  //             child: child);
-                                  //       },
-                                  //     ),
-                                  //   );
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  // 패딩을 동일하게 주어 동그란 모양 유지
-                                  child:
-                                  Icon(
-                                    Icons.map_outlined,
-                                    color: Colors.white,
-                                    size: 18,
-                                  ),
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 0, vertical: 6),
-                                  shape: CircleBorder(), // 동그란 모양으로 변경
-                                  backgroundColor: Colors.grey[400],
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                         /*-----------------------------------------------Card---------------------------------------------------------------*/
@@ -703,7 +547,7 @@ class _CarpoolListState extends State<CarpoolList> {
                   ),
                 ),
               ),
-            );
+            ));
           }
         },
       ),
@@ -776,24 +620,7 @@ class DashedLinePainter extends CustomPainter {
   }
 }
 
-//역삼각형
-class dwonTrianglePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final path = Path()
-      ..moveTo(0, 0) // 왼쪽 위
-      ..lineTo(size.width, 0) // 오른쪽 위
-      ..lineTo(size.width / 2, size.height) // 아래 중앙
-      ..close();
 
-    final paint = Paint()..color = Colors.white;
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
 //반원
 // class SemiCirclePainter extends CustomPainter {
 //   @override
@@ -812,20 +639,20 @@ class dwonTrianglePainter extends CustomPainter {
 // }
 
 //삼각형
-class UpTrianglePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final path = Path()
-      ..moveTo(size.width / 2, 0) // 중앙 위
-      ..lineTo(0, size.height) // 왼쪽 아래
-      ..lineTo(size.width, size.height) // 오른쪽 아래
-      ..close();
+//class UpTrianglePainter extends CustomPainter {
+  //@override
+  //void paint(Canvas canvas, Size size) {
+    //final path = Path()
+      //..moveTo(size.width / 2, 0) // 중앙 위
+      //..lineTo(0, size.height) // 왼쪽 아래
+      //..lineTo(size.width, size.height) // 오른쪽 아래
+      //..close();
 
-    final paint = Paint()..color = Colors.white;
+    //final paint = Paint()..color = Colors.white;
 
-    canvas.drawPath(path, paint);
-  }
+    //canvas.drawPath(path, paint);
+  //}
 
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
-}
+  //@override
+  //bool shouldRepaint(CustomPainter oldDelegate) => false;
+//}

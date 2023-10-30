@@ -24,19 +24,19 @@ class _SecessionPageState extends State<SecessionPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Colors.lightBlueAccent, Colors.black];
-  List<Color> unSelectedBackgroundColors = [Colors.white, Colors.white];
+  List<Color> selectedBackgroundColors = [Color.fromARGB(255, 70, 100, 192)];
+  List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
 
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [Colors.blue, Colors.black]
-        : [Colors.black, Colors.blue];
+        ? [Color.fromARGB(255, 70, 100, 192)]
+        : [Color.fromARGB(255, 70, 100, 192)];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.white, Colors.white]
-        : [Colors.white, Colors.white];
+        ? [Colors.black54, Colors.black]
+        : [Colors.black54, Colors.black];
   }
 
   final storage = FlutterSecureStorage();
@@ -194,7 +194,7 @@ class _SecessionPageState extends State<SecessionPage> {
                                       fontSize: 12,
                                       fontWeight: FontWeight.w700),
                                   unSelectedTextStyle: const TextStyle(
-                                      color: Colors.black87,
+                                      color: Colors.white,
                                       fontSize: 10,
                                       fontWeight: FontWeight.w500),
                                   labels: const ["인하공전", "인하대"],
@@ -210,9 +210,9 @@ class _SecessionPageState extends State<SecessionPage> {
                                     });
                                   },
                                   selectedBackgroundColors:
-                                      selectedBackgroundColors,
+                                  selectedBackgroundColors,
                                   unSelectedBackgroundColors:
-                                      unSelectedBackgroundColors,
+                                  unSelectedBackgroundColors,
                                   isScroll: false,
                                   selectedIndex: selectedIndex,
                                 ),
@@ -254,25 +254,25 @@ class _SecessionPageState extends State<SecessionPage> {
                         ),
                       ),
                     ),
-                    SizedBox(height: context.height(0.3)),
+                    SizedBox(height: context.height(0.01)),
                     Container(
-                      height: context.height(0.09),
+                      height: context.height(0.12),
                       padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             primary: (onChanges != false)?Colors.blue:Colors.grey[300], // 버튼 배경색 회색으로 설정
                             minimumSize: const Size.fromHeight(50),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(90.0),
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
 
-                            child: const Text('탈퇴하기',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold)),
-                   
+                          child: const Text('탈퇴하기',
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+
                           onPressed: () async {
                             bool isValid = await validateCredentials(
                                 email + academy, password);
@@ -306,7 +306,7 @@ Future<bool> validateCredentials(String email, String password) async {
   try {
     User? user = FirebaseAuth.instance.currentUser;
     AuthCredential credential =
-        EmailAuthProvider.credential(email: email, password: password);
+    EmailAuthProvider.credential(email: email, password: password);
     await user!.reauthenticateWithCredential(credential);
     return true;
   } catch (e) {
