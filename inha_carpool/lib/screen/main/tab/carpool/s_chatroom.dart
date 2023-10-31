@@ -218,7 +218,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
-          toolbarHeight: 45,
+          toolbarHeight: 65,
           shape: Border(
             bottom: BorderSide(
               color: Colors.grey.shade200,
@@ -226,36 +226,50 @@ class _ChatroomPageState extends State<ChatroomPage> {
               width: 1,
             ),
           ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          title: Column(
             children: [
-              Text.rich(
-                TextSpan(
-                  children: [
+              const Height(10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text.rich(
                     TextSpan(
-                      text:  admin,
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      children: [
+                        TextSpan(
+                          text:  admin,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const TextSpan(
+                          text: "님의 방",
+                          style: TextStyle(
+                            fontSize: 17,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+
+                      ],
                     ),
-                    TextSpan(
-                      text: "님의 방",
-                      style: TextStyle(
-                        fontSize: 17,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+
+                ],
               ),
+              const Height(5),
+              Text('${startTime.month}월 ${startTime.day}일 $formattedDate 출발',
+                  style: const TextStyle(
+                    fontSize: 13,
+                  )),
             ],
+
           ),
+
         ),
         endDrawer: Drawer(
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.zero, // 모서리를 직각으로 설정
           ),
           child: Container(
@@ -267,7 +281,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   child: Padding(
                     padding: EdgeInsets.only(top: AppBar().preferredSize.height, left: 15),
                     child: ListTile(
-                      title: Text(
+                      title: const Text(
                         "대화상대",
                         style: TextStyle(
                           fontSize: 17,
@@ -447,7 +461,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 ),
                 Expanded(
                   child: ListView.builder(
-                    padding: EdgeInsets.all(8.0), // ListView.builder에 패딩 설정
+                    padding: const EdgeInsets.all(8.0), // ListView.builder에 패딩 설정
                     itemCount: membersList.length,
                     itemBuilder: (BuildContext context, int index) {
                       String memberName = getName(membersList[index]);
@@ -496,90 +510,43 @@ class _ChatroomPageState extends State<ChatroomPage> {
             Container(
               height: context.height(0.08),
              // height: membersList.length > 2 ? context.height(0.20) : context.height(0.15), //높이 조절
-              margin: EdgeInsets.fromLTRB(5, 0, 8, 0),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 border: Border(
                   bottom: BorderSide(
                     color: Color.fromARGB(255, 224, 224, 224),
                     //Colors.white,
-                    width: 1.0,
+                    width: 5.0,
                   ),
                 ),
               ),
               child: Column(
                 children: [
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        // const Icon(Icons.calendar_today_outlined ,
-                        //     color: Colors.black, size: 18),
-                        // SizedBox(
-                        //   width: context.width(0.01),
-                        // ),
-                        Text('${startTime.month}월 ${startTime.day}일 '+ formattedDate + ' 출발',
-
-                            style: const TextStyle(
-                              fontSize: 13,
-                            )),
-                      ],
-                    ),
-                  ),
+                  const Height(25),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      /*--출/도착*/
-                      Container(
-                        height: context.height(0.05),
-                        width: (screenWidth - 20) * 0.8,
-                        padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                        child:
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Container(
-                                  // height: containerHeight,
-                                  padding: const EdgeInsets.only(left: 5),
-                                  // width: context.width(0.4),
-                                  child:
-                                      Text(
-                                        startPoint,
-                                        style: const TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-
-                                ),
-                                Container(
-                                  //padding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-                                  child: Icon(
-                                    Icons.arrow_right_outlined,
-                                    size: 20,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Container(
-                                  // height: containerHeight,
-                                 // padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                                  // width: context.width(0.4),
-                                  child:
-                                      Text(
-                                        endPoint,
-                                        style: const TextStyle(
-                                          fontSize: 13,
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-
-                                ),
-                              ],
-                            ),
+                      Text(
+                        startPoint,
+                        style: const TextStyle(
+                          fontSize: 19,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      /*--출/도착*/
+                      const Icon(
+                        Icons.arrow_right_outlined,
+                        size: 28,
+                        color: Colors.black,
+                      ),
+                      Text(
+                        endPoint,
+                        style: const TextStyle(
+                          fontSize: 19,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                 ],

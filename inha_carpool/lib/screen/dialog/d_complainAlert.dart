@@ -67,7 +67,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                         ),
                         Text(
                           widget.reportedUserNickName.replaceFirst(' ', '').toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           ),
@@ -147,7 +147,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('취소'),
+              child: const Text('취소'),
             ),
           ],
         ),
