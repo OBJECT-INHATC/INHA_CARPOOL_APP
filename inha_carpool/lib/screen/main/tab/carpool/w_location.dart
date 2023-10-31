@@ -37,25 +37,31 @@ class ChatLocation extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: RichText(
+                  child: Text(
+                    location,
+                    style: const TextStyle(color: Colors.black, fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                  /*RichText(
                     maxLines: 2,
                     text: TextSpan(
                       style: const TextStyle(color: Colors.black, fontSize: 15),
                       text: location,
                       children: const [
                         TextSpan(
-                          text: "...더 보기",
+                          text: "...",
                           style: TextStyle(fontSize: 12),
                         ),
                       ],
                     ),
-                  ),
+                  ),*/
                 ),
-                const Icon(
+          /*      const Icon(
                   Icons.arrow_forward_ios,
                   color: Colors.black,
                   size: 15,
-                ),
+                ),*/
               ],
             ),
           ),

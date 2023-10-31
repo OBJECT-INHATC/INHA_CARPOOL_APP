@@ -238,7 +238,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Text(
+                        const Text(
                           '대화 상대',
                           style: TextStyle(
                             color: Colors.white,
@@ -252,7 +252,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               : () async {
                             ExitIconButton(context);
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.exit_to_app,
                             color: Colors.white,
                             size: 25,
@@ -316,11 +316,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   ],
                 ),
               ),
-              const Line(height: 1),
+              const Line(height: 2),
               Flexible(
                 child: Column(
                   children: [
                     ChatLocation(title: '출발지', location: startPoint),
+                    const Line(height: 1),
                     ChatLocation(title: '도착지', location: endPoint),
                   ],
                 ),
