@@ -30,7 +30,7 @@ class _HomeState extends State<Home> {
   late LatLng myPoint;
 
   // Declare a StreamController for DateTime
-  final  _timeStreamController = StreamController<DateTime>.broadcast();
+  final _timeStreamController = StreamController<DateTime>.broadcast();
 
   // 현재 시간을 1초마다 스트림에 추가 -> init
   _HomeState() {
@@ -43,7 +43,6 @@ class _HomeState extends State<Home> {
   }
 
   Stream<DateTime>? _timeStream;
-
 
 //Future.value([]); 는 비동기를 알려주는 것
   late Future<List<DocumentSnapshot>> carPoolList = Future.value([]);
@@ -62,7 +61,7 @@ class _HomeState extends State<Home> {
   // 검색어 필터링
   String _searchKeyword = "";
   final TextEditingController _searchKeywordController =
-  TextEditingController();
+      TextEditingController();
 
   @override
   void initState() {
@@ -74,7 +73,6 @@ class _HomeState extends State<Home> {
     _scrollController.addListener(_scrollListener); // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
     _HomeState(); // 현재 시간을 1초마다 스트림에 추가
     _subscribeToTimeStream(); // 스트림 구독
-
   }
 
   void _subscribeToTimeStream() {
@@ -90,14 +88,13 @@ class _HomeState extends State<Home> {
     super.dispose();
   }
 
-
   Future<DocumentSnapshot?> _loadFirstCarpool() async {
     String myID = uid;
     String myNickName = nickName;
     String myGender = gender;
 
     List<DocumentSnapshot> carpools =
-    await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
+        await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
 
     if (carpools.isNotEmpty) {
       return carpools[0];
@@ -111,8 +108,8 @@ class _HomeState extends State<Home> {
 
     if (firstCarpool != null) {
       Map<String, dynamic> carpoolData =
-      firstCarpool.data() as Map<String, dynamic>;
-      if(!mounted) return;
+          firstCarpool.data() as Map<String, dynamic>;
+      if (!mounted) return;
       Navigator.push(
         Nav.globalContext,
         MaterialPageRoute(
@@ -140,7 +137,7 @@ class _HomeState extends State<Home> {
           },
         ),
       );
-      if(!mounted) return;
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -149,11 +146,9 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
 
-          resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
-
-        floatingActionButton:
-        SizedBox(
+        floatingActionButton: SizedBox(
           width: context.width(0.9),
           height: context.height(0.07),
           child: FutureBuilder<DocumentSnapshot?>(
@@ -169,16 +164,18 @@ class _HomeState extends State<Home> {
                 // 데이터가 없는 경우 혹은 null인 경우 로딩 중으로 표시
                 return const SizedBox.shrink();
               } else {
-                Map<String, dynamic> carpoolData = snapshot.data!.data() as Map<String, dynamic>;
-                DateTime startTime = DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
+                Map<String, dynamic> carpoolData =
+                    snapshot.data!.data() as Map<String, dynamic>;
+                DateTime startTime = DateTime.fromMillisecondsSinceEpoch(
+                    carpoolData['startTime']);
                 // 해당 startTime을 몇월 몇일 몇시로 변경
                 // 데이터가 있는 경우 플로팅 액션 버튼 생성
 
                 // 오늘 날짜가 아닐 경우 플로팅 액션 버튼 생성하지 않음
-                if(startTime.year != DateTime.now().year ||
+                if (startTime.year != DateTime.now().year ||
                     startTime.month != DateTime.now().month) {
                   return const SizedBox.shrink();
-                }else if(startTime.day - DateTime.now().day < 2){
+                } else if (startTime.day - DateTime.now().day < 2) {
                   return FloatingActionButton(
                     elevation: 3,
                     mini: false,
@@ -210,7 +207,6 @@ class _HomeState extends State<Home> {
                             // return SizedBox.shrink(); // 혹은 다른 UI 요소
                           }
 
-
                           return Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -241,7 +237,8 @@ class _HomeState extends State<Home> {
                               const Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.arrow_forward_ios_rounded,
+                                  Icon(
+                                    Icons.arrow_forward_ios_rounded,
                                     color: Colors.white,
                                     size: 25,
                                   ),
@@ -254,7 +251,7 @@ class _HomeState extends State<Home> {
                       },
                     ),
                   );
-                }else{
+                } else {
                   return const SizedBox.shrink();
                 }
               }
@@ -263,9 +260,8 @@ class _HomeState extends State<Home> {
         ),
         body: Container(
           decoration: BoxDecoration(
-            color: //Colors.grey[100],
-            Colors.white
-          ),
+              color: //Colors.grey[100],
+                  Colors.white),
           child: Column(
             children: [
               Container(height: 5, color: Colors.white),
@@ -289,7 +285,7 @@ class _HomeState extends State<Home> {
                               border: const OutlineInputBorder(
                                 borderSide: BorderSide.none, // 외곽선 없음
                                 borderRadius:
-                                BorderRadius.all(Radius.circular(20)),
+                                    BorderRadius.all(Radius.circular(20)),
                               ),
                               // 글씨의 위치를 가운데 정렬
                               contentPadding: const EdgeInsets.symmetric(
@@ -391,13 +387,13 @@ class _HomeState extends State<Home> {
           final filteredCarpools = snapshot.data!.where((carpool) {
             final carpoolData = carpool.data() as Map<String, dynamic>;
             final startPointName =
-            carpoolData['startPointName'].toString().toLowerCase();
+                carpoolData['startPointName'].toString().toLowerCase();
             final startDetailPointName =
-            carpoolData['startDetailPoint'].toString().toLowerCase();
+                carpoolData['startDetailPoint'].toString().toLowerCase();
             final endPointName =
-            carpoolData['endPointName'].toString().toLowerCase();
+                carpoolData['endPointName'].toString().toLowerCase();
             final endDetailPointName =
-            carpoolData['endDetailPoint'].toString().toLowerCase();
+                carpoolData['endDetailPoint'].toString().toLowerCase();
             final keyword = _searchKeyword.toLowerCase();
 
             return startPointName.contains(keyword) ||
@@ -449,6 +445,7 @@ class _HomeState extends State<Home> {
   Future<void> initMyPoint() async {
     myPoint = (await Location_handler.getCurrentLatLng(context))!;
   }
+
   /// 새로고침 로직
   Future<void> _refreshCarpoolList() async {
     if (selectedFilter == FilteringOption.Time) {
@@ -461,8 +458,8 @@ class _HomeState extends State<Home> {
     // 새로고침 후 보여지는 리스트 갯수 : 5개 보다 적을시 리스트의 갯수, 이상일 시 5개
     carPoolList.then((list) {
       // setState(() {
-        _visibleItemCount = list.length < 5 ? list.length : 5;
-        print('초기 리스트 갯수: $_visibleItemCount');
+      _visibleItemCount = list.length < 5 ? list.length : 5;
+      print('초기 리스트 갯수: $_visibleItemCount');
       // });
     });
 
@@ -544,5 +541,4 @@ class _HomeState extends State<Home> {
     final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
     return '$hours:$minutes:$seconds';
   }
-
 }
