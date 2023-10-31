@@ -19,7 +19,7 @@ class CarpoolList extends StatefulWidget {
 }
 
 class _CarpoolListState extends State<CarpoolList> {
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   late String nickName = ""; // Initialize with a default value
   late String uid = "";
   late String gender = "";
@@ -110,11 +110,15 @@ class _CarpoolListState extends State<CarpoolList> {
     // 화면의 너비와 높이를 가져 와서 화면 비율 계산함
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    print(screenHeight);
 
     // 화면 높이의 70%를 ListView.builder의 높이로 사용
     double listViewHeight = screenHeight * 0.7;
+
     // 각 카드의 높이
-    double cardHeight = listViewHeight * 0.35;
+    double cardHeight =
+        screenHeight > 750 ? listViewHeight * 0.3 - 10 : listViewHeight * 0.34;
+
     // 카드 높이의 1/2 사용
     double containerHeight = cardHeight / 2;
 
@@ -206,7 +210,7 @@ class _CarpoolListState extends State<CarpoolList> {
                       .size(50)
                       .color(
                         //Colors.blue[200],
-                        Color.fromARGB(255, 70, 100, 192),
+                        const Color.fromARGB(255, 70, 100, 192),
                       )
                       .make(),
                 ),
@@ -261,15 +265,16 @@ class _CarpoolListState extends State<CarpoolList> {
                           child: Stack(
                             children: [
                               Card(
-                                color: Color.fromARGB(255, 70, 100, 192),
+                                color: const Color.fromARGB(255, 70, 100, 192),
                                 surfaceTintColor: Colors.transparent,
-                                margin: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+                                margin:
+                                    const EdgeInsets.fromLTRB(10, 10, 10, 5),
                                 elevation: 1,
                                 // 그림자 높이 설정
                                 child: Container(
                                   width: screenWidth - 20,
                                   height: cardHeight - 26,
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     border: Border(
                                       bottom: BorderSide(
                                         color: Colors.white,
@@ -300,7 +305,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                     left: 10,
                                     right: 10,
                                   ),
-                                  child: Container(
+                                  child: SizedBox(
                                     width: (screenWidth - 20) * 0.8,
                                     height: containerHeight,
                                     child: Column(
@@ -319,7 +324,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                 child: Row(
                                                   children: [
                                                     // 날짜
-                                                    Container(
+                                                    SizedBox(
                                                       width:
                                                           (screenWidth - 20) *
                                                               0.8 /
@@ -329,7 +334,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                             MainAxisAlignment
                                                                 .center,
                                                         children: [
-                                                          Flexible(
+                                                          const Flexible(
                                                             flex: 1,
                                                             child: Align(
                                                               alignment: Alignment
@@ -380,7 +385,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                       ),
                                                     ),
                                                     // 시간
-                                                    Container(
+                                                    SizedBox(
                                                       width:
                                                           (screenWidth - 20) *
                                                               0.8 /
@@ -390,7 +395,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                             MainAxisAlignment
                                                                 .center,
                                                         children: [
-                                                          Flexible(
+                                                          const Flexible(
                                                             flex: 1,
                                                             child: Align(
                                                               alignment: Alignment
@@ -491,7 +496,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                         fontSize: carpoolData['startDetailPoint'].toString().length >
                                                                                 4
                                                                             ? 12
-                                                                            : 16,
+                                                                            : 15,
                                                                         fontWeight:
                                                                             FontWeight.bold,
                                                                       ),
@@ -502,7 +507,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                               'startPointName'],
                                                                           16),
                                                                       style:
-                                                                          TextStyle(
+                                                                          const TextStyle(
                                                                         color: Colors
                                                                             .black54,
                                                                         fontSize:
@@ -549,7 +554,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                         carpoolData['endDetailPoint'].toString().length >
                                                                                 4
                                                                             ? 12
-                                                                            : 16,
+                                                                            : 15,
                                                                     fontWeight:
                                                                         FontWeight
                                                                             .bold,
@@ -561,7 +566,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                                           'endPointName'],
                                                                       16),
                                                                   style:
-                                                                      TextStyle(
+                                                                      const TextStyle(
                                                                     color: Colors
                                                                         .black54,
                                                                     fontSize:
@@ -598,13 +603,13 @@ class _CarpoolListState extends State<CarpoolList> {
                                               builder: (context, snapshot) {
                                                 if (snapshot.connectionState ==
                                                     ConnectionState.waiting) {
-                                                  return CircularProgressIndicator();
+                                                  return const CircularProgressIndicator();
                                                 } else if (snapshot.hasError) {
                                                   return Text(
                                                       'Error: ${snapshot.error}');
                                                 } else if (!snapshot.hasData ||
                                                     snapshot.data == null) {
-                                                  return Text(
+                                                  return const Text(
                                                       '아직 채팅이 시작되지 않은 채팅방입니다!',
                                                       style: TextStyle(
                                                           color: Colors.grey));
@@ -619,20 +624,20 @@ class _CarpoolListState extends State<CarpoolList> {
                                                 // 글자가 16글자 이상인 경우, 17글자부터는 '...'로 대체
                                                 if (content.length > 16) {
                                                   content =
-                                                      content.substring(0, 16) +
-                                                          '...';
+                                                      '${content.substring(0, 16)}...';
                                                 }
 
                                                 return Row(
                                                   children: [
                                                     Container(
                                                       //margin: EdgeInsets.only(bottom: 8.0), // 채팅 밑 여백
-                                                      padding: EdgeInsets.only(
-                                                          left: 10.0),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              left: 10.0),
                                                       // 채팅 왼쪽 여백
                                                       child: Text(
                                                         '$sender : $content',
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             fontSize: 13,
                                                             color: Colors.grey),
                                                       ),
@@ -713,7 +718,7 @@ class DashedLinePainter extends CustomPainter {
     double startY = 0;
 
     final paint = Paint()
-      ..color = Color.fromARGB(255, 224, 224, 224)
+      ..color = const Color.fromARGB(255, 224, 224, 224)
       ..strokeWidth = 3;
 
     while (startY < size.height) {
