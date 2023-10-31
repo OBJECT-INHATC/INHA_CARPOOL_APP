@@ -19,28 +19,25 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
     super.initState();
     checkUserStatus();
   }
-///인증 여부에 따른 state 변경
-  Future<void> checkUserStatus() async {
-    user = _auth.currentUser;
-    if (user != null) {
-      await user!.reload();
-      if (user!.emailVerified) {
-        setState(() { // This will cause the widget to rebuild with the new text.
-          verificationText = "본인 인증 완료!";
 
-        });
-      }
-    }
-  }
-
-
+  ///인증 여부에 따른 state 변경
+//   Future<void> checkUserStatus() async {
+//     user = _auth.currentUser;
+//     if (user != null) {
+//       await user!.reload();
+//       if (user!.emailVerified) {
+//         setState(() { // This will cause the widget to rebuild with the new text.
+//           verificationText = "본인 인증 완료!";
+//
+//         });
+//       }
+//     }
+//   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-
       child: Scaffold(
-
         appBar: AppBar(
           backgroundColor: Colors.white,
           leading: IconButton(
@@ -52,126 +49,173 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                 color: Colors.black,
               )),
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-
-
-            color: Colors.white,
-          ),
-
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-
-            children: [
-              Text(verificationText, style: (verificationText=="본인인증 대기중...")?TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.red):TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.green),),
-              const SizedBox(
-                height: 15,
-              ),
-              Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children:[
-              (verificationText == "본인인증 대기중...")?Text("학교 이메일로 가입 인증 메일이 전송되었습니다. \n 이메일에 접속하여 인증을 진행해 주세요!", style: TextStyle(fontSize: 14,),):
-              Text("본인인증이 완료되었습니다! 확인을 눌러 로그인을 진행하세요!", style: TextStyle(fontSize: 14,),),]),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                width: context.width(0.9),
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+        body: FutureBuilder(
+          future: checkUserStatus(),
+          builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator(); // loading spinner
+            } else if (snapshot.connectionState == ConnectionState.done) {
+              return Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-
+                  borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
-                  border: Border.all(color: Colors.grey),),
+                ),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: Icon(Icons.email_outlined, color: Colors.grey,),
-                        ),
-                        Text("1단계"),
-                        Text("이메일에서 인증 요청 메시지 확인"),
-                      ],
+                    Text(
+                      verificationText,
+                      style: (verificationText == "본인인증 대기중...")
+                          ? TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red)
+                          : TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green),
                     ),
-                    Icon(Icons.arrow_downward_rounded, color: Colors.grey,),
-                    Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey),
-                          ),
-                          child: Icon(Icons.check_circle, color: Colors.grey,),
-                        ),
-                        Text("2단계"),
-                        Text("링크를 눌러 인증하기"),
-                      ],
+                    const SizedBox(
+                      height: 15,
                     ),
-                    Icon(Icons.arrow_downward_rounded, color: Colors.grey,),
                     Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                            border: Border.all(color: Colors.grey),
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          (verificationText == "본인인증 대기중...")
+                              ? Text(
+                                  "학교 이메일로 가입 인증 메일이 전송되었습니다. \n 이메일에 접속하여 인증을 진행해 주세요!",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                )
+                              : Text(
+                                  "본인인증이 완료되었습니다! 확인을 눌러 로그인을 진행하세요!",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                        ]),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      width: context.width(0.9),
+                      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: Column(
+                        children: [
+                          Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: Icon(
+                                  Icons.email_outlined,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              Text("1단계"),
+                              Text("이메일에서 인증 요청 메시지 확인"),
+                            ],
                           ),
-                          child: Icon(Icons.phone_android_outlined, color: Colors.grey,),
+                          Icon(
+                            Icons.arrow_downward_rounded,
+                            color: Colors.grey,
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: Icon(
+                                  Icons.check_circle,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              Text("2단계"),
+                              Text("링크를 눌러 인증하기"),
+                            ],
+                          ),
+                          Icon(
+                            Icons.arrow_downward_rounded,
+                            color: Colors.grey,
+                          ),
+                          Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Colors.white,
+                                  border: Border.all(color: Colors.grey),
+                                ),
+                                child: Icon(
+                                  Icons.phone_android_outlined,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              Text("3단계"),
+                              Text("앱으로 돌아와서 인증 완료 버튼 누르기"),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(context.width(1), 50),
+                        backgroundColor: (verificationText=="본인인증 대기중...")?Colors.grey[300]:Colors.blue[400],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(80.0),
                         ),
-                        Text("3단계"),
-                        Text("앱으로 돌아와서 인증 완료 버튼 누르기"),
-                      ],
-                    )
+                      ),
+                      child: const Text('인증 완료',
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
+                      onPressed: () async {
+                        if (verificationText == "본인인증 대기중...") {
+                          await checkUserStatus();
+                          setState(() {});
+                        } else {
+                          Navigator.of(context).popUntil((route) => route.isFirst);
+                        }
+                      },
+                    ),
+
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 40,
-              ),
-              ElevatedButton(
-
-
-
-
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(context.width(1), 50),
-
-
-                    backgroundColor: (verificationText=="본인인증 대기중...")?Colors.grey[300]:Colors.blue[400],
-
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(80.0),
-
-                    ),
-                  ),
-                  child: const Text('인증 완료',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold)),
-                  onPressed: (verificationText == "본인인증 대기중...")?(){
-                    ///아직 대기중이면 state변경 감지
-                    checkUserStatus();
-                  }:(){
-                    // 123123
-                    ///인증이 완료되면 로그인 페이지로 이동
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                  }),
-            ],
-          ),
+              );
+            } else {
+              return Text('잘못된 접근입니다..!');
+            }
+          },
         ),
-      ),);
+      ),
+    );
+  }
+
+  Future<void> checkUserStatus() async {
+    user = _auth.currentUser;
+    if (user != null) {
+      await user!.reload();
+      if (user!.emailVerified) {
+        verificationText = "본인 인증 완료!";
+      }
+    }
   }
 }
