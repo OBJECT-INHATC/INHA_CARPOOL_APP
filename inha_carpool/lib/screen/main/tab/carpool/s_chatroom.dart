@@ -5,16 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/f_mypage.dart';
-import 'package:inha_Carpool/service/api/ApiService.dart';
 import 'package:inha_Carpool/service/api/Api_Topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
-import 'package:quiver/collection.dart';
 
 
 import '../../../../common/data/preference/prefs.dart';
@@ -29,7 +26,6 @@ class ChatroomPage extends StatefulWidget {
   final String userName;
   final String uid;
   final String gender;
-
 
   /// 생성자
   const ChatroomPage(
@@ -216,16 +212,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
           toolbarHeight: 65,
-          shape: Border(
-            bottom: BorderSide(
-              color: Colors.grey.shade200,
-              //Colors.white,
-              width: 1,
-            ),
-          ),
           title: Column(
             children: [
               const Height(10),
@@ -255,19 +242,14 @@ class _ChatroomPageState extends State<ChatroomPage> {
                       ],
                     ),
                   ),
-
                 ],
               ),
-              const Height(5),
-              Text('${startTime.month}월 ${startTime.day}일 $formattedDate 출발',
-                  style: const TextStyle(
-                    fontSize: 13,
-                  )),
             ],
 
           ),
 
         ),
+
         endDrawer: Drawer(
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.zero, // 모서리를 직각으로 설정
@@ -453,7 +435,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
                   width: screenWidth * 0.7,
                   child: Divider(
                     color: Colors.grey.shade200,
@@ -479,24 +461,11 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         ),
                         title: Row(
                           children: [
-                            Text(
-                              '$memberName  ',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: admin == memberName ? Colors.blue : Colors.black,
-                              ),
-                            ),
-                            // Text(
-                            //   memberGender,
-                            //   style: TextStyle(
-                            //     fontSize: 13,
-                            //     fontWeight: FontWeight.w500,
-                            //     color: Colors.grey,
-                            //   ),
-                            // ),
+                            memberName.text.size(16)
+                                .color(admin == memberName ? Colors.blue : Colors.black).make(),
                           ],
                         ),
-                        trailing: Icon(Icons.navigate_next_rounded),
+                        trailing: const Icon(Icons.navigate_next_rounded),
                       );
                     },
                   ),
@@ -505,53 +474,25 @@ class _ChatroomPageState extends State<ChatroomPage> {
             ),
           ),
         ),
+
+        //----------------------------------------------body
+        //----------------------------------------------body
+        //----------------------------------------------body
         body: Column(
           children: [
-            Container(
-              height: context.height(0.08),
-             // height: membersList.length > 2 ? context.height(0.20) : context.height(0.15), //높이 조절
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                border: Border(
-                  bottom: BorderSide(
-                    color: Color.fromARGB(255, 224, 224, 224),
-                    //Colors.white,
-                    width: 5.0,
-                  ),
-                ),
-              ),
-              child: Column(
-                children: [
-                  const Height(25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        startPoint,
-                        style: const TextStyle(
-                          fontSize: 19,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Icon(
-                        Icons.arrow_right_outlined,
-                        size: 28,
-                        color: Colors.black,
-                      ),
-                      Text(
-                        endPoint,
-                        style: const TextStyle(
-                          fontSize: 19,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+            //출발 목적지
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                startPoint.text.size(17).color(Colors.black).bold.make(),
+                const Icon(Icons.arrow_right_outlined, size: 28, color: Colors.black),
+                endPoint.text.size(17).color(Colors.black).bold.make(),
+              ],
             ),
+            const Height(5),
+            Divider(height: 1, color: Colors.grey[400],),
+            const Height(3),
+            '${startTime.month}월 ${startTime.day}일 $formattedDate 출발'.text.size(13).make(),
             Expanded(
               child: Stack(
                 children: <Widget>[
@@ -609,9 +550,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               height: 45,
                               width: 45,
                               decoration: BoxDecoration(
-                                 color:
-                                 //Color.fromARGB(255, 238, 238, 238),
-                                Color.fromARGB(255, 70, 100, 192),
+                                 color: context.appColors.logoColor,
+
                                 borderRadius: BorderRadius.circular(30),
                               ),
                               child: const Center(
@@ -621,7 +561,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 ),
                               ),
                             ),
-                          )
+                          ),
+                          // 맨 밑 메세지 보내는 부분인데 반응형 디자인이 안되서 일단 주석처리함
+                          const Height(90),
                         ],
                       ),
                     ),
@@ -763,6 +705,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
       });
     }
   }
+
+
 
   void _showProfileModal(BuildContext context, String memberId ,String userName, String memberGender) {
     showModalBottomSheet(
