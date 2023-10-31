@@ -84,10 +84,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
             //     index < widget.snapshot.data!.length) {
             DocumentSnapshot carpool = widget.snapshot.data![index];
             Map<String, dynamic> carpoolData =
-                carpool.data() as Map<String, dynamic>;
+            carpool.data() as Map<String, dynamic>;
 
             DateTime startTime =
-                DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
+            DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
             DateTime currentTime = DateTime.now();
             Duration difference = startTime.difference(currentTime);
 
@@ -106,15 +106,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
               formattedTime = '${difference.inMinutes}분 후';
             }
 
-            Color borderColor;
-            if (carpoolData['gender'] == '남성') {
-              borderColor = Colors.blue; // 남자일 때 보더 색
-            } else if (carpoolData['gender'] == '남성') {
-              borderColor = Colors.red; // 여자일 때 보더 색
-            } else {
-              borderColor = Colors.grey; // 무관일 때 보더 색
-            }
-
             // 각 아이템을 빌드하는 로직
             return GestureDetector(
               onTap: () {
@@ -131,12 +122,12 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                       Nav.globalContext,
                       MaterialPageRoute(
                           builder: (context) => ChatroomPage(
-                                carId: carpoolData['carId'],
-                                groupName: '카풀 네임',
-                                userName: widget.nickName,
-                                uid: widget.uid,
-                                gender: widget.gender,
-                              )),
+                            carId: carpoolData['carId'],
+                            groupName: '카풀 네임',
+                            userName: widget.nickName,
+                            uid: widget.uid,
+                            gender: widget.gender,
+                          )),
                     );
                     print('현재 유저: $currentUser');
                     print(carpoolData['members']);
@@ -177,239 +168,145 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                   }
                 }
               },
-
-
-                child: Stack(
+              //=================================================================================작업
+              //=================================================================================작업
+              //=================================================================================작업
+              //=================================================================================작업
+              //=================================================================================작업
+              //=================================================================================작업
+              //=================================================================================작업
+              //=================================================================================작업
+              child: Card(
+                color: Colors.white,
+                elevation: 3, // 그림자의 깊이를 조절하는 elevation 값
+                margin: const EdgeInsets.all(10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
                     children: [
-                      Card(
-                        color: Color.fromARGB(255, 70, 100, 192),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                      //첫번째 줄
+                      Row(children: [
+                        const Icon(
+                          Icons.calendar_today_outlined,
+                          color: Colors.black,
+                          size: 18,
                         ),
-                        surfaceTintColor: Colors.transparent,
-                        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                        elevation: 3,
-                        child: Container(
-                          //width: screenWidth - 20,
-                          height: cardHeight - 60,
-                          decoration: BoxDecoration(
+                        //달력 아이콘과 날짜의 간격
+                        const Width(20),
+                        '${startTime.month}월 ${startTime.day}일 $formattedDate 예정'.text.size(13).make(),
+                        //-- 예정과 택시 아이콘 사이 공간 은우--//
+                        const Width(80),
+                        // 2/2명
+                        Icon(
+                          Icons.directions_car_outlined,
+                          color: getColorForGender(
+                              carpoolData['gender']),
+                        ),
 
+                        // 택시 아이콘과 인원수 사이 간격
+                        const Width(5),
+                        '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명'.text.bold.size(16).make(),
+
+                        // 인원수와 성별 사이 간격
+                        const Width(10),
+                        //무관
+                        '${carpoolData['gender']}'.text.size(13).normal.color(Colors.grey).make(),
+
+                      ]),
+
+                      //출발지와 row와 간격
+                      const Height(15),
+
+//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+//----------------------------------------------------------------------------------
+
+                      //2번째 줄 출발지
+                      Row(
+                        children: [
+                           Icon(Icons.circle_outlined,
+                              color: context.appColors.logoColor,
+                              size: 12),
+
+                          // 아이콘과 주소들 사이 간격
+                          const Width(10),
+
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // 출발지 요약주소
+                              _truncateText(carpoolData['startDetailPoint'], 32)
+                                  .text.color(Colors.black).size(15).bold.make(),
+                              // 출발지 풀주소
+                              _truncateText(carpoolData['startPointName'], 32)
+                                  .text.color(Colors.grey[600]).size(13).bold.make(),
+                            ],
                           ),
-                        ),
+                        ],
                       ),
-                      Positioned(
-                          left: 0,
-                          right: 0,
-                          child: Container(
-                            color: Colors.white,
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 4,
-                              horizontal: 0,
-                            ),
-                            margin: const EdgeInsets.only(
-                              top: 2,
-                              bottom: 5,
-                              left: 10,
-                              right: 10,
-                            ),
-                            child: Container(
-                              width: (screenWidth - 20) * 0.8,
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                      children: [
-                                        Flexible(
-                                          child: Container(
-                                            width: (screenWidth - 20) * 0.8,
-                                            height: cardHeight * 0.15,
-                                            margin: const EdgeInsets.only(left: 5.0),
-                                            child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  // 방장 정보 가져오기
-                                                  Row(
-                                                    children: [
-                                                      Padding(
-                                                        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.02), // 왼쪽 여백을 화면 너비의 2%로 설정
-                                                        child: Icon(
-                                                          Icons.calendar_today_outlined,
-                                                          color: Colors.black,
-                                                          size: 18,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: MediaQuery.of(context).size.width * 0.02, // 아이콘과 텍스트 사이의 간격을 화면 너비의 2%로 설정
-                                                      ),
-                                                      Text(
-                                                        '${startTime.month}월 ${startTime.day}일 ' + formattedDate + ' 예정',
-                                                        style: TextStyle(
-                                                          fontSize: 13,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
 
-                                                  // 방의 인원 및 성별
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end, // 오른쪽 정렬
-                                                    children: [
-                                                      Padding(
-                                                        padding: EdgeInsets.only(
-                                                          left: MediaQuery.of(context).size.width * 0.1, // 왼쪽 여백 화면 너비의 10%로 설정
-                                                        ),
-                                                        child: Icon(
-                                                          Icons.directions_car_outlined,
-                                                          color: getColorForGender(carpoolData['gender']),
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: MediaQuery.of(context).size.width * 0.02, // 아이콘과 텍스트 사이의 간격 화면 너비의 2%로 설정
-                                                      ),
-                                                      Text(
-                                                        '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명 ',
-                                                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                                      ),
-                                                      Text(
-                                                        carpoolData['gender'],
-                                                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.normal, color: Colors.grey),
-                                                      ),
-                                                    ],
-                                                  )
+                      //구분선 --------------
+                      Divider(height: 20, color: Colors.grey[400]),
 
+                      Row( // 3번째 줄 도착지
+                        children: [
+                          Icon(Icons.circle,
+                              color:
+                              context.appColors.logoColor,
+                              size: 12),
 
+                          // 아이콘과 주소들 사이 간격
+                          const Width(10),
 
-                                                  //방장 평점
-                              ]),
-                        ),
-                      ),
-                    ]),
-                  Row(
-
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 12),
-                                  // 출발지 아이콘 왼쪽 여백 추가
-                                  child: Icon(Icons.circle_outlined,
-                                      color: Color.fromARGB(255, 70, 100, 192),
-                                      size: 12),
-                                ),
-                                const SizedBox(width: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _truncateText(
-                                          carpoolData['startDetailPoint'], 32),
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      _truncateText(
-                                          carpoolData['startPointName'], 32),
-                                      style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 13),
-                              // 여백을 위아래로 5픽셀 추가
-                              child: Container(
-                                margin: EdgeInsets.only(left: 10),
-                                width: screenWidth - 100,
-                                height: 0.5,
-                                color: Colors.grey,
-                              ),
-                            ),
-
-                            //방 생성시 설정했던 성별 표시
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 12),
-                                  // 목적지 아이콘의 왼쪽 여백 추가
-                                  child: Icon(Icons.circle,
-                                      color: context.appColors.logoColor,
-                                      size: 12),
-                                ),
-                                const SizedBox(width: 10),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      _truncateText(
-                                          carpoolData['endDetailPoint'], 32),
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Text(
-                                      _truncateText(
-                                          carpoolData['endPointName'], 32),
-                                      style: TextStyle(
-                                        color: Colors.grey[600],
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        //화면 하단 **일 후 출발 박스
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                                color: context.appColors.logoColor, width: 2),
+                          Column(
+                            children: [
+                              // 도착지 요약주소
+                              _truncateText(carpoolData['endDetailPoint'], 32).text
+                                  .color(Colors.black).size(15).bold.make(),
+                              // 도착지 풀주소
+                              _truncateText(carpoolData['endPointName'], 32)
+                                  .text.color(Colors.grey[600]).size(13).bold.make(),
+                            ],
                           ),
-
-                          height: MediaQuery.of(context).size.height * 0.055,
-                          width: MediaQuery.of(context).size.width * 0.55,
-                          child: Center(
-                            child: Text('$formattedTime 출발',
-                                style: TextStyle(
-                                  fontSize: 17,
+                        ],
+                      ),
+                      // 박스와 간격
+                      const Height(15),
+                      //---------------------------------
+                      Row( // 4번째 줄 박스
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //화면 하단 **일 후 출발 박스
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
                                   color: context.appColors.logoColor,
-                                  fontWeight: FontWeight.bold,
-                                )),
+                                  width: 2),
+                            ),
+                            height: MediaQuery.of(context).size.height *
+                                0.050,
+                            width:
+                            MediaQuery.of(context).size.width * 0.50,
+                            child: Center(
+                              child: Text('$formattedTime 출발',
+                                  style: TextStyle(
+                                    fontSize: 17,
+                                    color: context.appColors.logoColor,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
                           ),
-                        ).pSymmetric(v: 15)
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ))]));
-            // } else {
-            //   return null;
-            // }
+            );
           },
         ),
       ),
