@@ -68,14 +68,21 @@ class AuthService {
     }
   }
 
-  /// 로그인 여부 확인
-  /// 0824 서은율, 한승완
+
+  /// 로그인 여부 확인 ->
+  /// 1031 한승완 수정
   Future<bool> checkUserAvailable() async{
     User? user = FirebaseAuth.instance.currentUser;
+    if(user == null){
+      signOut();
+      return false;
+    }
 
-    if(user != null){
+    bool isAble = await FireStoreService(uid: user.uid).isUserExist(user.uid);
+    if(isAble) {
       return true;
     }else{
+      signOut();
       return false;
     }
 

@@ -49,6 +49,14 @@ class FireStoreService {
 
   }
 
+  /// 1031 한승완
+  /// uid로 사용자가 존재하는지 확인
+  Future<bool> isUserExist(String uid) async {
+    QuerySnapshot snapshot =
+    await userCollection.where("uid", isEqualTo: uid).get();
+    return snapshot.docs.isNotEmpty;
+  }
+
   /// 0828 한승완
   /// 특정 시점 이후의 채팅 메시지 스트림 가져오기
   getChatsAfterSpecTime(String carId, int time) async {
