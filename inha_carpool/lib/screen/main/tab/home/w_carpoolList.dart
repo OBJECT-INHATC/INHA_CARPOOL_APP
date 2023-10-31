@@ -198,7 +198,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                         const Width(20),
                         '${startTime.month}월 ${startTime.day}일 $formattedDate 예정'.text.size(13).make(),
                         //-- 예정과 택시 아이콘 사이 공간 은우--//
-                        const Width(80),
+                        const Width(30),
                         // 2/2명
                         Icon(
                           Icons.directions_car_outlined,
