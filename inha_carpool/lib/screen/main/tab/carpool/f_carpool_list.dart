@@ -114,7 +114,7 @@ class _CarpoolListState extends State<CarpoolList> {
     // 화면 높이의 70%를 ListView.builder의 높이로 사용
     double listViewHeight = screenHeight * 0.7;
     // 각 카드의 높이
-    double cardHeight = listViewHeight * 0.3;
+    double cardHeight = listViewHeight * 0.35;
     // 카드 높이의 1/2 사용
     double containerHeight = cardHeight / 2;
 
@@ -172,7 +172,7 @@ class _CarpoolListState extends State<CarpoolList> {
                             .text
                             .size(50)
                             .color(
-                            Colors.blue[200],
+                              Colors.blue[200],
                               //Color.fromARGB(255, 70, 100, 192),
                             )
                             .make(),
@@ -185,54 +185,60 @@ class _CarpoolListState extends State<CarpoolList> {
               List<DocumentSnapshot> myCarpools = snapshot.data!;
 
               return SafeArea(
-                child: Scaffold(
-                  floatingActionButton: FloatingActionButton(
-                    heroTag: "recruit_from_myCarpool",
-                    elevation: 10,
-                    backgroundColor: Colors.white,
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(40),
-                      //side: const BorderSide(color: Colors.white, width: 1),
-                    ),
-            onPressed: () {
-            Navigator.push(
-            Nav.globalContext,
-            MaterialPageRoute(
-            builder: (context) => const RecruitPage()),
-            );
-            },
-            child: '+'
-                .text
-                .size(50)
-                .color(
-            //Colors.blue[200],
-            Color.fromARGB(255, 70, 100, 192),
-            )
-                .make(),
-            ),
-            body: Container( //이 부분 추가
-            /*컨테이너 배경색 추가*/
-            decoration: BoxDecoration(color: Colors.grey[100],
-            // Colors.white,
-            borderRadius: BorderRadius.circular(10),),
-            /*--------------*/
-            child: Align( alignment: Alignment.center,
-              child: ListView.builder(
-              itemCount: myCarpools.length,
-              itemBuilder: (context, i) {
-              DocumentSnapshot carpool = myCarpools[i];
-            // DocumentSnapshot carpool = widget.snapshot.data![index];
-            Map<String, dynamic> carpoolData =
-              carpool.data() as Map<String, dynamic>;
-              String startPointName = carpool['startPointName'];
+                  child: Scaffold(
+                floatingActionButton: FloatingActionButton(
+                  heroTag: "recruit_from_myCarpool",
+                  elevation: 10,
+                  backgroundColor: Colors.white,
+                  shape: ContinuousRectangleBorder(
+                    borderRadius: BorderRadius.circular(40),
+                    //side: const BorderSide(color: Colors.white, width: 1),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      Nav.globalContext,
+                      MaterialPageRoute(
+                          builder: (context) => const RecruitPage()),
+                    );
+                  },
+                  child: '+'
+                      .text
+                      .size(50)
+                      .color(
+                        //Colors.blue[200],
+                        Color.fromARGB(255, 70, 100, 192),
+                      )
+                      .make(),
+                ),
+                body: Container(
+                  //이 부분 추가
+                  /*컨테이너 배경색 추가*/
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    // Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  /*--------------*/
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: ListView.builder(
+                      itemCount: myCarpools.length,
+                      itemBuilder: (context, i) {
+                        DocumentSnapshot carpool = myCarpools[i];
+                        // DocumentSnapshot carpool = widget.snapshot.data![index];
+                        Map<String, dynamic> carpoolData =
+                            carpool.data() as Map<String, dynamic>;
+                        String startPointName = carpool['startPointName'];
 
-            //카풀 날짜 및 시간 변환
-                        DateTime startTime = DateTime.fromMillisecondsSinceEpoch(
-                            carpool['startTime']);
+                        //카풀 날짜 및 시간 변환
+                        DateTime startTime =
+                            DateTime.fromMillisecondsSinceEpoch(
+                                carpool['startTime']);
                         DateTime currentTime = DateTime.now();
                         Duration difference = startTime.difference(currentTime);
 
-                        String formattedDate = DateFormat('HH:mm').format(startTime);
+                        String formattedDate =
+                            DateFormat('HH:mm').format(startTime);
 
                         String formattedStartTime =
                             _getFormattedDateString(startTime);
@@ -257,8 +263,9 @@ class _CarpoolListState extends State<CarpoolList> {
                               Card(
                                 color: Color.fromARGB(255, 70, 100, 192),
                                 surfaceTintColor: Colors.transparent,
-                                margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                                elevation: 1, // 그림자 높이 설정
+                                margin: const EdgeInsets.fromLTRB(10, 10, 10, 5),
+                                elevation: 1,
+                                // 그림자 높이 설정
                                 child: Container(
                                   width: screenWidth - 20,
                                   height: cardHeight - 26,
@@ -273,13 +280,18 @@ class _CarpoolListState extends State<CarpoolList> {
                                 ),
                               ),
                               Positioned(
-                                top: (cardHeight - containerHeight) / 2 - 22,
-                                left: 0,
-                                right: 0,
+                                top: 8,
+                                left: 13,
+                                right: 13,
                                 child: Container(
-                                  color: Colors.white,
+                                  width: screenWidth - 40,
+                                  height: cardHeight - 26,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    // borderRadius: BorderRadius.circular(10),
+                                  ),
                                   padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
+                                    vertical: 10,
                                     horizontal: 0,
                                   ),
                                   margin: const EdgeInsets.only(
@@ -290,36 +302,49 @@ class _CarpoolListState extends State<CarpoolList> {
                                   ),
                                   child: Container(
                                     width: (screenWidth - 20) * 0.8,
-                                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                                    height: containerHeight + 20,
+                                    height: containerHeight,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          children: [
-                                            Flexible(
-                                              child: Container(
+                                        Expanded(
+                                          flex: 1,
+                                          child: Row(
+                                            children: [
+                                              Container(
                                                 width: (screenWidth - 20) * 0.8,
                                                 height: cardHeight * 0.15,
-                                                margin: const EdgeInsets.only(left: 5.0),
+                                                margin: const EdgeInsets.only(
+                                                    left: 5.0),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                   children: [
                                                     // 날짜
                                                     Container(
-                                                      width: (screenWidth - 20) * 0.8 / 2,
+                                                      width:
+                                                          (screenWidth - 20) *
+                                                              0.8 /
+                                                              2,
                                                       child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
                                                         children: [
                                                           Flexible(
                                                             flex: 1,
                                                             child: Align(
-                                                              alignment: Alignment.centerRight,
+                                                              alignment: Alignment
+                                                                  .centerRight,
                                                               child: Padding(
-                                                                padding: EdgeInsets.only(left: 40),
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            40),
                                                                 child: Icon(
-                                                                  Icons.calendar_today_rounded,
+                                                                  Icons
+                                                                      .calendar_today_rounded,
                                                                   size: 18,
-                                                                  color: Colors.black54,
+                                                                  color: Colors
+                                                                      .black54,
                                                                 ),
                                                               ),
                                                             ),
@@ -327,17 +352,25 @@ class _CarpoolListState extends State<CarpoolList> {
                                                           Flexible(
                                                             flex: 2,
                                                             child: Align(
-                                                              alignment: Alignment.centerRight,
+                                                              alignment: Alignment
+                                                                  .centerRight,
                                                               child: Container(
-                                                                margin: EdgeInsets.only(left: 5),
-                                                                padding: EdgeInsets.only(right: 3),
-                                                                alignment: Alignment.center,
+                                                                // margin: EdgeInsets.only(left: 5),
+                                                                // padding: EdgeInsets.only(right: 3),
+                                                                alignment:
+                                                                    Alignment
+                                                                        .center,
                                                                 child: Text(
                                                                   formattedStartTime,
-                                                                  style: const TextStyle(
-                                                                    fontSize: 15,
-                                                                    color : Colors.black54,
-                                                                    fontWeight: FontWeight.bold,
+                                                                  style:
+                                                                      const TextStyle(
+                                                                    fontSize:
+                                                                        15,
+                                                                    color: Colors
+                                                                        .black54,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
                                                                   ),
                                                                 ),
                                                               ),
@@ -348,148 +381,217 @@ class _CarpoolListState extends State<CarpoolList> {
                                                     ),
                                                     // 시간
                                                     Container(
-                                                      width: (screenWidth - 20) * 0.8 / 2,
+                                                      width:
+                                                          (screenWidth - 20) *
+                                                              0.8 /
+                                                              2,
                                                       child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
                                                         children: [
-                                                        Flexible(
-                                                        flex: 1,
-                                                        child: Align(
-                                                          alignment: Alignment.centerRight,
-                                                          child: Padding(
-                                                            padding: EdgeInsets.only(left: 10),
-                                                            child: Icon(
-                                                              Icons.access_time_rounded,
-                                                              size: 20,
-                                                              color: Colors.black54,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Flexible(
-                                                        flex: 1,
-                                                        child: Align(
-                                                          alignment: Alignment.centerRight,
-                                                          child: Container(
-                                                            margin: EdgeInsets.only(left: 1),
-                                                            padding: EdgeInsets.only(right: 8),
-                                                            alignment: Alignment.center,
-                                                            child: Text(
-                                                              formattedDate,
-                                                              style: const TextStyle(
-                                                                fontSize: 15,
-                                                                color : Colors.black54,
-                                                                fontWeight: FontWeight.bold,
+                                                          Flexible(
+                                                            flex: 1,
+                                                            child: Align(
+                                                              alignment: Alignment
+                                                                  .centerRight,
+                                                              child: Padding(
+                                                                padding: EdgeInsets
+                                                                    .only(
+                                                                        left:
+                                                                            10),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .access_time_rounded,
+                                                                  size: 20,
+                                                                  color: Colors
+                                                                      .black54,
+                                                                ),
                                                               ),
                                                             ),
                                                           ),
-                                                      ))],
+                                                          Flexible(
+                                                              flex: 1,
+                                                              child: Align(
+                                                                alignment: Alignment
+                                                                    .centerRight,
+                                                                child:
+                                                                    Container(
+                                                                  // margin: EdgeInsets.only(left: 1),
+                                                                  // padding: EdgeInsets.only(right: 8),
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  child: Text(
+                                                                    formattedDate,
+                                                                    style:
+                                                                        const TextStyle(
+                                                                      fontSize:
+                                                                          15,
+                                                                      color: Colors
+                                                                          .black54,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ))
+                                                        ],
                                                       ),
                                                     ),
                                                   ],
                                                 ),
                                               ),
-                                            ),
-                                          ],
+                                            ],
+                                          ),
                                         ),
 
                                         //출발지,도착지
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              width: (screenWidth - 20) * 0.8,
-                                              height: cardHeight * 0.25,
-                                              margin: EdgeInsets.fromLTRB(70, 8, 0, 0),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
+                                        Flexible(
+                                          flex: 2,
+                                          child: Container(
+                                            height: cardHeight * 0.3,
+                                            margin: const EdgeInsets.fromLTRB(
+                                                5, 12, 5, 5),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  // margin: EdgeInsets.fromLTRB(70, 8, 0, 0),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
                                                     children: [
-                                                      Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                      Row(
                                                         children: [
-                                                          Row(
-                                                            children: [
-                                                              Container(
-                                                                padding: EdgeInsets.only(left: 10), // 왼쪽 여백 추가
-                                                                child: Column(
-                                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                          Expanded(
+                                                            // padding: EdgeInsets.only(left: 10), // 왼쪽 여백 추가
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .end,
+                                                              children: [
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
                                                                   children: [
                                                                     //요약주소 6글자 이상이면 폰트 크기 작게
                                                                     Text(
                                                                       "${carpoolData['startDetailPoint']}",
-                                                                      style: TextStyle(
-                                                                        color: Colors.black,
-                                                                        fontSize: carpoolData['startDetailPoint'].toString().length > 4
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize: carpoolData['startDetailPoint'].toString().length >
+                                                                                4
                                                                             ? 12
-                                                                            : 17,
-                                                                        fontWeight: FontWeight.bold,
+                                                                            : 16,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
                                                                       ),
                                                                     ),
                                                                     Text(
-                                                                      shortenText(carpoolData['startPointName'], 16),
-                                                                      style: TextStyle(
-                                                                        color: Colors.black54,
-                                                                        fontSize: 11,
-                                                                        fontWeight: FontWeight.bold,
+                                                                      shortenText(
+                                                                          carpoolData[
+                                                                              'startPointName'],
+                                                                          16),
+                                                                      style:
+                                                                          TextStyle(
+                                                                        color: Colors
+                                                                            .black54,
+                                                                        fontSize:
+                                                                            11,
+                                                                        fontWeight:
+                                                                            FontWeight.bold,
                                                                       ),
                                                                     ),
                                                                   ],
                                                                 ),
-                                                              ),
-                                                              // 세로선을 추가
-                                                              Container(
-                                                                margin: const EdgeInsets.only(left: 25, right: 25, top: 0, bottom: 0),
-                                                                width: 2, // 세로선의 너비
-                                                                height: 30, // 세로선의 높이를 설정, 필요에 따라 조절
-                                                                color: Colors.grey[300], // 세로선의 색상
-                                                              ),
-                                                              Row(
-                                                                children: [
-                                                                  Column(
-                                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                                    children: [
-                                                                      //요약주소 6글자 이상이면 폰트 크기 작게
-                                                                      Text(
-                                                                        "${carpoolData['endDetailPoint']}",
-                                                                        style: TextStyle(
-                                                                          color: Colors.black,
-                                                                          fontSize: carpoolData['endDetailPoint'].toString().length > 4
-                                                                              ? 12
-                                                                              : 17,
-                                                                          fontWeight: FontWeight.bold,
-                                                                        ),
-                                                                      ),
-                                                                      Text(
-                                                                        shortenText(carpoolData['endPointName'], 16),
-                                                                        style: TextStyle(
-                                                                          color: Colors.black54,
-                                                                          fontSize: 11,
-                                                                          fontWeight: FontWeight.bold,
-                                                                        ),
-                                                                      ),
-                                                                    ],
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          // 세로선을 추가
+                                                          Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    left: 30,
+                                                                    right: 30,
+                                                                    top: 0,
+                                                                    bottom: 0),
+                                                            width: 2,
+                                                            // 세로선의 너비
+                                                            height: 30,
+                                                            // 세로선의 높이를 설정, 필요에 따라 조절
+                                                            color: Colors.grey[
+                                                                300], // 세로선의 색상
+                                                          ),
+                                                          Expanded(
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                //요약주소 6글자 이상이면 폰트 크기 작게
+                                                                Text(
+                                                                  "${carpoolData['endDetailPoint']}",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        carpoolData['endDetailPoint'].toString().length >
+                                                                                4
+                                                                            ? 12
+                                                                            : 16,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
                                                                   ),
-                                                                ],
-                                                              ),
-                                                            ],
+                                                                ),
+                                                                Text(
+                                                                  shortenText(
+                                                                      carpoolData[
+                                                                          'endPointName'],
+                                                                      16),
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: Colors
+                                                                        .black54,
+                                                                    fontSize:
+                                                                        11,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
                                                         ],
                                                       ),
                                                     ],
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                        Expanded(
+                                        Flexible(
+                                          flex: 1,
                                           child: Container(
+                                            alignment: Alignment.bottomLeft,
                                             width: (screenWidth - 20) * 0.8,
-                                            margin:
-                                                const EdgeInsets.only(left: 8.0),
-                                            child:
-                                                StreamBuilder<DocumentSnapshot?>(
+                                            margin: const EdgeInsets.only(
+                                                left: 8.0, bottom: 5.0),
+                                            child: StreamBuilder<
+                                                DocumentSnapshot?>(
                                               stream: FireStoreService()
                                                   .getLatestMessageStream(
                                                       carpool['carId']),
@@ -525,7 +627,9 @@ class _CarpoolListState extends State<CarpoolList> {
                                                   children: [
                                                     Container(
                                                       //margin: EdgeInsets.only(bottom: 8.0), // 채팅 밑 여백
-                                                      padding: EdgeInsets.only(left: 10.0), // 채팅 왼쪽 여백
+                                                      padding: EdgeInsets.only(
+                                                          left: 10.0),
+                                                      // 채팅 왼쪽 여백
                                                       child: Text(
                                                         '$sender : $content',
                                                         style: TextStyle(
@@ -544,7 +648,6 @@ class _CarpoolListState extends State<CarpoolList> {
                                   ),
                                 ),
                               ),
-
                             ],
                           ),
                           /*-----------------------------------------------Card---------------------------------------------------------------*/
@@ -560,7 +663,6 @@ class _CarpoolListState extends State<CarpoolList> {
       ),
     );
   }
-
 
   //카메라 이동 메서드
   void _moveCameraTo(LatLng target) {
@@ -628,7 +730,6 @@ class DashedLinePainter extends CustomPainter {
   }
 }
 
-
 //반원
 // class SemiCirclePainter extends CustomPainter {
 //   @override
@@ -648,19 +749,19 @@ class DashedLinePainter extends CustomPainter {
 
 //삼각형
 //class UpTrianglePainter extends CustomPainter {
-  //@override
-  //void paint(Canvas canvas, Size size) {
-    //final path = Path()
-      //..moveTo(size.width / 2, 0) // 중앙 위
-      //..lineTo(0, size.height) // 왼쪽 아래
-      //..lineTo(size.width, size.height) // 오른쪽 아래
-      //..close();
+//@override
+//void paint(Canvas canvas, Size size) {
+//final path = Path()
+//..moveTo(size.width / 2, 0) // 중앙 위
+//..lineTo(0, size.height) // 왼쪽 아래
+//..lineTo(size.width, size.height) // 오른쪽 아래
+//..close();
 
-    //final paint = Paint()..color = Colors.white;
+//final paint = Paint()..color = Colors.white;
 
-    //canvas.drawPath(path, paint);
-  //}
+//canvas.drawPath(path, paint);
+//}
 
-  //@override
-  //bool shouldRepaint(CustomPainter oldDelegate) => false;
+//@override
+//bool shouldRepaint(CustomPainter oldDelegate) => false;
 //}
