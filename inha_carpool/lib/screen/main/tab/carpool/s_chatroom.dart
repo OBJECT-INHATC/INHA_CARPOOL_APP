@@ -233,7 +233,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: widget.userName,
+                      text:  admin,
                       style: TextStyle(
                         fontSize: 17,
                         color: Colors.black,
@@ -472,14 +472,14 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 color: admin == memberName ? Colors.blue : Colors.black,
                               ),
                             ),
-                            Text(
-                              memberGender,
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey,
-                              ),
-                            ),
+                            // Text(
+                            //   memberGender,
+                            //   style: TextStyle(
+                            //     fontSize: 13,
+                            //     fontWeight: FontWeight.w500,
+                            //     color: Colors.grey,
+                            //   ),
+                            // ),
                           ],
                         ),
                         trailing: Icon(Icons.navigate_next_rounded),
