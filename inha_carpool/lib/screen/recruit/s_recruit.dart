@@ -100,11 +100,10 @@ class _RecruitPageState extends State<RecruitPage> {
               width: context.width(0.001),
             ),
           ),
-          title: 'recruit'.tr().text.make(),
+          title: '모집하기'.text.make(),
         ),
         body: SingleChildScrollView(
           child: Column(
-
             children: [
               startPointInput = LocationInputWidget(
                 labelText: startPointName,
@@ -142,6 +141,9 @@ class _RecruitPageState extends State<RecruitPage> {
                 detailPoint: '요약 주소 (ex 인하대 후문)',
                 detailController: _endPointDetailController,
               ),
+
+
+
               Row(
                 children: [
                   DateTimePickerWidget(
@@ -311,7 +313,6 @@ class _RecruitPageState extends State<RecruitPage> {
                             context,
                             MaterialPageRoute(builder: (context) => const MainScreen()),
                           );
-
                           if(carId == ""){
                             context.showErrorSnackbar("카풀 생성에 실패했습니다.");
                           }else{
@@ -336,7 +337,6 @@ class _RecruitPageState extends State<RecruitPage> {
                 ).p(50),
               ),
             ],
-
           ),
 
         ),
@@ -344,13 +344,7 @@ class _RecruitPageState extends State<RecruitPage> {
     );
   }
 
-  // Future<void> _getCurrentLocation() async {
-  //   Location_handler.getCurrentLocation(context, (LatLng location) {
-  //     setState(() {
-  //       startPoint = location;
-  //     });
-  //   });
-  // }
+
 
   // 주소 입력 오류 알림창
   Future<void> _showAddressAlertDialog(BuildContext context) async {

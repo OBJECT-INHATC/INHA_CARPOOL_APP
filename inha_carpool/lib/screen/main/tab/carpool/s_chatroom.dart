@@ -9,12 +9,13 @@ import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/w_location.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/f_mypage.dart';
 import 'package:inha_Carpool/service/api/Api_Topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-
 import '../../../../common/data/preference/prefs.dart';
+import '../home/s_carpool_map.dart';
 
 /// 0828 서은율, 한승완
 /// 채팅방 페이지 - 채팅방 정보 표시, 채팅 메시지 스트림, 메시지 입력, 메시지 전송
@@ -28,21 +29,18 @@ class ChatroomPage extends StatefulWidget {
   final String gender;
 
   /// 생성자
-  const ChatroomPage(
-      {Key? key,
-        required this.carId,
-        required this.groupName,
-        required this.userName,
-        required this.uid,
-        required this.gender,})
-      : super(key: key);
+  const ChatroomPage({
+    Key? key,
+    required this.carId,
+    required this.groupName,
+    required this.userName,
+    required this.uid,
+    required this.gender,
+  }) : super(key: key);
 
   @override
   State<ChatroomPage> createState() => _ChatroomPageState();
 }
-
-
-
 
 class _ChatroomPageState extends State<ChatroomPage> {
   /// 채팅 메시지 스트림
@@ -66,6 +64,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   /// 관리자 이름, 토큰, 사용자 Auth 정보
   String admin = "";
   String token = "";
+
   // User? user;
 
   //0927강지윤
@@ -86,8 +85,14 @@ class _ChatroomPageState extends State<ChatroomPage> {
   // 출발지
   String startPoint = "";
 
+  // 출발지
+  String startPointDetail = "";
+
   // 도착지
   String endPoint = "";
+
+  // 도착지
+  String endPointDetail = "";
 
   // 나가기 중복 방지
   bool exitButtonDisabled = true;
@@ -139,9 +144,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
     } else {
       FireStoreService()
           .getChatsAfterSpecTime(
-          widget.carId, DateTime
-          .now()
-          .millisecondsSinceEpoch)
+              widget.carId, DateTime.now().millisecondsSinceEpoch)
           .then((val) {
         setState(() {
           chats = val;
@@ -178,7 +181,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
     return res.substring(start, end);
   }
 
-
   /// 토큰, 사용자 Auth 정보 호출 메서드
   getCurrentUserandToken() async {
     user = FirebaseAuth.instance.currentUser;
@@ -192,8 +194,10 @@ class _ChatroomPageState extends State<ChatroomPage> {
       setState(() {
         membersList = val['members'];
         startTime = DateTime.fromMillisecondsSinceEpoch(val['startTime']);
-        startPoint = val['startDetailPoint'];
-        endPoint = val['endDetailPoint'];
+        startPoint = val['startPointName'];
+        startPointDetail = val['startDetailPoint'];
+        endPoint = val['endPointName'];
+        endPointDetail = val['endDetailPoint'];
         agreedTime = startTime.subtract(Duration(minutes: 10));
       });
     });
@@ -219,8 +223,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
         ),
 
         endDrawer: Drawer(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero, // 모서리를 직각으로 설정
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
           ),
           child: Column(
             children: [
@@ -230,11 +234,11 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 color: context.appColors.logoColor,
                 child: Column(
                   children: [
-                    Height(screenWidth * 0.15),
+                    SizedBox(height: screenWidth * 0.15),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        const Text(
+                        Text(
                           '대화 상대',
                           style: TextStyle(
                             color: Colors.white,
@@ -244,12 +248,11 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         ),
                         IconButton(
                           onPressed: isExitButtonDisabled
-                              ? null // 나가기 버튼 비활성화
+                              ? null
                               : () async {
-                            // 나가기 버튼 기능
                             ExitIconButton(context);
                           },
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.exit_to_app,
                             color: Colors.white,
                             size: 25,
@@ -260,45 +263,72 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   ],
                 ),
               ),
-              // 유저 목록 불러오기
-              ListView.builder(
-                padding: const EdgeInsets.all(8.0), // ListView.builder에 패딩 설정
-                itemCount: membersList.length >= 4 ? 4 : membersList.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (BuildContext context, int index) {
-                  String memberName = getName(membersList[index]);
-                  String memberGender = getGender(membersList[index]);
-                  String memberId = getMemberId(membersList[index]);
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8.0),
+                  itemCount: membersList.length >= 4 ? 4 : membersList.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    String memberName = getName(membersList[index]);
+                    String memberGender = getGender(membersList[index]);
+                    String memberId = getMemberId(membersList[index]);
 
-                  return ListTile(
-                    onTap: () {
-                      _showProfileModal(context, memberId, '$memberName 님', memberGender);
-                    },
-                    leading: Icon(
-                      Icons.account_circle,
-                      size: 35,
-                      color: admin == memberName ? Colors.blue : Colors.black,
-                    ),
-                    title: Row(
-                      children: [
-                        memberName.text.size(16)
-                            .color(admin == memberName ? Colors.blue : Colors.black).make(),
-                      ],
-                    ),
-                    trailing: const Icon(Icons.navigate_next_rounded),
-                  );
-                },
+                    return ListTile(
+                      onTap: () {
+                        _showProfileModal(
+                          context,
+                          memberId,
+                          '$memberName 님',
+                          memberGender,
+                        );
+                      },
+                      leading: Icon(
+                        Icons.account_circle,
+                        size: 35,
+                        color: admin == memberName ? Colors.blue : Colors.black,
+                      ),
+                      title: Row(
+                        children: [
+                          memberName.text
+                              .size(16)
+                              .color(admin == memberName
+                              ? Colors.blue
+                              : Colors.black)
+                              .make(),
+                        ],
+                      ),
+                      trailing: const Icon(Icons.navigate_next_rounded),
+                    );
+                  },
+                ),
               ),
-             //-------- 출발지
-              startPoint.text.size(17).color(Colors.black).bold.make(),
-              const Icon(Icons.arrow_right_outlined, size: 28, color: Colors.black),
-              endPoint.text.size(17).color(Colors.black).bold.make(),
-
-              //-------- 목적지
+              const Line(height: 1),
+              Flexible(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    startPointDetail.text.size(25).color(Colors.black).bold.make(),
+                    const Icon(Icons.arrow_right_outlined,
+                        size: 40, color: Colors.black),
+                    endPointDetail.text.size(25).color(Colors.black).bold.make(),
+                  ],
+                ),
+              ),
+              const Line(height: 1),
+              Flexible(
+                child: Column(
+                  children: [
+                    ChatLocation(title: '출발지', location: startPoint),
+                    ChatLocation(title: '도착지', location: endPoint),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
+
 
         //----------------------------------------------body
         //----------------------------------------------body
@@ -321,21 +351,22 @@ class _ChatroomPageState extends State<ChatroomPage> {
                           Height(3),
                         ],
                       ),
-                      '${startTime.month}월 ${startTime.day}일 $formattedDate 출발'.text.medium.size(13).make(),
+                      '${startTime.month}월 ${startTime.day}일 $formattedDate 출발'
+                          .text
+                          .medium
+                          .size(13)
+                          .make(),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 10),
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
+                        width: MediaQuery.of(context).size.width,
                         color: Colors.white,
                         child: Row(
                           children: [
                             Expanded(
                               child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                    horizontal: 20),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
                                 decoration: BoxDecoration(
                                   color: Colors.grey[400],
                                   borderRadius: BorderRadius.circular(30),
@@ -343,7 +374,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 child: TextField(
                                   cursorColor: Colors.white,
                                   controller: messageController,
-                                  style: const TextStyle(color: Colors.black87,
+                                  style: const TextStyle(
+                                      color: Colors.black87,
                                       fontWeight: FontWeight.bold),
                                   maxLines: null,
                                   decoration: const InputDecoration(
@@ -358,14 +390,13 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             const SizedBox(width: 12),
                             GestureDetector(
                               onTap: () {
-                                  sendMessage();
+                                sendMessage();
                               },
                               child: Container(
                                 height: 45,
                                 width: 45,
                                 decoration: BoxDecoration(
-                                   color: context.appColors.logoColor,
-
+                                  color: context.appColors.logoColor,
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: const Center(
@@ -396,7 +427,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   }
 
   void ExitIconButton(BuildContext context) {
-     final currentTime = DateTime.now();
+    final currentTime = DateTime.now();
     final timeDifference = agreedTime.difference(currentTime);
     // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
     final minutesDifference = timeDifference.inMinutes;
@@ -420,7 +451,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    if(exitButtonDisabled) {
+                    if (exitButtonDisabled) {
                       exitButtonDisabled = false;
 
                       /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
@@ -429,21 +460,16 @@ class _ChatroomPageState extends State<ChatroomPage> {
                             .unsubscribeFromTopic(widget.carId);
 
                         await FirebaseMessaging.instance
-                            .unsubscribeFromTopic(
-                            "${widget.carId}_info");
+                            .unsubscribeFromTopic("${widget.carId}_info");
                       }
                       ApiTopic apiTopic = ApiTopic();
-                      await apiTopic.deleteTopic(
-                          widget.uid, widget.carId);
+                      await apiTopic.deleteTopic(widget.uid, widget.carId);
 
                       ///--------------------------------------------------------------------
 
                       // 데이터베이스 작업을 비동기로 수행
-                      await FireStoreService().exitCarpool(
-                          widget.carId,
-                          widget.userName,
-                          widget.uid,
-                          widget.gender);
+                      await FireStoreService().exitCarpool(widget.carId,
+                          widget.userName, widget.uid, widget.gender);
 
                       // 데이터베이스 작업이 완료되면 다음 페이지로 이동
                       if (!mounted) return;
@@ -451,8 +477,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                          const MainScreen(),
+                          builder: (context) => const MainScreen(),
                         ),
                       );
                       setState(() {
@@ -477,7 +502,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   }
 
   void EixtTenMinCarpool(BuildContext context) {
-     showDialog(
+    showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -502,8 +527,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('카풀 나가기'),
-          content:
-          const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
+          content: const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -513,7 +537,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
             ),
             TextButton(
               onPressed: () async {
-                if(exitButtonDisabled) {
+                if (exitButtonDisabled) {
                   exitButtonDisabled = false;
 
                   if (Prefs.isPushOnRx.get() == true) {
@@ -521,27 +545,20 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         .unsubscribeFromTopic(widget.carId);
 
                     await FirebaseMessaging.instance
-                        .unsubscribeFromTopic(
-                        "${widget.carId}_info");
+                        .unsubscribeFromTopic("${widget.carId}_info");
                   }
                   ApiTopic apiTopic = ApiTopic();
-                  await apiTopic.deleteTopic(
-                      widget.uid, widget.carId);
+                  await apiTopic.deleteTopic(widget.uid, widget.carId);
 
                   await FireStoreService().exitCarpoolAsAdmin(
-                      widget.carId,
-                      widget.userName,
-                      widget.uid,
-                      widget.gender);
+                      widget.carId, widget.userName, widget.uid, widget.gender);
 
                   if (!mounted) return;
                   Navigator.pop(context);
                   Navigator.pop(context);
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                        const MainScreen()),
+                    MaterialPageRoute(builder: (context) => const MainScreen()),
                   );
                   setState(() {
                     exitButtonDisabled = true;
@@ -571,8 +588,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
         if (snapshot.hasData) {
           List<ChatMessage> fireStoreChats = snapshot.data!.docs
-              .map<ChatMessage>((e) =>
-              ChatMessage.fromMap(e.data() as Map<String, dynamic>, widget.carId))
+              .map<ChatMessage>((e) => ChatMessage.fromMap(
+                  e.data() as Map<String, dynamic>, widget.carId))
               .toList();
           if (localChats != null) {
             fireStoreChats.addAll(localChats!);
@@ -581,7 +598,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
           if (fireStoreChats.length > previousItemCount) {
             previousItemCount = fireStoreChats.length;
             WidgetsBinding.instance?.addPostFrameCallback((_) {
-              _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+              _scrollController
+                  .jumpTo(_scrollController.position.maxScrollExtent);
             });
           }
 
@@ -598,16 +616,17 @@ class _ChatroomPageState extends State<ChatroomPage> {
             itemCount: fireStoreChats.length,
             itemBuilder: (context, index) {
               final currentChat = fireStoreChats[index]; // 현재 채팅 메시지
-              final previousChat = index > 0 ? fireStoreChats[index - 1] : null; // 이전 채팅 메시지
+              final previousChat =
+                  index > 0 ? fireStoreChats[index - 1] : null; // 이전 채팅 메시지
 
               // 채팅에 포함된 시간을 DateTime으로 변환
               final currentDate =
-              DateTime.fromMillisecondsSinceEpoch(currentChat.time);
+                  DateTime.fromMillisecondsSinceEpoch(currentChat.time);
               final previousDate =
-              // 이전 채팅 메시지가 있을 경우에만 변환
-              previousChat != null
-                  ? DateTime.fromMillisecondsSinceEpoch(previousChat.time)
-                  : null;
+                  // 이전 채팅 메시지가 있을 경우에만 변환
+                  previousChat != null
+                      ? DateTime.fromMillisecondsSinceEpoch(previousChat.time)
+                      : null;
 
               // 날짜 변환 체크
 
@@ -635,11 +654,10 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     messageType: widget.userName == fireStoreChats[index].sender
                         ? MessageType.me
                         : (fireStoreChats[index].sender == 'service'
-                        ? MessageType.service
-                        : MessageType.other),
+                            ? MessageType.service
+                            : MessageType.other),
                     time: fireStoreChats[index].time,
                   ),
-
                 ],
               );
             },
@@ -657,9 +675,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
       Map<String, dynamic> chatMessageMap = {
         "message": messageController.text,
         "sender": widget.userName,
-        "time": DateTime
-            .now()
-            .millisecondsSinceEpoch,
+        "time": DateTime.now().millisecondsSinceEpoch,
       };
 
       /// 메시지 전송
@@ -685,14 +701,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
     }
   }
 
-
-
-  void _showProfileModal(BuildContext context, String memberId ,String userName, String memberGender) {
+  void _showProfileModal(BuildContext context, String memberId, String userName,
+      String memberGender) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return Container(
-
           // 크기 지정
           height: context.height(0.35),
           width: double.infinity,
@@ -711,7 +725,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 padding: const EdgeInsets.all(10.0),
                 margin: const EdgeInsets.all(10.0),
                 alignment: Alignment.center,
-                child: const Text('프로필 조회',
+                child: const Text(
+                  '프로필 조회',
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -729,18 +744,30 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     margin: const EdgeInsets.fromLTRB(20, 5, 0, 0),
                     alignment: Alignment.centerLeft,
                     child: const Icon(
-                      Icons.person_search, size: 120,),
+                      Icons.person_search,
+                      size: 120,
+                    ),
                   ),
-                  const SizedBox(width: 10,),
+                  const SizedBox(
+                    width: 10,
+                  ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(userName, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
-                      Text(memberGender,style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: Colors.grey),),
+                      Text(userName,
+                          style: const TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.w600)),
+                      Text(
+                        memberGender,
+                        style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey),
+                      ),
                       ElevatedButton(
                         onPressed: () {
                           viewProfile(context, uid, memberId);
-                          if(uid != memberId) {
+                          if (uid != memberId) {
                             // UID와 MemberId가 다르면 ComplainAlert 다이얼로그 표시
                             Navigator.pop(context);
                             showDialog(
@@ -748,34 +775,40 @@ class _ChatroomPageState extends State<ChatroomPage> {
                               builder: (context) => ComplainAlert(
                                   reportedUserNickName: userName,
                                   myId: widget.userName,
-                                  carpoolId: widget.carId
-                              ),
+                                  carpoolId: widget.carId),
                             );
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:  Color.fromARGB(255, 255, 167, 2),
+                          backgroundColor: Color.fromARGB(255, 255, 167, 2),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)
-                          ),
+                              borderRadius: BorderRadius.circular(5.0)),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             //Icon(Icons.warning_rounded, color: (uid == memberId) ? Colors.grey : Colors.white),
                             Icon(
-                                (uid == memberId) ? Icons.double_arrow_rounded : Icons.warning_rounded,
-                                color: (uid == memberId) ? Colors.white : Colors.white
+                                (uid == memberId)
+                                    ? Icons.double_arrow_rounded
+                                    : Icons.warning_rounded,
+                                color: (uid == memberId)
+                                    ? Colors.white
+                                    : Colors.white),
+                            SizedBox(
+                              width: 8,
                             ),
-                            SizedBox(width: 8,),
                             Text(
                               (uid == memberId) ? "프로필로 이동" : "신고하기",
-                              style: TextStyle(color: (uid == memberId) ? Colors.white : Colors.white, fontWeight: FontWeight.bold),
+                              style: TextStyle(
+                                  color: (uid == memberId)
+                                      ? Colors.white
+                                      : Colors.white,
+                                  fontWeight: FontWeight.bold),
                             )
                           ],
                         ),
                       ),
-
                     ],
                   ),
                 ],
@@ -788,16 +821,10 @@ class _ChatroomPageState extends State<ChatroomPage> {
   }
 
 //uid와 memberID비교
-  void viewProfile(BuildContext context, String? uid, String memberId){
-    if( uid == memberId){
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => MyPage()));
-    }else{
-
-    }
+  void viewProfile(BuildContext context, String? uid, String memberId) {
+    if (uid == memberId) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => MyPage()));
+    } else {}
   }
-
-
 }
-
-
