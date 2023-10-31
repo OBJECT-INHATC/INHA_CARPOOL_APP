@@ -53,7 +53,7 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
           future: checkUserStatus(),
           builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return CircularProgressIndicator(); // loading spinner
+              return const CircularProgressIndicator(); // loading spinner
             } else if (snapshot.connectionState == ConnectionState.done) {
               return Container(
                 decoration: BoxDecoration(
@@ -67,11 +67,11 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                     Text(
                       verificationText,
                       style: (verificationText == "본인인증 대기중...")
-                          ? TextStyle(
+                          ? const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.red)
-                          : TextStyle(
+                          : const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
                               color: Colors.green),
@@ -101,7 +101,7 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                     ),
                     Container(
                       width: context.width(0.9),
-                      padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: Colors.white,
@@ -117,16 +117,16 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                                   color: Colors.white,
                                   border: Border.all(color: Colors.grey),
                                 ),
-                                child: Icon(
+                                child: const Icon(
                                   Icons.email_outlined,
                                   color: Colors.grey,
                                 ),
                               ),
-                              Text("1단계"),
-                              Text("이메일에서 인증 요청 메시지 확인"),
+                              const Text("1단계"),
+                              const Text("이메일에서 인증 요청 메시지 확인"),
                             ],
                           ),
-                          Icon(
+                          const Icon(
                             Icons.arrow_downward_rounded,
                             color: Colors.grey,
                           ),
@@ -138,16 +138,16 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                                   color: Colors.white,
                                   border: Border.all(color: Colors.grey),
                                 ),
-                                child: Icon(
+                                child: const Icon(
                                   Icons.check_circle,
                                   color: Colors.grey,
                                 ),
                               ),
-                              Text("2단계"),
-                              Text("링크를 눌러 인증하기"),
+                              const Text("2단계"),
+                              const Text("링크를 눌러 인증하기"),
                             ],
                           ),
-                          Icon(
+                          const Icon(
                             Icons.arrow_downward_rounded,
                             color: Colors.grey,
                           ),
@@ -159,13 +159,13 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                                   color: Colors.white,
                                   border: Border.all(color: Colors.grey),
                                 ),
-                                child: Icon(
+                                child: const Icon(
                                   Icons.phone_android_outlined,
                                   color: Colors.grey,
                                 ),
                               ),
-                              Text("3단계"),
-                              Text("앱으로 돌아와서 인증 완료 버튼 누르기"),
+                              const Text("3단계"),
+                              const Text("앱으로 돌아와서 인증 완료 버튼 누르기"),
                             ],
                           )
                         ],
@@ -201,7 +201,7 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                 ),
               );
             } else {
-              return Text('잘못된 접근입니다..!');
+              return const Text('잘못된 접근입니다..!');
             }
           },
         ),

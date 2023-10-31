@@ -321,5 +321,10 @@ class FireStoreService {
     // 로컬 DB에서 해당 카풀 정보 삭제
     ChatDao().deleteByCarId(carId);
   }
-
+  Future<int> getCarpoolStartTime(String carId) async {
+    DocumentSnapshot carpool = await FirebaseFirestore.instance.collection('carpool').doc(carId).get();
+    int startTime = carpool.get('startTime');
+    print("가져온 타임값: $startTime");
+    return startTime;
+  }
 }
