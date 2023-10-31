@@ -7,7 +7,8 @@ class DateTimePickerWidget extends StatefulWidget {
   final DateTime selectedDateTime;
   final Function(DateTime) onDateTimeChanged;
 
-  const DateTimePickerWidget({super.key,
+  const DateTimePickerWidget({
+    super.key,
     required this.label,
     required this.selectedDateTime,
     required this.onDateTimeChanged,
@@ -33,12 +34,20 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
         onTap: () {
           FocusScope.of(context).unfocus();
           showModalBottomSheet(
-            backgroundColor: Colors.white,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            // backgroundColor: Colors.white,
+            // shape:
+            //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             context: context,
             builder: (BuildContext context) {
-              return SizedBox(
+              return Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  // 컨테이너에서 틴트 값 빼고, 여기서 모서리 둥글게
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
                 height: context.width(0.9),
                 child: _isTimePicker
                     ? SizedBox(
@@ -48,6 +57,7 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                             textTheme: CupertinoTextThemeData(
                               dateTimePickerTextStyle: TextStyle(
                                 fontSize: 17,
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -96,7 +106,8 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                 child: Text(
                   widget.label,
                   style: const TextStyle(
-                    fontSize: 17, fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),

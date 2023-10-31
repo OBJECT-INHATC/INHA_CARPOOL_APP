@@ -149,7 +149,6 @@ class _AgreementState extends State<Agreement> {
               ),
               SizedBox(
                 width: width - 60,
-                height: 300,
                 child: Column(
                   children: [
                     Container(
@@ -165,8 +164,8 @@ class _AgreementState extends State<Agreement> {
                                   children: [
                                     Text(
                                       _agreementList[0]['label'],
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                      style: TextStyle(
+                                        fontSize: width > 380 ? 16 : 14,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black,
                                       ),
@@ -222,8 +221,8 @@ class _AgreementState extends State<Agreement> {
                                   children: [
                                     Text(
                                       _agreementList[1]['label'],
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                      style: TextStyle(
+                                        fontSize: width > 380 ? 16 : 14,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black,
                                       ),
@@ -278,8 +277,8 @@ class _AgreementState extends State<Agreement> {
                                   children: [
                                     Text(
                                       _agreementList[2]['label'],
-                                      style: const TextStyle(
-                                        fontSize: 16,
+                                      style: TextStyle(
+                                        fontSize: width > 380 ? 16 : 14,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.black,
                                       ),
