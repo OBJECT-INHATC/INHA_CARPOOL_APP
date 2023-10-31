@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
-import 'package:nav/nav.dart';
-import 'package:intl/intl.dart';
 import '../carpool/s_chatroom.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
 
 class CarpoolListWidget extends StatefulWidget {
@@ -17,7 +14,7 @@ class CarpoolListWidget extends StatefulWidget {
   final String uid; // uid 추가
   final String gender;
 
-  const CarpoolListWidget({
+  const CarpoolListWidget({super.key,
     required this.snapshot,
     required this.scrollController,
     required this.visibleItemCount,
@@ -178,6 +175,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
               //=================================================================================작업
               child: Card(
                 color: Colors.white,
+                surfaceTintColor: Colors.transparent,
                 elevation: 3, // 그림자의 깊이를 조절하는 elevation 값
                 margin: const EdgeInsets.all(10),
                 shape: RoundedRectangleBorder(
