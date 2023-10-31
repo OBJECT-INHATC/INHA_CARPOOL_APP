@@ -223,6 +223,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
         ),
 
         endDrawer: Drawer(
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(40),
           ),
@@ -310,7 +312,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     startPointDetail.text.size(25).color(Colors.black).bold.make(),
-                    const Icon(Icons.arrow_right_outlined,
+                    const Icon(Icons.arrow_downward_outlined,
                         size: 40, color: Colors.black),
                     endPointDetail.text.size(25).color(Colors.black).bold.make(),
                   ],
