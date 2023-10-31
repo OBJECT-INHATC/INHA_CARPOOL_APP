@@ -163,10 +163,11 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                     ///아직 대기중이면 state변경 감지
                     checkUserStatus();
                   }:(){
+                    // 123123
                     ///인증이 완료되면 로그인 페이지로 이동
                     Navigator.pop(context);
                     Navigator.pop(context);
-
+                    Navigator.pop(context);
                   }),
             ],
           ),
