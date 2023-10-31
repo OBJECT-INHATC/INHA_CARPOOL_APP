@@ -212,43 +212,10 @@ class _ChatroomPageState extends State<ChatroomPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: context.appColors.logoColor,
           surfaceTintColor: Colors.transparent,
           toolbarHeight: 65,
-          title: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text:  admin,
-                          style: const TextStyle(
-                            fontSize: 17,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const TextSpan(
-                          text: "님의 방",
-                          style: TextStyle(
-                            fontSize: 17,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-
-          ),
-
+          title: "$admin의 카풀".text.size(20).make(),
         ),
 
         endDrawer: Drawer(
@@ -468,6 +435,14 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   },
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  startPoint.text.size(17).color(Colors.black).bold.make(),
+                  const Icon(Icons.arrow_right_outlined, size: 28, color: Colors.black),
+                  endPoint.text.size(17).color(Colors.black).bold.make(),
+                ],
+              ),
             ],
           ),
         ),
@@ -478,16 +453,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
         body: Column(
           children: [
             //출발 목적지
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                startPoint.text.size(17).color(Colors.black).bold.make(),
-                const Icon(Icons.arrow_right_outlined, size: 28, color: Colors.black),
-                endPoint.text.size(17).color(Colors.black).bold.make(),
-              ],
-            ),
-            const Height(5),
-            Divider(height: 1, color: Colors.grey[400],),
             const Height(3),
             Expanded(
               child: Stack(
@@ -497,8 +462,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Divider(height: 1, color: Colors.grey[400],),
-                      const Height(3),
+                      const Line(height: 1),
+                      const Column(
+                        children: [
+                          Height(3),
+                        ],
+                      ),
                       '${startTime.month}월 ${startTime.day}일 $formattedDate 출발'.text.medium.size(13).make(),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -558,7 +527,10 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         ),
                       ),
                       // 맨 밑 메세지 보내는 부분인데 반응형 디자인이 안되서 일단 주석처리함
-                      const Height(20),
+                      Container(
+                        color: Colors.white,
+                        height: 20,
+                      ),
                     ],
                   ),
                 ],

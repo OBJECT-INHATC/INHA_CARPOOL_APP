@@ -65,7 +65,7 @@ class MainScreenState extends State<MainScreen>
           toolbarHeight: 45,
           // 해당 선을 내릴때만 나오게 해줘
           elevation: 0,
-          shape: Border(
+          shape: const Border(
             bottom: BorderSide(
               color: //Colors.grey.shade200,
               Colors.white,
