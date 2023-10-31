@@ -224,225 +224,78 @@ class _ChatroomPageState extends State<ChatroomPage> {
           ),
           child: Column(
             children: [
-              Align(
-                alignment: Alignment.centerLeft, // 왼쪽 정렬
-                child: Padding(
-                  padding: EdgeInsets.only(top: AppBar().preferredSize.height, left: 15),
-                  child: ListTile(
-                    title: const Text(
-                      "대화상대",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
+              Container(
+                height: AppBar().preferredSize.height * 2,
+                width: double.infinity,
+                color: context.appColors.logoColor,
+                child: Column(
+                  children: [
+                    Height(screenWidth * 0.15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        const Text(
+                          '대화 상대',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: isExitButtonDisabled
+                              ? null // 나가기 버튼 비활성화
+                              : () async {
+                            // 나가기 버튼 기능
+                            ExitIconButton(context);
+                          },
+                          icon: const Icon(
+                            Icons.exit_to_app,
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        ),
+                      ],
                     ),
-                    trailing: IconButton(
-                      iconSize: 30,
-                      onPressed: isExitButtonDisabled
-                          ? null
-                          : () async {
-                        final currentTime = DateTime.now();
-                        final timeDifference = agreedTime.difference(currentTime);
-                        // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
-                        final minutesDifference = timeDifference.inMinutes;
+                  ],
+                ),
+              ),
+              // 유저 목록 불러오기
+              ListView.builder(
+                padding: const EdgeInsets.all(8.0), // ListView.builder에 패딩 설정
+                itemCount: membersList.length >= 4 ? 4 : membersList.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (BuildContext context, int index) {
+                  String memberName = getName(membersList[index]);
+                  String memberGender = getGender(membersList[index]);
+                  String memberId = getMemberId(membersList[index]);
 
-                        if (minutesDifference > 10) {
-                          // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
-                          if (admin != widget.userName) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  surfaceTintColor: Colors.transparent,
-                                  title: const Text('카풀 나가기'),
-                                  content: const Text('정말로 카풀을 나가시겠습니까?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('취소'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        if(exitButtonDisabled) {
-                                          exitButtonDisabled = false;
-
-                                          /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
-                                          if (Prefs.isPushOnRx.get() == true) {
-                                            await FirebaseMessaging.instance
-                                                .unsubscribeFromTopic(widget.carId);
-
-                                            await FirebaseMessaging.instance
-                                                .unsubscribeFromTopic(
-                                                "${widget.carId}_info");
-                                          }
-                                          ApiTopic apiTopic = ApiTopic();
-                                          await apiTopic.deleteTopic(
-                                              widget.uid, widget.carId);
-
-                                          ///--------------------------------------------------------------------
-
-                                          // 데이터베이스 작업을 비동기로 수행
-                                          await FireStoreService().exitCarpool(
-                                              widget.carId,
-                                              widget.userName,
-                                              widget.uid,
-                                              widget.gender);
-
-                                          // 데이터베이스 작업이 완료되면 다음 페이지로 이동
-                                          if (!mounted) return;
-                                          Navigator.pop(context);
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                              const MainScreen(),
-                                            ),
-                                          );
-                                          setState(() {
-                                            exitButtonDisabled = true;
-                                          });
-                                        }
-                                      },
-                                      child: const Text('나가기'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text('카풀 나가기'),
-                                  content:
-                                  const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
-                                  actions: [
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: const Text('취소'),
-                                    ),
-                                    TextButton(
-                                      onPressed: () async {
-                                        if(exitButtonDisabled) {
-                                          exitButtonDisabled = false;
-
-                                          if (Prefs.isPushOnRx.get() == true) {
-                                            await FirebaseMessaging.instance
-                                                .unsubscribeFromTopic(widget.carId);
-
-                                            await FirebaseMessaging.instance
-                                                .unsubscribeFromTopic(
-                                                "${widget.carId}_info");
-                                          }
-                                          ApiTopic apiTopic = ApiTopic();
-                                          await apiTopic.deleteTopic(
-                                              widget.uid, widget.carId);
-
-                                          await FireStoreService().exitCarpoolAsAdmin(
-                                              widget.carId,
-                                              widget.userName,
-                                              widget.uid,
-                                              widget.gender);
-
-                                          if (!mounted) return;
-                                          Navigator.pop(context);
-                                          Navigator.pop(context);
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                const MainScreen()),
-                                          );
-                                          setState(() {
-                                            exitButtonDisabled = true;
-                                          });
-                                        }
-                                      },
-                                      child: const Text('나가기'),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          }
-                        } else {
-                          // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('카풀 나가기 불가'),
-                                content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Text('확인'),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.exit_to_app,
-                        color: Colors.black,
-                        size: 25,
-                      ),
+                  return ListTile(
+                    onTap: () {
+                      _showProfileModal(context, memberId, '$memberName 님', memberGender);
+                    },
+                    leading: Icon(
+                      Icons.account_circle,
+                      size: 35,
+                      color: admin == memberName ? Colors.blue : Colors.black,
                     ),
-                  ),
-                ),
+                    title: Row(
+                      children: [
+                        memberName.text.size(16)
+                            .color(admin == memberName ? Colors.blue : Colors.black).make(),
+                      ],
+                    ),
+                    trailing: const Icon(Icons.navigate_next_rounded),
+                  );
+                },
               ),
-              SizedBox(
-                width: screenWidth * 0.7,
-                child: Divider(
-                  color: Colors.grey.shade200,
-                ),
-              ),
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(8.0), // ListView.builder에 패딩 설정
-                  itemCount: membersList.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    String memberName = getName(membersList[index]);
-                    String memberGender = getGender(membersList[index]);
-                    String memberId = getMemberId(membersList[index]);
+             //-------- 출발지
+              startPoint.text.size(17).color(Colors.black).bold.make(),
+              const Icon(Icons.arrow_right_outlined, size: 28, color: Colors.black),
+              endPoint.text.size(17).color(Colors.black).bold.make(),
 
-                    return ListTile(
-                      onTap: () {
-                        _showProfileModal(context, memberId, '$memberName 님', memberGender);
-                      },
-                      leading: Icon(
-                        Icons.account_circle,
-                        size: 35,
-                        color: admin == memberName ? Colors.blue : Colors.black,
-                      ),
-                      title: Row(
-                        children: [
-                          memberName.text.size(16)
-                              .color(admin == memberName ? Colors.blue : Colors.black).make(),
-                        ],
-                      ),
-                      trailing: const Icon(Icons.navigate_next_rounded),
-                    );
-                  },
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  startPoint.text.size(17).color(Colors.black).bold.make(),
-                  const Icon(Icons.arrow_right_outlined, size: 28, color: Colors.black),
-                  endPoint.text.size(17).color(Colors.black).bold.make(),
-                ],
-              ),
+              //-------- 목적지
             ],
           ),
         ),
@@ -539,6 +392,167 @@ class _ChatroomPageState extends State<ChatroomPage> {
           ],
         ),
       ),
+    );
+  }
+
+  void ExitIconButton(BuildContext context) {
+     final currentTime = DateTime.now();
+    final timeDifference = agreedTime.difference(currentTime);
+    // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
+    final minutesDifference = timeDifference.inMinutes;
+
+    if (minutesDifference > 10) {
+      // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
+      if (admin != widget.userName) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              surfaceTintColor: Colors.transparent,
+              title: const Text('카풀 나가기'),
+              content: const Text('정말로 카풀을 나가시겠습니까?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('취소'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    if(exitButtonDisabled) {
+                      exitButtonDisabled = false;
+
+                      /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
+                      if (Prefs.isPushOnRx.get() == true) {
+                        await FirebaseMessaging.instance
+                            .unsubscribeFromTopic(widget.carId);
+
+                        await FirebaseMessaging.instance
+                            .unsubscribeFromTopic(
+                            "${widget.carId}_info");
+                      }
+                      ApiTopic apiTopic = ApiTopic();
+                      await apiTopic.deleteTopic(
+                          widget.uid, widget.carId);
+
+                      ///--------------------------------------------------------------------
+
+                      // 데이터베이스 작업을 비동기로 수행
+                      await FireStoreService().exitCarpool(
+                          widget.carId,
+                          widget.userName,
+                          widget.uid,
+                          widget.gender);
+
+                      // 데이터베이스 작업이 완료되면 다음 페이지로 이동
+                      if (!mounted) return;
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                          const MainScreen(),
+                        ),
+                      );
+                      setState(() {
+                        exitButtonDisabled = true;
+                      });
+                    }
+                  },
+                  child: const Text('나가기'),
+                ),
+              ],
+            );
+          },
+        );
+      } else {
+        // 나가기 버튼 기능
+        ExitCarpool(context);
+      }
+    } else {
+      // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
+      EixtTenMinCarpool(context);
+    }
+  }
+
+  void EixtTenMinCarpool(BuildContext context) {
+     showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('카풀 나가기 불가'),
+          content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void ExitCarpool(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('카풀 나가기'),
+          content:
+          const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('취소'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if(exitButtonDisabled) {
+                  exitButtonDisabled = false;
+
+                  if (Prefs.isPushOnRx.get() == true) {
+                    await FirebaseMessaging.instance
+                        .unsubscribeFromTopic(widget.carId);
+
+                    await FirebaseMessaging.instance
+                        .unsubscribeFromTopic(
+                        "${widget.carId}_info");
+                  }
+                  ApiTopic apiTopic = ApiTopic();
+                  await apiTopic.deleteTopic(
+                      widget.uid, widget.carId);
+
+                  await FireStoreService().exitCarpoolAsAdmin(
+                      widget.carId,
+                      widget.userName,
+                      widget.uid,
+                      widget.gender);
+
+                  if (!mounted) return;
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                        const MainScreen()),
+                  );
+                  setState(() {
+                    exitButtonDisabled = true;
+                  });
+                }
+              },
+              child: const Text('나가기'),
+            ),
+          ],
+        );
+      },
     );
   }
 
