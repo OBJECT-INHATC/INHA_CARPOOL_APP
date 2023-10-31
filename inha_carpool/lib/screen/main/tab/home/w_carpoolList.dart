@@ -52,8 +52,8 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
   @override
   Widget build(BuildContext context) {
     // 화면의 너비와 높이를 가져 와서 화면 비율 계산함
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width; //360
+    final screenHeight = MediaQuery.of(context).size.height; //727
 
     // 화면 높이의 75%를 ListView.builder의 높이로 사용
     double listViewHeight = screenHeight * 0.75;
@@ -193,10 +193,11 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                           size: 18,
                         ),
                         //달력 아이콘과 날짜의 간격
-                        const Width(20),
+                        Width( screenWidth * 0.01),
                         '${startTime.month}월 ${startTime.day}일 $formattedDate 예정'.text.size(13).make(),
                         //-- 예정과 택시 아이콘 사이 공간 은우--//
-                        const Width(30),
+                        //Width(screenWidth * 0.17),
+                        Width(screenWidth > 400 ? screenWidth * 0.17 + 50 : screenWidth * 0.17),
                         // 2/2명
                         Icon(
                           Icons.directions_car_outlined,
@@ -205,18 +206,18 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                         ),
 
                         // 택시 아이콘과 인원수 사이 간격
-                        const Width(5),
+                        Width(screenWidth * 0.01),
                         '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명'.text.bold.size(16).make(),
 
                         // 인원수와 성별 사이 간격
-                        const Width(10),
+                        Width(screenWidth * 0.01),
                         //무관
                         '${carpoolData['gender']}'.text.size(13).normal.color(Colors.grey).make(),
 
                       ]),
 
                       //출발지와 row와 간격
-                      const Height(15),
+                      Height(screenHeight*0.02),
 
 //----------------------------------------------------------------------------------
 //----------------------------------------------------------------------------------
@@ -225,12 +226,12 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                       //2번째 줄 출발지
                       Row(
                         children: [
-                           Icon(Icons.circle_outlined,
+                          Icon(Icons.circle_outlined,
                               color: context.appColors.logoColor,
                               size: 12),
 
                           // 아이콘과 주소들 사이 간격
-                          const Width(10),
+                          Width(screenWidth * 0.03),
 
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,9 +258,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                               size: 12),
 
                           // 아이콘과 주소들 사이 간격
-                          const Width(10),
+                          Width(screenWidth * 0.03),
 
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // 도착지 요약주소
                               _truncateText(carpoolData['endDetailPoint'], 32).text
@@ -272,7 +274,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                         ],
                       ),
                       // 박스와 간격
-                      const Height(15),
+                      Height(screenHeight*0.02),
                       //---------------------------------
                       Row( // 4번째 줄 박스
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -310,4 +312,4 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
       ),
     );
   }
-}
+}/**/
