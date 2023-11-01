@@ -7,7 +7,6 @@ import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-//import 'package:inha_Carpool/lib/common/constants.dart';
 
 class ProFile extends StatefulWidget {
   const ProFile({Key? key}) : super(key: key);
@@ -121,7 +120,7 @@ class _ProFileState extends State<ProFile> {
                                   } else {
                                     return Text(
                                       snapshot.data ?? '',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey, // 이름 색 변경
                                       ),

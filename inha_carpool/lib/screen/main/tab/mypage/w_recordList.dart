@@ -1,20 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/extension/datetime_extension.dart';
 
-import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/screen/dialog/d_complain.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
-import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
-
-import 'package:inha_Carpool/service/sv_firestore.dart';
-
-import 'package:inha_Carpool/screen/main/tab/carpool/f_carpool_list.dart';
 
 class RecordList extends StatefulWidget {
   const RecordList({super.key});
@@ -32,9 +22,7 @@ class _RecordListState extends State<RecordList> {
   late String uid = "";
   late String gender = "";
 
-  // static Future<List<DocumentSnapshot>> getCarpoolsWithMemberAndPastTime(String myID, String myNickName, int currentTime) async {
-  //   CollectionReference carpoolCollection = _firestore.collection('carpool');
-  //   QuerySnapshot querySnapshot = await carpoolCollection.get();
+
 
   static Future<List<DocumentSnapshot>> getCarpoolsWithMemberAndPastTime(String memberID, String memberName, int currentTime
       ) async {
@@ -186,7 +174,7 @@ class _RecordListState extends State<RecordList> {
                           icon: Icon(Icons.arrow_back_ios_new, size: 18,),
                         ),
                         SizedBox(width: 8),
-                        Text(
+                        const Text(
                           '이용내역',
                           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                         ),
@@ -232,7 +220,7 @@ class _RecordListState extends State<RecordList> {
                                 Expanded(
                                     child: Row(
                                       children: <Widget>[
-                                        SizedBox(width: 20,
+                                        const SizedBox(width: 20,
                                         ),
                                         Expanded(
                                           child: Container(
@@ -251,20 +239,18 @@ class _RecordListState extends State<RecordList> {
                                                           Text("${formattedStartTime}", style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold, color: Colors.grey),),
                                                         ],
                                                       ),
-                                                      Container(
-                                                        child: Column(
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                const Icon(Icons.person, color: Colors.grey, size: 22),
-                                                                Text('${carpoolData['admin'].split('_')[1]}',
-                                                                  style: const TextStyle(
-                                                                      fontSize: 15, fontWeight: FontWeight.bold),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ],
-                                                        ),
+                                                      Column(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              const Icon(Icons.person, color: Colors.grey, size: 22),
+                                                              Text('${carpoolData['admin'].split('_')[1]}',
+                                                                style: const TextStyle(
+                                                                    fontSize: 15, fontWeight: FontWeight.bold),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
@@ -332,7 +318,7 @@ class _RecordListState extends State<RecordList> {
                                                                               borderRadius: BorderRadius.circular(10),
                                                                             ),
                                                                             padding: const EdgeInsets.all(8.0),
-                                                                            child:  Center(
+                                                                            child:  const Center(
                                                                             )),
                                                                         const SizedBox(width: 5,),
                                                                         Column(
@@ -374,12 +360,12 @@ class _RecordListState extends State<RecordList> {
                                                                                 context: context,
                                                                                 builder: (BuildContext context) => Container(
                                                                                     color: Colors.white,
-                                                                                    padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                                                                                    padding: const EdgeInsets.fromLTRB(10, 5, 10, 0),
                                                                                     height:
                                                                                     MediaQuery.of(context).size.height * 0.35,
-                                                                                    child: ComplainDialog()));
+                                                                                    child: const ComplainDialog()));
                                                                           },
-                                                                          child: Icon(Icons.warning_rounded, size: 20,),
+                                                                          child: const Icon(Icons.warning_rounded, size: 20,),
                                                                         ),
 
                                                                       ],

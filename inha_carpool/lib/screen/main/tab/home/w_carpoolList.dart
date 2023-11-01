@@ -216,7 +216,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
 
                       ]),
 
-                      //출발지와 row와 간격
+                      //출발지와 row의간격
                       Height(screenHeight*0.02),
 
 //----------------------------------------------------------------------------------
@@ -292,12 +292,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                             width:
                             MediaQuery.of(context).size.width * 0.50,
                             child: Center(
-                              child: Text('$formattedTime 출발',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    color: context.appColors.logoColor,
-                                    fontWeight: FontWeight.bold,
-                                  )),
+                              child: '$formattedTime 출발'.text.size(17).bold.color(context.appColors.logoColor).make(),
                             ),
                           ),
                         ],

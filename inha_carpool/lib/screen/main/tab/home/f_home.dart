@@ -331,7 +331,7 @@ class _HomeState extends State<Home> {
                   ],
                 ),
               ),
-              Height(5),
+              const Height(5),
               Container(height: 2, color: context.appColors.divider),
               Expanded(
                 child: RefreshIndicator(

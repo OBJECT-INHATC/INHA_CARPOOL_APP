@@ -12,7 +12,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class LogoutConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
 
-  LogoutConfirmationDialog({required this.onConfirm});
+  const LogoutConfirmationDialog({super.key, required this.onConfirm});
 
   Future<String?> getEmail() async {
     try {
@@ -33,13 +33,14 @@ class LogoutConfirmationDialog extends StatelessWidget {
     return AlertDialog(
       surfaceTintColor: Colors.transparent, // 틴트 빼기
       backgroundColor: Colors.white, // 다이얼로그 배경색
-      content: Container(
+      content: SizedBox(
         height: MediaQuery.of(context).size.height * 0.12,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 1),
-            Text('로그아웃', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+
+          const Text('로그아웃', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
             // Title
             const SizedBox(height: 22),
             FutureBuilder<String?>(
@@ -55,7 +56,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 4.0),
                     child: Text(
                       email,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                       ),
@@ -89,7 +90,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
             ); // 로그아웃
             onConfirm();
           },
-          child: Text('예'),
+          child: const Text('예'),
         ),
       ],
     );

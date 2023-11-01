@@ -30,8 +30,8 @@ class _SecessionPageState extends State<SecessionPage> {
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [Color.fromARGB(255, 70, 100, 192)]
-        : [Color.fromARGB(255, 70, 100, 192)];
+        ? [const Color.fromARGB(255, 70, 100, 192)]
+        : [const Color.fromARGB(255, 70, 100, 192)];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
@@ -73,7 +73,7 @@ class _SecessionPageState extends State<SecessionPage> {
             ),
           ),
 
-          title: Text(
+          title: const Text(
             "회원 탈퇴",
             style: TextStyle(color: Colors.black, fontSize: 20),
           ),
@@ -91,7 +91,7 @@ class _SecessionPageState extends State<SecessionPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.warning_amber_rounded,
                           color: Colors.red,
                           size: 30,
@@ -106,11 +106,11 @@ class _SecessionPageState extends State<SecessionPage> {
                                 ConnectionState.waiting) {
                               return CircularProgressIndicator(); // 데이터를 기다리는 동안 로딩 스피너 표시
                             } else if (snapshot.hasError) {
-                              return Text('닉네임을 불러오는 중 오류 발생');
+                              return const Text('닉네임을 불러오는 중 오류 발생');
                             } else {
                               return Text(
                                 "${snapshot.data}님.. 정말 탈퇴하시겠어요?",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 20, fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.start,
                               );
@@ -119,8 +119,8 @@ class _SecessionPageState extends State<SecessionPage> {
                         ),
                       ],
                     ),
-                    SizedBox(height: 15), // 간격 조절
-                    Text(
+                    const SizedBox(height: 15), // 간격 조절
+                    const Text(
                       "지금 탈퇴하시면 서비스를 이용할 수 없어요!\n탈퇴하시려면 학번과 비밀번호를 입력해주세요.",
                       style: TextStyle(fontSize: 16, color: Colors.red),
                       textAlign: TextAlign.start,

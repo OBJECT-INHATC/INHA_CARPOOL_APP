@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import '../../../login/s_login.dart';
@@ -34,10 +35,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               color: Colors.black,
             ),
           ),
-          title: const Text(
-            "비밀번호 변경",
-            style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-          ),
+          title:
+            "비밀번호 변경".text.color(Colors.black).size(17).bold.make(),
           centerTitle: true,
         ),
         body: Form(
@@ -47,20 +46,15 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 20),
-                const Text(
-                  '학번',
-                  style: TextStyle(fontSize: 15),
-                ),
+                  '학번'.text.size(15).make(),
                 TextFormField(
                   decoration: const InputDecoration(
                     hintText: '학번 입력',
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text(
-                  '현재 비밀번호',
-                  style: TextStyle(fontSize: 15),
-                ),
+                '현재 비밀번호'.text.size(15).make(),
+
                 TextFormField(
                   decoration: const InputDecoration(
                     hintText: '현재 비밀번호 입력',
@@ -72,10 +66,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   },
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  '새 비밀번호',
-                  style: TextStyle(fontSize: 15),
-                ),
+                '새 비밀번호'.text.size(15).make(),
+
                 TextFormField(
                   decoration: const InputDecoration(
                     hintText: '새로운 비밀번호 입력',
@@ -87,10 +79,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                   },
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  '새 비밀번호 확인',
-                  style: TextStyle(fontSize: 15),
-                ),
+                '새 비밀번호 확인'.text.size(15).make(),
+
                 TextFormField(
                   decoration: InputDecoration(
                     hintText: '새로운 비밀번호 다시 입력',
@@ -157,7 +147,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                     backgroundColor: Colors.grey[400],
                   ),
-                  child: const Text('비밀번호 변경'),
+                  child:'비밀번호 변경'.text.size(14).make(),
                 ),
               ],
             ),
