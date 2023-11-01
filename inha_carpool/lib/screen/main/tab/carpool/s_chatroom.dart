@@ -476,14 +476,20 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     if (exitButtonDisabled) {
                       exitButtonDisabled = false;
 
-                      /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
-                      if (Prefs.isPushOnRx.get() == true) {
-                        await FirebaseMessaging.instance
-                            .unsubscribeFromTopic(widget.carId);
+                      try{
+                        /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
+                        if (Prefs.isPushOnRx.get() == true) {
+                          await FirebaseMessaging.instance
+                              .unsubscribeFromTopic(widget.carId);
 
-                        await FirebaseMessaging.instance
-                            .unsubscribeFromTopic("${widget.carId}_info");
+                          await FirebaseMessaging.instance
+                              .unsubscribeFromTopic("${widget.carId}_info");
+                        }
+                      }catch(e){
+                        print("Ios 시뮬 에러~");
                       }
+
+
                       ApiTopic apiTopic = ApiTopic();
                       await apiTopic.deleteTopic(widget.uid, widget.carId);
 

@@ -375,18 +375,23 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       selectedRoomGender);
                                   if (!mounted) return;
 
-                                  ///  해당 카풀 알림 토픽 추가 0919 이상훈
-                                  if (Prefs.isPushOnRx.get() == true) {
+                                  try {
+                                    ///  해당 카풀 알림 토픽 추가 0919 이상훈
+                                    if (Prefs.isPushOnRx.get() == true) {
 
-                                    /// 채팅 토픽
-                                    await FirebaseMessaging.instance
-                                        .subscribeToTopic(carId);
+                                      /// 채팅 토픽
+                                      await FirebaseMessaging.instance
+                                          .subscribeToTopic(carId);
 
-                                    /// 카풀 정보 토픽 - 서버 저장 X
-                                    await FirebaseMessaging.instance
-                                        .subscribeToTopic("${carId}_info");
-
+                                      /// 카풀 정보 토픽 - 서버 저장 X
+                                      await FirebaseMessaging.instance
+                                          .subscribeToTopic("${carId}_info");
+                                    }
+                                  }catch(e){
+                                    print("토픽 추가 실패가 아닌 버전 이슈~");
                                   }
+
+
                                   ApiTopic apiTopic = ApiTopic();
                                   TopicRequstDTO topicRequstDTO =
                                       TopicRequstDTO(
