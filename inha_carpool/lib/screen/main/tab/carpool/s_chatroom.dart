@@ -207,6 +207,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   Widget build(BuildContext context) {
     bool isExitButtonDisabled = false; // 나가기 버튼 기본적으로 활성화
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     String formattedDate = DateFormat('HH:mm').format(startTime);
 
@@ -240,12 +241,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
               //-------------------------------대화상대 상단
               //-------------------------------대화상대 상단
               Container(
-                height: AppBar().preferredSize.height * 2,
+                height: AppBar().preferredSize.height * 2.2,
                 width: double.infinity,
                 color: context.appColors.logoColor,
                 child: Column(
                   children: [
-                    SizedBox(height: screenWidth * 0.15),
+                    SizedBox(height: screenWidth * 0.17),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -332,14 +333,18 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   ],
                 ),
               ),*/
-              const Line(height: 2),
-              Flexible(
-                child: Column(
-                  children: [
-                    ChatLocation(title: '출발지', location: startPoint),
-                    const Line(height: 1),
-                    ChatLocation(title: '도착지', location: endPoint),
-                  ],
+              const Line(height: 1),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: screenHeight * 0.01),
+                  child: Column(
+                    children: [
+                      ChatLocation(title: '출발지', location: startPoint),
+                      const Line(height: 1),
+                      ChatLocation(title: '도착지', location: endPoint),
+                    ],
+                  ),
                 ),
               ),
             ],
