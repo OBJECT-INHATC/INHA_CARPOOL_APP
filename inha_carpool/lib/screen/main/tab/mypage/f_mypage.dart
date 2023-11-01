@@ -157,7 +157,6 @@ class _MyPageState extends State<MyPage> {
                         await apiUser.getAllCarIdsForUser(uid);
                         if (isOn) {
                           print('채팅 알림 on');
-
                           /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독
                           for (String carId in topicList) {
                             await FirebaseMessaging.instance.subscribeToTopic(carId);
