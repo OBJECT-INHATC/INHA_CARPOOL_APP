@@ -222,6 +222,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
           title: "$admin의 카풀".text.size(20).make(),
         ),
 
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
         endDrawer: Drawer(
           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.white,
@@ -230,6 +236,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
           ),
           child: Column(
             children: [
+              //-------------------------------대화상대 상단
+              //-------------------------------대화상대 상단
+              //-------------------------------대화상대 상단
               Container(
                 height: AppBar().preferredSize.height * 2,
                 width: double.infinity,
@@ -265,6 +274,11 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   ],
                 ),
               ),
+
+              //---------------------------------대화상대 목록
+              //---------------------------------대화상대 목록
+              //---------------------------------대화상대 목록
+              //---------------------------------대화상대 목록
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(8.0),
@@ -306,7 +320,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 ),
               ),
               const Line(height: 1),
-              Flexible(
+           /*   Flexible(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -317,7 +331,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     endPointDetail.text.size(25).color(Colors.black).bold.make(),
                   ],
                 ),
-              ),
+              ),*/
               const Line(height: 2),
               Flexible(
                 child: Column(
@@ -575,6 +589,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
       },
     );
   }
+
+  //--------------------------
+  //--------------------------
+  //--------------------------
+  //--------------------------
+  //--------------------------
 
   /// 채팅 메시지 스트림
   chatMessages() {
