@@ -1,4 +1,6 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -44,6 +46,19 @@ class MainScreenState extends State<MainScreen>
   void initState() {
     super.initState();
     // 각 텝의 네비게이터 초기화
+    // Firebase 초기화
+    Firebase.initializeApp().then((_) {
+      // 로그인 상태 확인
+      FirebaseAuth.instance.authStateChanges().listen((User? user) {
+        if (user == null) {
+          // 로그인이 되어있지 않은 경우 로그아웃 처리
+          FirebaseAuth.instance.signOut();
+        }
+      });
+    }).catchError((error) {
+      // Firebase 초기화 실패 시 로그아웃 처리
+      FirebaseAuth.instance.signOut();
+    });
     initNavigatorKeys();
     removeSplash();
   }
