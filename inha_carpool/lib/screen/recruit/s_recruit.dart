@@ -112,7 +112,7 @@ class _RecruitPageState extends State<RecruitPage> {
                 onLocationSelected: (String value) {
                   setState(() {
                     startPointName =
-                        Location_handler.getStringBetweenUnderscores(value);
+                        Location_handler.getStringBetweenUnderscores(value).trim();
                     startPoint = LatLng(
                         Location_handler.parseDoubleBeforeUnderscore(value),
                         Location_handler.getDoubleAfterSecondUnderscore(value));
@@ -130,7 +130,7 @@ class _RecruitPageState extends State<RecruitPage> {
                 onLocationSelected: (String value) {
                   setState(() {
                     endPointName =
-                        Location_handler.getStringBetweenUnderscores(value);
+                        Location_handler.getStringBetweenUnderscores(value).trim();
                     endPoint = LatLng(
                         Location_handler.parseDoubleBeforeUnderscore(value),
                         Location_handler.getDoubleAfterSecondUnderscore(value));
@@ -303,8 +303,8 @@ class _RecruitPageState extends State<RecruitPage> {
                             memberName: nickName,
                             memberGender: gender,
                             startDetailPoint:
-                            startPointInput.detailController.text,
-                            endDetailPoint: endPointInput.detailController.text,
+                            startPointInput.detailController.text.trim(),
+                            endDetailPoint: endPointInput.detailController.text.trim(),
                           );
 
                           if(!mounted) return;
