@@ -65,6 +65,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
   BitmapDescriptor endCustomIcon = BitmapDescriptor.defaultMarker;
 
   bool joinButtonEnabled = true;
+  bool isjoining = false;
 
   @override
   void initState() {
@@ -129,6 +130,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
         }
       },
       child: Scaffold(
+        backgroundColor: isLoading ? Colors.white.withOpacity(0.5) : Colors.transparent,
         appBar: AppBar(
           titleTextStyle: const TextStyle(
             fontSize: 17,
@@ -148,6 +150,13 @@ class _CarpoolMapState extends State<CarpoolMap> {
         ),
         body: Stack(
           children: [
+            if (isjoining)
+              Container(
+                color: Colors.black.withOpacity(0.5),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             Padding(
               padding: EdgeInsets.only(bottom: context.height(0.25)),
               child: GoogleMap(
@@ -351,6 +360,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
                             ),
                             ElevatedButton(
                               onPressed: () async {
+                                setState(() {
+                                  isjoining = true;
+                                });
                                 String carId = widget.carId;
                                 String memberID = uid;
                                 String memberName = nickName;
@@ -398,6 +410,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
                                     ///--------------------------------------------
 
+                                    await Future.delayed(const Duration(seconds: 2)); // 2초 딜레이
+
                                     if (!mounted) return;
                                     Navigator.pop(context);
                                     Navigator.pushReplacement(
@@ -430,6 +444,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
                                   setState(() {
                                     joinButtonEnabled = true;
+                                    isjoining = false;
                                   });
                                 } else {
                                   context.showErrorSnackbar(
