@@ -7,6 +7,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/service/api/Api_Topic.dart';
 
 import '../../../../common/data/preference/prefs.dart';
@@ -24,7 +25,6 @@ class CarpoolMap extends StatefulWidget {
   final String carId;
   final String admin;
   final String roomGender;
-
 
   const CarpoolMap({
     super.key,
@@ -356,77 +356,85 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 String memberName = nickName;
                                 String selectedRoomGender = widget.roomGender;
 
-                                if(joinButtonEnabled){
+                                if (joinButtonEnabled) {
                                   joinButtonEnabled = false;
 
-                                if (gender != selectedRoomGender &&
-                                    selectedRoomGender != '무관') {
-                                  context.showErrorSnackbar(
-                                      '입장할 수 없는 성별입니다.\n다른 카풀을 이용해주세요!');
-                                  return;
-                                }
-                                try {
-                                  await FirebaseCarpool.addMemberToCarpool(
-                                      carId,
-                                      memberID,
-                                      memberName,
-                                      gender,
-                                      token!,
-                                      selectedRoomGender);
-                                  if (!mounted) return;
-
+                                  if (gender != selectedRoomGender &&
+                                      selectedRoomGender != '무관') {
+                                    context.showErrorSnackbar(
+                                        '입장할 수 없는 성별입니다.\n다른 카풀을 이용해주세요!');
+                                    return;
+                                  }
                                   try {
-                                    ///  해당 카풀 알림 토픽 추가 0919 이상훈
-                                    if (Prefs.isPushOnRx.get() == true) {
+                                    await FirebaseCarpool.addMemberToCarpool(
+                                        carId,
+                                        memberID,
+                                        memberName,
+                                        gender,
+                                        token!,
+                                        selectedRoomGender);
+                                    if (!mounted) return;
 
-                                      /// 채팅 토픽
-                                      await FirebaseMessaging.instance
-                                          .subscribeToTopic(carId);
+                                    try {
+                                      ///  해당 카풀 알림 토픽 추가 0919 이상훈
+                                      if (Prefs.isPushOnRx.get() == true) {
+                                        /// 채팅 토픽
+                                        await FirebaseMessaging.instance
+                                            .subscribeToTopic(carId);
 
-                                      /// 카풀 정보 토픽 - 서버 저장 X
-                                      await FirebaseMessaging.instance
-                                          .subscribeToTopic("${carId}_info");
+                                        /// 카풀 정보 토픽 - 서버 저장 X
+                                        await FirebaseMessaging.instance
+                                            .subscribeToTopic("${carId}_info");
+                                      }
+                                    } catch (e) {
+                                      print("토픽 추가 실패가 아닌 버전 이슈~");
                                     }
-                                  }catch(e){
-                                    print("토픽 추가 실패가 아닌 버전 이슈~");
+
+                                    ApiTopic apiTopic = ApiTopic();
+                                    TopicRequstDTO topicRequstDTO =
+                                        TopicRequstDTO(
+                                            uid: memberID, carId: carId);
+                                    await apiTopic.saveTopoic(topicRequstDTO);
+
+                                    ///--------------------------------------------
+
+                                    if (!mounted) return;
+                                    Navigator.pop(context);
+                                    Navigator.pushReplacement(
+                                        Nav.globalContext,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const MainScreen()));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ChatroomPage(
+                                                  carId: carId,
+                                                  groupName: '카풀네임',
+                                                  userName: nickName,
+                                                  uid: uid,
+                                                  gender: gender,
+                                                )));
+                                  } catch (error) {
+                                    if (error is DeletedRoomException) {
+                                      // 방 삭제 예외 처리
+                                      showErrorDialog(context, error.message);
+                                    } else if (error is MaxCapacityException) {
+                                      // 인원 초과 예외 처원리
+                                      showErrorDialog(context, error.message);
+                                    } else {
+                                      // 기타 예외 처리
+                                      print('카풀 참가 실패 (다른 예외): $error');
+                                    }
                                   }
-
-
-                                  ApiTopic apiTopic = ApiTopic();
-                                  TopicRequstDTO topicRequstDTO =
-                                      TopicRequstDTO(
-                                          uid: memberID, carId: carId);
-                                  await apiTopic.saveTopoic(topicRequstDTO);
-                                  ///--------------------------------------------
-
-                                  Navigator.pop(context);
-                                  Navigator.pushReplacement(
-                                      Nav.globalContext,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const MainScreen()));
-
-                                } catch (error) {
-                                  if (error is DeletedRoomException) {
-                                    // 방 삭제 예외 처리
-                                    showErrorDialog(context, error.message);
-                                  } else if (error is MaxCapacityException) {
-                                    // 인원 초과 예외 처원리
-                                    showErrorDialog(context, error.message);
-                                  } else {
-                                    // 기타 예외 처리
-                                    print('카풀 참가 실패 (다른 예외): $error');
-                                  }
-                                }
 
                                   setState(() {
                                     joinButtonEnabled = true;
                                   });
-
-                                }else{
-                                  context.showErrorSnackbar('참가 중입니다. 잠시만 기다려주세요.');
+                                } else {
+                                  context.showErrorSnackbar(
+                                      '참가 중입니다. 잠시만 기다려주세요.');
                                 }
-
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
