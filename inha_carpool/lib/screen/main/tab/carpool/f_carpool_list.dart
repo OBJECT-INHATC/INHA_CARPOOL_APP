@@ -103,6 +103,12 @@ class _CarpoolListState extends State<CarpoolList> {
       default:
         return '';
     }
+
+  }
+  bool isCarpoolOver(DateTime startTime) {
+    DateTime currentTime = DateTime.now();
+    Duration difference = currentTime.difference(startTime);
+    return difference.inHours >= 1;
   }
 
   @override
@@ -241,17 +247,30 @@ class _CarpoolListState extends State<CarpoolList> {
 
                         return GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                              Nav.globalContext,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatroomPage(
-                                    carId: carpool['carId'],
-                                    groupName: '카풀네임',
-                                    userName: nickName,
-                                    uid: uid,
-                                    gender: gender,
-                                  )),
-                            );
+
+                            if (isCarpoolOver(startTime)) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                      content: Text('해당 방은 이미 종료된 카풀방입니다!')))
+                                  .closed
+                                  .then((value) {
+                                _loadCarpools();
+                                setState(() {});
+                              });
+                            } else {
+                              Navigator.push(
+                                Nav.globalContext,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatroomPage(
+                                          carId: carpool['carId'],
+                                          groupName: '카풀네임',
+                                          userName: nickName,
+                                          uid: uid,
+                                          gender: gender,
+                                        )),
+                              );
+                            }
+
                           },
 
                           /*-----------------------------------------------Card---------------------------------------------------------------*/
@@ -456,6 +475,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                               fontWeight: FontWeight.bold,
                                                             ),
                                                           ),
+
                                                           SizedBox(height: MediaQuery.of(context).size.width * 0.005), // endDetailPoint - endPointName 사이 간격
                                                           // 출발지 이름
                                                           Text(
@@ -464,6 +484,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                               color: Colors.black54,
                                                               fontSize: MediaQuery.of(context).size.width * 0.03,
                                                               fontWeight: FontWeight.bold,
+
                                                             ),
                                                           ),
                                                         ],

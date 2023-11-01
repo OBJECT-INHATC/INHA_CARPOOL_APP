@@ -6,7 +6,7 @@ import '../../service/api/ApiService.dart';
 import 'd_complain_complete.dart';
 
 class ComplainAlert extends StatefulWidget {
-  const ComplainAlert({super.key, required this.reportedUserNickName, required this.myId, required this.carpoolId});
+     const ComplainAlert({super.key, required this.reportedUserNickName, required this.myId, required this.carpoolId});
 
   final String reportedUserNickName; // 이름 따라보내기
   final String myId;
@@ -17,9 +17,17 @@ class ComplainAlert extends StatefulWidget {
 }
 
 class _ComplainAlertState extends State<ComplainAlert> {
+  // 스트링 변수선언
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   final apiService = ApiService();
   final _controller = TextEditingController();
-  List<Map<String, dynamic>> _checkBoxItems = [
+  final List<Map<String, dynamic>> _checkBoxItems = [
     {'value': false, 'label': '욕설'},
     {'value': false, 'label': '영리목적'},
     {'value': false, 'label': '개인정보노출'},
@@ -83,7 +91,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: 15),
+                          padding: const EdgeInsets.only(top: 15),
                           child: Column(
                             children: _buildCheckBoxes(),
                           ),
@@ -92,7 +100,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.all(8.0),
                     child: TextField(
                       controller: _controller,
                       maxLines: 3, // 크기를 조절하기 위해 maxLines를 3으로 설정
@@ -121,7 +129,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                   final reportRequstDTO = ReportRequstDTO(
                     content: _controller.text,
                     carpoolId: widget.carpoolId,
-                    reportedUser: widget.reportedUserNickName,
+                    reportedUser: widget.reportedUserNickName.replaceAll(' 님', ''),
                     reporter: widget.myId,
                     reportType: getCheckedItems().toString(),
                     reportDate: DateTime.now().toString(),

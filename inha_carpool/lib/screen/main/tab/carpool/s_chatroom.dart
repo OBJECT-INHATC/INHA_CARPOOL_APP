@@ -207,6 +207,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
   Widget build(BuildContext context) {
     bool isExitButtonDisabled = false; // 나가기 버튼 기본적으로 활성화
     final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     String formattedDate = DateFormat('HH:mm').format(startTime);
 
@@ -222,6 +223,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
           title: "$admin의 카풀".text.size(20).make(),
         ),
 
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
         endDrawer: Drawer(
           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.white,
@@ -230,13 +237,16 @@ class _ChatroomPageState extends State<ChatroomPage> {
           ),
           child: Column(
             children: [
+              //-------------------------------대화상대 상단
+              //-------------------------------대화상대 상단
+              //-------------------------------대화상대 상단
               Container(
-                height: AppBar().preferredSize.height * 2,
+                height: AppBar().preferredSize.height * 2.2,
                 width: double.infinity,
                 color: context.appColors.logoColor,
                 child: Column(
                   children: [
-                    SizedBox(height: screenWidth * 0.15),
+                    SizedBox(height: screenWidth * 0.17),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
@@ -265,6 +275,11 @@ class _ChatroomPageState extends State<ChatroomPage> {
                   ],
                 ),
               ),
+
+              //---------------------------------대화상대 목록
+              //---------------------------------대화상대 목록
+              //---------------------------------대화상대 목록
+              //---------------------------------대화상대 목록
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(8.0),
@@ -306,7 +321,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 ),
               ),
               const Line(height: 1),
-              Flexible(
+           /*   Flexible(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -317,15 +332,19 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     endPointDetail.text.size(25).color(Colors.black).bold.make(),
                   ],
                 ),
-              ),
-              const Line(height: 2),
-              Flexible(
-                child: Column(
-                  children: [
-                    ChatLocation(title: '출발지', location: startPoint),
-                    const Line(height: 1),
-                    ChatLocation(title: '도착지', location: endPoint),
-                  ],
+              ),*/
+              const Line(height: 1),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: screenHeight * 0.01),
+                  child: Column(
+                    children: [
+                      ChatLocation(title: '출발지', location: startPoint),
+                      const Line(height: 1),
+                      ChatLocation(title: '도착지', location: endPoint),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -457,14 +476,20 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     if (exitButtonDisabled) {
                       exitButtonDisabled = false;
 
-                      /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
-                      if (Prefs.isPushOnRx.get() == true) {
-                        await FirebaseMessaging.instance
-                            .unsubscribeFromTopic(widget.carId);
+                      try{
+                        /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
+                        if (Prefs.isPushOnRx.get() == true) {
+                          await FirebaseMessaging.instance
+                              .unsubscribeFromTopic(widget.carId);
 
-                        await FirebaseMessaging.instance
-                            .unsubscribeFromTopic("${widget.carId}_info");
+                          await FirebaseMessaging.instance
+                              .unsubscribeFromTopic("${widget.carId}_info");
+                        }
+                      }catch(e){
+                        print("Ios 시뮬 에러~");
                       }
+
+
                       ApiTopic apiTopic = ApiTopic();
                       await apiTopic.deleteTopic(widget.uid, widget.carId);
 
@@ -498,9 +523,14 @@ class _ChatroomPageState extends State<ChatroomPage> {
         // 나가기 버튼 기능
         ExitCarpool(context);
       }
-    } else {
-      // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
-      EixtTenMinCarpool(context);
+    }
+    else{
+      if(membersList.length < 2 ) {
+        // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
+        ExitCarpool(context);}else{
+        EixtTenMinCarpool(context);
+      }
+
     }
   }
 
@@ -509,6 +539,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: Colors.transparent,
           title: const Text('카풀 나가기 불가'),
           content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
           actions: [
@@ -529,6 +560,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: Colors.transparent,
           title: const Text('카풀 나가기'),
           content: const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
           actions: [
@@ -543,13 +575,19 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 if (exitButtonDisabled) {
                   exitButtonDisabled = false;
 
-                  if (Prefs.isPushOnRx.get() == true) {
-                    await FirebaseMessaging.instance
-                        .unsubscribeFromTopic(widget.carId);
+                  try{
+                    if (Prefs.isPushOnRx.get() == true) {
+                      await FirebaseMessaging.instance
+                          .unsubscribeFromTopic(widget.carId);
 
-                    await FirebaseMessaging.instance
-                        .unsubscribeFromTopic("${widget.carId}_info");
+                      await FirebaseMessaging.instance
+                          .unsubscribeFromTopic("${widget.carId}_info");
+                    }
+                  }catch(e){
+                    print("Ios 시뮬 에러~");
                   }
+
+
                   ApiTopic apiTopic = ApiTopic();
                   await apiTopic.deleteTopic(widget.uid, widget.carId);
 
@@ -575,6 +613,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
       },
     );
   }
+
+  //--------------------------
+  //--------------------------
+  //--------------------------
+  //--------------------------
+  //--------------------------
 
   /// 채팅 메시지 스트림
   chatMessages() {
@@ -722,7 +766,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
             ),
           ),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 padding: const EdgeInsets.all(10.0),
@@ -771,6 +814,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         onPressed: () {
                           viewProfile(context, uid, memberId);
                           if (uid != memberId) {
+                            print("uid: $uid");
                             // UID와 MemberId가 다르면 ComplainAlert 다이얼로그 표시
                             Navigator.pop(context);
                             showDialog(
@@ -783,7 +827,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 255, 167, 2),
+                          backgroundColor: const Color.fromARGB(255, 255, 167, 2),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)),
                         ),
@@ -798,7 +842,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 color: (uid == memberId)
                                     ? Colors.white
                                     : Colors.white),
-                            SizedBox(
+                            const SizedBox(
                               width: 8,
                             ),
                             Text(
@@ -825,9 +869,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
 //uid와 memberID비교
   void viewProfile(BuildContext context, String? uid, String memberId) {
-    if (uid == memberId) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MyPage()));
-    } else {}
+    if (uid == memberId) Navigator.push(context, MaterialPageRoute(builder: (context) => const MyPage()));
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
@@ -133,6 +134,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // 로그인 여부 확인
     checkLogin();
+    getMyDeviceToken();
     super.initState();
   }
 
@@ -227,7 +229,7 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.grey[200], // 연한 회색 배경색
                             ),
                             child: TextFormField(
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
@@ -266,7 +268,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         child: TextFormField(
                           obscureText: true,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                             enabledBorder: InputBorder.none,
                             focusedBorder: InputBorder.none,
@@ -278,7 +280,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             prefixIcon: Icon(Icons.lock, color: Colors.grey),
                           ),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 15,
                           ),
                           onChanged: (text) {
@@ -292,11 +294,11 @@ class _LoginPageState extends State<LoginPage> {
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           elevation: 5,
-                          backgroundColor: Color.fromARGB(255, 50, 113, 190),
+                          backgroundColor: const Color.fromARGB(255, 50, 113, 190),
                           shape: ContinuousRectangleBorder(
                             borderRadius: BorderRadius.circular(16.0)
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 12.0), //버튼 위아래 패딩 크기 늘리기
+                          padding: const EdgeInsets.symmetric(vertical: 12.0), //버튼 위아래 패딩 크기 늘리기
                         ),
                         onPressed: () async{
                           
@@ -313,7 +315,6 @@ class _LoginPageState extends State<LoginPage> {
                               await FireStoreService()
                                   .gettingUserData(email);
 
-                              getMyDeviceToken();
 
                               String nickname = snapshot.docs[0]
                                   .get("nickName");
@@ -341,9 +342,7 @@ class _LoginPageState extends State<LoginPage> {
                               );
                               ///유저 정보저장 ------------ Topic 발급 - logout or 알림 Off 시 해제
                               // Todo: 이미 저장한 uid가 있으면 저장 안하는 로직 추가하기 - 상훈 0919
-                              // Todo: 광고성 알림 Topic on/off 기능 추가하기 - 상훈 0919
-                              // Todo: 별거 아닌데 여기 누가 작업한대서 빨리 비켜줘야돼서 냅둠
-                              // 유저 정보 서저에 저장
+                              // 유저 정보 서저에 저장 --풀기 1101================
                               userSaveAPi(uid, nickname, email);
 
                               // 토픽 저장 전 - IOS APNS 권한 요청
@@ -357,20 +356,18 @@ class _LoginPageState extends State<LoginPage> {
                                 sound: true,
                               );
 
-                              // 광고성 마케팅 토픽 저장
-                              if (Prefs.isAdPushOnRx.get() == true) {
-                                await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
-                              } else {
+                              try{
+                                /// todo: 토픽 저장 추후 광고성도 추가하기
+                                if (Prefs.isSchoolPushOnRx.get() == true) {
+                                  // 학교 공지사항 토픽 저장
+                                  await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
+                                } else {
+                                  print('APNS token is not available');
+                                }
+                              }catch(e){
                                 print('APNS token is not available');
                               }
 
-                              // 학교 공지사항 토픽 저장
-                              if (Prefs.isSchoolPushOnRx.get() == true) {
-                                await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
-                              } else {
-                                print('APNS token is not available');
-                              }
-                              ///---------- ---------- ------------ ---------------
 
 
                               if (context.mounted) {
@@ -413,7 +410,7 @@ class _LoginPageState extends State<LoginPage> {
                           shape: ContinuousRectangleBorder(
                               borderRadius: BorderRadius.circular(16.0)
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 12.0),
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
                         ),
                         // onPressed: () {
                         //   Navigator.push(
@@ -476,7 +473,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           );
                         },
-                      child: Text(
+                      child: const Text(
                         '비밀번호찾기',
                         style: TextStyle(
                           color: Colors.indigo,
