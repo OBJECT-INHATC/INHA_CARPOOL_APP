@@ -575,13 +575,19 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 if (exitButtonDisabled) {
                   exitButtonDisabled = false;
 
-                  if (Prefs.isPushOnRx.get() == true) {
-                    await FirebaseMessaging.instance
-                        .unsubscribeFromTopic(widget.carId);
+                  try{
+                    if (Prefs.isPushOnRx.get() == true) {
+                      await FirebaseMessaging.instance
+                          .unsubscribeFromTopic(widget.carId);
 
-                    await FirebaseMessaging.instance
-                        .unsubscribeFromTopic("${widget.carId}_info");
+                      await FirebaseMessaging.instance
+                          .unsubscribeFromTopic("${widget.carId}_info");
+                    }
+                  }catch(e){
+                    print("Ios 시뮬 에러~");
                   }
+
+
                   ApiTopic apiTopic = ApiTopic();
                   await apiTopic.deleteTopic(widget.uid, widget.carId);
 
