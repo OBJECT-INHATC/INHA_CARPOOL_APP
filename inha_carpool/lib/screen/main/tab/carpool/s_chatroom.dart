@@ -760,7 +760,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
             ),
           ),
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
                 padding: const EdgeInsets.all(10.0),
@@ -809,6 +808,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         onPressed: () {
                           viewProfile(context, uid, memberId);
                           if (uid != memberId) {
+                            print("uid: $uid");
                             // UID와 MemberId가 다르면 ComplainAlert 다이얼로그 표시
                             Navigator.pop(context);
                             showDialog(
@@ -821,7 +821,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 255, 167, 2),
+                          backgroundColor: const Color.fromARGB(255, 255, 167, 2),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)),
                         ),
@@ -836,7 +836,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                                 color: (uid == memberId)
                                     ? Colors.white
                                     : Colors.white),
-                            SizedBox(
+                            const SizedBox(
                               width: 8,
                             ),
                             Text(
@@ -863,9 +863,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
 //uid와 memberID비교
   void viewProfile(BuildContext context, String? uid, String memberId) {
-    if (uid == memberId) {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MyPage()));
-    } else {}
+    if (uid == memberId) Navigator.push(context, MaterialPageRoute(builder: (context) => const MyPage()));
   }
 }
