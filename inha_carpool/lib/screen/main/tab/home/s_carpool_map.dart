@@ -154,7 +154,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
               Container(
                 color: Colors.black.withOpacity(0.5),
                 child: const Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                  ),
                 ),
               ),
             Padding(
@@ -246,6 +247,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      Text("isLoad : ${isLoading}"),
                                       Expanded(
                                         child: Container(
                                           margin:
@@ -363,6 +365,12 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 setState(() {
                                   isjoining = true;
                                 });
+                                print("isjoining 타입 : ${isjoining}");
+                                print("isjoining 타입 : ${isjoining}");
+                                print("isjoining 타입 : ${isjoining}");
+                                print("isjoining 타입 : ${isjoining}");
+                                print("isjoining 타입 : ${isjoining}");
+
                                 String carId = widget.carId;
                                 String memberID = uid;
                                 String memberName = nickName;
