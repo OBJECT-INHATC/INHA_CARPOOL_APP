@@ -512,9 +512,14 @@ class _ChatroomPageState extends State<ChatroomPage> {
         // 나가기 버튼 기능
         ExitCarpool(context);
       }
-    } else {
-      // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
-      EixtTenMinCarpool(context);
+    }
+    else{
+      if(membersList.length < 2 ) {
+        // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
+        ExitCarpool(context);}else{
+        EixtTenMinCarpool(context);
+      }
+
     }
   }
 
@@ -523,6 +528,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: Colors.transparent,
           title: const Text('카풀 나가기 불가'),
           content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
           actions: [
@@ -543,6 +549,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: Colors.transparent,
           title: const Text('카풀 나가기'),
           content: const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
           actions: [
