@@ -27,17 +27,26 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   final storage = FlutterSecureStorage();
   late String uid;
+  late String nickName;
 
   @override
   void initState() {
     super.initState();
     _loadUid();
+    _loadNickName();
   }
 
   Future<void> _loadUid() async {
     uid = await storage.read(key: 'uid') ?? "";
   }
 
+  Future<void> _loadNickName() async {
+    nickName = await storage.read(key: 'nickName') ?? "";
+    setState(() {});
+  }
+
+  bool isEventAdsAllowed = true; // 스위치의 초기 상태를 설정
+  bool isEvent = true; // 스위치의 초기 상태를 설정
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +87,8 @@ class _MyPageState extends State<MyPage> {
                   onTap: () {
                     // 이용기록 페이지로 이동
                     Navigator.of(Nav.globalContext).push(MaterialPageRoute(
-                        builder: (context) => const RecordList()));
+                      builder: (context) => RecordList(uid: uid!, nickName: nickName!,),
+                    ));
                   },
                 ),
                 ListTile(
@@ -158,13 +168,13 @@ class _MyPageState extends State<MyPage> {
                         if (isOn) {
                           print('채팅 알림 on');
 
-                          /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독
+                          ///Todo:서버 db에서 카풀Id다 가져와서 다 구독
                           for (String carId in topicList) {
                             await FirebaseMessaging.instance.subscribeToTopic(carId);
                             print('채팅 구독 완료: $carId');
                           }
                         } else {
-                          /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독 해제
+                          ///Todo:서버 db에서 카풀Id다 가져와서 다 구독 해제
                           print('채팅 알림 off');
                           for (String carId in topicList) {
                             await FirebaseMessaging.instance

@@ -1,4 +1,5 @@
-class HistoryRequestDTO {
+class HistoryResponsetDTO {
+
 
   final String carPoolId;
   final String admin;
@@ -16,7 +17,7 @@ class HistoryRequestDTO {
   final String endPointName;
   final String gender;
 
-  HistoryRequestDTO({
+  HistoryResponsetDTO({
     required this.carPoolId,
     required this.admin,
     required this.member1,
@@ -52,6 +53,31 @@ class HistoryRequestDTO {
       'endPointName': endPointName,
       'gender': gender,
     };
+  }
+
+
+
+
+  // Factory constructor to create an instance of HistoryRequestDTO from a JSON map.
+  factory HistoryResponsetDTO.fromJson(Map<String, dynamic> json) {
+
+    return HistoryResponsetDTO(
+      carPoolId: json['carPoolId'],
+      admin: json['admin'],
+      member1: json['member1'],
+      member2: json['member2'],
+      member3: json['member3'],
+      nowMember: json['nowMember'],
+      maxMember: json['maxMember'],
+      startDetailPoint: json['startDetailPoint'],
+      startPoint: json['startPoint'],
+      startPointName: json['startPointName'],
+      startTime: json['startTime'],
+      endDetailPoint: json['endDetailPoint'],
+      endPoint: json['endPoint'],
+      endPointName: json['endPointName'],
+      gender: json['gender'],
+    );
   }
 
 
