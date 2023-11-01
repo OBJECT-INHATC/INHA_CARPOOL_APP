@@ -150,14 +150,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
         ),
         body: Stack(
           children: [
-            if (isjoining)
-              Container(
-                color: Colors.black.withOpacity(0.5),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                  ),
-                ),
-              ),
             Padding(
               padding: EdgeInsets.only(bottom: context.height(0.25)),
               child: GoogleMap(
@@ -247,7 +239,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      Text("isLoad : ${isLoading}"),
                                       Expanded(
                                         child: Container(
                                           margin:
@@ -362,15 +353,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
                             ),
                             ElevatedButton(
                               onPressed: () async {
-                                setState(() {
-                                  isjoining = true;
-                                });
-                                print("isjoining 타입 : ${isjoining}");
-                                print("isjoining 타입 : ${isjoining}");
-                                print("isjoining 타입 : ${isjoining}");
-                                print("isjoining 타입 : ${isjoining}");
-                                print("isjoining 타입 : ${isjoining}");
-
                                 String carId = widget.carId;
                                 String memberID = uid;
                                 String memberName = nickName;
@@ -386,6 +368,10 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                     return;
                                   }
                                   try {
+                                    setState(() {
+                                      isjoining = true;
+                                    });
+
                                     await FirebaseCarpool.addMemberToCarpool(
                                         carId,
                                         memberID,
@@ -417,8 +403,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                     await apiTopic.saveTopoic(topicRequstDTO);
 
                                     ///--------------------------------------------
-
-                                    await Future.delayed(const Duration(seconds: 2)); // 2초 딜레이
 
                                     if (!mounted) return;
                                     Navigator.pop(context);
@@ -452,7 +436,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
                                   setState(() {
                                     joinButtonEnabled = true;
-                                    isjoining = false;
                                   });
                                 } else {
                                   context.showErrorSnackbar(
@@ -517,6 +500,15 @@ class _CarpoolMapState extends State<CarpoolMap> {
                     const Icon(Icons.location_on_outlined, color: Colors.white),
               ),
             ),
+            isjoining
+                ? Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),
