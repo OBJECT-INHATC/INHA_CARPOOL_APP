@@ -130,7 +130,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
         }
       },
       child: Scaffold(
-        backgroundColor: isLoading ? Colors.white.withOpacity(0.5) : Colors.transparent,
+        backgroundColor:
+            isLoading ? Colors.black.withOpacity(0.3) : Colors.white,
         appBar: AppBar(
           titleTextStyle: const TextStyle(
             fontSize: 17,
@@ -502,10 +503,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
             ),
             isjoining
                 ? Container(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withOpacity(0.3),
                     child: const Center(
-                      child: CircularProgressIndicator(
-                      ),
+                      child: CircularProgressIndicator(),
                     ),
                   )
                 : Container(),

@@ -91,26 +91,20 @@ class _RecruitPageState extends State<RecruitPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: isShowingLoader ? Colors.black.withOpacity(0.5) : Colors.white, // 투명도 설정
           surfaceTintColor: Colors.white,
           toolbarHeight: context.height(0.05),
-          shape: Border(
-            bottom: BorderSide(
-              color: Colors.grey.shade200,
-              width: context.width(0.001),
-            ),
-          ),
+          shape: isShowingLoader
+              ? null
+              : Border(
+                  bottom: BorderSide(
+                    color: Colors.grey.shade200,
+                    width: context.width(0.001),
+                  ),
+                ),
           title: '모집하기'.text.make(),
         ),
         body: Stack(
           children: [
-            if (isShowingLoader)
-              Container(
-                color: Colors.black.withOpacity(0.5),
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
             SingleChildScrollView(
               child: Column(
                 children: [
@@ -125,7 +119,8 @@ class _RecruitPageState extends State<RecruitPage> {
                                 .trim();
                         startPoint = LatLng(
                             Location_handler.parseDoubleBeforeUnderscore(value),
-                            Location_handler.getDoubleAfterSecondUnderscore(value));
+                            Location_handler.getDoubleAfterSecondUnderscore(
+                                value));
                         print("출발지 주소 : $startPointName");
                         print("출발지 위도경도 : $startPoint");
                       });
@@ -144,7 +139,8 @@ class _RecruitPageState extends State<RecruitPage> {
                                 .trim();
                         endPoint = LatLng(
                             Location_handler.parseDoubleBeforeUnderscore(value),
-                            Location_handler.getDoubleAfterSecondUnderscore(value));
+                            Location_handler.getDoubleAfterSecondUnderscore(
+                                value));
                         print("도착지 주소 : $endPointName");
                         print("도착지 위도경도 : $endPoint");
                       });
@@ -184,47 +180,53 @@ class _RecruitPageState extends State<RecruitPage> {
                     children: [
                       Column(// 제한인원 영역
                           children: [
-                            Container(
-                              width: double.infinity,
-                              margin: const EdgeInsets.all(15),
-                              padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                              child:
-                              '인원'.text.size(16).bold.align(TextAlign.left).make(),
-                            ),
-                            LimitSelectorWidget(
-                              options: const ['2인', '3인'],
-                              selectedValue: selectedLimit,
-                              onOptionSelected: (value) {
-                                FocusScopeNode currentFocus = FocusScope.of(context);
-                                if (!currentFocus.hasPrimaryFocus) {
-                                  currentFocus.unfocus();
-                                }
+                        Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                          child: '인원'
+                              .text
+                              .size(16)
+                              .bold
+                              .align(TextAlign.left)
+                              .make(),
+                        ),
+                        LimitSelectorWidget(
+                          options: const ['2인', '3인'],
+                          selectedValue: selectedLimit,
+                          onOptionSelected: (value) {
+                            FocusScopeNode currentFocus =
+                                FocusScope.of(context);
+                            if (!currentFocus.hasPrimaryFocus) {
+                              currentFocus.unfocus();
+                            }
 
-                                setState(() {
-                                  selectedLimit = value;
-                                  print("선택된 인원: $selectedLimit");
-                                });
-                              },
-                            ),
-                          ]),
+                            setState(() {
+                              selectedLimit = value;
+                              print("선택된 인원: $selectedLimit");
+                            });
+                          },
+                        ),
+                      ]),
                       Column(// 성별 영역
                           children: [
-                            // 성별 선택 버튼
-                            GenderSelectorWidget(
-                              selectedGender: selectedGender,
-                              gender: gender,
-                              onGenderSelected: (value) {
-                                FocusScopeNode currentFocus = FocusScope.of(context);
-                                if (!currentFocus.hasPrimaryFocus) {
-                                  currentFocus.unfocus();
-                                }
-                                setState(() {
-                                  selectedGender = value;
-                                  print("선택된 성별: $selectedGender");
-                                });
-                              },
-                            ),
-                          ]),
+                        // 성별 선택 버튼
+                        GenderSelectorWidget(
+                          selectedGender: selectedGender,
+                          gender: gender,
+                          onGenderSelected: (value) {
+                            FocusScopeNode currentFocus =
+                                FocusScope.of(context);
+                            if (!currentFocus.hasPrimaryFocus) {
+                              currentFocus.unfocus();
+                            }
+                            setState(() {
+                              selectedGender = value;
+                              print("선택된 성별: $selectedGender");
+                            });
+                          },
+                        ),
+                      ]),
                     ],
                   ),
 
@@ -235,9 +237,9 @@ class _RecruitPageState extends State<RecruitPage> {
                     child: ElevatedButton(
                       style: ButtonStyle(
                         surfaceTintColor:
-                        MaterialStateProperty.all(Colors.blue[200]),
+                            MaterialStateProperty.all(Colors.blue[200]),
                         backgroundColor:
-                        MaterialStateProperty.all(Colors.blue[200]),
+                            MaterialStateProperty.all(Colors.blue[200]),
                         // 버튼 배경색
                         fixedSize: MaterialStateProperty.all(Size(
                             context.width(0.5), context.height(0.04))), // 버튼 크기
@@ -247,117 +249,126 @@ class _RecruitPageState extends State<RecruitPage> {
                       onPressed: isButtonDisabled
                           ? null
                           : () async {
-                        setState(() {
-                          isButtonDisabled = true;
-                          isShowingLoader = true; // 버튼 비활성화 시 로딩 표시
-                        });
+                              setState(() {
+                                isButtonDisabled = true;
+                                isShowingLoader = true; // 버튼 비활성화 시 로딩 표시
+                              });
 
-                        // 버튼 동작
-                        String startDetailPoint =
-                            _startPointDetailController.text;
-                        String endDetailPoint =
-                            _endPointDetailController.text;
+                              // 버튼 동작
+                              String startDetailPoint =
+                                  _startPointDetailController.text;
+                              String endDetailPoint =
+                                  _endPointDetailController.text;
 
-                        // 현재 시간과 선택된 날짜와 시간의 차이 계산
-                        DateTime currentTime = DateTime.now();
-                        DateTime selectedDateTime = DateTime(
-                          _selectedDate.year,
-                          _selectedDate.month,
-                          _selectedDate.day,
-                          _selectedTime.hour,
-                          _selectedTime.minute,
-                        );
-                        Duration difference =
-                        selectedDateTime.difference(currentTime);
+                              // 현재 시간과 선택된 날짜와 시간의 차이 계산
+                              DateTime currentTime = DateTime.now();
+                              DateTime selectedDateTime = DateTime(
+                                _selectedDate.year,
+                                _selectedDate.month,
+                                _selectedDate.day,
+                                _selectedTime.hour,
+                                _selectedTime.minute,
+                              );
+                              Duration difference =
+                                  selectedDateTime.difference(currentTime);
 
-                        /// 주소 입력 오류 알림창
-                        if (!isAddressValid(startDetailPoint) ||
-                            !isAddressValid(endDetailPoint)) {
-                          _showAddressAlertDialog(context);
-                          setState(() {
-                            isButtonDisabled = false;
-                            isShowingLoader = false;
-                          });
-                          return;
-                        }
+                              /// 주소 입력 오류 알림창
+                              if (!isAddressValid(startDetailPoint) ||
+                                  !isAddressValid(endDetailPoint)) {
+                                _showAddressAlertDialog(context);
+                                setState(() {
+                                  isButtonDisabled = false;
+                                  isShowingLoader = false;
+                                });
+                                return;
+                              }
 
-                        /// 시간 입력 오류 알림창
-                        if (!isTimeValid(difference)) {
-                          _showTimeAlertDialog(context);
-                          setState(() {
-                            isButtonDisabled = false;
-                            isShowingLoader = false;
-                          });
-                          return;
-                        }
+                              /// 시간 입력 오류 알림창
+                              if (!isTimeValid(difference)) {
+                                _showTimeAlertDialog(context);
+                                setState(() {
+                                  isButtonDisabled = false;
+                                  isShowingLoader = false;
+                                });
+                                return;
+                              }
 
-                        if (gender != selectedGender &&
-                            selectedGender != '무관') {
-                          context.showErrorSnackbar("선택할 수 없는 성별입니다.");
-                          isButtonDisabled = false;
-                          isShowingLoader = false;
-                          return;
-                        }
+                              if (gender != selectedGender &&
+                                  selectedGender != '무관') {
+                                context.showErrorSnackbar("선택할 수 없는 성별입니다.");
+                                isButtonDisabled = false;
+                                isShowingLoader = false;
+                                return;
+                              }
 
-                        context.showSnackbar(
-                          "카풀을 생성하는 중입니다. 잠시만 기다려주세요.",
-                        );
+                              context.showSnackbar(
+                                "카풀을 생성하는 중입니다. 잠시만 기다려주세요.",
+                              );
 
-                        /// 조건 충족 시 파이어베이스에 카풀 정보 저장
-                        String carId =
-                        await FirebaseCarpool.addDataToFirestore(
-                          selectedDate: _selectedDate,
-                          selectedTime: _selectedTime,
-                          startPoint: startPoint,
-                          endPoint: endPoint,
-                          endPointName: endPointName,
-                          startPointName: startPointName,
-                          selectedLimit: selectedLimit,
-                          selectedRoomGender: selectedGender,
-                          memberID: uid,
-                          memberName: nickName,
-                          memberGender: gender,
-                          startDetailPoint:
-                          startPointInput.detailController.text.trim(),
-                          endDetailPoint:
-                          endPointInput.detailController.text.trim(),
-                        );
+                              /// 조건 충족 시 파이어베이스에 카풀 정보 저장
+                              String carId =
+                                  await FirebaseCarpool.addDataToFirestore(
+                                selectedDate: _selectedDate,
+                                selectedTime: _selectedTime,
+                                startPoint: startPoint,
+                                endPoint: endPoint,
+                                endPointName: endPointName,
+                                startPointName: startPointName,
+                                selectedLimit: selectedLimit,
+                                selectedRoomGender: selectedGender,
+                                memberID: uid,
+                                memberName: nickName,
+                                memberGender: gender,
+                                startDetailPoint: startPointInput
+                                    .detailController.text
+                                    .trim(),
+                                endDetailPoint:
+                                    endPointInput.detailController.text.trim(),
+                              );
 
-                        if (!mounted) return;
-                        Nav.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const MainScreen()),
-                        );
-                        if (carId == "") {
-                          context.showErrorSnackbar("카풀 생성에 실패했습니다.");
-                        } else {
-                          context.showSnackbar("카풀 생성 성공! 채팅방으로 이동합니다");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChatroomPage(
-                                  carId: carId,
-                                  groupName: '카풀네임',
-                                  userName: nickName,
-                                  uid: uid,
-                                  gender: gender,
-                                )),
-                          );
-                        }
+                              if (!mounted) return;
+                              Nav.pop(context);
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const MainScreen()),
+                              );
+                              if (carId == "") {
+                                context.showErrorSnackbar("카풀 생성에 실패했습니다.");
+                              } else {
+                                context.showSnackbar("카풀 생성 성공! 채팅방으로 이동합니다");
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChatroomPage(
+                                            carId: carId,
+                                            groupName: '카풀네임',
+                                            userName: nickName,
+                                            uid: uid,
+                                            gender: gender,
+                                          )),
+                                );
+                              }
 
-                        setState(() {
-                          isButtonDisabled = false;
-                          isShowingLoader = false;
-                        });
-                      },
+                              setState(() {
+                                isButtonDisabled = false;
+                                isShowingLoader = false;
+                              });
+                            },
                       child: '카풀 시작하기'.text.size(20).white.make(),
                     ).p(50),
                   ),
                 ],
               ),
             ),
+            isShowingLoader
+                ? Container(
+                    color: Colors.black.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : Container(),
           ],
         ),
       ),
