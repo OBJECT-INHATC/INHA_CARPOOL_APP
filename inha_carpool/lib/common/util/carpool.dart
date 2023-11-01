@@ -26,41 +26,7 @@ class FirebaseCarpool {
   late String uid = "";
   late String gender = "";
 
-  // ///출발 시간순으로 조회 (출발 시간이 현재시간을 넘으면 제외)
-  // static Future<List<DocumentSnapshot>> getCarpoolsTimeby(int limit) async {
-  //   CollectionReference carpoolCollection = _firestore.collection('carpool');
-  //   QuerySnapshot querySnapshot = await carpoolCollection
-  //       .where('startTime',
-  //           isGreaterThan: DateTime.now().millisecondsSinceEpoch)
-  //       .orderBy('startTime')
-  //       .limit(limit)
-  //       .get();
-  //
-  //   List<DocumentSnapshot> sortedCarpools = [];
-  //   print("조회된 카풀 수(getCarpoolsTimeby): ${querySnapshot.docs.length}");
-  //
-  //   // 현재 시간을 가져옵니다.
-  //   DateTime currentTime = DateTime.now();
-  //
-  //   querySnapshot.docs.forEach((doc) {
-  //     DateTime startTime =
-  //         DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
-  //
-  //     // 현재 시간보다 미래의 시간인 경우만 추가
-  //     if (startTime.isAfter(currentTime)) {
-  //       sortedCarpools.add(doc);
-  //     }
-  //   });
-  //
-  //   sortedCarpools.sort((a, b) {
-  //     DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
-  //     DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b['startTime']);
-  //
-  //     return startTimeA.compareTo(startTimeB);
-  //   });
-  //
-  //   return sortedCarpools;
-  // }
+
 
   /// 카풀 저장
   static Future<String> addDataToFirestore({
@@ -88,6 +54,7 @@ class FirebaseCarpool {
 
     String? token = await storage.read(key: "token");
     int dateAsInt = combinedDateTime.millisecondsSinceEpoch;
+    String tempCarId = "";
 
     try {
       CollectionReference users = _firestore.collection('carpool');
@@ -97,6 +64,21 @@ class FirebaseCarpool {
       List<String> members = ['${memberID}_${memberName}_$memberGender'];
 
       print(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''));
+
+      print('admin: ${memberID}_${memberName}_$memberGender');
+      print('startPointName: $startPointName');
+      print('startPoint: $geoStart');
+      print('endPointName: $endPointName');
+      print('endPoint: $geoEnd');
+      print('maxMember: ${int.parse(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''))}');
+      print('gender: $selectedRoomGender');
+      print('startTime: $dateAsInt');
+      print('nowMember: 1');
+      print('status: false');
+      print('members: $members');
+      print('startDetailPoint: $startDetailPoint');
+      print('endDetailPoint: $endDetailPoint');
+
 
       DocumentReference carpoolDocRef = await users.add({
         'admin': '${memberID}_${memberName}_$memberGender',
@@ -114,27 +96,33 @@ class FirebaseCarpool {
         'endDetailPoint': endDetailPoint,
       });
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
+      tempCarId = carpoolDocRef.id;
+      print("11uid : $memberID");
+      print("22carId : ${carpoolDocRef.id}");
 
       /// 0918 해당 카풀 알림 토픽 추가
       if(Prefs.isPushOnRx.get() == true){
         await FirebaseMessaging.instance.subscribeToTopic(carpoolDocRef.id);
         print("토픽 추가");
-
         /// 카풀 정보 토픽 추가
         await FirebaseMessaging.instance.subscribeToTopic("${carpoolDocRef.id}_info");
 
       }
-      TopicRequstDTO topicRequstDTO = TopicRequstDTO(uid: memberID, carId: carpoolDocRef.id);
-      await apiTopic.saveTopoic(topicRequstDTO);
 
-      /// 0903 한승완 추가 : 참가 메시지 전송
-      await FireStoreService().sendCreateMessage(carpoolDocRef.id, memberName);
-      print('Data added to Firestore.');
 
-      return carpoolDocRef.id;
 
     } catch (e) {
       print('Error adding data to Firestore: $e');
+    }finally{
+      TopicRequstDTO topicRequstDTO = TopicRequstDTO(uid: memberID, carId: tempCarId);
+      await apiTopic.saveTopoic(topicRequstDTO);
+
+      /// 0903 한승완 추가 : 참가 메시지 전송
+      await FireStoreService().sendCreateMessage(tempCarId, memberName);
+      print('Data added to Firestore.');
+      print("carpoolDocRef.id : ${tempCarId}");
+
+      return tempCarId;
     }
     return "";
   }

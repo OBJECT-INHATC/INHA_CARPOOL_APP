@@ -306,6 +306,7 @@ class _RecruitPageState extends State<RecruitPage> {
                             startPointInput.detailController.text.trim(),
                             endDetailPoint: endPointInput.detailController.text.trim(),
                           );
+                          print("카풀 생성 완료! 카풀 ID: $carId");
 
                           if(!mounted) return;
                           Nav.pop(context);
