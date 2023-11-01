@@ -232,8 +232,11 @@ class _ChatroomPageState extends State<ChatroomPage> {
         endDrawer: Drawer(
           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(40),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(40),
+              topLeft: Radius.circular(40),
+            )
           ),
           child: Column(
             children: [
@@ -528,6 +531,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: Colors.white,
           title: const Text('카풀 나가기 불가'),
           content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
           actions: [

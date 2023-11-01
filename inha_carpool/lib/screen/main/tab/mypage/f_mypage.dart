@@ -75,11 +75,11 @@ class _MyPageState extends State<MyPage> {
                     color: Colors.black,
                   ),
                   title: const Text('이용기록'),
-                  onTap: () {
-                    // 이용기록 페이지로 이동
-                    Navigator.of(Nav.globalContext).push(MaterialPageRoute(
-                        builder: (context) => const RecordList()));
-                  },
+                  // onTap: () {
+                  //   // 이용기록 페이지로 이동
+                  //   Navigator.of(Nav.globalContext).push(MaterialPageRoute(
+                  //       builder: (context) => const RecordList()));
+                  // },
                 ),
                 ListTile(
                   leading: const Icon(
