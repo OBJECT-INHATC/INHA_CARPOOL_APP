@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -20,6 +19,7 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
+  bool inCarpoolList = false; // Add this state
   //시작 화면 지정
   TabItem _currentTab = TabItem.home;
 
@@ -48,7 +48,7 @@ class MainScreenState extends State<MainScreen>
     removeSplash();
   }
 
-  void removeSplash() async{
+  void removeSplash() async {
     // 1.5초 후에 스플래시 제거
     await Future.delayed(const Duration(milliseconds: 1500));
     print("removeSplash");
@@ -68,7 +68,7 @@ class MainScreenState extends State<MainScreen>
           shape: const Border(
             bottom: BorderSide(
               color: //Colors.grey.shade200,
-              Colors.white,
+                  Colors.white,
               width: 1,
             ),
           ),
@@ -76,38 +76,29 @@ class MainScreenState extends State<MainScreen>
           surfaceTintColor: Colors.white,
           foregroundColor: Colors.white,
           shadowColor: Colors.white,
-          // title:GestureDetector(
-          //   onTap: () {
-          //     // TODO: 이미지가 클릭되었을 때 수행할 동작
-          //     // 여기에 클릭 시 수행할 작업을 추가하세요.
-          //   },
-          //   Padding(
-          //             padding: const EdgeInsets.all(5.0),
-          //             child: Image.asset(
-          //               'assets/image/splash/banner.png',
-          //               width: 400,  // 원하는 이미지 너비로 설정
-          //               height: 60,   // 원하는 이미지 높이로 설정
-          //               fit: BoxFit.contain,  // 이미지를 너비와 높이에 맞게 유지
-          //             ),
-          //           ),
-          // ),
+          leading: GestureDetector(
+            onTap: () {},
+            child: _currentTab == TabItem.carpool // Check the current tab here
+                ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                "참여 중인 카풀", style: TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
 
-          leading:
-          GestureDetector(
-              onTap: () {
-                
-              },
-            child:
-              Padding(
-                        padding: const EdgeInsets.all(3.0),
-                        child: Image.asset(
-                          'assets/image/splash/banner.png',
-                          width: 400,  // 원하는 이미지 너비로 설정
-                          height: 60,   // 원하는 이미지 높이로 설정
-                          fit: BoxFit.contain,  // 이미지를 너비와 높이에 맞게 유지
-                        ),
-                      ),
-            ),
+              ) ),
+            )
+                : Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Image.asset(
+                      'assets/image/splash/banner.png',
+                      width: 400, // 원하는 이미지 너비로 설정
+                      height: 60, // 원하는 이미지 높이로 설정
+                      fit: BoxFit.contain, // 이미지를 너비와 높이에 맞게 유지
+                    ),
+                  ),
+          ),
           leadingWidth: 170,
           actions: [
             FutureBuilder<bool>(
@@ -143,13 +134,13 @@ class MainScreenState extends State<MainScreen>
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const NotificationList()),
+                      MaterialPageRoute(
+                          builder: (context) => const NotificationList()),
                     );
                   },
                 );
               },
             ),
-
           ],
         ),
         //바디를 하단 네비게이션 바 아래까지 확장
@@ -184,7 +175,7 @@ class MainScreenState extends State<MainScreen>
   //텝 내의서 뒤로 갈 수 있으면 해당 탭의 네비게이터를 이용, 아니면 홈으로 이동
   Future<bool> _handleBackPressed() async {
     final isFirstRouteInCurrentTab =
-    (await _currentTabNavigationKey.currentState?.maybePop() == false);
+        (await _currentTabNavigationKey.currentState?.maybePop() == false);
 
     if (isFirstRouteInCurrentTab) {
       if (_currentTab != TabItem.home) {
@@ -289,5 +280,4 @@ class MainScreenState extends State<MainScreen>
       navigatorKeys.add(GlobalKey<NavigatorState>());
     }
   }
-
 }
