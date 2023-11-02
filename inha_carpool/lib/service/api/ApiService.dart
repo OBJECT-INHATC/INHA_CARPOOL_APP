@@ -72,7 +72,7 @@ class ApiService {
 
   /// 이용 내역 조회
   Future<http.Response> selectHistoryList(String uid, String nickName) async {
-    const String apiUrl = '$baseUrl/history/select'; // API 엔드포인트 URL
+    String apiUrl = '$baseUrl/history/select'; // API 엔드포인트 URL
 
     final Uri uri = Uri.parse(apiUrl).replace( // 쿼리 스트링 추가
       queryParameters: {
@@ -96,7 +96,7 @@ class ApiService {
 
     } else {
       // API 요청이 실패한 경우 처리할 코드
-      print('Failed to save report: ${response.statusCode}');
+      print('Failed to select report: ${response.statusCode}');
       return response; // API 응답을 반환
     }
 

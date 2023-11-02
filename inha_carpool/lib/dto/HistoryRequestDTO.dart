@@ -54,5 +54,27 @@ class HistoryRequestDTO {
     };
   }
 
+  // Factory constructor to create an instance of HistoryRequestDTO from a JSON map.
+  // factory HistoryRequestDTO.fromJson(Map<String, dynamic> json) {
+  //
+  //   return HistoryRequestDTO(
+  //     carPoolId: json['carPoolId'],
+  //     admin: json['admin'],
+  //     member1: json['member1'],
+  //     member2: json['member2'],
+  //     member3: json['member3'],
+  //     nowMember: json['nowMember'],
+  //     maxMember: json['maxMember'],
+  //     startDetailPoint: json['startDetailPoint'],
+  //     startPoint: json['startPoint'],
+  //     startPointName: json['startPointName'],
+  //     startTime: json['startTime'],
+  //     endDetailPoint: json['endDetailPoint'],
+  //     endPoint: json['endPoint'],
+  //     endPointName: json['endPointName'],
+  //     gender: json['gender'],
+  //   );
+  // }
+
 
 }
