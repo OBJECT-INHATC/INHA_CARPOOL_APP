@@ -306,6 +306,26 @@ class FireStoreService {
     }
     return snapshot.docs.isNotEmpty;
   }
+  /// 0919 한승완, 사용자가 현재 참가한 카풀이 존재하는지 확인하는 메서드
+  Future<bool> StartTimeInCarpool(String uid, String nickName, String gender) async {
+    DateTime currentTime = DateTime.now();
+    int currentTimeMillis = currentTime.millisecondsSinceEpoch;
+
+    QuerySnapshot snapshot = await carpoolCollection
+        .where("members", arrayContains: "${uid}_${nickName}_$gender")
+        .get();
+
+    for (var doc in snapshot.docs) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      if (data['startTime'] >= currentTimeMillis) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
 
 
   /// 1025 서은율, 해당 carId의 토픽 구독 취소, 로컬 DB 정보 삭제

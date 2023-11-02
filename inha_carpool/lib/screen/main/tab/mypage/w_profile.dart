@@ -41,6 +41,7 @@ class _ProFileState extends State<ProFile> {
     uid = await storage.read(key: 'uid') ?? "";
     nickName = await storage.read(key: "nickName");
     gender = await storage.read(key: "gender");
+    email = await storage.read(key: "email") ?? "";
   }
 
   Future<String> _loadUserDataForKey(String key) async {
@@ -192,7 +193,7 @@ class _ProFileState extends State<ProFile> {
   Future<void> _showEditNicknameDialog(BuildContext context, String uid, String nickName, String gender) async {
     TextEditingController nicknameController = TextEditingController();
 
-    bool userBool = await FireStoreService().isUserInCarpool(uid, nickName, gender);
+    bool userBool = await FireStoreService().StartTimeInCarpool(uid, nickName, gender);
     if(!mounted) return;
 
     if (userBool) {
