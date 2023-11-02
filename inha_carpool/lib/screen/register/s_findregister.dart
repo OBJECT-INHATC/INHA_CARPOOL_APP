@@ -131,17 +131,6 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                             }),
                         Positioned(
                           // 중간 텍스트를 겹쳐서 배치
-                          right: 110,
-                          //bottom
-                          bottom: 15,
-                          child: Text(academy,
-                            style: TextStyle(
-                                fontSize: 13
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          // 중간 텍스트를 겹쳐서 배치
                           right: 0,
                           child: FlutterToggleTab(
                             width: 30,
@@ -200,10 +189,23 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                                 fontWeight: FontWeight.bold)),
                         onPressed: () {
                           auth.sendPasswordResetEmail(email: email);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('비밀번호 재설정 메일을 보냈습니다.'),
-                            ),
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                surfaceTintColor: Colors.transparent,
+                                title: Text("비밀번호 재설정 메일 전송"),
+                                content: Text("비밀번호 재설정 메일을 보내드렸습니다. 변경이 완료된 후 다시 로그인 해주세요!"),
+                                actions: <Widget>[
+                                  ElevatedButton(
+                                    child: Text("확인"),
+                                    onPressed: () {
+                                      Navigator.of(context).popUntil((route) => route.isFirst);
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
                           );
                         }),
                   ),
