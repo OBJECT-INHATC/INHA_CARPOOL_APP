@@ -128,7 +128,7 @@ class _CarpoolListState extends State<CarpoolList> {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.grey,
+        color: Colors.white,
       ),
       child: FutureBuilder<List<DocumentSnapshot>>(
         future: _loadCarpools(),

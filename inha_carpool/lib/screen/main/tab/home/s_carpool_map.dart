@@ -70,28 +70,15 @@ class _CarpoolMapState extends State<CarpoolMap> {
   @override
   void initState() {
     super.initState();
-    init();
+    addCustomIcon();
+    _moveCamera();
+    _loadUserData();
+    _getLocalToken();
   }
 
-  void init() async {
-    setState(() {
-      isLoading = true; // 로딩 시작
-    });
-    try {
-      await addCustomIcon();
-      await _moveCamera();
-      await _loadUserData();
-      await _getLocalToken();
-      setState(() {
-        isLoading = false; // 로딩 완료
-      });
-    } catch (e) {
-      print("init메소드 이슈 : $e");
-    }
-  }
 
   /// 커스텀 아이콘 이미지 추가 - 0915 한승완
-  addCustomIcon() async {
+  void addCustomIcon() async {
     final Uint8List? starticon =
         await getBytesFromAsset('assets/image/startmarker.png', 200);
     setState(() {
@@ -113,7 +100,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
         (widget.startPoint.longitude + widget.endPoint.longitude) / 2;
     midPoint = LatLng(midLat, midLng);
     // 뒤로가기 제한 해제
-    // handlePageLoadComplete();
+    handlePageLoadComplete();
   }
 
   _getLocalToken() async {
