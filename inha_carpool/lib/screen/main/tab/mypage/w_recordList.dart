@@ -1,31 +1,47 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 import 'package:inha_Carpool/service/api/ApiService.dart';
 
 class RecordList extends StatefulWidget {
-  final String uid;
-  final String nickName;
 
-
-  const RecordList({Key? key, required this.uid, required this.nickName}) : super(key: key);
+  const RecordList({Key? key}) : super(key: key);
 
   @override
   State<RecordList> createState() => _RecordListState();
 }
 
 class _RecordListState extends State<RecordList> {
+  final storage = FlutterSecureStorage();
   final ApiService apiService = ApiService();
-  late Future<http.Response> _historyFuture;
-
-
+  late String uid;
+  late String nickName;
+  late String gender;
 
   @override
   void initState() {
     super.initState();
-    _historyFuture = apiService.selectHistoryList(widget.uid, widget.nickName);
+  }
+
+  Future<List<HistoryRequestDTO>> _loadHistoryData() async {
+    await _loadUser();
+    final response = await apiService.selectHistoryList(uid, nickName, gender);
+    if (response.statusCode == 200) {
+      final List<dynamic> histories = jsonDecode(utf8.decode(response.body.runes.toList()));
+      List<HistoryRequestDTO> historyList = histories.map((data) => HistoryRequestDTO.fromJson(data)).toList();
+      return historyList;
+    } else {
+      throw Exception('Failed to fetch history');
+    }
+  }
+
+  Future<void> _loadUser() async {
+    uid = await storage.read(key: 'uid') ?? "";
+    nickName = await storage.read(key: 'nickName') ?? "";
+    gender = await storage.read(key: "gender") ?? "";
   }
 
   @override
@@ -45,111 +61,100 @@ class _RecordListState extends State<RecordList> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back_ios_new, size: 18),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 18),
         ),
         title: const Text('이용내역',
           style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
         ),
       ),
-      body:
-      // FutureBuilder<http.Response>(
-      //   future: _historyFuture,
-      //   builder: (context, snapshot) {
-      //     if (snapshot.connectionState == ConnectionState.waiting) {
-      //       print("123");
-      //       return Center(child: CircularProgressIndicator());
-      //     } else if (snapshot.hasError) {
-      //       return Center(child: Text('Error: ${snapshot.error}'));
-      //     } else if (snapshot.data == null || snapshot.data!.statusCode != 200) {
-      //       return Center(child: Text('Failed to fetch history.'));
-      //     } else {
-      //       final List<dynamic> histories = jsonDecode(utf8.decoder.convert(snapshot.data!.bodyBytes));
-      //       if (histories.isEmpty) {
-      //         return Center(child: Text('이용기록이 존재하지 않습니다.'));
-      //       }
-      //
-      //       return ListView.builder(
-      //         itemCount: histories.length,
-      //         itemBuilder: (context, index) {
-      //           final history = histories[index];
-      //           return ListTile(
-      //             title: Text('History: ${history['carPoolId']}'),
-      //             subtitle: Text('Admin: ${history['admin']}'),
-      //           );
-      //         },
-      //       );
-      //     }
-      //   },
-      // ),
-      Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-          ),
-          child: ListView(
-            children: [
-              Card(
-                color: Colors.white,
-                surfaceTintColor: Colors.transparent,
-                elevation: 2,
-                margin: const EdgeInsets.all(10),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Container(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Row(
+      body: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+        ),
+        child: FutureBuilder<List<HistoryRequestDTO>>(
+          future: _loadHistoryData(),
+          builder: (BuildContext context, AsyncSnapshot<List<HistoryRequestDTO>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasError) {
+              return const Center(
+                child: Text('이용내역을 불러오는 데 실패했습니다'),
+              );
+            } else {
+              List<HistoryRequestDTO>? historyList = snapshot.data;
+              return ListView.builder(
+                itemCount: historyList?.length ?? 0,
+                itemBuilder: (BuildContext context, int index) {
+                  // 이용내역을 화면에 표시하는 코드 작성
+                  int epoch = historyList![index].startTime;
+                  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
+                  String formattedDate = "${dateTime.month}월 ${dateTime.day}일 ${dateTime.hour}시 ${dateTime.minute}분";
+                  return Card(
+                    color: Colors.white,
+                    surfaceTintColor: Colors.transparent,
+                    elevation: 2,
+                    margin: const EdgeInsets.all(10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          const Icon(
-                            Icons.local_taxi_rounded,
-                            color: Colors.yellow,
-                            size: 30,
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.local_taxi_rounded,
+                                color: Colors.yellow,
+                                size: 30,
+                              ),
+                              SizedBox(width: screenWidth * 0.02),
+                              Text(
+                                formattedDate, // 출발 날짜 시간
+                                style: const TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
-                          Width(screenWidth * 0.02),
-                          const Text('날짜',
-                              style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold)),
+                          SizedBox(height: screenHeight * 0.02),
+                          Row(
+                            children: [
+                              const Text(
+                                '출발지:',
+                                style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: screenWidth * 0.03),
+                              Text(
+                                historyList![index].startDetailPoint, // 출발지 정보
+                                style: const TextStyle(color: Colors.black, fontSize: 15),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: screenHeight * 0.01),
+                          Row(
+                            children: [
+                              const Text(
+                                '도착지:',
+                                style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox(width: screenWidth * 0.03),
+                              Text(
+                                historyList![index].endDetailPoint, // 도착지 정보
+                                style: const TextStyle(color: Colors.black, fontSize: 15),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                      Height(screenHeight*0.02),
-                      Row(
-                        children: [
-                         const Text('시간',
-                              style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold)
-                          ),
-                          Width(screenWidth * 0.06),
-                          Text('시간',
-                              style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold)
-                          ),
-                        ],
-                      ),
-                      Height(screenHeight*0.01),
-                      Row(
-                        children: [
-                          const Text('출발지',
-                              style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold)
-                          ),
-                          Width(screenWidth * 0.03),
-                          Text('풀주소'),
-                        ],
-                      ),
-                      Height(screenHeight*0.01),
-                      Row(
-                        children: [
-                         const Text('목적지',
-                              style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.bold)
-                          ),
-                          Width(screenWidth * 0.03),
-                          Text('풀주소'),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          )
+                    ),
+                  );
+                },
+              );
+            }
+          },
+        ),
       ),
 
     );

@@ -259,7 +259,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: //Colors.grey[100],
                   Colors.white),
           child: Column(

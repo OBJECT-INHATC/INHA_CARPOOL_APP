@@ -522,12 +522,22 @@ class _CarpoolMapState extends State<CarpoolMap> {
             ),
             isJoining
                 ? Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(
+                      color: Colors.white,
+                    ), // Circular Indicator 추가
+                    const SizedBox(height: 16),
+                    '🚕 카풀 참가 중...'.text.size(20).white.make(),
+                  ],
+                ),
+              ),
+            )
                 : Container(),
+
           ],
         ),
       ),
