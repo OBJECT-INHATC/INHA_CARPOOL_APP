@@ -65,19 +65,33 @@ class _CarpoolMapState extends State<CarpoolMap> {
   BitmapDescriptor endCustomIcon = BitmapDescriptor.defaultMarker;
 
   bool joinButtonEnabled = true;
-  bool isjoining = false;
+  bool isJoining = false;
 
   @override
   void initState() {
     super.initState();
-    addCustomIcon(); // 커스텀 아이콘 추가
-    _moveCamera(); // 카메라 이동
-    _loadUserData();
-    _getLocalToken();
+    init();
+  }
+
+  void init() async {
+    setState(() {
+      isLoading = true; // 로딩 시작
+    });
+    try {
+      await addCustomIcon();
+      await _moveCamera();
+      await _loadUserData();
+      await _getLocalToken();
+      setState(() {
+        isLoading = false; // 로딩 완료
+      });
+    } catch (e) {
+      print("init메소드 이슈 : $e");
+    }
   }
 
   /// 커스텀 아이콘 이미지 추가 - 0915 한승완
-  void addCustomIcon() async {
+  addCustomIcon() async {
     final Uint8List? starticon =
         await getBytesFromAsset('assets/image/startmarker.png', 200);
     setState(() {
@@ -99,7 +113,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
         (widget.startPoint.longitude + widget.endPoint.longitude) / 2;
     midPoint = LatLng(midLat, midLng);
     // 뒤로가기 제한 해제
-    handlePageLoadComplete();
+    // handlePageLoadComplete();
   }
 
   _getLocalToken() async {
@@ -130,8 +144,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
         }
       },
       child: Scaffold(
-        backgroundColor:
-            isLoading ? Colors.black.withOpacity(0.3) : Colors.white,
+        // backgroundColor:
+        //     isLoading ? Colors.black.withOpacity(0.3) : Colors.white,
         appBar: AppBar(
           titleTextStyle: const TextStyle(
             fontSize: 17,
@@ -139,15 +153,17 @@ class _CarpoolMapState extends State<CarpoolMap> {
           ),
           centerTitle: true,
           title: '${widget.admin.split("_")[1]}님의 카풀 정보'.text.black.make(),
-          backgroundColor: Colors.white,
+          backgroundColor: isJoining ? Colors.black.withOpacity(0.5) : null,
           surfaceTintColor: Colors.white,
           toolbarHeight: 45,
-          shape: Border(
-            bottom: BorderSide(
-              color: Colors.grey.shade200,
-              width: 1,
-            ),
-          ),
+          shape: isJoining
+              ? null
+              : Border(
+                  bottom: BorderSide(
+                    color: Colors.grey.shade200,
+                    width: 1,
+                  ),
+                ),
         ),
         body: Stack(
           children: [
@@ -370,7 +386,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                   }
                                   try {
                                     setState(() {
-                                      isjoining = true;
+                                      isJoining = true;
                                     });
 
                                     await FirebaseCarpool.addMemberToCarpool(
@@ -502,9 +518,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
                     const Icon(Icons.location_on_outlined, color: Colors.white),
               ),
             ),
-            isjoining
+            isJoining
                 ? Container(
-                    color: Colors.black.withOpacity(0.3),
+                    color: Colors.black.withOpacity(0.5),
                     child: const Center(
                       child: CircularProgressIndicator(),
                     ),
