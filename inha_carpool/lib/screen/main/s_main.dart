@@ -79,8 +79,8 @@ class MainScreenState extends State<MainScreen>
           leading: GestureDetector(
             onTap: () {},
             child: _currentTab == TabItem.carpool // Check the current tab here
-                ? Padding(
-              padding: const EdgeInsets.all(8.0),
+                ? const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text(
                 "참여 중인 카풀", style: TextStyle(
                 color: Colors.black,
