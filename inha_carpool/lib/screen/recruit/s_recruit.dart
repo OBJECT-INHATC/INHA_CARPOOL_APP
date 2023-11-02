@@ -91,6 +91,7 @@ class _RecruitPageState extends State<RecruitPage> {
       },
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: isShowingLoader ? Colors.black.withOpacity(0.5) : Colors.white,
           surfaceTintColor: Colors.white,
           toolbarHeight: context.height(0.05),
           shape: isShowingLoader
