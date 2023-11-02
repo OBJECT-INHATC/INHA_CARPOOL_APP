@@ -890,7 +890,22 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
 //uid와 memberID비교
   void viewProfile(BuildContext context, String? uid, String memberId) {
-    if (uid == memberId) Navigator.push(context, MaterialPageRoute(builder: (context) => const MyPage()));
+    if (uid == memberId) {
+      print("마이페이지로 이동");
+      Navigator.pop(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MainScreen(temp: 'MyPage'),
+        ),
+      );
+
+
+
+
+
+
+    }
   }
 
   /// 에러 다이얼로그

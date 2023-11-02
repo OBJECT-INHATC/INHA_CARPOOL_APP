@@ -8,21 +8,30 @@ import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
 
 import '../../common/common.dart';
 import '../../fragment/f_notification.dart';
-import 'w_menu_drawer.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  // 마이페이지 이동 변수
+  final String? temp;
+
+  const MainScreen({Key? key, this.temp}) : super(key: key);
 
   @override
-  State<MainScreen> createState() => MainScreenState();
+  State<MainScreen> createState() => MainScreenState(temp: temp);
 }
 
 class MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
   bool inCarpoolList = false; // Add this state
+  late TabItem _currentTab;
   //시작 화면 지정
-  TabItem _currentTab = TabItem.home;
-
+  MainScreenState({String? temp}) {
+    if (temp == 'MyPage') {
+      print("temp : $temp");
+      _currentTab = TabItem.myPage;
+    } else {
+      _currentTab = TabItem.home; // Default or other cases
+    }
+  }
   //사용 가능한 화면 리스트
   final tabs = [TabItem.carpool, TabItem.home, TabItem.myPage];
 
@@ -80,15 +89,14 @@ class MainScreenState extends State<MainScreen>
             onTap: () {},
             child: _currentTab == TabItem.carpool // Check the current tab here
                 ? const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text(
-                "참여 중인 카풀", style: TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-
-              ) ),
-            )
+                    padding: EdgeInsets.all(8.0),
+                    child: Text("참여 중인 카풀",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  )
                 : Padding(
                     padding: const EdgeInsets.all(3.0),
                     child: Image.asset(
