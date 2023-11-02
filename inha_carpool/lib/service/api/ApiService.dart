@@ -22,23 +22,32 @@ class ApiService {
   }
 
   /// 신고 하기 (저장)
-  Future<http.Response> saveReport(ReportRequstDTO reportRequstDTO) async {
+  Future<bool> saveReport(ReportRequstDTO reportRequstDTO) async {
     const String apiUrl = '$baseUrl/report/save';
 
     // ReportRequstDTO 객체를 JSON 문자열로 변환
     final String requestBody = jsonEncode(reportRequstDTO);
 
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: requestBody,
-    );
-    // 성공적으로 API 요청을 보냈을 때 처리할 코드
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: requestBody,
+      );
+      // 성공적으로 API 요청을 보냈을 때 처리할 코드
 
-    print('API Response: ${utf8.decode(response.body.runes.toList())}');
-    return response; // API 응답을 반환
+      print('API Response: ${utf8.decode(response.body.runes.toList())}');
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    }catch(e){
+      print(e);
+      return false;
+    }
   }
 
 

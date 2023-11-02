@@ -10,44 +10,62 @@ class ApiUser {
   //유저 닉네임 업데이트
   ///TOdo: 지윤이가 고치면 이거 추가하기 (닉네임 중복체크)
   /// 신고 하기 (저장)
-  Future<http.Response> updateUserNickname(
+  Future<bool> updateUserNickname(
       String myUid, String newNickName) async {
     final String apiUrl = '$baseUrl/user/update/$myUid/$newNickName';
 
-    final response = await http.put(
-      Uri.parse(apiUrl),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
-    print(jsonDecode(utf8.decoder.convert(response.bodyBytes)));
-    return response;
+    try {
+      final response = await http.put(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      print(jsonDecode(utf8.decoder.convert(response.bodyBytes)));
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    }catch(e){
+      print(e);
+      return false;
+    }
   }
 
-  Future<http.Response> saveUser(UserRequstDTO userDTO) async {
+  Future<bool> saveUser(UserRequstDTO userDTO) async {
      String apiUrl = '$baseUrl/user/save';
     final String requestBody = jsonEncode(userDTO);
+    try{
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: requestBody,
+      );
+      if(response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch(e) {
+      print(e);
+      return false;
+    }
 
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',  
-      },
-      body: requestBody,
-    );
-    print('API Response: ${utf8.decode(response.body.runes.toList())}');
-    return response; // API 응답을 반환
   }
 
   Future<List<String>> getAllCarIdsForUser(String userId) async {
     String apiUrl = '$baseUrl/user/selectList/$userId';
-
-    final response = await http.get(Uri.parse(apiUrl));
-    final List<String> carIds = List<String>.from(json.decode(response.body));
-    print('API Response: ${utf8.decode(response.body.runes.toList())}');
-
-    return carIds; // API 응답을 반환
-
-
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      final List<String> carIds = List<String>.from(json.decode(response.body));
+      print('API Response: ${utf8.decode(response.body.runes.toList())}');
+      return carIds; // API 응답을 반환
+    } catch (e) {
+      print(e);
+      return List<String>.empty();
+    }
   }
 }

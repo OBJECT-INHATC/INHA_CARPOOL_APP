@@ -26,8 +26,6 @@ class FirebaseCarpool {
   late String uid = "";
   late String gender = "";
 
-
-
   /// 카풀 저장
   static Future<String> addDataToFirestore({
     required DateTime selectedDate,
@@ -52,7 +50,6 @@ class FirebaseCarpool {
       selectedTime.minute,
     );
 
-    String? token = await storage.read(key: "token");
     int dateAsInt = combinedDateTime.millisecondsSinceEpoch;
     String tempCarId = "";
 
@@ -70,7 +67,8 @@ class FirebaseCarpool {
       print('startPoint: $geoStart');
       print('endPointName: $endPointName');
       print('endPoint: $geoEnd');
-      print('maxMember: ${int.parse(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''))}');
+      print(
+          'maxMember: ${int.parse(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''))}');
       print('gender: $selectedRoomGender');
       print('startTime: $dateAsInt');
       print('nowMember: 1');
@@ -78,7 +76,6 @@ class FirebaseCarpool {
       print('members: $members');
       print('startDetailPoint: $startDetailPoint');
       print('endDetailPoint: $endDetailPoint');
-
 
       DocumentReference carpoolDocRef = await users.add({
         'admin': '${memberID}_${memberName}_$memberGender',
@@ -101,30 +98,42 @@ class FirebaseCarpool {
       print("22carId : ${carpoolDocRef.id}");
 
       /// 0918 해당 카풀 알림 토픽 추가
-      if(Prefs.isPushOnRx.get() == true){
+      if (Prefs.isPushOnRx.get() == true) {
         await FirebaseMessaging.instance.subscribeToTopic(carpoolDocRef.id);
         print("토픽 추가");
         /// 카풀 정보 토픽 추가
         await FirebaseMessaging.instance.subscribeToTopic("${carpoolDocRef.id}_info");
-
       }
-
-
 
     } catch (e) {
       print('Error adding data to Firestore: $e');
-    }finally{
-      TopicRequstDTO topicRequstDTO = TopicRequstDTO(uid: memberID, carId: tempCarId);
-      await apiTopic.saveTopoic(topicRequstDTO);
+    }
 
+    TopicRequstDTO topicRequstDTO = TopicRequstDTO(uid: memberID, carId: tempCarId);
+    bool isOpen = await apiTopic.saveTopoic(topicRequstDTO);
+    if (isOpen) {
+      print("스프링부트 서버 성공 #############");
       /// 0903 한승완 추가 : 참가 메시지 전송
       await FireStoreService().sendCreateMessage(tempCarId, memberName);
       print('Data added to Firestore.');
       print("carpoolDocRef.id : ${tempCarId}");
 
       return tempCarId;
+
+    } else {
+      print("스프링부트 서버 실패 #############");
+      /// 토픽 및 카풀 삭제
+      if(Prefs.isPushOnRx.get() == true) {
+        print("서버 이상으로 토픽 삭제");
+        await FirebaseMessaging.instance.unsubscribeFromTopic(tempCarId);
+        await FirebaseMessaging.instance.unsubscribeFromTopic("${tempCarId}_info");
+      }
+
+      await _firestore.collection('carpool').doc(tempCarId).delete();
+
+
+      return "";
     }
-    return "";
   }
 
   ///0907 새 채팅 카운트 업데이트
@@ -196,6 +205,9 @@ class FirebaseCarpool {
         // 예외 처리 코드 추가
       }
     }
+
+
+
   }
 
   /// 시간순으로 조회, 정렬

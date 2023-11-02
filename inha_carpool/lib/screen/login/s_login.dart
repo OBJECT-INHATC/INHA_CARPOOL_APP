@@ -148,12 +148,6 @@ class _LoginPageState extends State<LoginPage> {
     final titleFontSize = screenWidth * 0.1;
     final subTitleFontSize = screenWidth * 0.04;
 
-    Future<void> userSaveAPi(String uid, String nickName, String email) async {
-      final ApiUser apiUser = ApiUser();
-      UserRequstDTO userDTO = UserRequstDTO(uid: uid, nickname: nickName, email: email);
-      await apiUser.saveUser(userDTO);
-    }
-
     return GestureDetector(
       onTap: () {
         // 키보드 감추기
@@ -305,7 +299,9 @@ class _LoginPageState extends State<LoginPage> {
                           
                            if(loginButtonEnabled){ // 로그인 버튼이 활성화 되어 있는지 확인
                              loginButtonEnabled = false;
-                          
+
+
+
                           // 로그인 버튼 기능 추가
                           AuthService()
                               .loginWithUserNameandPassword(
@@ -316,80 +312,87 @@ class _LoginPageState extends State<LoginPage> {
                               await FireStoreService()
                                   .gettingUserData(email);
 
-
                               String nickname = snapshot.docs[0]
                                   .get("nickName");
                               String uid = snapshot.docs[0].get("uid");
 
-                              storage.write(
-                                key: "nickName",
-                                value: nickname,
-                              );
-                              storage.write(
-                                key: "uid",
-                                value: uid,
-                              );
-                              storage.write(
-                                key: "gender",
-                                value: snapshot.docs[0].get('gender'),
-                              );
-                              storage.write(
-                                key: "email",
-                                value: email,
-                              );
-                              storage.write(
-                                key: "userName",
-                                value: snapshot.docs[0].get('userName'),
-                              );
                               ///유저 정보저장 ------------ Topic 발급 - logout or 알림 Off 시 해제
                               // Todo: 이미 저장한 uid가 있으면 저장 안하는 로직 추가하기 - 상훈 0919
                               // 유저 정보 서저에 저장 --풀기 1101================
-                              userSaveAPi(uid, nickname, email);
+                              UserRequstDTO userDTO = UserRequstDTO(uid: uid, nickname: nickname, email: email);
+                              bool isOpen = await ApiUser().saveUser(userDTO);
 
-                              // 토픽 저장 전 - IOS APNS 권한 요청
-                              await FirebaseMessaging.instance.requestPermission(
-                                alert: true,
-                                announcement: false,
-                                badge: true,
-                                carPlay: false,
-                                criticalAlert: false,
-                                provisional: false,
-                                sound: true,
-                              );
+                              if(isOpen){
+                                print("스프링부트 서버 성공 #############");
+                                /// 로그인 성공
+                                storage.write(
+                                  key: "nickName",
+                                  value: nickname,
+                                );
+                                storage.write(
+                                  key: "uid",
+                                  value: uid,
+                                );
+                                storage.write(
+                                  key: "gender",
+                                  value: snapshot.docs[0].get('gender'),
+                                );
+                                storage.write(
+                                  key: "email",
+                                  value: email,
+                                );
+                                storage.write(
+                                  key: "userName",
+                                  value: snapshot.docs[0].get('userName'),
+                                );
 
-                              try{
-                                /// todo: 토픽 저장 추후 광고성도 추가하기
-                                if (Prefs.isSchoolPushOnRx.get() == true) {
-                                  // 학교 공지사항 토픽 저장
-                                  await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
-                                } else {
+                                // 토픽 저장 전 - IOS APNS 권한 요청
+                                await FirebaseMessaging.instance.requestPermission(
+                                  alert: true,
+                                  announcement: false,
+                                  badge: true,
+                                  carPlay: false,
+                                  criticalAlert: false,
+                                  provisional: false,
+                                  sound: true,
+                                );
+
+                                try{
+                                  /// todo: 토픽 저장 추후 광고성도 추가하기
+                                  if (Prefs.isSchoolPushOnRx.get() == true) {
+                                    // 학교 공지사항 토픽 저장
+                                    await FirebaseMessaging.instance.subscribeToTopic("SchoolNotification");
+                                  } else {
+                                    print('APNS token is not available');
+                                  }
+                                }catch(e){
                                   print('APNS token is not available');
                                 }
-                              }catch(e){
-                                print('APNS token is not available');
-                              }
 
+                                if (context.mounted) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                      const MainScreen(),
+                                    ),
+                                  );
+                                }
 
-
-                              if (context.mounted) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                    const MainScreen(),
-                                  ),
-                                );
+                              }else{
+                                print("스프링부트 서버 실패 #############");
+                                /// 로그인 실패
+                                if(!mounted) return;
+                                context.showErrorSnackbar("서버가 불안정합니다. 잠시 후 다시 시도해주세요.");
                               }
                             } else {
                               context.showErrorSnackbar(value);
                             }
                           });
-                             
                              // 로그인 버튼 활성화
                              setState(() {
                                loginButtonEnabled = true;
                              });
-
                            }
                         },
                         child: const Center(

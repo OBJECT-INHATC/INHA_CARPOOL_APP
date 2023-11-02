@@ -9,6 +9,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/service/api/Api_Topic.dart';
+import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../common/data/preference/prefs.dart';
 import '../../../../common/util/carpool.dart';
@@ -404,27 +405,42 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                     TopicRequstDTO topicRequstDTO =
                                         TopicRequstDTO(
                                             uid: memberID, carId: carId);
-                                    await apiTopic.saveTopoic(topicRequstDTO);
-
+                                    bool isOpen = await apiTopic.saveTopoic(topicRequstDTO);
                                     ///--------------------------------------------
-
-                                    if (!mounted) return;
-                                    Navigator.pop(context);
-                                    Navigator.pushReplacement(
-                                        Nav.globalContext,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const MainScreen()));
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ChatroomPage(
-                                                  carId: carId,
-                                                  groupName: '카풀네임',
-                                                  userName: nickName,
-                                                  uid: uid,
-                                                  gender: gender,
-                                                )));
+                                    if(isOpen){
+                                      print("스프링부트 서버 성공 #############");
+                                      if (!mounted) return;
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                          Nav.globalContext,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                              const MainScreen()));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ChatroomPage(
+                                                carId: carId,
+                                                groupName: '카풀네임',
+                                                userName: nickName,
+                                                uid: uid,
+                                                gender: gender,
+                                              )));
+                                    }else{
+                                      print("스프링부트 서버 실패 #############");
+                                      await FireStoreService().exitCarpool(
+                                          carId, nickName, uid, gender
+                                      );
+                                      if (Prefs.isPushOnRx.get() == true) {
+                                        await FirebaseMessaging.instance.unsubscribeFromTopic(carId);
+                                        await FirebaseMessaging.instance.unsubscribeFromTopic("${carId}_info");
+                                      }
+                                      if (!mounted) return;
+                                      Navigator.pop(context);
+                                      showErrorDialog(
+                                          context, '서버가 비정상 작동중입니다.\n잠시 후 다시 시도해주세요.'
+                                      );
+                                    }
                                   } catch (error) {
                                     if (error is DeletedRoomException) {
                                       // 방 삭제 예외 처리
@@ -437,7 +453,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                       print('카풀 참가 실패 (다른 예외): $error');
                                     }
                                   }
-
                                   setState(() {
                                     joinButtonEnabled = true;
                                   });

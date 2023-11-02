@@ -125,6 +125,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
           children: [
             TextButton(
               onPressed: () async {
+
                 if(_controller.text.isNotEmpty && getCheckedItems().isNotEmpty){
                   final reportRequstDTO = ReportRequstDTO(
                     content: _controller.text,
@@ -136,16 +137,24 @@ class _ComplainAlertState extends State<ComplainAlert> {
                   );
                   
                   // API 호출
-                  final response = await apiService.saveReport(reportRequstDTO);
-                  print(response.statusCode);
-
-                  Navigator.pop(context);
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => const ComplainComplete(),
-                  );
+                  bool isOpen = await apiService.saveReport(reportRequstDTO);
+                  if(isOpen) {
+                    print("스프링부트 서버 성공 #############");
+                    if(!mounted) return;
+                    Navigator.pop(context);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) => const ComplainComplete(),
+                    );
+                  }else{
+                    print("스프링부트 서버 실패 #############");
+                    if(!mounted) return;
+                    showDialog(context: context, builder: (BuildContext context) => const ComplainShow(
+                        cautionText: "서버가 불안정합니다.\n잠시 후 다시 시도해주세요."));
+                  }
                 }else{
-                    showDialog(context: context, builder: (BuildContext context) => const ComplainShow());
+                    showDialog(context: context, builder: (BuildContext context) => const ComplainShow(
+                      cautionText: "체크박스와 신고내용을 모두 입력 해주세요",));
                 }
 
               },
