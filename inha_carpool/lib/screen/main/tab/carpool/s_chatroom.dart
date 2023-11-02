@@ -476,38 +476,48 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     if (exitButtonDisabled) {
                       exitButtonDisabled = false;
 
-                      try{
-                        /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
-                        if (Prefs.isPushOnRx.get() == true) {
-                          await FirebaseMessaging.instance
-                              .unsubscribeFromTopic(widget.carId);
-
-                          await FirebaseMessaging.instance
-                              .unsubscribeFromTopic("${widget.carId}_info");
-                        }
-                      }catch(e){
-                        print("Ios 시뮬 에러~");
-                      }
-
-
                       ApiTopic apiTopic = ApiTopic();
-                      await apiTopic.deleteTopic(widget.uid, widget.carId);
+                      bool isOpen = await apiTopic.deleteTopic(widget.uid, widget.carId);
+
+                      if(isOpen){
+                        print("스프링부트 서버 성공 #############");
+                        try{
+                          /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
+                          if (Prefs.isPushOnRx.get() == true) {
+                            await FirebaseMessaging.instance
+                                .unsubscribeFromTopic(widget.carId);
+
+                            await FirebaseMessaging.instance
+                                .unsubscribeFromTopic("${widget.carId}_info");
+                          }
+                        }catch(e){
+                          print("Ios 시뮬 에러~");
+                        }
+
+                        await FireStoreService().exitCarpool(widget.carId,
+                            widget.userName, widget.uid, widget.gender);
+
+                        // 데이터베이스 작업이 완료되면 다음 페이지로 이동
+                        if (!mounted) return;
+                        Navigator.pop(context);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainScreen(),
+                          ),
+                        );
+
+                      }else{
+                        print("스프링부트 서버 실패 #############");
+                        if (!mounted) return;
+                        Navigator.pop(context);
+                        showErrorDialog(
+                            context, "현재 서버가 정지 상태입니다. 잠시 후 다시 시도해주세요."
+                        );
+                      }
 
                       ///--------------------------------------------------------------------
 
-                      // 데이터베이스 작업을 비동기로 수행
-                      await FireStoreService().exitCarpool(widget.carId,
-                          widget.userName, widget.uid, widget.gender);
-
-                      // 데이터베이스 작업이 완료되면 다음 페이지로 이동
-                      if (!mounted) return;
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MainScreen(),
-                        ),
-                      );
                       setState(() {
                         exitButtonDisabled = true;
                       });
@@ -575,32 +585,42 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 if (exitButtonDisabled) {
                   exitButtonDisabled = false;
 
-                  try{
-                    if (Prefs.isPushOnRx.get() == true) {
-                      await FirebaseMessaging.instance
-                          .unsubscribeFromTopic(widget.carId);
+                  ApiTopic apiTopic = ApiTopic();
+                  bool isOpen = await apiTopic.deleteTopic(widget.uid, widget.carId);
+                  if(isOpen){
+                    print("스프링부트 서버 성공 #############");
+                    try{
+                      if (Prefs.isPushOnRx.get() == true) {
+                        await FirebaseMessaging.instance
+                            .unsubscribeFromTopic(widget.carId);
 
-                      await FirebaseMessaging.instance
-                          .unsubscribeFromTopic("${widget.carId}_info");
+                        await FirebaseMessaging.instance
+                            .unsubscribeFromTopic("${widget.carId}_info");
+                      }
+                    }catch(e){
+                      print("Ios 시뮬 에러~");
                     }
-                  }catch(e){
-                    print("Ios 시뮬 에러~");
+
+                    await FireStoreService().exitCarpoolAsAdmin(
+                        widget.carId, widget.userName, widget.uid, widget.gender);
+
+                    if (!mounted) return;
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MainScreen()),
+                    );
+                  }else{
+                    print("스프링부트 서버 실패 #############");
+                    if (!mounted) return;
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                    showErrorDialog(
+                        context, "현재 서버가 정지 상태입니다. 잠시 후 다시 시도해주세요."
+                    );
                   }
 
-
-                  ApiTopic apiTopic = ApiTopic();
-                  await apiTopic.deleteTopic(widget.uid, widget.carId);
-
-                  await FireStoreService().exitCarpoolAsAdmin(
-                      widget.carId, widget.userName, widget.uid, widget.gender);
-
-                  if (!mounted) return;
-                  Navigator.pop(context);
-                  Navigator.pop(context);
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MainScreen()),
-                  );
                   setState(() {
                     exitButtonDisabled = true;
                   });
@@ -872,4 +892,33 @@ class _ChatroomPageState extends State<ChatroomPage> {
   void viewProfile(BuildContext context, String? uid, String memberId) {
     if (uid == memberId) Navigator.push(context, MaterialPageRoute(builder: (context) => const MyPage()));
   }
+
+  /// 에러 다이얼로그
+  void showErrorDialog(BuildContext context, String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          surfaceTintColor: Colors.transparent,
+          title: const Text('카풀참가 실패'),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  Nav.globalContext,
+                  MaterialPageRoute(
+                    builder: (context) => const MainScreen(),
+                  ),
+                );
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

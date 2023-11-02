@@ -5,35 +5,53 @@ import 'package:inha_Carpool/dto/UserDTO.dart';
 
 import '../../common/constants.dart';
 
-/// 0918 이상훈 - 서버 db에 Topic 정보 관련 api
+/// 0918 이상훈 - 서버 db에 Topic 정보 관련 api -> bool 타입 반환
 class ApiTopic {
-  Future<http.Response> saveTopoic(TopicRequstDTO topicRequstDTO) async {
+
+  Future<bool> saveTopoic(TopicRequstDTO topicRequstDTO) async {
     String apiUrl = '$baseUrl/topic/save';
-    print(baseUrl);
     final String requestBody = jsonEncode(topicRequstDTO);
 
-    final response = await http.post(
-      Uri.parse(apiUrl),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: requestBody,
-    );
-    print('API Response: ${utf8.decode(response.body.runes.toList())}');
-    return response; // API 응답을 반환
+    try {
+      final response = await http.post(
+        Uri.parse(apiUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: requestBody,
+      );
+      print('API Response: ${utf8.decode(response.body.runes.toList())}');
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
-  Future<http.Response> deleteTopic(String uid, String carId) async {
+  Future<bool> deleteTopic(String uid, String carId) async {
     String apiUrl = '$baseUrl/topic/delete';
 
-    final response = await http.delete(
-      Uri.parse('$apiUrl?uid=$uid&carId=$carId'),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    );
+    try {
+      final response = await http.delete(
+        Uri.parse('$apiUrl?uid=$uid&carId=$carId'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      );
 
-    print('API Response: ${utf8.decode(response.body.runes.toList())}');
-    return response; // API 응답을 반환
+      print('API Response: ${utf8.decode(response.body.runes.toList())}');
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        return false;
+      }
+    }catch(e){
+      print(e);
+      return false;
+    }
   }
 }

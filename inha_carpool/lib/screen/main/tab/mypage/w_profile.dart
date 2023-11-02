@@ -227,35 +227,44 @@ class _ProFileState extends State<ProFile> {
                 onPressed: () async {
                   String newNickname = nicknameController.text;
                   if (newNickname.isNotEmpty && newNickname.length > 1) {
-                    int result =
-                    await updateNickname(newNickname, email, storage);
 
                     ApiUser apiUser = ApiUser();
                     print('uid : $uid, newNickname : $newNickname');
-                    apiUser.updateUserNickname(uid, newNickname);
+                    bool isOpen = await apiUser.updateUserNickname(uid, newNickname);
 
-                    if (result == 1) {
-                      // 업데이트 성공 팝업
+                    if(isOpen){
+                      print("스프링부트 서버 성공 #############");
+                      int result = await updateNickname(newNickname, email, storage);
+
+                      if (result == 1) {
+                        // 업데이트 성공 팝업
+                        if (!mounted) return;
+                        Navigator.of(context).pop();
+                        _showResultPopup(context, "수정 완료", "닉네임이 성공적으로 수정되었습니다.");
+                        setState(() {
+                          nickNameFuture = _loadUserDataForKey("nickName");
+                        });
+                      }
+                      else if (result == 2) {
+                        // 중복된 닉네임 팝업
+                        if (!mounted) return;
+                        _showResultPopup(
+                            context, "오류", "중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.");
+                      } else if (result == 0) {
+                        // 이메일 일치 문서 없음 팝업
+                        if (!mounted) return;
+                        _showResultPopup(context, "오류", "해당 이메일과 일치하는 문서가 없습니다.");
+                      } else {
+                        // 업데이트 실패 팝업
+                        if (!mounted) return;
+                        _showResultPopup(context, "오류", "닉네임 업데이트에 실패했습니다.");
+                      }
+
+                    }else{
+                      print("스프링부트 서버 실패 #############");
                       if (!mounted) return;
-                      Navigator.of(context).pop();
-                      _showResultPopup(context, "수정 완료", "닉네임이 성공적으로 수정되었습니다.");
-                      setState(() {
-                        nickNameFuture = _loadUserDataForKey("nickName");
-                      });
-                    }
-                    else if (result == 2) {
-                      // 중복된 닉네임 팝업
-                      if (!mounted) return;
-                      _showResultPopup(
-                          context, "오류", "중복된 닉네임이 있습니다. 다른 닉네임을 선택하세요.");
-                    } else if (result == 0) {
-                      // 이메일 일치 문서 없음 팝업
-                      if (!mounted) return;
-                      _showResultPopup(context, "오류", "해당 이메일과 일치하는 문서가 없습니다.");
-                    } else {
-                      // 업데이트 실패 팝업
-                      if (!mounted) return;
-                      _showResultPopup(context, "오류", "닉네임 업데이트에 실패했습니다.");
+                      _showResultPopup(context, "오류", "서버가 정지하여 닉네임을 변경할 수 없습니다.");
+
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
