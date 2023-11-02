@@ -253,9 +253,8 @@ class FireStoreService {
     int nowMember = carpoolSnapshot['nowMember'];
 
     if(nowMember == 1) {
-      await carpoolDocRef.update({
-        'status': true,
-      });
+      // 방 삭제
+      await carpoolDocRef.delete();
     } else {
       await carpoolDocRef.update({
         'members': FieldValue.arrayRemove(['${uid}_${userName}_$gender']),
