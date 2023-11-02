@@ -176,6 +176,7 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        surfaceTintColor: Colors.transparent,
                         minimumSize: Size(context.width(1), 50),
                         backgroundColor: (verificationText=="본인인증 대기중...")?Colors.grey[300]:Colors.blue[400],
                         shape: RoundedRectangleBorder(

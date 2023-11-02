@@ -52,6 +52,7 @@ class _ComplainDialogState extends State<ComplainDialog> {
             itemCount: 2,
             itemBuilder: (context, index) {
               return Card(
+                surfaceTintColor: Colors.transparent,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
                 color: Colors.grey[200],

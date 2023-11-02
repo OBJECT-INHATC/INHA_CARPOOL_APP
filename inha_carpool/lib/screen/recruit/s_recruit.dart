@@ -381,6 +381,7 @@ class _RecruitPageState extends State<RecruitPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: Colors.transparent,
           title: const Text('카풀 생성 실패'),
           content: const Text('요약주소는 2 ~ 10 글자로 작성해주세요.'),
           actions: [
@@ -402,6 +403,7 @@ class _RecruitPageState extends State<RecruitPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: Colors.transparent,
           title: const Text('카풀 생성 실패'),
           content: const Text('카풀을 생성하기 위한 시간은 현재 시간으로부터 10분 이후여야 합니다.'),
           actions: [

@@ -150,6 +150,7 @@ class _ProFileState extends State<ProFile> {
                       padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05), // 좌우 여백 반응형으로 지정
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          surfaceTintColor: Colors.transparent,
                           elevation: 5,
                           primary: Colors.blue[100], // 버튼 배경색
                           shape: RoundedRectangleBorder(
@@ -280,6 +281,7 @@ void _showResultPopup(BuildContext context, String title, String content) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
+        surfaceTintColor: Colors.transparent,
         title: Text(title),
         content: Text(content),
         actions: [

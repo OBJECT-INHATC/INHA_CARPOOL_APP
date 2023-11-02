@@ -293,6 +293,7 @@ class _LoginPageState extends State<LoginPage> {
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          surfaceTintColor: Colors.transparent,
                           elevation: 5,
                           backgroundColor: const Color.fromARGB(255, 50, 113, 190),
                           shape: ContinuousRectangleBorder(
@@ -405,6 +406,7 @@ class _LoginPageState extends State<LoginPage> {
                       padding: EdgeInsets.fromLTRB(screenWidth * 0.1, screenHeight * 0.02, screenWidth * 0.1, 0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          surfaceTintColor: Colors.transparent,
                           elevation: 5,
                           backgroundColor: Colors.black,
                           shape: ContinuousRectangleBorder(

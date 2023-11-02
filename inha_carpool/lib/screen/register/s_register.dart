@@ -395,6 +395,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               40, 0, 40, 20),
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
+
                               padding: const EdgeInsets.symmetric(vertical: 11),
                               // 버튼 높이
                               backgroundColor: Color.fromARGB(255, 70, 100, 192),

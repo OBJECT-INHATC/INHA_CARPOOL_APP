@@ -185,6 +185,7 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                     padding: const EdgeInsets.fromLTRB(35, 20, 35, 20),
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          surfaceTintColor: Colors.transparent,
                           minimumSize: const Size.fromHeight(50),
                           backgroundColor: (onChanged != false)? Color.fromARGB(255, 70, 100, 192) : Colors.grey[400],
                           shape: ContinuousRectangleBorder(

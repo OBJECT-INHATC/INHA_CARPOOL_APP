@@ -88,6 +88,7 @@ class _DeleteAuthDialogState extends State<DeleteAuthDialog> {
                     },
                     child: Text('정말 탈퇴하기'),
                     style: ElevatedButton.styleFrom(
+                      surfaceTintColor: Colors.transparent,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),

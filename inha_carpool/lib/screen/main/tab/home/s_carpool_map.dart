@@ -444,6 +444,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
+                                surfaceTintColor: Colors.transparent,
                                 backgroundColor: Colors.blue,
                                 textStyle: const TextStyle(
                                   fontSize: 13,
@@ -535,6 +536,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          surfaceTintColor: Colors.transparent,
           title: const Text('카풀참가 실패'),
           content: Text(errorMessage),
           actions: [

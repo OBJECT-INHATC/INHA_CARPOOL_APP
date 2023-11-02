@@ -277,6 +277,7 @@ class _CarpoolListState extends State<CarpoolList> {
                             child: Stack(
                               children: [
                                 Card(
+
                                   color:
                                   Color.fromARGB(255, 70, 100, 192),
                                   surfaceTintColor: Colors.transparent,
@@ -446,6 +447,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                     size: MediaQuery.of(context).size.width * 0.04,
                                                   ),
                                                   style: ElevatedButton.styleFrom(
+                                                    surfaceTintColor: Colors.transparent,
                                                     padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
                                                     shape: CircleBorder(),
                                                     backgroundColor: Colors.blue[100],

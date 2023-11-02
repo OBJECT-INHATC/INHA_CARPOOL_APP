@@ -827,6 +827,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
+                          surfaceTintColor: Colors.transparent,
                           backgroundColor: const Color.fromARGB(255, 255, 167, 2),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)),

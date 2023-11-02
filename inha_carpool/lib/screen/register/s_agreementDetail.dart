@@ -69,6 +69,7 @@ class AgreementDetailPage extends StatelessWidget {
               height: 45,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
+
                   surfaceTintColor: Colors.transparent,
                   backgroundColor: context.appColors.logoColor,
                   shape: RoundedRectangleBorder(
