@@ -49,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Color.fromARGB(255, 70, 100, 192)];
+  List<Color> selectedBackgroundColors = [const Color.fromARGB(255, 70, 100, 192)];
   List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
 
   // 입력 필드 높이 설정
@@ -59,8 +59,8 @@ class _RegisterPageState extends State<RegisterPage> {
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [Color.fromARGB(255, 70, 100, 192)]
-        : [Color.fromARGB(255, 70, 100, 192)];
+        ? [const Color.fromARGB(255, 70, 100, 192)]
+        : [const Color.fromARGB(255, 70, 100, 192)];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
@@ -72,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
       //const Color pastelSkyBlue = Color(0xff6CC0FF);
     return isLoading
-        ? Center(
+        ? const Center(
             child: CircularProgressIndicator(
              // color: Theme.of(context).primaryColor,
             ),
@@ -429,7 +429,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                   if (value == true) {
                                     await FirebaseAuth.instance.currentUser!
                                         .sendEmailVerification();
-
                                     if (!mounted) return;
                                     Nav.push(const VerifiedRegisterPage());
                                   } else {
