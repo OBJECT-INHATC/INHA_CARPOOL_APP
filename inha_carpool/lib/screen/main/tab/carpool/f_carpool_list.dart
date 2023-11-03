@@ -11,6 +11,8 @@ import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 import 'dart:math';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
+import '../home/s_carpool_map.dart';
+
 class CarpoolList extends StatefulWidget {
   const CarpoolList({Key? key}) : super(key: key);
 
@@ -31,6 +33,8 @@ class _CarpoolListState extends State<CarpoolList> {
   String _distanceToLocation = ' ';
 
   late GoogleMapController mapController;
+
+  bool isPopUp = true;
 
   @override
   void initState() {
@@ -363,47 +367,47 @@ class _CarpoolListState extends State<CarpoolList> {
                                                 ),
                                                 child: ElevatedButton(
                                                   onPressed: () {
-                                                    //   Navigator.push(
-                                                    //     Nav.globalContext,
-                                                    //     PageRouteBuilder(
-                                                    //       //아래에서 위로 올라오는 효과
-                                                    //       pageBuilder: (context, animation,
-                                                    //               secondaryAnimation) =>
-                                                    /// TODO : 한승완 - 지도 연결 해주세요
-                                                    //           CarpoolMap(
-                                                    //         startPoint: LatLng(
-                                                    //             carpoolData['startPoint'].latitude,
-                                                    //             carpoolData['startPoint']
-                                                    //                 .longitude),
-                                                    //         startPointName:
-                                                    //             carpoolData['startPointName'],
-                                                    //         endPoint: LatLng(
-                                                    //             carpoolData['endPoint'].latitude,
-                                                    //             carpoolData['endPoint'].longitude),
-                                                    //         endPointName:
-                                                    //             carpoolData['endPointName'],
-                                                    //         startTime: formattedStartTime,
-                                                    //         carId: carpoolData['carId'],
-                                                    //         admin: carpoolData['admin'],
-                                                    //         roomGender: carpoolData['gender'],
-                                                    //       ),
+                                                      Navigator.push(
+                                                        Nav.globalContext,
+                                                        PageRouteBuilder(
+                                                          //아래에서 위로 올라오는 효과
+                                                          pageBuilder: (context, animation,
+                                                                  secondaryAnimation) =>
+                                                              CarpoolMap(
+                                                                isPopUp : true,
+                                                            startPoint: LatLng(
+                                                                carpoolData['startPoint'].latitude,
+                                                                carpoolData['startPoint']
+                                                                    .longitude),
+                                                            startPointName:
+                                                                carpoolData['startPointName'],
+                                                            endPoint: LatLng(
+                                                                carpoolData['endPoint'].latitude,
+                                                                carpoolData['endPoint'].longitude),
+                                                            endPointName:
+                                                                carpoolData['endPointName'],
+                                                            startTime: formattedStartTime,
+                                                            carId: carpoolData['carId'],
+                                                            admin: carpoolData['admin'],
+                                                            roomGender: carpoolData['gender'],
+                                                          ),
 
-                                                    //       transitionsBuilder: (context, animation,
-                                                    //           secondaryAnimation, child) {
-                                                    //         const begin = Offset(0.0, 1.0);
-                                                    //         const end = Offset.zero;
-                                                    //         const curve = Curves.easeInOut;
-                                                    //         var tween = Tween(
-                                                    //                 begin: begin, end: end)
-                                                    //             .chain(CurveTween(curve: curve));
-                                                    //         var offsetAnimation =
-                                                    //             animation.drive(tween);
-                                                    //         return SlideTransition(
-                                                    //             position: offsetAnimation,
-                                                    //             child: child);
-                                                    //       },
-                                                    //     ),
-                                                    //   );
+                                                          transitionsBuilder: (context, animation,
+                                                              secondaryAnimation, child) {
+                                                            const begin = Offset(0.0, 1.0);
+                                                            const end = Offset.zero;
+                                                            const curve = Curves.easeInOut;
+                                                            var tween = Tween(
+                                                                    begin: begin, end: end)
+                                                                .chain(CurveTween(curve: curve));
+                                                            var offsetAnimation =
+                                                                animation.drive(tween);
+                                                            return SlideTransition(
+                                                                position: offsetAnimation,
+                                                                child: child);
+                                                          },
+                                                        ),
+                                                      );
                                                   },
                                                   child: Icon(
                                                     Icons.map_outlined,

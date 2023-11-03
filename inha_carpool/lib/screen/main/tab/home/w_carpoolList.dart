@@ -148,6 +148,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                     // 현재 인원이 최대 인원보다 작을 때
                     Nav.push(
                       CarpoolMap(
+                        isPopUp: false,
                         startPoint: LatLng(carpoolData['startPoint'].latitude,
                             carpoolData['startPoint'].longitude),
                         startPointName: carpoolData['startPointName'],
