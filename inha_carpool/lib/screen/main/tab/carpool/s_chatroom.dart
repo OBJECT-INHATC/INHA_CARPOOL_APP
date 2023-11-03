@@ -496,12 +496,18 @@ class _ChatroomPageState extends State<ChatroomPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return AlertDialog(
                 surfaceTintColor: Colors.transparent,
+                title: const Text(''),
                 content: Container(
                   height: 80,
                   alignment: Alignment.center,
                   child: const Center(
-                    child: Center(
-                      child: CircularProgressIndicator(),
+                    child: Column(
+                      children: [
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        Text("나가는 중..."),
+                      ],
                     ),
                   ),
                 ),
