@@ -91,6 +91,8 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     return CustomThemeApp(
       child: Builder(builder: (context) {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
+
           /// 0916 한승완 - 텍스트의 전체적인 크기를 고정
           builder: (context, child) {
             final MediaQueryData data = MediaQuery.of(context);
