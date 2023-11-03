@@ -91,7 +91,8 @@ class _RecruitPageState extends State<RecruitPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: isShowingLoader ? Colors.black.withOpacity(0.5) : Colors.white,
+          backgroundColor:
+              isShowingLoader ? Colors.black.withOpacity(0.5) : Colors.white,
           surfaceTintColor: Colors.white,
           toolbarHeight: context.height(0.05),
           shape: isShowingLoader
@@ -179,55 +180,52 @@ class _RecruitPageState extends State<RecruitPage> {
 
                   Column(
                     children: [
-                      Column(// 제한인원 영역
-                          children: [
-                        Container(
-                          width: double.infinity,
-                          margin: const EdgeInsets.all(15),
-                          padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
-                          child: '인원'
-                              .text
-                              .size(16)
-                              .bold
-                              .align(TextAlign.left)
-                              .make(),
-                        ),
-                        LimitSelectorWidget(
-                          options: const ['2인', '3인'],
-                          selectedValue: selectedLimit,
-                          onOptionSelected: (value) {
-                            FocusScopeNode currentFocus =
-                                FocusScope.of(context);
-                            if (!currentFocus.hasPrimaryFocus) {
-                              currentFocus.unfocus();
-                            }
+                      GenderSelectorWidget(
+                        selectedGender: selectedGender,
+                        gender: gender,
+                        onGenderSelected: (value) {
+                          FocusScopeNode currentFocus = FocusScope.of(context);
+                          if (!currentFocus.hasPrimaryFocus) {
+                            currentFocus.unfocus();
+                          }
+                          setState(() {
+                            selectedGender = value;
+                            print("선택된 성별: $selectedGender");
+                          });
+                        },
+                      ),
+                      Column(
+                        // 제한인원 영역
+                        children: [
+                          Container(
+                            width: double.infinity,
+                            margin: const EdgeInsets.all(15),
+                            padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                            child: '인원'
+                                .text
+                                .size(16)
+                                .bold
+                                .align(TextAlign.left)
+                                .make(),
+                          ),
+                          LimitSelectorWidget(
+                            options: const ['2인', '3인', '4인'],
+                            selectedValue: selectedLimit,
+                            onOptionSelected: (value) {
+                              FocusScopeNode currentFocus =
+                                  FocusScope.of(context);
+                              if (!currentFocus.hasPrimaryFocus) {
+                                currentFocus.unfocus();
+                              }
 
-                            setState(() {
-                              selectedLimit = value;
-                              print("선택된 인원: $selectedLimit");
-                            });
-                          },
-                        ),
-                      ]),
-                      Column(// 성별 영역
-                          children: [
-                        // 성별 선택 버튼
-                        GenderSelectorWidget(
-                          selectedGender: selectedGender,
-                          gender: gender,
-                          onGenderSelected: (value) {
-                            FocusScopeNode currentFocus =
-                                FocusScope.of(context);
-                            if (!currentFocus.hasPrimaryFocus) {
-                              currentFocus.unfocus();
-                            }
-                            setState(() {
-                              selectedGender = value;
-                              print("선택된 성별: $selectedGender");
-                            });
-                          },
-                        ),
-                      ]),
+                              setState(() {
+                                selectedLimit = value;
+                                print("선택된 인원: $selectedLimit");
+                              });
+                            },
+                          ),
+                        ],
+                      ),
                     ],
                   ),
 
@@ -364,20 +362,20 @@ class _RecruitPageState extends State<RecruitPage> {
             ),
             isShowingLoader
                 ? Container(
-              color: Colors.black.withOpacity(0.5),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CircularProgressIndicator(
-                      color: Colors.white,
-                    ), // Circular Indicator 추가
-                    const SizedBox(height: 16),
-                    '🚕 카풀 생성 중...'.text.size(20).white.make(),
-                  ],
-                ),
-              ),
-            )
+                    color: Colors.black.withOpacity(0.5),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const CircularProgressIndicator(
+                            color: Colors.white,
+                          ), // Circular Indicator 추가
+                          const SizedBox(height: 16),
+                          '🚕 카풀 생성 중...'.text.size(20).white.make(),
+                        ],
+                      ),
+                    ),
+                  )
                 : Container(),
           ],
         ),

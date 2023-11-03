@@ -42,7 +42,7 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: context.width(0.3),
+                width: context.width(0.4),
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: TextButton(
                   onPressed: () {
@@ -53,7 +53,7 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                         ? Colors.blue[200]
                         : Colors.grey[300],
                   ),
-                  child: '${widget.gender}만'.text.white.size(13).make(),
+                  child: '${widget.gender}만'.text.white.size(16).make(),
                 ),
               ),
               // Container(
@@ -73,7 +73,7 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
               //   ),
               // ),
               Container(
-                width: context.width(0.3),
+                width: context.width(0.4),
                 margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                 child: TextButton(
                   onPressed: () {
@@ -84,7 +84,7 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                         ? Colors.blue[200]
                         : Colors.grey[300],
                   ),
-                  child: '무관'.text.white.size(17).make(),
+                  child: '무관'.text.white.size(16).make(),
                 ),
               ),
             ],
