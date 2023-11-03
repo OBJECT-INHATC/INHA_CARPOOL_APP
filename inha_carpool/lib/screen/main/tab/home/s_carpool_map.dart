@@ -26,7 +26,6 @@ class CarpoolMap extends StatefulWidget {
   final String carId;
   final String admin;
   final String roomGender;
-  final bool isPopUp;
 
   const CarpoolMap({
     super.key,
@@ -38,7 +37,6 @@ class CarpoolMap extends StatefulWidget {
     required this.roomGender,
     required this.endPoint,
     required this.endPointName,
-    required this.isPopUp,
   });
 
   @override
@@ -358,9 +356,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 ),
                               ],
                             ),
-                            widget.isPopUp
-                                ? Container()
-                                :
                             ElevatedButton(
                               onPressed: () async {
                                 String carId = widget.carId;
