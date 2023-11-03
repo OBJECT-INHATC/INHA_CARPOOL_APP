@@ -261,7 +261,7 @@ class _CarpoolListState extends State<CarpoolList> {
                               if (isCarpoolOver(startTime)) {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
-                                        content: Text('해당 방은 이미 종료된 카풀방입니다!')))
+                                    content: Text('해당 방은 이미 종료된 카풀방입니다!')))
                                     .closed
                                     .then((value) {
                                   _loadCarpools();
@@ -272,12 +272,12 @@ class _CarpoolListState extends State<CarpoolList> {
                                   Nav.globalContext,
                                   MaterialPageRoute(
                                       builder: (context) => ChatroomPage(
-                                            carId: carpool['carId'],
-                                            groupName: '카풀네임',
-                                            userName: nickName,
-                                            uid: uid,
-                                            gender: gender,
-                                          )),
+                                        carId: carpool['carId'],
+                                        groupName: '카풀네임',
+                                        userName: nickName,
+                                        uid: uid,
+                                        gender: gender,
+                                      )),
                                 );
                               }
 
@@ -321,42 +321,19 @@ class _CarpoolListState extends State<CarpoolList> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              Flexible(
-                                                child: Container(
-                                                  width: (screenWidth - 20) * 0.8,
-                                                  height: cardHeight * 0.15,
-                                                  margin: const EdgeInsets.only(left: 5.0),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      SizedBox(
-                                                        width: (screenWidth - 20) *0.4,
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          children: [
-                                                            const Icon(
-                                                              Icons.calendar_today_outlined,
-                                                              color: Colors.black54,
-                                                              size: 18,
-                                                            ),
-                                                            Text(
-                                                              '${startTime.month}월 ${startTime.day}일 $formattedDate',
-                                                              style: TextStyle(
-                                                                color: Colors.grey,
-                                                                fontSize: 13,
-                                                                fontWeight: FontWeight.bold,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
+                                              const Icon(
+                                                Icons.calendar_today_outlined,
+                                                color: Colors.black54,
+                                                size: 18,
                                               ),
+                                              //달력 아이콘과 날짜의 간격
+                                              Width(screenWidth * 0.01),
+                                              '${startTime.month}월 ${startTime.day}일 $formattedDate'.text.bold.color(Colors.grey).bold.size(13).make(),
                                             ],
                                           ),
+
                                           Row(
                                             children: [
                                               Padding(
@@ -367,47 +344,47 @@ class _CarpoolListState extends State<CarpoolList> {
                                                 ),
                                                 child: ElevatedButton(
                                                   onPressed: () {
-                                                      Navigator.push(
-                                                        Nav.globalContext,
-                                                        PageRouteBuilder(
-                                                          //아래에서 위로 올라오는 효과
-                                                          pageBuilder: (context, animation,
-                                                                  secondaryAnimation) =>
-                                                              CarpoolMap(
-                                                                isPopUp : true,
-                                                            startPoint: LatLng(
-                                                                carpoolData['startPoint'].latitude,
-                                                                carpoolData['startPoint']
-                                                                    .longitude),
-                                                            startPointName:
-                                                                carpoolData['startPointName'],
-                                                            endPoint: LatLng(
-                                                                carpoolData['endPoint'].latitude,
-                                                                carpoolData['endPoint'].longitude),
-                                                            endPointName:
-                                                                carpoolData['endPointName'],
-                                                            startTime: formattedStartTime,
-                                                            carId: carpoolData['carId'],
-                                                            admin: carpoolData['admin'],
-                                                            roomGender: carpoolData['gender'],
-                                                          ),
+                                                    Navigator.push(
+                                                      Nav.globalContext,
+                                                      PageRouteBuilder(
+                                                        //아래에서 위로 올라오는 효과
+                                                        pageBuilder: (context, animation,
+                                                            secondaryAnimation) =>
+                                                            CarpoolMap(
+                                                              isPopUp : true,
+                                                              startPoint: LatLng(
+                                                                  carpoolData['startPoint'].latitude,
+                                                                  carpoolData['startPoint']
+                                                                      .longitude),
+                                                              startPointName:
+                                                              carpoolData['startPointName'],
+                                                              endPoint: LatLng(
+                                                                  carpoolData['endPoint'].latitude,
+                                                                  carpoolData['endPoint'].longitude),
+                                                              endPointName:
+                                                              carpoolData['endPointName'],
+                                                              startTime: formattedStartTime,
+                                                              carId: carpoolData['carId'],
+                                                              admin: carpoolData['admin'],
+                                                              roomGender: carpoolData['gender'],
+                                                            ),
 
-                                                          transitionsBuilder: (context, animation,
-                                                              secondaryAnimation, child) {
-                                                            const begin = Offset(0.0, 1.0);
-                                                            const end = Offset.zero;
-                                                            const curve = Curves.easeInOut;
-                                                            var tween = Tween(
-                                                                    begin: begin, end: end)
-                                                                .chain(CurveTween(curve: curve));
-                                                            var offsetAnimation =
-                                                                animation.drive(tween);
-                                                            return SlideTransition(
-                                                                position: offsetAnimation,
-                                                                child: child);
-                                                          },
-                                                        ),
-                                                      );
+                                                        transitionsBuilder: (context, animation,
+                                                            secondaryAnimation, child) {
+                                                          const begin = Offset(0.0, 1.0);
+                                                          const end = Offset.zero;
+                                                          const curve = Curves.easeInOut;
+                                                          var tween = Tween(
+                                                              begin: begin, end: end)
+                                                              .chain(CurveTween(curve: curve));
+                                                          var offsetAnimation =
+                                                          animation.drive(tween);
+                                                          return SlideTransition(
+                                                              position: offsetAnimation,
+                                                              child: child);
+                                                        },
+                                                      ),
+                                                    );
                                                   },
                                                   child: Icon(
                                                     Icons.map_outlined,
@@ -429,7 +406,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                               Expanded(
                                                 child: Padding(
                                                   padding: EdgeInsets.symmetric(
-                                                    horizontal: screenWidth * 0.03,
+                                                    horizontal: screenWidth * 0.02,
                                                   ),
                                                   child: Row(
                                                     children: [
@@ -440,7 +417,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                             "${carpoolData['startDetailPoint']}",
                                                             style: TextStyle(
                                                               color: Colors.black,
-                                                              fontSize: screenWidth * 0.03,
+                                                              fontSize: screenWidth * 0.035,
                                                               fontWeight: FontWeight.bold,
                                                             ),
                                                           ),
@@ -470,7 +447,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                             "${carpoolData['endDetailPoint']}",
                                                             style: TextStyle(
                                                               color: Colors.black,
-                                                              fontSize: screenWidth * 0.03,
+                                                              fontSize: screenWidth * 0.035,
                                                               fontWeight: FontWeight.bold,
                                                             ),
                                                           ),
@@ -488,114 +465,114 @@ class _CarpoolListState extends State<CarpoolList> {
                                                     ],
                                                   ),
                                                 ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
+                                          ),
 
 
-                                            Expanded(
-                                              child: Container(
-                                                width: (screenWidth - 20) * 0.8,
-                                                margin: const EdgeInsets.only(left: 5.0),
-                                                padding: EdgeInsets.only(
-                                                  left: MediaQuery.of(context).size.width * 0.03, // 채팅 왼쪽 여백
-                                                ),
-                                                child: StreamBuilder<DocumentSnapshot?>(
-                                                  stream: FireStoreService().getLatestMessageStream(carpool['carId']),
-                                                  builder: (context, snapshot) {
-                                                    if (snapshot.connectionState == ConnectionState.waiting) {
-                                                      return CircularProgressIndicator();
-                                                    } else if (snapshot.hasError) {
-                                                      return Text('Error: ${snapshot.error}');
-                                                    } else if (!snapshot.hasData || snapshot.data == null) {
-                                                      return Padding(
-                                                        padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.02), // 위 여백 추가
-                                                        child: Text(
-                                                          '아직 채팅이 시작되지 않은 채팅방입니다!',
-                                                          style: TextStyle(color: Colors.grey),
-                                                        ),
-                                                      );
-                                                    }
-                                                    DocumentSnapshot lastMessage = snapshot.data!;
-                                                    String content = lastMessage['message'];
-                                                    String sender = lastMessage['sender'];
-
-                                                    // 글자가 16글자 이상인 경우, 17글자부터는 '...'로 대체
-                                                    if (content.length > 16) {
-                                                      content = content.substring(0, 16) + '...';
-                                                    }
-
-                                                    return Row(
-                                                      children: [
-                                                        Container(
-                                                          padding: EdgeInsets.only(
-                                                            left: MediaQuery.of(context).size.width * 0.01, // 채팅 왼쪽 여백
-                                                          ),
-                                                          child: Text(
-                                                            '$sender : $content',
-                                                            style: TextStyle(fontSize: 13, color: Colors.grey),
-                                                          ),
-                                                        ),
-                                                      ],
+                                          Expanded(
+                                            child: Container(
+                                              width: (screenWidth - 20) * 0.8,
+                                              margin: const EdgeInsets.only(left: 5.0),
+                                              padding: EdgeInsets.only(
+                                                left: MediaQuery.of(context).size.width * 0.03, // 채팅 왼쪽 여백
+                                              ),
+                                              child: StreamBuilder<DocumentSnapshot?>(
+                                                stream: FireStoreService().getLatestMessageStream(carpool['carId']),
+                                                builder: (context, snapshot) {
+                                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                                    return CircularProgressIndicator();
+                                                  } else if (snapshot.hasError) {
+                                                    return Text('Error: ${snapshot.error}');
+                                                  } else if (!snapshot.hasData || snapshot.data == null) {
+                                                    return Padding(
+                                                      padding: EdgeInsets.only(top: MediaQuery.of(context).size.width * 0.02), // 위 여백 추가
+                                                      child: Text(
+                                                        '아직 채팅이 시작되지 않은 채팅방입니다!',
+                                                        style: TextStyle(color: Colors.grey),
+                                                      ),
                                                     );
-                                                  },
-                                                ),
+                                                  }
+                                                  DocumentSnapshot lastMessage = snapshot.data!;
+                                                  String content = lastMessage['message'];
+                                                  String sender = lastMessage['sender'];
+
+                                                  // 글자가 16글자 이상인 경우, 17글자부터는 '...'로 대체
+                                                  if (content.length > 16) {
+                                                    content = content.substring(0, 16) + '...';
+                                                  }
+
+                                                  return Row(
+                                                    children: [
+                                                      Container(
+                                                        padding: EdgeInsets.only(
+                                                          left: MediaQuery.of(context).size.width * 0.01, // 채팅 왼쪽 여백
+                                                        ),
+                                                        child: Text(
+                                                          '$sender : $content',
+                                                          style: TextStyle(fontSize: 13, color: Colors.grey),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
                                               ),
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),
+                                ),
 
-                                  //수직 점선
-                                  // Positioned(
-                                  //   top: 18,
-                                  //   // 점선 수직 위치 조정
-                                  //   left: ((screenWidth - 20) * 4 / 5) + 10,
-                                  //   // 카드를 1/5해서 가장 오른쪽 위치 계산
-                                  //   child: CustomPaint(
-                                  //     painter: DashedLinePainter(),
-                                  //     child: Container(
-                                  //       width: 2,
-                                  //       height: cardHeight - 10,
-                                  //     ),
-                                  //   ),
-                                  // ),
+                                //수직 점선
+                                // Positioned(
+                                //   top: 18,
+                                //   // 점선 수직 위치 조정
+                                //   left: ((screenWidth - 20) * 4 / 5) + 10,
+                                //   // 카드를 1/5해서 가장 오른쪽 위치 계산
+                                //   child: CustomPaint(
+                                //     painter: DashedLinePainter(),
+                                //     child: Container(
+                                //       width: 2,
+                                //       height: cardHeight - 10,
+                                //     ),
+                                //   ),
+                                // ),
 
-                                  // 흰색 역삼각형
-                                  Positioned(
-                                    top: 5,
-                                    left: ((screenWidth - 20) * 4 / 5) + 1,
-                                    child: CustomPaint(
-                                      size: Size(
-                                          (screenWidth - 20) / 16, cardHeight / 11),
-                                      painter: dwonTrianglePainter(),
-                                    ),
+                                // 흰색 역삼각형
+                                Positioned(
+                                  top: 5,
+                                  left: ((screenWidth - 20) * 4 / 5) + 1,
+                                  child: CustomPaint(
+                                    size: Size(
+                                        (screenWidth - 20) / 16, cardHeight / 11),
+                                    painter: dwonTrianglePainter(),
                                   ),
+                                ),
 
-                                  //흰색 삼각형
-                                  Positioned(
-                                    bottom: 5, // 카드의 아래쪽에서 5의 위치에 배치
-                                    left: ((screenWidth - 20) * 4 / 5) + 1,
-                                    child: CustomPaint(
-                                      size: Size(
-                                          (screenWidth - 20) / 16, cardHeight / 11),
-                                      painter: UpTrianglePainter(),
-                                    ),
+                                //흰색 삼각형
+                                Positioned(
+                                  bottom: 5, // 카드의 아래쪽에서 5의 위치에 배치
+                                  left: ((screenWidth - 20) * 4 / 5) + 1,
+                                  child: CustomPaint(
+                                    size: Size(
+                                        (screenWidth - 20) / 16, cardHeight / 11),
+                                    painter: UpTrianglePainter(),
                                   ),
+                                ),
 
 
-                                ],
-                              ),
+                              ],
+                            ),
 
-                              /*-----------------------------------------------Card---------------------------------------------------------------*/
-                            );
+                            /*-----------------------------------------------Card---------------------------------------------------------------*/
+                          );
                         },
                       ),
                     ),
                   ),
-              ),
+                ),
               );
             }
           },
