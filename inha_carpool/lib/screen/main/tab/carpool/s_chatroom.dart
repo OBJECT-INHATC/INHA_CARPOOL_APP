@@ -95,27 +95,13 @@ class _ChatroomPageState extends State<ChatroomPage> {
   // 도착지
   String endPointDetail = "";
 
-  // 나가기 중복 방지
-  bool exitButtonDisabled = true;
-  bool isExiting = false;
-
   @override
   void initState() {
-    getChatandAdmin();
-
-    /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
-
-    getCurrentUserandToken();
-
-    /// 토큰, 사용자 Auth 정보 호출
-
-    getCarpoolInfo();
-    // 멤버 리스트, 출발 시간 가져오기
-
     super.initState();
-    _scrollController = ScrollController();
-
-    /// 스크롤 컨트롤러 초기화
+    getChatandAdmin(); /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
+    getCurrentUserandToken(); /// 토큰, 사용자 Auth 정보 호출
+    getCarpoolInfo(); /// 멤버 리스트, 출발 시간 가져오기
+    _scrollController = ScrollController(); /// 스크롤 컨트롤러 초기화
   }
 
   getLocalChat() async {
@@ -200,268 +186,249 @@ class _ChatroomPageState extends State<ChatroomPage> {
         startPointDetail = val['startDetailPoint'];
         endPoint = val['endPointName'];
         endPointDetail = val['endDetailPoint'];
-        agreedTime = startTime.subtract(Duration(minutes: 10));
+        agreedTime = startTime.subtract(const Duration(minutes: 10));
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isExitButtonDisabled = false; // 나가기 버튼 기본적으로 활성화
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
     String formattedDate = DateFormat('HH:mm').format(startTime);
 
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: context.appColors.logoColor,
-              surfaceTintColor: Colors.transparent,
-              toolbarHeight: 65,
-              title: "$admin의 카풀".text.size(20).make(),
-            ),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: context.appColors.logoColor,
+          surfaceTintColor: Colors.transparent,
+          toolbarHeight: 65,
+          title: "$admin의 카풀".text.size(20).make(),
+        ),
 
-            //----------------------------------------------drawer 대화상대
-            //----------------------------------------------drawer 대화상대
-            //----------------------------------------------drawer 대화상대
-            //----------------------------------------------drawer 대화상대
-            //----------------------------------------------drawer 대화상대
-            //----------------------------------------------drawer 대화상대
-            endDrawer: Drawer(
-              surfaceTintColor: Colors.transparent,
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40),
-              ),
-              child: Column(
-                children: [
-                  //-------------------------------대화상대 상단
-                  //-------------------------------대화상대 상단
-                  //-------------------------------대화상대 상단
-                  Container(
-                    height: AppBar().preferredSize.height * 2.2,
-                    width: double.infinity,
-                    color: context.appColors.logoColor,
-                    child: Column(
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        //----------------------------------------------drawer 대화상대
+        endDrawer: Drawer(
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+          ),
+          child: Column(
+            children: [
+              //-------------------------------대화상대 상단
+              //-------------------------------대화상대 상단
+              //-------------------------------대화상대 상단
+              Container(
+                height: AppBar().preferredSize.height * 2.2,
+                width: double.infinity,
+                color: context.appColors.logoColor,
+                child: Column(
+                  children: [
+                    SizedBox(height: screenWidth * 0.17),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        SizedBox(height: screenWidth * 0.17),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        const Text(
+                          '대화 상대',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () async {
+                                  _exitIconBtn(context);
+                                },
+                          icon: const Icon(
+                            Icons.exit_to_app,
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+              //---------------------------------대화상대 목록
+              //---------------------------------대화상대 목록
+              //---------------------------------대화상대 목록
+              //---------------------------------대화상대 목록
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8.0),
+                  itemCount: membersList.length >= 4 ? 4 : membersList.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (BuildContext context, int index) {
+                    String memberName = getName(membersList[index]);
+                    String memberGender = getGender(membersList[index]);
+                    String memberId = getMemberId(membersList[index]);
+
+                    return ListTile(
+                      onTap: () {
+                        _showProfileModal(
+                          context,
+                          memberId,
+                          '$memberName 님',
+                          memberGender,
+                        );
+                      },
+                      leading: Icon(
+                        Icons.account_circle,
+                        size: 35,
+                        color: admin == memberName ? Colors.blue : Colors.black,
+                      ),
+                      title: Row(
+                        children: [
+                          memberName.text
+                              .size(16)
+                              .color(admin == memberName
+                                  ? Colors.blue
+                                  : Colors.black)
+                              .make(),
+                        ],
+                      ),
+                      trailing: const Icon(Icons.navigate_next_rounded),
+                    );
+                  },
+                ),
+              ),
+              const Line(height: 1),
+              /*   Flexible(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  startPointDetail.text.size(25).color(Colors.black).bold.make(),
+                  const Icon(Icons.arrow_downward_outlined,
+                      size: 40, color: Colors.black),
+                  endPointDetail.text.size(25).color(Colors.black).bold.make(),
+                ],
+              ),
+            ),*/
+              const Line(height: 1),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom: screenHeight * 0.01),
+                  child: Column(
+                    children: [
+                      ChatLocation(title: '출발지', location: startPoint),
+                      const Line(height: 1),
+                      ChatLocation(title: '도착지', location: endPoint),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        //----------------------------------------------body
+        //----------------------------------------------body
+        //----------------------------------------------body
+        body: Column(
+          children: [
+            //출발 목적지
+            const Height(3),
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  /// 채팅 메시지 스트림
+                  chatMessages(),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const Line(height: 1),
+                      const Column(
+                        children: [
+                          Height(3),
+                        ],
+                      ),
+                      '${startTime.month}월 ${startTime.day}일 $formattedDate 출발'
+                          .text
+                          .medium
+                          .size(13)
+                          .make(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.white,
+                        child: Row(
                           children: [
-                            const Text(
-                              '대화 상대',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[400],
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: TextField(
+                                  cursorColor: Colors.white,
+                                  controller: messageController,
+                                  style: const TextStyle(
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.bold),
+                                  maxLines: null,
+                                  decoration: const InputDecoration(
+                                    hintText: "메시지 보내기...",
+                                    hintStyle: TextStyle(
+                                        color: Colors.black54, fontSize: 13),
+                                    border: InputBorder.none,
+                                  ),
+                                ),
                               ),
                             ),
-                            IconButton(
-                              onPressed: isExitButtonDisabled
-                                  ? null
-                                  : () async {
-                                      _exitIconBtn(context);
-                                    },
-                              icon: const Icon(
-                                Icons.exit_to_app,
-                                color: Colors.white,
-                                size: 25,
+                            const SizedBox(width: 12),
+                            GestureDetector(
+                              onTap: () {
+                                sendMessage();
+                              },
+                              child: Container(
+                                height: 45,
+                                width: 45,
+                                decoration: BoxDecoration(
+                                  color: context.appColors.logoColor,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.send,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-
-                  //---------------------------------대화상대 목록
-                  //---------------------------------대화상대 목록
-                  //---------------------------------대화상대 목록
-                  //---------------------------------대화상대 목록
-                  Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(8.0),
-                      itemCount:
-                          membersList.length >= 4 ? 4 : membersList.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (BuildContext context, int index) {
-                        String memberName = getName(membersList[index]);
-                        String memberGender = getGender(membersList[index]);
-                        String memberId = getMemberId(membersList[index]);
-
-                        return ListTile(
-                          onTap: () {
-                            _showProfileModal(
-                              context,
-                              memberId,
-                              '$memberName 님',
-                              memberGender,
-                            );
-                          },
-                          leading: Icon(
-                            Icons.account_circle,
-                            size: 35,
-                            color: admin == memberName
-                                ? Colors.blue
-                                : Colors.black,
-                          ),
-                          title: Row(
-                            children: [
-                              memberName.text
-                                  .size(16)
-                                  .color(admin == memberName
-                                      ? Colors.blue
-                                      : Colors.black)
-                                  .make(),
-                            ],
-                          ),
-                          trailing: const Icon(Icons.navigate_next_rounded),
-                        );
-                      },
-                    ),
-                  ),
-                  const Line(height: 1),
-                  /*   Flexible(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      startPointDetail.text.size(25).color(Colors.black).bold.make(),
-                      const Icon(Icons.arrow_downward_outlined,
-                          size: 40, color: Colors.black),
-                      endPointDetail.text.size(25).color(Colors.black).bold.make(),
-                    ],
-                  ),
-                ),*/
-                  const Line(height: 1),
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: screenHeight * 0.01),
-                      child: Column(
-                        children: [
-                          ChatLocation(title: '출발지', location: startPoint),
-                          const Line(height: 1),
-                          ChatLocation(title: '도착지', location: endPoint),
-                        ],
                       ),
-                    ),
+                      // 맨 밑 메세지 보내는 부분인데 반응형 디자인이 안되서 일단 주석처리함
+                      Container(
+                        color: Colors.white,
+                        height: 20,
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-
-            //----------------------------------------------body
-            //----------------------------------------------body
-            //----------------------------------------------body
-            body: Column(
-              children: [
-                //출발 목적지
-                const Height(3),
-                Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      /// 채팅 메시지 스트림
-                      chatMessages(),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          const Line(height: 1),
-                          const Column(
-                            children: [
-                              Height(3),
-                            ],
-                          ),
-                          '${startTime.month}월 ${startTime.day}일 $formattedDate 출발'
-                              .text
-                              .medium
-                              .size(13)
-                              .make(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            width: MediaQuery.of(context).size.width,
-                            color: Colors.white,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[400],
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    child: TextField(
-                                      cursorColor: Colors.white,
-                                      controller: messageController,
-                                      style: const TextStyle(
-                                          color: Colors.black87,
-                                          fontWeight: FontWeight.bold),
-                                      maxLines: null,
-                                      decoration: const InputDecoration(
-                                        hintText: "메시지 보내기...",
-                                        hintStyle: TextStyle(
-                                            color: Colors.black54,
-                                            fontSize: 13),
-                                        border: InputBorder.none,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                GestureDetector(
-                                  onTap: () {
-                                    sendMessage();
-                                  },
-                                  child: Container(
-                                    height: 45,
-                                    width: 45,
-                                    decoration: BoxDecoration(
-                                      color: context.appColors.logoColor,
-                                      borderRadius: BorderRadius.circular(30),
-                                    ),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.send,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // 맨 밑 메세지 보내는 부분인데 반응형 디자인이 안되서 일단 주석처리함
-                          Container(
-                            color: Colors.white,
-                            height: 20,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          ],
         ),
-        isExiting
-            ? Container(
-                color: Colors.black.withOpacity(0.5),
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )
-            : Container(),
-      ],
+      ),
     );
   }
 
@@ -597,7 +564,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
     } else {
       print("스프링부트 서버 실패 #############");
       if (!mounted) return;
-      context.showErrorSnackbar("현재 서버가 불안정합니다.\n 잠시 후 다시 시도해주세요.");
+      showErrorDialog(context, "현재 서버가 불안정합니다.\n잠시 후 다시 시도해주세요.");
     }
   }
 
@@ -651,7 +618,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
           // itemCount가 변경되었을 때 스크롤 위치를 조정
           if (fireStoreChats.length > previousItemCount) {
             previousItemCount = fireStoreChats.length;
-            WidgetsBinding.instance?.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               _scrollController
                   .jumpTo(_scrollController.position.maxScrollExtent);
             });
@@ -884,7 +851,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MainScreen(temp: 'MyPage'),
+          builder: (context) => const MainScreen(temp: 'MyPage'),
         ),
       );
     }
