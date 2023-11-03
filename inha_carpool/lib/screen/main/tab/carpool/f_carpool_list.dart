@@ -334,6 +334,8 @@ class _CarpoolListState extends State<CarpoolList> {
                                             ],
                                           ),
 
+                                          Height(screenHeight * 0.006),
+
                                           Row(
                                             children: [
                                               Padding(
