@@ -56,9 +56,9 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
     final screenHeight = MediaQuery.of(context).size.height; //727
 
     // 화면 높이의 75%를 ListView.builder의 높이로 사용
-    double listViewHeight = screenHeight * 0.75;
-    // 각 카드의 높이
-    double cardHeight = listViewHeight * 0.53;
+    // double listViewHeight = screenHeight * 0.75;
+    // // 각 카드의 높이
+    // double cardHeight = listViewHeight * 0.53;
 
     return GestureDetector(
       onTap: () {
@@ -187,35 +187,29 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                   child: Column(
                     children: [
                       //첫번째 줄
-                      Row(children: [
-                        const Icon(
-                          Icons.calendar_today_outlined,
-                          color: Colors.black,
-                          size: 18,
-                        ),
-                        //달력 아이콘과 날짜의 간격
-                        Width( screenWidth * 0.01),
-                        '${startTime.month}월 ${startTime.day}일 $formattedDate 예정'.text.size(13).make(),
-                        //-- 예정과 택시 아이콘 사이 공간 은우--//
-                        //Width(screenWidth * 0.17),
-                        Width(screenWidth > 400 ? screenWidth * 0.15 + 45 : screenWidth * 0.15),
-                        // 2/2명
-                        Icon(
-                          Icons.directions_car_outlined,
-                          color: getColorForGender(
-                              carpoolData['gender']),
-                        ),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.calendar_today_outlined,
+                            color: Colors.black,
+                            size: 18,
+                          ),
+                          Width(screenHeight * 0.01),
+                          '${startTime.month}월 ${startTime.day}일 $formattedDate 예정'.text.size(13).make(),
+                          const Spacer(),
+                          Icon(
+                            Icons.directions_car_outlined,
+                            color: getColorForGender(carpoolData['gender']),
+                          ),
+                          Width(screenHeight * 0.01),
+                          '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명'.text.bold.size(16).make(),
+                          Width(screenHeight * 0.01),
+                          '${carpoolData['gender']}'.text.size(13).normal.color(Colors.grey).make(),
 
-                        // 택시 아이콘과 인원수 사이 간격
-                        Width(screenWidth * 0.01),
-                        '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명'.text.bold.size(16).make(),
+                        ],
+                      ),
 
-                        // 인원수와 성별 사이 간격
-                        Width(screenWidth * 0.01),
-                        //무관
-                        '${carpoolData['gender']}'.text.size(13).normal.color(Colors.grey).make(),
 
-                      ]),
 
                       //출발지와 row의간격
                       Height(screenHeight*0.02),
@@ -281,19 +275,20 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           //화면 하단 **일 후 출발 박스
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                  color: context.appColors.logoColor,
-                                  width: 2),
-                            ),
-                            height: MediaQuery.of(context).size.height *
-                                0.050,
-                            width:
-                            MediaQuery.of(context).size.width * 0.50,
-                            child: Center(
-                              child: '$formattedTime 출발'.text.size(17).bold.color(context.appColors.logoColor).make(),
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: context.appColors.logoColor,
+                                    width: 2),
+                              ),
+                              height: screenHeight * 0.05,
+                              // width:
+                              // MediaQuery.of(context).size.width * 0.50,
+                              child: Center(
+                                child: '$formattedTime 출발'.text.size(17).bold.color(context.appColors.logoColor).make(),
+                              ),
                             ),
                           ),
                         ],

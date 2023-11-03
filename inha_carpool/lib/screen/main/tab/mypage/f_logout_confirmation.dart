@@ -34,13 +34,13 @@ class LogoutConfirmationDialog extends StatelessWidget {
       surfaceTintColor: Colors.transparent, // 틴트 빼기
       backgroundColor: Colors.white, // 다이얼로그 배경색
       content: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.12,
+        height: MediaQuery.of(context).size.height * 0.15,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 1),
 
-          const Text('로그아웃', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
+            const Text('로그아웃', style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold)),
             // Title
             const SizedBox(height: 22),
             FutureBuilder<String?>(
