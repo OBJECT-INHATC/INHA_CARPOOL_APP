@@ -11,7 +11,7 @@ import 'package:isar/isar.dart';
 
 class RecordList extends StatefulWidget {
 
-  const RecordList({Key? key}) : super(key: key);
+   RecordList({Key? key}) : super(key: key);
 
   @override
   State<RecordList> createState() => _RecordListState();
@@ -26,6 +26,7 @@ class _RecordListState extends State<RecordList> {
 
   @override
   void initState() {
+    _loadHistoryData();
     super.initState();
   }
 
@@ -34,12 +35,18 @@ class _RecordListState extends State<RecordList> {
     final response = await apiService.selectHistoryList(uid, nickName, gender);
     if (response.statusCode == 200) {
       final List<dynamic> histories = jsonDecode(utf8.decode(response.body.runes.toList()));
-      List<HistoryRequestDTO> historyList = histories.map((data) => HistoryRequestDTO.fromJson(data)).toList();
+      List<HistoryRequestDTO> historyList = histories.map((data) =>
+          HistoryRequestDTO.fromJson(data)).toList();
       return historyList;
+    } else if (response.statusCode == 204) {
+      // 카풀 이용 내역이 없는 경우
+      return <HistoryRequestDTO>[]; // 빈 리스트를 반환
     } else {
+      // 다른 상태 코드 처리
       throw Exception('Failed to fetch history');
     }
   }
+
 
   Future<void> _loadUser() async {
     uid = await storage.read(key: 'uid') ?? "";
@@ -87,6 +94,11 @@ class _RecordListState extends State<RecordList> {
               );
             } else {
               List<HistoryRequestDTO>? historyList = snapshot.data;
+              if (historyList == null || historyList.isEmpty) {
+                return  Center(
+                  child: '이용 내역이 없습니다'.text.size(20).bold.make(),
+                );
+              }
               return ListView.builder(
                 itemCount: historyList?.length ?? 0,
                 itemBuilder: (BuildContext context, int index) {
