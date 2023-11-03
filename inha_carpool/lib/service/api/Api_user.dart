@@ -47,6 +47,7 @@ class ApiUser {
       if(response.statusCode == 200) {
         return true;
       } else {
+        print("에러 코드 ${response.statusCode}");
         return false;
       }
     } catch(e) {

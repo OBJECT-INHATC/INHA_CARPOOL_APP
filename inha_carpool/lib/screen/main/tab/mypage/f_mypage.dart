@@ -75,9 +75,10 @@ class _MyPageState extends State<MyPage> {
                   ),
                   title: const Text('이용기록'),
                   onTap: () {
+                    print("이용기록 onTap 이동준비");
                     // 이용기록 페이지로 이동
                     Navigator.of(Nav.globalContext).push(MaterialPageRoute(
-                        builder: (context) =>  const RecordList()));
+                        builder: (context) =>  RecordList()));
                   },
                 ),
                 ListTile(

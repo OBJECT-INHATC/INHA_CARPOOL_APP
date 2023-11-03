@@ -20,15 +20,15 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Color.fromARGB(255, 70, 100, 192)];
+  List<Color> selectedBackgroundColors = [const Color.fromARGB(255, 70, 100, 192)];
   List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
 
 // 토글 배경색 업데이트 메서드
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
     selectedBackgroundColors = selectedIndex == 0
-        ? [Color.fromARGB(255, 70, 100, 192)]
-        : [Color.fromARGB(255, 70, 100, 192)];
+        ? [const Color.fromARGB(255, 70, 100, 192)]
+        : [const Color.fromARGB(255, 70, 100, 192)];
 
     // 선택되지 않은 토글의 배경색을 변경
     unSelectedBackgroundColors = selectedIndex == 0
@@ -194,11 +194,11 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 surfaceTintColor: Colors.transparent,
-                                title: Text("비밀번호 재설정 메일 전송"),
-                                content: Text("비밀번호 재설정 메일을 보내드렸습니다. 변경이 완료된 후 다시 로그인 해주세요!"),
+                                title: const Text("비밀번호 재설정 메일 전송"),
+                                content: const Text("비밀번호 재설정 메일을 보내드렸습니다. 변경이 완료된 후 다시 로그인 해주세요!"),
                                 actions: <Widget>[
                                   ElevatedButton(
-                                    child: Text("확인"),
+                                    child: const Text("확인"),
                                     onPressed: () {
                                       Navigator.of(context).popUntil((route) => route.isFirst);
                                     },

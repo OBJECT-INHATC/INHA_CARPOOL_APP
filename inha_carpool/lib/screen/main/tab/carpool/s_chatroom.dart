@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
@@ -94,26 +95,13 @@ class _ChatroomPageState extends State<ChatroomPage> {
   // 도착지
   String endPointDetail = "";
 
-  // 나가기 중복 방지
-  bool exitButtonDisabled = true;
-
   @override
   void initState() {
-    getChatandAdmin();
-
-    /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
-
-    getCurrentUserandToken();
-
-    /// 토큰, 사용자 Auth 정보 호출
-
-    getCarpoolInfo();
-    // 멤버 리스트, 출발 시간 가져오기
-
     super.initState();
-    _scrollController = ScrollController();
-
-    /// 스크롤 컨트롤러 초기화
+    getChatandAdmin(); /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
+    getCurrentUserandToken(); /// 토큰, 사용자 Auth 정보 호출
+    getCarpoolInfo(); /// 멤버 리스트, 출발 시간 가져오기
+    _scrollController = ScrollController(); /// 스크롤 컨트롤러 초기화
   }
 
   getLocalChat() async {
@@ -198,14 +186,13 @@ class _ChatroomPageState extends State<ChatroomPage> {
         startPointDetail = val['startDetailPoint'];
         endPoint = val['endPointName'];
         endPointDetail = val['endDetailPoint'];
-        agreedTime = startTime.subtract(Duration(minutes: 10));
+        agreedTime = startTime.subtract(const Duration(minutes: 10));
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    bool isExitButtonDisabled = false; // 나가기 버튼 기본적으로 활성화
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -259,11 +246,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
                           ),
                         ),
                         IconButton(
-                          onPressed: isExitButtonDisabled
-                              ? null
-                              : () async {
-                            ExitIconButton(context);
-                          },
+                          onPressed: () async {
+                                  _exitIconBtn(context);
+                                },
                           icon: const Icon(
                             Icons.exit_to_app,
                             color: Colors.white,
@@ -310,8 +295,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                           memberName.text
                               .size(16)
                               .color(admin == memberName
-                              ? Colors.blue
-                              : Colors.black)
+                                  ? Colors.blue
+                                  : Colors.black)
                               .make(),
                         ],
                       ),
@@ -321,18 +306,18 @@ class _ChatroomPageState extends State<ChatroomPage> {
                 ),
               ),
               const Line(height: 1),
-           /*   Flexible(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    startPointDetail.text.size(25).color(Colors.black).bold.make(),
-                    const Icon(Icons.arrow_downward_outlined,
-                        size: 40, color: Colors.black),
-                    endPointDetail.text.size(25).color(Colors.black).bold.make(),
-                  ],
-                ),
-              ),*/
+              /*   Flexible(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  startPointDetail.text.size(25).color(Colors.black).bold.make(),
+                  const Icon(Icons.arrow_downward_outlined,
+                      size: 40, color: Colors.black),
+                  endPointDetail.text.size(25).color(Colors.black).bold.make(),
+                ],
+              ),
+            ),*/
               const Line(height: 1),
               Align(
                 alignment: Alignment.bottomLeft,
@@ -350,7 +335,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
             ],
           ),
         ),
-
 
         //----------------------------------------------body
         //----------------------------------------------body
@@ -448,103 +432,150 @@ class _ChatroomPageState extends State<ChatroomPage> {
     );
   }
 
-  void ExitIconButton(BuildContext context) {
+  void _exitIconBtn(BuildContext context) {
     final currentTime = DateTime.now();
     final timeDifference = agreedTime.difference(currentTime);
     // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
     final minutesDifference = timeDifference.inMinutes;
 
+    // 출발 시간과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
     if (minutesDifference > 10) {
-      // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
-      if (admin != widget.userName) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              surfaceTintColor: Colors.transparent,
-              title: const Text('카풀 나가기'),
-              content: const Text('정말로 카풀을 나가시겠습니까?'),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('취소'),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    if (exitButtonDisabled) {
-                      exitButtonDisabled = false;
-
-                      ApiTopic apiTopic = ApiTopic();
-                      bool isOpen = await apiTopic.deleteTopic(widget.uid, widget.carId);
-
-                      if(isOpen){
-                        print("스프링부트 서버 성공 #############");
-                        try{
-                          /// 토픽 추가 및 서버에 토픽 삭제 요청 0919 이상훈
-                          if (Prefs.isPushOnRx.get() == true) {
-                            await FirebaseMessaging.instance
-                                .unsubscribeFromTopic(widget.carId);
-
-                            await FirebaseMessaging.instance
-                                .unsubscribeFromTopic("${widget.carId}_info");
-                          }
-                        }catch(e){
-                          print("Ios 시뮬 에러~");
-                        }
-
-                        await FireStoreService().exitCarpool(widget.carId,
-                            widget.userName, widget.uid, widget.gender);
-
-                        // 데이터베이스 작업이 완료되면 다음 페이지로 이동
-                        if (!mounted) return;
-                        Navigator.pop(context);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const MainScreen(),
-                          ),
-                        );
-
-                      }else{
-                        print("스프링부트 서버 실패 #############");
-                        if (!mounted) return;
-                        Navigator.pop(context);
-                        showErrorDialog(
-                            context, "현재 서버가 정지 상태입니다. 잠시 후 다시 시도해주세요."
-                        );
-                      }
-
-                      ///--------------------------------------------------------------------
-
-                      setState(() {
-                        exitButtonDisabled = true;
-                      });
-                    }
-                  },
-                  child: const Text('나가기'),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        // 나가기 버튼 기능
-        ExitCarpool(context);
-      }
-    }
-    else{
-      if(membersList.length < 2 ) {
+      // 방장이 아닐 때 다이얼로그
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            surfaceTintColor: Colors.transparent,
+            title: const Text('카풀 나가기'),
+            content: admin == widget.userName
+                ? const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?')
+                : const Text('정말로 카풀을 나가시겠습니까?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('취소'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  // 나가기 메소드
+                  _exitCarpool(context);
+                },
+                child: const Text('나가기'),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      if (membersList.length < 2) {
         // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
-        ExitCarpool(context);}else{
-        EixtTenMinCarpool(context);
+        _exitCarpool(context);
+      } else {
+        // 나가기 불가
+        _exitImpossible(context);
       }
-
     }
   }
 
-  void EixtTenMinCarpool(BuildContext context) {
+  //--------------------------------------------------
+  //--------------------------------------------------
+  //--------------------------------------------------
+
+  /// 나가기 처리 메소드
+  void _exitCarpool(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return FutureBuilder(
+          future: _exitCarpoolFuture(), // 나가기 처리를 수행하는 비동기 함수
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return AlertDialog(
+                surfaceTintColor: Colors.transparent,
+                title: const Text(''),
+                content: Container(
+                  height: 80,
+                  alignment: Alignment.center,
+                  child: const Center(
+                    child: Column(
+                      children: [
+                        Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        Text("나가는 중..."),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              if (snapshot.error != null) {
+                // 에러가 발생한 경우
+                return const AlertDialog(
+                  title: Text('카풀 나가기'),
+                  content: Text('카풀 나가기에 실패했습니다.'),
+                );
+              } else {
+                // 나가기 처리가 완료된 경우
+                WidgetsBinding.instance.addPostFrameCallback(
+                  (_) {
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MainScreen(),
+                      ),
+                    );
+                  },
+                );
+                return Container(); // 임시 컨테이너 반환
+              }
+            }
+          },
+        );
+      },
+    );
+  }
+
+  /// 나가기 처리를 수행하는 비동기 함수
+  Future<void> _exitCarpoolFuture() async {
+    ApiTopic apiTopic = ApiTopic();
+    bool isOpen = await apiTopic.deleteTopic(widget.uid, widget.carId);
+
+    if (isOpen) {
+      print("스프링부트 서버 성공 #############");
+      try {
+        if (Prefs.isPushOnRx.get() == true) {
+          await FirebaseMessaging.instance.unsubscribeFromTopic(widget.carId);
+          await FirebaseMessaging.instance
+              .unsubscribeFromTopic("${widget.carId}_info");
+        }
+      } catch (e) {
+        print("Ios 시뮬 에러~");
+      }
+
+      if (admin != widget.userName) {
+        // 방장이 아닐 때 exitCarpool 메소드 호출
+        await FireStoreService().exitCarpool(
+            widget.carId, widget.userName, widget.uid, widget.gender);
+      } else {
+        // 방장일 때 exitCarpoolAsAdmin 메소드 호출
+        await FireStoreService().exitCarpoolAsAdmin(
+            widget.carId, widget.userName, widget.uid, widget.gender);
+      }
+    } else {
+      print("스프링부트 서버 실패 #############");
+      if (!mounted) return;
+      showErrorDialog(context, "현재 서버가 불안정합니다.\n잠시 후 다시 시도해주세요.");
+    }
+  }
+
+  /// 나가기 불가 메소드
+  void _exitImpossible(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -565,77 +596,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
     );
   }
 
-  void ExitCarpool(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          surfaceTintColor: Colors.transparent,
-          title: const Text('카풀 나가기'),
-          content: const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('취소'),
-            ),
-            TextButton(
-              onPressed: () async {
-                if (exitButtonDisabled) {
-                  exitButtonDisabled = false;
-
-                  ApiTopic apiTopic = ApiTopic();
-                  bool isOpen = await apiTopic.deleteTopic(widget.uid, widget.carId);
-                  if(isOpen){
-                    print("스프링부트 서버 성공 #############");
-                    try{
-                      if (Prefs.isPushOnRx.get() == true) {
-                        await FirebaseMessaging.instance
-                            .unsubscribeFromTopic(widget.carId);
-
-                        await FirebaseMessaging.instance
-                            .unsubscribeFromTopic("${widget.carId}_info");
-                      }
-                    }catch(e){
-                      print("Ios 시뮬 에러~");
-                    }
-
-                    await FireStoreService().exitCarpoolAsAdmin(
-                        widget.carId, widget.userName, widget.uid, widget.gender);
-
-                    if (!mounted) return;
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const MainScreen()),
-                    );
-                  }else{
-                    print("스프링부트 서버 실패 #############");
-                    if (!mounted) return;
-                    Navigator.pop(context);
-                    Navigator.pop(context);
-                    showErrorDialog(
-                        context, "현재 서버가 정지 상태입니다. 잠시 후 다시 시도해주세요."
-                    );
-                  }
-
-                  setState(() {
-                    exitButtonDisabled = true;
-                  });
-                }
-              },
-              child: const Text('나가기'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  //--------------------------
-  //--------------------------
   //--------------------------
   //--------------------------
   //--------------------------
@@ -664,7 +624,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
           // itemCount가 변경되었을 때 스크롤 위치를 조정
           if (fireStoreChats.length > previousItemCount) {
             previousItemCount = fireStoreChats.length;
-            WidgetsBinding.instance?.addPostFrameCallback((_) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
               _scrollController
                   .jumpTo(_scrollController.position.maxScrollExtent);
             });
@@ -760,7 +720,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
         messageController.clear();
         canSend = false;
       });
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () {
         setState(() {
           canSend = true;
         });
@@ -848,7 +808,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         },
                         style: ElevatedButton.styleFrom(
                           surfaceTintColor: Colors.transparent,
-                          backgroundColor: const Color.fromARGB(255, 255, 167, 2),
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 167, 2),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)),
                         ),
@@ -896,15 +857,9 @@ class _ChatroomPageState extends State<ChatroomPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => MainScreen(temp: 'MyPage'),
+          builder: (context) => const MainScreen(temp: 'MyPage'),
         ),
       );
-
-
-
-
-
-
     }
   }
 
@@ -935,5 +890,4 @@ class _ChatroomPageState extends State<ChatroomPage> {
       },
     );
   }
-
 }
