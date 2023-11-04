@@ -26,7 +26,6 @@ class _RecordListState extends State<RecordList> {
 
   @override
   void initState() {
-    _loadHistoryData();
     super.initState();
   }
 
