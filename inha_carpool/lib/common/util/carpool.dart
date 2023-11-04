@@ -62,20 +62,8 @@ class FirebaseCarpool {
 
       print(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''));
 
-      print('admin: ${memberID}_${memberName}_$memberGender');
-      print('startPointName: $startPointName');
-      print('startPoint: $geoStart');
-      print('endPointName: $endPointName');
-      print('endPoint: $geoEnd');
-      print(
-          'maxMember: ${int.parse(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''))}');
-      print('gender: $selectedRoomGender');
-      print('startTime: $dateAsInt');
-      print('nowMember: 1');
-      print('status: false');
-      print('members: $members');
-      print('startDetailPoint: $startDetailPoint');
-      print('endDetailPoint: $endDetailPoint');
+
+
 
       DocumentReference carpoolDocRef = await users.add({
         'admin': '${memberID}_${memberName}_$memberGender',
@@ -92,6 +80,10 @@ class FirebaseCarpool {
         'startDetailPoint': startDetailPoint,
         'endDetailPoint': endDetailPoint,
       });
+
+
+
+
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
       tempCarId = carpoolDocRef.id;
       print("11uid : $memberID");
