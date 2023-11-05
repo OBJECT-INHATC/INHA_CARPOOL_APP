@@ -69,11 +69,11 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
             )
         );
 
-        // if(message.data['id'] == 'carpoolDone'){
-        //   // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
-        //   String carId = message.data['groupId'];
-        //   FireStoreService().handleEndCarpoolSignal(carId);
-        // }
+        if(message.data['id'] == 'carpoolDone'){
+          // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
+          String carId = message.data['groupId'];
+          FireStoreService().handleEndCarpoolSignal(carId);
+        }
       }
     });
 
