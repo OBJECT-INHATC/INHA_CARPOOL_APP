@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
-import 'package:provider/provider.dart';
 import 'app.dart';
 import 'common/data/preference/app_preferences.dart';
 
