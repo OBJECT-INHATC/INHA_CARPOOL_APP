@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -118,11 +117,11 @@ class _RecruitPageState extends State<RecruitPage> {
                     onLocationSelected: (String value) {
                       setState(() {
                         startPointName =
-                            Location_handler.getStringBetweenUnderscores(value)
+                            LocationHandler.getStringBetweenUnderscores(value)
                                 .trim();
                         startPoint = LatLng(
-                            Location_handler.parseDoubleBeforeUnderscore(value),
-                            Location_handler.getDoubleAfterSecondUnderscore(
+                            LocationHandler.parseDoubleBeforeUnderscore(value),
+                            LocationHandler.getDoubleAfterSecondUnderscore(
                                 value));
                         print("출발지 주소 : $startPointName");
                         print("출발지 위도경도 : $startPoint");
@@ -138,11 +137,11 @@ class _RecruitPageState extends State<RecruitPage> {
                     onLocationSelected: (String value) {
                       setState(() {
                         endPointName =
-                            Location_handler.getStringBetweenUnderscores(value)
+                            LocationHandler.getStringBetweenUnderscores(value)
                                 .trim();
                         endPoint = LatLng(
-                            Location_handler.parseDoubleBeforeUnderscore(value),
-                            Location_handler.getDoubleAfterSecondUnderscore(
+                            LocationHandler.parseDoubleBeforeUnderscore(value),
+                            LocationHandler.getDoubleAfterSecondUnderscore(
                                 value));
                         print("도착지 주소 : $endPointName");
                         print("도착지 위도경도 : $endPoint");

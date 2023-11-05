@@ -443,7 +443,7 @@ class _HomeState extends State<Home> {
 
   /// 내 위치 받아오기
   Future<void> initMyPoint() async {
-    myPoint = (await Location_handler.getCurrentLatLng(context))!;
+    myPoint = (await LocationHandler.getCurrentLatLng(context))!;
   }
 
   /// 새로고침 로직

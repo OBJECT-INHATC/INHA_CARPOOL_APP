@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/recruit/s_select_location.dart';
+
+import '../../common/util/location_handler.dart';
 
 class LocationInputWidget extends StatefulWidget {
   late TextEditingController detailController;
@@ -57,7 +58,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             if (result != null) {
               setState(() {
                 selectedLocation =
-                    Location_handler.getStringBetweenUnderscores(result);
+                    LocationHandler.getStringBetweenUnderscores(result);
                 // isGestureEnabled = false; // Tap 이벤트 비활성화
               });
               widget.onLocationSelected(result);
