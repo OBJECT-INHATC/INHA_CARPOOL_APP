@@ -81,14 +81,12 @@ class ApiService {
   }
 
   /// 이용 내역 조회
-  Future<http.Response> selectHistoryList(String uid, String nickName, String gender) async {
+  Future<http.Response> selectHistoryList(String uid) async {
     String apiUrl = '$baseUrl/history/select'; // API 엔드포인트 URL
 
     final Uri uri = Uri.parse(apiUrl).replace( // 쿼리 스트링 추가
       queryParameters: {
-        'uid': uid,
-        'nickName': nickName,
-        'gender': gender
+        'uid': uid
       },
     );
 

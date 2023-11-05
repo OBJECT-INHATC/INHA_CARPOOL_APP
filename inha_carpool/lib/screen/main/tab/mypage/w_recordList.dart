@@ -22,7 +22,6 @@ class _RecordListState extends State<RecordList> {
   final ApiService apiService = ApiService();
   late String uid;
   late String nickName;
-  late String gender;
 
   @override
   void initState() {
@@ -31,7 +30,7 @@ class _RecordListState extends State<RecordList> {
 
   Future<List<HistoryRequestDTO>> _loadHistoryData() async {
     await _loadUser();
-    final response = await apiService.selectHistoryList(uid, nickName, gender);
+    final response = await apiService.selectHistoryList(uid);
     if (response.statusCode == 200) {
       final List<dynamic> histories = jsonDecode(utf8.decode(response.body.runes.toList()));
       List<HistoryRequestDTO> historyList = histories.map((data) =>
@@ -50,7 +49,6 @@ class _RecordListState extends State<RecordList> {
   Future<void> _loadUser() async {
     uid = await storage.read(key: 'uid') ?? "";
     nickName = await storage.read(key: 'nickName') ?? "";
-    gender = await storage.read(key: "gender") ?? "";
   }
 
   @override
@@ -236,7 +234,4 @@ class _RecordListState extends State<RecordList> {
       ],
     );
   }
-
-
-
 }
