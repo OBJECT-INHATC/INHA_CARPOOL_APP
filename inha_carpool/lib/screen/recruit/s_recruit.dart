@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
@@ -91,7 +92,8 @@ class _RecruitPageState extends State<RecruitPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: isShowingLoader ? Colors.black.withOpacity(0.5) : Colors.white,
+          backgroundColor:
+              isShowingLoader ? Colors.black.withOpacity(0.5) : Colors.white,
           surfaceTintColor: Colors.white,
           toolbarHeight: context.height(0.05),
           shape: isShowingLoader
@@ -364,20 +366,21 @@ class _RecruitPageState extends State<RecruitPage> {
             ),
             isShowingLoader
                 ? Container(
-              color: Colors.black.withOpacity(0.5),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CircularProgressIndicator(
-                      color: Colors.white,
-                    ), // Circular Indicator 추가
-                    const SizedBox(height: 16),
-                    '🚕 카풀 생성 중...'.text.size(20).white.make(),
-                  ],
-                ),
-              ),
-            )
+                    color: Colors.black.withOpacity(0.5),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SpinKitThreeBounce(
+                            color: Colors.white,
+                            size: 25.0,
+                          ), // Circular Indicator 추가
+                          const SizedBox(height: 16),
+                          '🚕 카풀 생성 중'.text.size(20).white.make(),
+                        ],
+                      ),
+                    ),
+                  )
                 : Container(),
           ],
         ),

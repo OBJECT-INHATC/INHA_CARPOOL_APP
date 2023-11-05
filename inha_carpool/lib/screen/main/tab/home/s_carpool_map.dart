@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
@@ -78,7 +79,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
     _loadUserData();
     _getLocalToken();
   }
-
 
   /// 커스텀 아이콘 이미지 추가 - 0915 한승완
   void addCustomIcon() async {
@@ -360,133 +360,145 @@ class _CarpoolMapState extends State<CarpoolMap> {
                             ),
                             widget.isPopUp
                                 ? Container()
-                                :
-                            ElevatedButton(
-                              onPressed: () async {
-                                String carId = widget.carId;
-                                String memberID = uid;
-                                String memberName = nickName;
-                                String selectedRoomGender = widget.roomGender;
+                                : ElevatedButton(
+                                    onPressed: () async {
+                                      String carId = widget.carId;
+                                      String memberID = uid;
+                                      String memberName = nickName;
+                                      String selectedRoomGender =
+                                          widget.roomGender;
 
-                                if (joinButtonEnabled) {
-                                  joinButtonEnabled = false;
+                                      if (joinButtonEnabled) {
+                                        joinButtonEnabled = false;
 
-                                  if (gender != selectedRoomGender &&
-                                      selectedRoomGender != '무관') {
-                                    context.showErrorSnackbar(
-                                        '입장할 수 없는 성별입니다.\n다른 카풀을 이용해주세요!');
-                                    return;
-                                  }
-                                  try {
-                                    setState(() {
-                                      isJoining = true;
-                                    });
+                                        if (gender != selectedRoomGender &&
+                                            selectedRoomGender != '무관') {
+                                          context.showErrorSnackbar(
+                                              '입장할 수 없는 성별입니다.\n다른 카풀을 이용해주세요!');
+                                          return;
+                                        }
+                                        try {
+                                          setState(() {
+                                            isJoining = true;
+                                          });
 
-                                    await FirebaseCarpool.addMemberToCarpool(
-                                        carId,
-                                        memberID,
-                                        memberName,
-                                        gender,
-                                        token!,
-                                        selectedRoomGender);
-                                    if (!mounted) return;
+                                          await FirebaseCarpool
+                                              .addMemberToCarpool(
+                                                  carId,
+                                                  memberID,
+                                                  memberName,
+                                                  gender,
+                                                  token!,
+                                                  selectedRoomGender);
+                                          if (!mounted) return;
 
-                                    try {
-                                      ///  해당 카풀 알림 토픽 추가 0919 이상훈
-                                      if (Prefs.isPushOnRx.get() == true) {
-                                        /// 채팅 토픽
-                                        await FirebaseMessaging.instance
-                                            .subscribeToTopic(carId);
+                                          try {
+                                            ///  해당 카풀 알림 토픽 추가 0919 이상훈
+                                            if (Prefs.isPushOnRx.get() ==
+                                                true) {
+                                              /// 채팅 토픽
+                                              await FirebaseMessaging.instance
+                                                  .subscribeToTopic(carId);
 
-                                        /// 카풀 정보 토픽 - 서버 저장 X
-                                        await FirebaseMessaging.instance
-                                            .subscribeToTopic("${carId}_info");
+                                              /// 카풀 정보 토픽 - 서버 저장 X
+                                              await FirebaseMessaging.instance
+                                                  .subscribeToTopic(
+                                                      "${carId}_info");
+                                            }
+                                          } catch (e) {
+                                            print("토픽 추가 실패가 아닌 버전 이슈~");
+                                          }
+
+                                          ApiTopic apiTopic = ApiTopic();
+                                          TopicRequstDTO topicRequstDTO =
+                                              TopicRequstDTO(
+                                                  uid: memberID, carId: carId);
+                                          bool isOpen = await apiTopic
+                                              .saveTopoic(topicRequstDTO);
+
+                                          ///--------------------------------------------
+                                          if (isOpen) {
+                                            print("스프링부트 서버 성공 #############");
+                                            if (!mounted) return;
+                                            Navigator.pop(context);
+                                            Navigator.pushReplacement(
+                                                Nav.globalContext,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        const MainScreen()));
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ChatroomPage(
+                                                          carId: carId,
+                                                          groupName: '카풀네임',
+                                                          userName: nickName,
+                                                          uid: uid,
+                                                          gender: gender,
+                                                        )));
+                                          } else {
+                                            print("스프링부트 서버 실패 #############");
+                                            await FireStoreService()
+                                                .exitCarpool(carId, nickName,
+                                                    uid, gender);
+                                            if (Prefs.isPushOnRx.get() ==
+                                                true) {
+                                              await FirebaseMessaging.instance
+                                                  .unsubscribeFromTopic(carId);
+                                              await FirebaseMessaging.instance
+                                                  .unsubscribeFromTopic(
+                                                      "${carId}_info");
+                                            }
+                                            if (!mounted) return;
+                                            Navigator.pop(context);
+                                            showErrorDialog(context,
+                                                '서버가 비정상 작동중입니다.\n잠시 후 다시 시도해주세요.');
+                                          }
+                                        } catch (error) {
+                                          if (error is DeletedRoomException) {
+                                            // 방 삭제 예외 처리
+                                            showErrorDialog(
+                                                context, error.message);
+                                          } else if (error
+                                              is MaxCapacityException) {
+                                            // 인원 초과 예외 처원리
+                                            showErrorDialog(
+                                                context, error.message);
+                                          } else {
+                                            // 기타 예외 처리
+                                            print('카풀 참가 실패 (다른 예외): $error');
+                                          }
+                                        }
+                                        setState(() {
+                                          joinButtonEnabled = true;
+                                        });
+                                      } else {
+                                        context.showErrorSnackbar(
+                                            '참가 중입니다. 잠시만 기다려주세요.');
                                       }
-                                    } catch (e) {
-                                      print("토픽 추가 실패가 아닌 버전 이슈~");
-                                    }
-
-                                    ApiTopic apiTopic = ApiTopic();
-                                    TopicRequstDTO topicRequstDTO =
-                                        TopicRequstDTO(
-                                            uid: memberID, carId: carId);
-                                    bool isOpen = await apiTopic.saveTopoic(topicRequstDTO);
-                                    ///--------------------------------------------
-                                    if(isOpen){
-                                      print("스프링부트 서버 성공 #############");
-                                      if (!mounted) return;
-                                      Navigator.pop(context);
-                                      Navigator.pushReplacement(
-                                          Nav.globalContext,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                              const MainScreen()));
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ChatroomPage(
-                                                carId: carId,
-                                                groupName: '카풀네임',
-                                                userName: nickName,
-                                                uid: uid,
-                                                gender: gender,
-                                              )));
-                                    }else{
-                                      print("스프링부트 서버 실패 #############");
-                                      await FireStoreService().exitCarpool(
-                                          carId, nickName, uid, gender
-                                      );
-                                      if (Prefs.isPushOnRx.get() == true) {
-                                        await FirebaseMessaging.instance.unsubscribeFromTopic(carId);
-                                        await FirebaseMessaging.instance.unsubscribeFromTopic("${carId}_info");
-                                      }
-                                      if (!mounted) return;
-                                      Navigator.pop(context);
-                                      showErrorDialog(
-                                          context, '서버가 비정상 작동중입니다.\n잠시 후 다시 시도해주세요.'
-                                      );
-                                    }
-                                  } catch (error) {
-                                    if (error is DeletedRoomException) {
-                                      // 방 삭제 예외 처리
-                                      showErrorDialog(context, error.message);
-                                    } else if (error is MaxCapacityException) {
-                                      // 인원 초과 예외 처원리
-                                      showErrorDialog(context, error.message);
-                                    } else {
-                                      // 기타 예외 처리
-                                      print('카풀 참가 실패 (다른 예외): $error');
-                                    }
-                                  }
-                                  setState(() {
-                                    joinButtonEnabled = true;
-                                  });
-                                } else {
-                                  context.showErrorSnackbar(
-                                      '참가 중입니다. 잠시만 기다려주세요.');
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                surfaceTintColor: Colors.transparent,
-                                backgroundColor: Colors.blue,
-                                textStyle: const TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              child: Container(
-                                width: context.width(0.8),
-                                alignment: Alignment.center,
-                                child: const Text(
-                                  '입장하기',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      surfaceTintColor: Colors.transparent,
+                                      backgroundColor: Colors.blue,
+                                      textStyle: const TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    child: Container(
+                                      width: context.width(0.8),
+                                      alignment: Alignment.center,
+                                      child: const Text(
+                                        '입장하기',
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -527,22 +539,22 @@ class _CarpoolMapState extends State<CarpoolMap> {
             ),
             isJoining
                 ? Container(
-              color: Colors.black.withOpacity(0.5),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CircularProgressIndicator(
-                      color: Colors.white,
-                    ), // Circular Indicator 추가
-                    const SizedBox(height: 16),
-                    '🚕 카풀 참가 중...'.text.size(20).white.make(),
-                  ],
-                ),
-              ),
-            )
+                    color: Colors.black.withOpacity(0.5),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SpinKitThreeBounce(
+                            color: Colors.white,
+                            size: 25.0,
+                          ),
+                          const SizedBox(height: 16),
+                          '🚕 카풀 참가 중'.text.size(20).white.make(),
+                        ],
+                      ),
+                    ),
+                  )
                 : Container(),
-
           ],
         ),
       ),
