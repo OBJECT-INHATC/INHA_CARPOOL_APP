@@ -70,11 +70,15 @@ class _RecordListState extends State<RecordList> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black,),
         ),
         title: const Text('이용내역',
           style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
         ),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        foregroundColor: Colors.white,
+        shadowColor: Colors.white,
       ),
       body: Container(
         decoration: BoxDecoration(
