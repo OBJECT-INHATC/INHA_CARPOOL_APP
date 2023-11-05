@@ -330,7 +330,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                               ),
                                               //달력 아이콘과 날짜의 간격
                                               Width(screenWidth * 0.01),
-                                              '${startTime.month}월 ${startTime.day}일 $formattedDate'.text.bold.color(Colors.grey).bold.size(13).make(),
+                                              '${startTime.month}월 ${startTime.day}일 $formattedDate'.text.bold.color(Colors.grey).bold.size(13).fontFamily('GmarketSans').make(),
                                             ],
                                           ),
 

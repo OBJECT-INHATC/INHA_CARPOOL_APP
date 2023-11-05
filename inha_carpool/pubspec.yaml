@@ -127,6 +127,18 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  fonts:
+    - family: hankuck
+      fonts:
+        - asset: assets/fonts/hankuck/hankuck_Light.ttf
+          weight: 300
+        - asset: assets/fonts/hankuck/hankuck_Bold.ttf
+          weight: 600
+    - family: bmFont
+      fonts:
+        - asset: assets/fonts/bmFont/BMDOHYEON.otf
+          weight: 300
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

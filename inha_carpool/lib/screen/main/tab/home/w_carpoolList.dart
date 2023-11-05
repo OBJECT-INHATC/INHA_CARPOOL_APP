@@ -195,16 +195,16 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                             size: 18,
                           ),
                           Width(screenHeight * 0.01),
-                          '${startTime.month}월 ${startTime.day}일 $formattedDate 예정'.text.size(13).make(),
+                          '${startTime.month}월 ${startTime.day}일 $formattedDate 예정'.text.size(13).fontFamily('hankuck').make(),
                           const Spacer(),
                           Icon(
                             Icons.directions_car_outlined,
                             color: getColorForGender(carpoolData['gender']),
                           ),
                           Width(screenHeight * 0.01),
-                          '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명'.text.bold.size(16).make(),
+                          '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명'.text.bold.size(16).fontFamily('hankuck').make(),
                           Width(screenHeight * 0.01),
-                          '${carpoolData['gender']}'.text.size(13).normal.color(Colors.grey).make(),
+                          '${carpoolData['gender']}'.text.size(13).normal.color(Colors.grey).fontFamily('hankuck').make(),
 
                         ],
                       ),
@@ -233,10 +233,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                             children: [
                               // 출발지 요약주소
                               _truncateText(carpoolData['startDetailPoint'], 32)
-                                  .text.color(Colors.black).size(15).bold.make(),
+                                  .text.color(Colors.black).size(15).bold.fontFamily('hankuck').make(),
                               // 출발지 풀주소
                               _truncateText(carpoolData['startPointName'], 32)
-                                  .text.color(Colors.grey[600]).size(13).bold.make(),
+                                  .text.color(Colors.grey[600]).size(13).bold.fontFamily('hankuck').make(),
                             ],
                           ),
                         ],
@@ -260,10 +260,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                             children: [
                               // 도착지 요약주소
                               _truncateText(carpoolData['endDetailPoint'], 32).text
-                                  .color(Colors.black).size(15).bold.make(),
+                                  .color(Colors.black).size(15).bold.fontFamily('hankuck').make(),
                               // 도착지 풀주소
                               _truncateText(carpoolData['endPointName'], 32)
-                                  .text.color(Colors.grey[600]).size(13).bold.make(),
+                                  .text.color(Colors.grey[600]).size(13).bold.fontFamily('hankuck').make(),
                             ],
                           ),
                         ],
@@ -287,7 +287,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                               // width:
                               // MediaQuery.of(context).size.width * 0.50,
                               child: Center(
-                                child: '$formattedTime 출발'.text.size(17).bold.color(context.appColors.logoColor).make(),
+                                child: '$formattedTime 출발'.text.size(17).bold.color(context.appColors.logoColor).fontFamily('hankuck').make(),
                               ),
                             ),
                           ),
