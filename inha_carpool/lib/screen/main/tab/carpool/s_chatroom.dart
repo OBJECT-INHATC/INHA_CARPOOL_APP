@@ -41,7 +41,7 @@ class ChatroomPage extends StatefulWidget {
   State<ChatroomPage> createState() => _ChatroomPageState();
 }
 
-class _ChatroomPageState extends State<ChatroomPage> {
+class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver {
   /// 채팅 메시지 스트림
   Stream<QuerySnapshot>? chats;
 
@@ -107,8 +107,34 @@ class _ChatroomPageState extends State<ChatroomPage> {
     /// 멤버 리스트, 출발 시간 가져오기
     _scrollController = ScrollController();
 
-    /// 스크롤 컨트롤러 초기화
+    WidgetsBinding.instance.addObserver(this);
+    FirebaseMessaging.instance.unsubscribeFromTopic(widget.carId);
   }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // 생명주기 관찰자 해제
+    FirebaseMessaging.instance.subscribeToTopic(widget.carId);
+
+    super.dispose();
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed: // 앱이 포그라운드에 있는 경우
+        FirebaseMessaging.instance.unsubscribeFromTopic(widget.carId);
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused: // 앱이 백그라운드에 있는 경우
+      case AppLifecycleState.detached:
+        FirebaseMessaging.instance.subscribeToTopic(widget.carId);
+        break;
+      case AppLifecycleState.hidden:
+      // TODO: Handle this case.
+    }
+
+  }
+
 
   getLocalChat() async {
     print(widget.carId);
