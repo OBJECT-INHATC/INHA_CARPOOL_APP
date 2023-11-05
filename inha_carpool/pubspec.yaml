@@ -103,7 +103,9 @@ dependencies:
   flutter_chat_bubble: ^2.0.2
 
   flutter_spinkit: ^5.2.0 # 로딩 스피너
-  
+
+  flutter_animated_dialog: ^2.0.1 # 다이얼로그 패키지
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
