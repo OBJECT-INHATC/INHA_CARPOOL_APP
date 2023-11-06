@@ -82,8 +82,8 @@ dependencies:
   #firebase / fcm
   firebase_core: ^2.15.0 # firebase core 패키지
   firebase_auth: ^4.7.2 # firebase auth 패키지
-  cloud_firestore: ^4.12.2 #firestore 패키지  최신 4.12.2  #카풀 4.8.4
-  firebase_messaging: ^14.7.3 # 최신 14.7.3  #카풀 14.6.5
+  cloud_firestore: ^4.8.4 #firestore 패키지  최신 4.12.2  #카풀 4.8.4
+  firebase_messaging: ^14.6.5 # 최신 14.7.3  #카풀 14.6.5
   flutter_local_notifications:
 
   flutter_secure_storage: ^9.0.0 # flutter_secure_storage 관련 패키지
