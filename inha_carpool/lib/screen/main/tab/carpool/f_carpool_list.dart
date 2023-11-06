@@ -322,19 +322,20 @@ class _CarpoolListState extends State<CarpoolList> {
                                         const Spacer(),
 
                                         // 지도
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 30, bottom: 10),
-                                          child: Align(
-                                            alignment: Alignment.topRight,
-                                            child: Image.asset(
-                                              'assets/image/icon/map.png',
-                                              width: 38,
-                                              height: 40,
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                        ),
+                                        // Padding(
+                                        //   padding: const EdgeInsets.only(
+                                        //       right: 30, bottom: 10),
+                                        //   child: Align(
+                                        //     alignment: Alignment.topRight,
+                                        //     child:
+                                        //     Image.asset(
+                                        //       'assets/image/icon/map.png',
+                                        //       width: 38,
+                                        //       height: 40,
+                                        //       fit: BoxFit.fill,
+                                        //     ),
+                                        //   ),
+                                        // ),
                                       ],
                                     ),
 
