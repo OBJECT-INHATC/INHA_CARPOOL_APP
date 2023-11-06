@@ -18,7 +18,7 @@ class LimitSelectorWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: options.map((option) {
         return Container(
-          width: context.width(0.3),
+          width: context.width(0.24),
           margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
           child: TextButton(
             onPressed: () => onOptionSelected(option),

@@ -180,6 +180,20 @@ class _RecruitPageState extends State<RecruitPage> {
 
                   Column(
                     children: [
+                      GenderSelectorWidget(
+                        selectedGender: selectedGender,
+                        gender: gender,
+                        onGenderSelected: (value) {
+                          FocusScopeNode currentFocus = FocusScope.of(context);
+                          if (!currentFocus.hasPrimaryFocus) {
+                            currentFocus.unfocus();
+                          }
+                          setState(() {
+                            selectedGender = value;
+                            print("선택된 성별: $selectedGender");
+                          });
+                        },
+                      ),
                       Column(// 제한인원 영역
                           children: [
                         Container(
@@ -194,7 +208,7 @@ class _RecruitPageState extends State<RecruitPage> {
                               .make(),
                         ),
                         LimitSelectorWidget(
-                          options: const ['2인', '3인'],
+                          options: const ['2인', '3인', '4인'],
                           selectedValue: selectedLimit,
                           onOptionSelected: (value) {
                             FocusScopeNode currentFocus =
@@ -206,25 +220,6 @@ class _RecruitPageState extends State<RecruitPage> {
                             setState(() {
                               selectedLimit = value;
                               print("선택된 인원: $selectedLimit");
-                            });
-                          },
-                        ),
-                      ]),
-                      Column(// 성별 영역
-                          children: [
-                        // 성별 선택 버튼
-                        GenderSelectorWidget(
-                          selectedGender: selectedGender,
-                          gender: gender,
-                          onGenderSelected: (value) {
-                            FocusScopeNode currentFocus =
-                                FocusScope.of(context);
-                            if (!currentFocus.hasPrimaryFocus) {
-                              currentFocus.unfocus();
-                            }
-                            setState(() {
-                              selectedGender = value;
-                              print("선택된 성별: $selectedGender");
                             });
                           },
                         ),
@@ -357,7 +352,7 @@ class _RecruitPageState extends State<RecruitPage> {
                                 isShowingLoader = false;
                               });
                             },
-                      child: '카풀 시작하기'.text.size(20).white.make(),
+                      child: '카풀시작'.text.size(20).white.make(),
                     ).p(50),
                   ),
                 ],
