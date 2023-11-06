@@ -234,11 +234,12 @@ class _ChatroomPageState extends State<ChatroomPage> {
               //-------------------------------대화상대 상단
               //-------------------------------대화상대 상단
               Container(
-                height: AppBar().preferredSize.height * 2.2,
-                width: double.infinity,
+                height: AppBar().preferredSize.height * 2.3,
+                //width: double.infinity,
                 color: context.appColors.logoColor,
                 child: Padding(
-                  padding: EdgeInsets.only(top: screenHeight * 0.1),
+                   padding: EdgeInsets.fromLTRB(8, screenHeight * 0.1, 8, 8),
+                  // padding: const EdgeInsets.all(8.0),
                   child: ListTile(
                     title: const Text(
                       '대화 상대',
@@ -258,6 +259,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         size: 25,
                       ),
                     ),
+                    //contentPadding: EdgeInsets.zero,
                   ),
                 ),
 
