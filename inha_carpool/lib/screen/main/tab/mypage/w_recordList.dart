@@ -35,6 +35,10 @@ class _RecordListState extends State<RecordList> {
       final List<dynamic> histories = jsonDecode(utf8.decode(response.body.runes.toList()));
       List<HistoryRequestDTO> historyList = histories.map((data) =>
           HistoryRequestDTO.fromJson(data)).toList();
+
+      // 시작 시간을 기준으로 내림차순 정렬
+      historyList.sort((a, b) => b.startTime.compareTo(a.startTime));
+
       return historyList;
     } else if (response.statusCode == 204) {
       // 카풀 이용 내역이 없는 경우
@@ -105,7 +109,7 @@ class _RecordListState extends State<RecordList> {
                 itemBuilder: (BuildContext context, int index) {
                   // 이용내역을 화면에 표시하는 코드 작성
                   int epoch = historyList![index].startTime;
-                  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epoch * 1000);
+                  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(epoch);
                   String formattedDate = "${dateTime.month}월 ${dateTime.day}일 ${dateTime.hour}시 ${dateTime.minute}분";
 
                   String member1 = historyList[index].member1;
