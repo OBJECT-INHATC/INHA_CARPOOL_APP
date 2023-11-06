@@ -76,36 +76,39 @@ class MainScreenState extends State<MainScreen>
           elevation: 0,
           shape: const Border(
             bottom: BorderSide(
-              color: //Colors.grey.shade200,
-                  Colors.white,
+              color: Colors.white,
               width: 1,
             ),
           ),
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
           foregroundColor: Colors.white,
-          shadowColor: Colors.white,
           leading: GestureDetector(
             onTap: () {},
-            child: _currentTab == TabItem.carpool // Check the current tab here
-                ? const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("참여 중인 카풀",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  )
+            child: _currentTab == TabItem.carpool
+                ? Padding(
+              padding: EdgeInsets.only(
+                  top: 5.0,
+                  bottom: 5.0,
+                  left: 25.0), // Adjust left padding here
+              child: Text(
+                "참여 중인 카풀",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
                 : Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Image.asset(
-                      'assets/image/splash/banner.png',
-                      width: 400, // 원하는 이미지 너비로 설정
-                      height: 60, // 원하는 이미지 높이로 설정
-                      fit: BoxFit.contain, // 이미지를 너비와 높이에 맞게 유지
-                    ),
-                  ),
+              padding: const EdgeInsets.all(3.0),
+              child: Image.asset(
+                'assets/image/splash/banner.png',
+                width: 400,
+                height: 60,
+                fit: BoxFit.contain,
+              ),
+            ),
           ),
           leadingWidth: 170,
           actions: [
@@ -143,7 +146,8 @@ class MainScreenState extends State<MainScreen>
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const NotificationList()),
+                        builder: (context) => const NotificationList(),
+                      ),
                     );
                   },
                 );
@@ -151,13 +155,13 @@ class MainScreenState extends State<MainScreen>
             ),
           ],
         ),
-        //바디를 하단 네비게이션 바 아래까지 확장
         extendBody: extendBody,
-        //bottomNavigationBar 아래 영역 까지 그림
-        // drawer: const MenuDrawer(),
         body: Padding(
           padding: EdgeInsets.only(
-              bottom: extendBody ? 30 - bottomNavigationBarBorderRadius : 0),
+            bottom: extendBody
+                ? 30 - bottomNavigationBarBorderRadius
+                : 0,
+          ),
           child: SafeArea(
             bottom: !extendBody,
             child: pages,
@@ -172,18 +176,18 @@ class MainScreenState extends State<MainScreen>
       index: _currentIndex,
       children: tabs
           .mapIndexed((tab, index) => Offstage(
-                offstage: _currentTab != tab,
-                child: TabNavigator(
-                  navigatorKey: navigatorKeys[index],
-                  tabItem: tab,
-                ),
-              ))
+        offstage: _currentTab != tab,
+        child: TabNavigator(
+          navigatorKey: navigatorKeys[index],
+          tabItem: tab,
+        ),
+      ))
           .toList());
-
   //텝 내의서 뒤로 갈 수 있으면 해당 탭의 네비게이터를 이용, 아니면 홈으로 이동
+
   Future<bool> _handleBackPressed() async {
     final isFirstRouteInCurrentTab =
-        (await _currentTabNavigationKey.currentState?.maybePop() == false);
+    (await _currentTabNavigationKey.currentState?.maybePop() == false);
 
     if (isFirstRouteInCurrentTab) {
       if (_currentTab != TabItem.home) {
@@ -196,8 +200,7 @@ class MainScreenState extends State<MainScreen>
     }
     return isFirstRouteInCurrentTab;
   }
-
-  //하단 네비게이션 바 스타일 지정
+//하단 네비게이션 바 스타일 지정
   Widget _buildBottomNavigationBar(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
@@ -224,17 +227,19 @@ class MainScreenState extends State<MainScreen>
     );
   }
 
+
   //하단 네비게이션 바 아이템 지정 ( 아이콘 색상 변경 )
   List<BottomNavigationBarItem> navigationBarItems(BuildContext context) {
     return tabs
         .mapIndexed(
           (tab, index) => tab.toNavigationBarItem(
-            context,
-            isActivated: _currentIndex == index,
-          ),
-        )
+        context,
+        isActivated: _currentIndex == index,
+      ),
+    )
         .toList();
   }
+
 
   // 선택한 탭의 인덱스로 현재 텝 변경
   void _changeTab(int index) {
@@ -256,21 +261,21 @@ class MainScreenState extends State<MainScreen>
         ),
         label: label);
   }
-
   //중요!
   //하단 네비게이션 바의 아이템이 탭됐을 때의 처리를 정의
   // 현재 탭과 타겟 탭이 같은 경우, 현재 탭의 네비게이터에서 모든 기록을 삭제
+
   void _handleOnTapNavigationBarItem(int index) {
     final oldTab = _currentTab;
     final targetTab = tabs[index];
     if (oldTab == targetTab) {
       // 같은 탭인 경우
+
       final navigationKey = _currentTabNavigationKey;
       popAllHistory(navigationKey);
     }
     _changeTab(index);
   }
-
   // 선택된 탭의 네비게이터에서 모든 기록을 삭제
   void popAllHistory(GlobalKey<NavigatorState> navigationKey) {
     //스택에 해당 텝이 있는지 확인
