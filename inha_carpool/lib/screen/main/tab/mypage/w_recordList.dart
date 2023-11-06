@@ -22,17 +22,15 @@ class _RecordListState extends State<RecordList> {
   final ApiService apiService = ApiService();
   late String uid;
   late String nickName;
-  late String gender;
 
   @override
   void initState() {
-    _loadHistoryData();
     super.initState();
   }
 
   Future<List<HistoryRequestDTO>> _loadHistoryData() async {
     await _loadUser();
-    final response = await apiService.selectHistoryList(uid, nickName, gender);
+    final response = await apiService.selectHistoryList(uid);
     if (response.statusCode == 200) {
       final List<dynamic> histories = jsonDecode(utf8.decode(response.body.runes.toList()));
       List<HistoryRequestDTO> historyList = histories.map((data) =>
@@ -51,7 +49,6 @@ class _RecordListState extends State<RecordList> {
   Future<void> _loadUser() async {
     uid = await storage.read(key: 'uid') ?? "";
     nickName = await storage.read(key: 'nickName') ?? "";
-    gender = await storage.read(key: "gender") ?? "";
   }
 
   @override
@@ -71,11 +68,15 @@ class _RecordListState extends State<RecordList> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios_new, size: 18),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black,),
         ),
         title: const Text('이용내역',
           style: TextStyle(color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
         ),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        foregroundColor: Colors.white,
+        shadowColor: Colors.white,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -233,7 +234,4 @@ class _RecordListState extends State<RecordList> {
       ],
     );
   }
-
-
-
 }

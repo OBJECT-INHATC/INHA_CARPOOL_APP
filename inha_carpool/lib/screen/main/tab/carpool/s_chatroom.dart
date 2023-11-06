@@ -3,20 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
-import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_location.dart';
-import 'package:inha_Carpool/screen/main/tab/mypage/f_mypage.dart';
 import 'package:inha_Carpool/service/api/Api_Topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../common/data/preference/prefs.dart';
-import '../home/s_carpool_map.dart';
 
 /// 0828 서은율, 한승완
 /// 채팅방 페이지 - 채팅방 정보 표시, 채팅 메시지 스트림, 메시지 입력, 메시지 전송
@@ -43,7 +41,7 @@ class ChatroomPage extends StatefulWidget {
   State<ChatroomPage> createState() => _ChatroomPageState();
 }
 
-class _ChatroomPageState extends State<ChatroomPage> {
+class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver {
   /// 채팅 메시지 스트림
   Stream<QuerySnapshot>? chats;
 
@@ -98,11 +96,45 @@ class _ChatroomPageState extends State<ChatroomPage> {
   @override
   void initState() {
     super.initState();
-    getChatandAdmin(); /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
-    getCurrentUserandToken(); /// 토큰, 사용자 Auth 정보 호출
-    getCarpoolInfo(); /// 멤버 리스트, 출발 시간 가져오기
-    _scrollController = ScrollController(); /// 스크롤 컨트롤러 초기화
+    getChatandAdmin();
+
+    /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
+    getCurrentUserandToken();
+
+    /// 토큰, 사용자 Auth 정보 호출
+    getCarpoolInfo();
+
+    /// 멤버 리스트, 출발 시간 가져오기
+    _scrollController = ScrollController();
+
+    WidgetsBinding.instance.addObserver(this);
+    FirebaseMessaging.instance.unsubscribeFromTopic(widget.carId);
   }
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this); // 생명주기 관찰자 해제
+    FirebaseMessaging.instance.subscribeToTopic(widget.carId);
+
+    super.dispose();
+  }
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch (state) {
+      case AppLifecycleState.resumed: // 앱이 포그라운드에 있는 경우
+        FirebaseMessaging.instance.unsubscribeFromTopic(widget.carId);
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused: // 앱이 백그라운드에 있는 경우
+      case AppLifecycleState.detached:
+        FirebaseMessaging.instance.subscribeToTopic(widget.carId);
+        break;
+      case AppLifecycleState.hidden:
+      // TODO: Handle this case.
+    }
+
+  }
+
 
   getLocalChat() async {
     print(widget.carId);
@@ -247,8 +279,8 @@ class _ChatroomPageState extends State<ChatroomPage> {
                         ),
                         IconButton(
                           onPressed: () async {
-                                  _exitIconBtn(context);
-                                },
+                            _exitIconBtn(context);
+                          },
                           icon: const Icon(
                             Icons.exit_to_app,
                             color: Colors.white,
@@ -440,7 +472,6 @@ class _ChatroomPageState extends State<ChatroomPage> {
 
     // 출발 시간과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
     if (minutesDifference > 10) {
-      // 방장이 아닐 때 다이얼로그
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -471,8 +502,34 @@ class _ChatroomPageState extends State<ChatroomPage> {
       );
     } else {
       if (membersList.length < 2) {
-        // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
-        _exitCarpool(context);
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              surfaceTintColor: Colors.transparent,
+              title: const Text('카풀 나가기'),
+              content: const Text('정말로 카풀을 나가시겠습니까?'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('취소'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    // 나가기 메소드
+                    _exitCarpool(context);
+                  },
+                  child: const Text('나가기'),
+                ),
+              ],
+            );
+          },
+        );
+        // // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
+        // _exitCarpool(context);
       } else {
         // 나가기 불가
         _exitImpossible(context);
@@ -495,6 +552,7 @@ class _ChatroomPageState extends State<ChatroomPage> {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return AlertDialog(
+                backgroundColor: Colors.black.withOpacity(0.5),
                 surfaceTintColor: Colors.transparent,
                 title: const Text(''),
                 content: Container(
@@ -504,9 +562,18 @@ class _ChatroomPageState extends State<ChatroomPage> {
                     child: Column(
                       children: [
                         Center(
-                          child: CircularProgressIndicator(),
+                          child: SpinKitThreeBounce(
+                            color: Colors.white,
+                            size: 25,
+                          ),
                         ),
-                        Text("나가는 중..."),
+                        Text(
+                          "나가는 중",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        ),
                       ],
                     ),
                   ),

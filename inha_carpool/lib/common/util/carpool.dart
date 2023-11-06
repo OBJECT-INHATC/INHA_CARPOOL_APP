@@ -3,15 +3,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter/material.dart';
 
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/dto/TopicDTO.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
-import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
 
-import '../../screen/main/s_main.dart';
 import '../../service/api/Api_Topic.dart';
 import '../data/preference/prefs.dart';
 import 'addMember_Exception.dart';
@@ -62,20 +58,8 @@ class FirebaseCarpool {
 
       print(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''));
 
-      print('admin: ${memberID}_${memberName}_$memberGender');
-      print('startPointName: $startPointName');
-      print('startPoint: $geoStart');
-      print('endPointName: $endPointName');
-      print('endPoint: $geoEnd');
-      print(
-          'maxMember: ${int.parse(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''))}');
-      print('gender: $selectedRoomGender');
-      print('startTime: $dateAsInt');
-      print('nowMember: 1');
-      print('status: false');
-      print('members: $members');
-      print('startDetailPoint: $startDetailPoint');
-      print('endDetailPoint: $endDetailPoint');
+
+
 
       DocumentReference carpoolDocRef = await users.add({
         'admin': '${memberID}_${memberName}_$memberGender',
@@ -92,6 +76,10 @@ class FirebaseCarpool {
         'startDetailPoint': startDetailPoint,
         'endDetailPoint': endDetailPoint,
       });
+
+
+
+
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
       tempCarId = carpoolDocRef.id;
       print("11uid : $memberID");
@@ -234,7 +222,7 @@ class FirebaseCarpool {
     // 현재 시간 가져옴
     DateTime currentTime = DateTime.now();
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       DateTime startTime =
           DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
 
@@ -242,7 +230,7 @@ class FirebaseCarpool {
       if (startTime.isAfter(currentTime)) {
         sortedCarpools.add(doc);
       }
-    });
+    }
     return sortedCarpools;
   }
 

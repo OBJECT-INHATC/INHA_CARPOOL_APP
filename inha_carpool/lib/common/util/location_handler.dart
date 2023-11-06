@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class Location_handler {
+class LocationHandler {
   // 위도 경도를 제외한 주소의 값을 가져옴
   static String getStringBetweenUnderscores(String input) {
     final firstUnderscoreIndex = input.indexOf('_');

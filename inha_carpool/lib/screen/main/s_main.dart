@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
 
@@ -21,6 +20,9 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
+
+  FocusNode _focusNode = FocusNode();
+
   bool inCarpoolList = false; // Add this state
   late TabItem _currentTab;
   //시작 화면 지정
@@ -162,6 +164,7 @@ class MainScreenState extends State<MainScreen>
                 ? 30 - bottomNavigationBarBorderRadius
                 : 0,
           ),
+
           child: SafeArea(
             bottom: !extendBody,
             child: pages,
@@ -203,9 +206,10 @@ class MainScreenState extends State<MainScreen>
 //하단 네비게이션 바 스타일 지정
   Widget _buildBottomNavigationBar(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration:  const BoxDecoration(
+        shape: BoxShape.rectangle,
         boxShadow: [
-          BoxShadow(color: Colors.black26, spreadRadius: 0, blurRadius: 10),
+          BoxShadow(color: Colors.black26, spreadRadius: 0, blurRadius: 5),
         ],
       ),
       child: ClipRRect(
@@ -247,6 +251,7 @@ class MainScreenState extends State<MainScreen>
       _currentTab = tabs[index];
     });
   }
+
 
   // 선택된 탭과 그렇지 않은 탭 아이콘 상태 변경
   BottomNavigationBarItem bottomItem(bool activate, IconData iconData,

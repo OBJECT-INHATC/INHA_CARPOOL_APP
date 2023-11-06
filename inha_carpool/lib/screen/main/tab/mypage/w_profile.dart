@@ -7,7 +7,6 @@ import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-
 class ProFile extends StatefulWidget {
   const ProFile({Key? key}) : super(key: key);
 
@@ -48,11 +47,10 @@ class _ProFileState extends State<ProFile> {
     return await storage.read(key: key) ?? "";
   }
 
-
   @override
   Widget build(BuildContext context) {
-
-    surfaceTintColor: Colors.transparent; // 틴트 제외
+    surfaceTintColor:
+    Colors.transparent; // 틴트 제외
     //프로필 수정 버튼 screenWidth,screenHeight 변수 선언
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -132,7 +130,6 @@ class _ProFileState extends State<ProFile> {
                             ],
                           ),
                         ),
-
                       ],
                     ),
                   ],
@@ -143,17 +140,19 @@ class _ProFileState extends State<ProFile> {
 
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child:GestureDetector(
+                  child: GestureDetector(
                     onTap: () {
                       _showEditNicknameDialog(context, uid, nickName!, gender!);
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05), // 좌우 여백 반응형으로 지정
+                      padding: EdgeInsets.symmetric(
+                          horizontal: screenWidth * 0.05), // 좌우 여백 반응형으로 지정
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           surfaceTintColor: Colors.transparent,
                           elevation: 5,
-                          primary: Colors.blue[100], // 버튼 배경색
+                          primary: Colors.blue[100],
+                          // 버튼 배경색
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12), // 조금 둥글게
                           ),
@@ -163,7 +162,8 @@ class _ProFileState extends State<ProFile> {
                           ),
                         ),
                         onPressed: () {
-                          _showEditNicknameDialog(context, uid, nickName!, gender!); // 프로필 수정 버튼 클릭 시 _showEditNicknameDialog 함수 호출
+                          _showEditNicknameDialog(context, uid, nickName!,
+                              gender!); // 프로필 수정 버튼 클릭 시 _showEditNicknameDialog 함수 호출
                         },
                         child: const Center(
                           child: Text(
@@ -177,9 +177,8 @@ class _ProFileState extends State<ProFile> {
                         ),
                       ),
                     ),
-                  ) ,
+                  ),
                 ),
-
               ],
             ),
           ),
@@ -188,17 +187,17 @@ class _ProFileState extends State<ProFile> {
     );
   }
 
-
-
-  Future<void> _showEditNicknameDialog(BuildContext context, String uid, String nickName, String gender) async {
+  Future<void> _showEditNicknameDialog(
+      BuildContext context, String uid, String nickName, String gender) async {
     TextEditingController nicknameController = TextEditingController();
 
-    bool userBool = await FireStoreService().StartTimeInCarpool(uid, nickName, gender);
-    if(!mounted) return;
+    bool userBool =
+        await FireStoreService().StartTimeInCarpool(uid, nickName, gender);
+    if (!mounted) return;
 
     if (userBool) {
       context.showErrorSnackbar('카풀에 참여중인 유저는 닉네임을 변경할 수 없습니다.');
-    }else {
+    } else {
       await showDialog<String>(
         context: context,
         builder: (BuildContext context) {
@@ -228,25 +227,26 @@ class _ProFileState extends State<ProFile> {
                 onPressed: () async {
                   String newNickname = nicknameController.text;
                   if (newNickname.isNotEmpty && newNickname.length > 1) {
-
                     ApiUser apiUser = ApiUser();
                     print('uid : $uid, newNickname : $newNickname');
-                    bool isOpen = await apiUser.updateUserNickname(uid, newNickname);
+                    bool isOpen =
+                        await apiUser.updateUserNickname(uid, newNickname);
 
-                    if(isOpen){
+                    if (isOpen) {
                       print("스프링부트 서버 성공 #############");
-                      int result = await updateNickname(newNickname, email, storage);
+                      int result =
+                          await updateNickname(newNickname, email, storage);
 
                       if (result == 1) {
                         // 업데이트 성공 팝업
                         if (!mounted) return;
                         Navigator.of(context).pop();
-                        _showResultPopup(context, "수정 완료", "닉네임이 성공적으로 수정되었습니다.");
+                        _showResultPopup(
+                            context, "수정 완료", "닉네임이 성공적으로 수정되었습니다.");
                         setState(() {
                           nickNameFuture = _loadUserDataForKey("nickName");
                         });
-                      }
-                      else if (result == 2) {
+                      } else if (result == 2) {
                         // 중복된 닉네임 팝업
                         if (!mounted) return;
                         _showResultPopup(
@@ -254,18 +254,18 @@ class _ProFileState extends State<ProFile> {
                       } else if (result == 0) {
                         // 이메일 일치 문서 없음 팝업
                         if (!mounted) return;
-                        _showResultPopup(context, "오류", "해당 이메일과 일치하는 문서가 없습니다.");
+                        _showResultPopup(
+                            context, "오류", "해당 이메일과 일치하는 문서가 없습니다.");
                       } else {
                         // 업데이트 실패 팝업
                         if (!mounted) return;
                         _showResultPopup(context, "오류", "닉네임 업데이트에 실패했습니다.");
                       }
-
-                    }else{
+                    } else {
                       print("스프링부트 서버 실패 #############");
                       if (!mounted) return;
-                      _showResultPopup(context, "오류", "서버가 정지하여 닉네임을 변경할 수 없습니다.");
-
+                      _showResultPopup(
+                          context, "오류", "서버가 정지하여 닉네임을 변경할 수 없습니다.");
                     }
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -285,36 +285,95 @@ class _ProFileState extends State<ProFile> {
   }
 }
 
-
 void _showResultPopup(BuildContext context, String title, String content) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return AlertDialog(
+      return Dialog(
+        insetPadding: EdgeInsets.zero,
         surfaceTintColor: Colors.transparent,
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("확인"),
+
+        /// 소프트키보드가 올라왔을 때 다이얼로그의 사이즈가 조절되는 시간
+        insetAnimationDuration: const Duration(milliseconds: 1000),
+
+        /// 소프트키보드가 올라왔을 때 다이얼로그 사이즈 변경 애니메이션
+        insetAnimationCurve: Curves.bounceOut,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.8,
+          height: 200,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                content,
+                style: const TextStyle(
+                  fontSize: 17,
+                ),
+              ),
+              const SizedBox(height: 15),
+              Padding(
+                padding: const EdgeInsets.only(right: 15.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        surfaceTintColor: Colors.transparent,
+                        backgroundColor: Colors.blue[100],
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("확인"),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       );
+      // return AlertDialog(
+      //   surfaceTintColor: Colors.transparent,
+      //   title: Text(title),
+      //   content: Text(content),
+      //   actions: [
+      //     TextButton(
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //       child: const Text("확인"),
+      //     ),
+      //   ],
+      // );
     },
   );
 }
 
-Future<int> updateNickname(String newNickname, String email, FlutterSecureStorage storage) async {
+Future<int> updateNickname(
+    String newNickname, String email, FlutterSecureStorage storage) async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final CollectionReference users = firestore.collection('users');
 
   try {
     // 이메일 값을 기반으로 쿼리를 수행하여 문서 ID를 가져옴
     final QuerySnapshot querySnapshot =
-    await users.where('email', isEqualTo: email).get();
+        await users.where('email', isEqualTo: email).get();
 
     // 쿼리 결과에서 문서 ID를 가져옴
     if (querySnapshot.docs.isNotEmpty) {
@@ -323,7 +382,7 @@ Future<int> updateNickname(String newNickname, String email, FlutterSecureStorag
 
       // 변경하려는 닉네임이 다른 문서의 닉네임과 중복되지 않는지 확인
       final QuerySnapshot duplicateNicknames =
-      await users.where('nickName', isEqualTo: newNickname).get();
+          await users.where('nickName', isEqualTo: newNickname).get();
 
       // 중복된 닉네임이 없다면 닉네임을 업데이트
       if (duplicateNicknames.docs.isEmpty) {
@@ -351,5 +410,3 @@ Future<int> updateNickname(String newNickname, String email, FlutterSecureStorag
     return -1;
   }
 }
-
-
