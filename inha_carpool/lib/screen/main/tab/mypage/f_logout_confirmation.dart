@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 import '../../../login/s_login.dart';
@@ -78,7 +79,8 @@ class LogoutConfirmationDialog extends StatelessWidget {
           child: const Text('아니오'),
         ),
         TextButton(
-          onPressed: () {
+          onPressed: () async{
+            await FirebaseMessaging.instance.deleteToken();
             AuthService().signOut().then(
                   (value) {
                 Navigator.pushAndRemoveUntil(

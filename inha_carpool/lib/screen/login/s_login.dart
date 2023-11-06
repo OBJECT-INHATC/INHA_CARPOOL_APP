@@ -28,6 +28,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late String nickName = ""; // 기본값으로 초기화
+  late String uid = "";
+  late String gender = "";
+
   // FCM 관련 설정 및 알림 처리를 위한 메서드
   Future<void> setupInteractedMessage() async {
     // 앱이 백그라운드 상태에서 푸시 알림 클릭하여 열릴 경우
@@ -126,10 +130,16 @@ class _LoginPageState extends State<LoginPage> {
 
   // 장치의 FCM 토큰을 가져와 로컬에 저장하는 함수
   void getMyDeviceToken() async {
-    FirebaseMessaging.instance.getToken().then((value) {
-      print("token : $value");
-      storage.write(key: 'token', value: value.toString());
-    });
+    String? token = await storage.read(key: 'token');
+
+    // 토큰이 없는 경우에만 새로운 토큰을 생성합니다.
+    if (token == null) {
+      token = await FirebaseMessaging.instance.getToken();
+      storage.write(key: 'token', value: token); // 생성된 토큰을 로컬에 저장합니다.
+    }
+
+    // 사용자의 uid를 가져옵니다.
+    String? uid = await storage.read(key: 'uid');
   }
 
   @override
@@ -365,6 +375,30 @@ class _LoginPageState extends State<LoginPage> {
                                         key: "userName",
                                         value: snapshot.docs[0].get('userName'),
                                       );
+                                      String memberUser =
+                                          "${uid}_${nickname}_${snapshot.docs[0].get('gender')}";
+                                      print("----------------------------------");
+                                      print("memberUser: $memberUser");
+
+                                      // Firestore에서 해당 사용자가 속한 모든 carId를 가져옵니다.
+                                      FirebaseFirestore.instance
+                                          .collection('carpool')
+                                          .where('members',
+                                          arrayContains: memberUser)
+                                          .get()
+                                          .then((QuerySnapshot querySnapshot) {
+                                        querySnapshot.docs.forEach((doc) {
+                                          // 각 carId에 대해 푸시 알림을 구독합니다.
+                                          String carId = doc.id;
+                                          print("----------------------------------");
+                                          print("carId: $carId");
+                                        
+
+                                          FirebaseMessaging.instance.subscribeToTopic(carId);
+                                          FirebaseMessaging.instance.subscribeToTopic("${carId}_info");
+
+                                        });
+                                      });
 
                                       // 토픽 저장 전 - IOS APNS 권한 요청
                                       await FirebaseMessaging.instance
@@ -402,6 +436,8 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         );
                                       }
+
+
                                     } else {
                                       print("스프링부트 서버 실패 #############");
 
@@ -581,5 +617,15 @@ class _LoginPageState extends State<LoginPage> {
       // 새로운 학교 도메인을 붙임
       email = id + academy;
     }
+  }
+
+  Future<void> _loadUserData() async {
+    nickName = await storage.read(key: "nickName") ?? "";
+    uid = await storage.read(key: "uid") ?? "";
+    gender = await storage.read(key: "gender") ?? "";
+
+    setState(() {
+      // nickName, email, gender를 업데이트했으므로 화면을 갱신합니다.
+    });
   }
 }
