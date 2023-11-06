@@ -134,7 +134,7 @@ class _ProFileState extends State<ProFile> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                /*const SizedBox(height: 10),
 
                 //이메일란 원래 위치
 
@@ -178,7 +178,7 @@ class _ProFileState extends State<ProFile> {
                       ),
                     ),
                   ),
-                ),
+                ),*/
               ],
             ),
           ),
@@ -187,7 +187,7 @@ class _ProFileState extends State<ProFile> {
     );
   }
 
-  Future<void> _showEditNicknameDialog(
+ /* Future<void> _showEditNicknameDialog(
       BuildContext context, String uid, String nickName, String gender) async {
     TextEditingController nicknameController = TextEditingController();
 
@@ -282,10 +282,10 @@ class _ProFileState extends State<ProFile> {
         },
       );
     }
-  }
+  }*/
 }
 
-void _showResultPopup(BuildContext context, String title, String content) {
+/*void _showResultPopup(BuildContext context, String title, String content) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -363,9 +363,9 @@ void _showResultPopup(BuildContext context, String title, String content) {
       // );
     },
   );
-}
+}*/
 
-Future<int> updateNickname(
+/*Future<int> updateNickname(
     String newNickname, String email, FlutterSecureStorage storage) async {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final CollectionReference users = firestore.collection('users');
@@ -409,4 +409,4 @@ Future<int> updateNickname(
     print('Error updating nickname: $e');
     return -1;
   }
-}
+}*/
