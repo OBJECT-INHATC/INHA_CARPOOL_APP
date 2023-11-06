@@ -36,59 +36,56 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
           padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
           child: '성별'.text.size(16).bold.align(TextAlign.left).make(),
         ),
-        Container(
-
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: context.width(0.3),
-                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: TextButton(
-                  onPressed: () {
-                    widget.onGenderSelected(widget.gender);
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: widget.selectedGender == widget.gender
-                        ? Colors.blue[200]
-                        : Colors.grey[300],
-                  ),
-                  child: '${widget.gender}만'.text.white.size(13).make(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: context.width(0.4),
+              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: TextButton(
+                onPressed: () {
+                  widget.onGenderSelected(widget.gender);
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: widget.selectedGender == widget.gender
+                      ? Colors.blue[200]
+                      : Colors.grey[300],
                 ),
+                child: '${widget.gender}만'.text.white.size(16).make(),
               ),
-              // Container(
-              //   width: context.width(0.3),
-              //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              //   child: TextButton(
-              //     onPressed: () {
-              //       widget.onGenderSelected('여성');
-              //     },
-              //     style: TextButton.styleFrom(
-              //       backgroundColor: widget.selectedGender == '여성'
-              //           ? Colors.lightBlue
-              //           : Colors.grey[300],
-              //     ),
-              //     child: '여성'.text.white.size(17).make(),
-              //
-              //   ),
-              // ),
-              Container(
-                width: context.width(0.3),
-                margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                child: TextButton(
-                  onPressed: () {
-                    widget.onGenderSelected('무관');
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: widget.selectedGender == '무관'
-                        ? Colors.blue[200]
-                        : Colors.grey[300],
-                  ),
-                  child: '무관'.text.white.size(17).make(),
+            ),
+            // Container(
+            //   width: context.width(0.3),
+            //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            //   child: TextButton(
+            //     onPressed: () {
+            //       widget.onGenderSelected('여성');
+            //     },
+            //     style: TextButton.styleFrom(
+            //       backgroundColor: widget.selectedGender == '여성'
+            //           ? Colors.lightBlue
+            //           : Colors.grey[300],
+            //     ),
+            //     child: '여성'.text.white.size(17).make(),
+            //
+            //   ),
+            // ),
+            Container(
+              width: context.width(0.4),
+              margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+              child: TextButton(
+                onPressed: () {
+                  widget.onGenderSelected('무관');
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: widget.selectedGender == '무관'
+                      ? Colors.blue[200]
+                      : Colors.grey[300],
                 ),
+                child: '무관'.text.white.size(16).make(),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
 
       ],
