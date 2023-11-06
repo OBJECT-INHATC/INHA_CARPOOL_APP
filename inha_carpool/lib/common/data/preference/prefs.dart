@@ -9,6 +9,8 @@ class Prefs {
   static final isPushOnRx = RxPreferenceItem<bool, RxBool>('isPushOnRx', true);
   static final isAdPushOnRx = RxPreferenceItem<bool, RxBool>('isAdPushOnRx', true);
   static final isSchoolPushOnRx = RxPreferenceItem<bool, RxBool>('isSchoolPushOnRx', true);
+  static final chatRoomOnRx = RxPreferenceItem<bool, RxBool>('chatRoomOnRx', true);
+  static final chatRoomCarIdRx = RxPreferenceItem<String, RxString>('chatRoomCarIdRx', "carId");
 
 
 }

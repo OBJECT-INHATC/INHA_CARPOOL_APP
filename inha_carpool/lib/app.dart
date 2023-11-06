@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
@@ -41,7 +42,21 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
       const secureStorage = FlutterSecureStorage();
       String? nickName = await secureStorage.read(key: 'nickName');
 
+
       if(notification != null && message.data['sender'] != nickName){
+        // Prefs.chatRoomOnRx.get()이 true이고, 알람 수신 시 앱이 포어그라운드 상태이고
+        if(notification.title == "새로운 채팅이 도착했습니다." && !Prefs.chatRoomOnRx.get() && Prefs.chatRoomCarIdRx.get() == message.data['groupId']){
+          print("=====================알람 꺼둠");
+
+          /// 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
+          AlarmInsert(notification, nowTime, message);
+
+          // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
+          deleteTopic(message);
+          return;
+        }
+        print("${notification.title!} <-- 타이틀");
+        print("${Prefs.chatRoomOnRx.get()} <-- Prefs.chatRoomOnRx.get()");
         final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
         await flutterLocalNotificationsPlugin.show(
           notification.hashCode,
@@ -58,25 +73,35 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
         );
 
         /// 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
-        AlarmDao().insert(
-            AlarmMessage(
-              aid: "${notification.title}${notification.body}${nowTime.toString()}",
-              carId: message.data['groupId'] as String,
-              type: message.data['id'] as String,
-              title: notification.title as String,
-              body: notification.body as String,
-              time: nowTime,
-            )
-        );
+        AlarmInsert(notification, nowTime, message);
 
-        if(message.data['id'] == 'carpoolDone'){
-          // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
-          String carId = message.data['groupId'];
-          FireStoreService().handleEndCarpoolSignal(carId);
-        }
+        // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
+        deleteTopic(message);
       }
     });
 
+  }
+
+  void deleteTopic(RemoteMessage message) {
+       if(message.data['id'] == 'carpoolDone'){
+      // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
+      String carId = message.data['groupId'];
+      FireStoreService().handleEndCarpoolSignal(carId);
+    }
+  }
+
+  /// 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
+  void AlarmInsert(RemoteNotification notification, int nowTime, RemoteMessage message) {
+    AlarmDao().insert(
+        AlarmMessage(
+          aid: "${notification.title}${notification.body}${nowTime.toString()}",
+          carId: message.data['groupId'] as String,
+          type: message.data['id'] as String,
+          title: notification.title as String,
+          body: notification.body as String,
+          time: nowTime,
+        )
+    );
   }
 
   // 클래스가 삭제될 때 옵저버 등록을 해제

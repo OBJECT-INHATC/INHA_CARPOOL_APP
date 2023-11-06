@@ -8,7 +8,6 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
-import 'dart:math';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../home/s_carpool_map.dart';

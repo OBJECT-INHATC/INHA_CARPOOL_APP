@@ -6,6 +6,7 @@ import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
 
 import '../../common/common.dart';
+import '../../common/data/preference/prefs.dart';
 import '../../fragment/f_notification.dart';
 
 class MainScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
+
 
   FocusNode _focusNode = FocusNode();
 
@@ -55,6 +57,9 @@ class MainScreenState extends State<MainScreen>
   void initState() {
     super.initState();
     // 각 텝의 네비게이터 초기화
+    Prefs.chatRoomOnRx.set(true);
+    Prefs.chatRoomCarIdRx.set("");
+    print("=========메인====================");
     initNavigatorKeys();
     removeSplash();
   }
@@ -88,7 +93,7 @@ class MainScreenState extends State<MainScreen>
           leading: GestureDetector(
             onTap: () {},
             child: _currentTab == TabItem.carpool
-                ? Padding(
+                ? const Padding(
               padding: EdgeInsets.only(
                   top: 5.0,
                   bottom: 5.0,
