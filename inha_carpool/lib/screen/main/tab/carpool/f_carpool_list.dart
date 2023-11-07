@@ -9,6 +9,8 @@ import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
+import '../home/s_carpool_map.dart';
+
 class CarpoolList extends StatefulWidget {
   const CarpoolList({Key? key}) : super(key: key);
 
@@ -215,7 +217,7 @@ class _CarpoolListState extends State<CarpoolList> {
                   ),
                   body: Column(
                     children: [
-                       Line(
+                      Line(
                         height: 1,
                         margin: const EdgeInsets.all(5),
                         color: context.appColors.logoColor,
@@ -306,10 +308,11 @@ class _CarpoolListState extends State<CarpoolList> {
                                                   left: 15, top: 15),
                                               child: Row(
                                                 children: [
-                                                   Icon(
+                                                  Icon(
                                                     Icons
                                                         .calendar_today_outlined,
-                                                    color: context.appColors.logoColor,
+                                                    color: context
+                                                        .appColors.logoColor,
                                                     size: 18,
                                                   ),
                                                   Width(screenWidth * 0.01),
@@ -324,16 +327,75 @@ class _CarpoolListState extends State<CarpoolList> {
                                           const Spacer(),
 
                                           // 지도
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 55, bottom: 10),
-                                            child: Align(
-                                              alignment: Alignment.topRight,
-                                              child: Image.asset(
-                                                'assets/image/icon/map.png',
-                                                width: 30,
-                                                height: 45,
-                                                fit: BoxFit.fill,
+                                          GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                Nav.globalContext,
+                                                PageRouteBuilder(
+                                                  //아래에서 위로 올라오는 효과
+                                                  pageBuilder: (context,
+                                                          animation,
+                                                          secondaryAnimation) =>
+                                                      CarpoolMap(
+                                                    isPopUp: true,
+                                                    startPoint: LatLng(
+                                                        carpoolData[
+                                                                'startPoint']
+                                                            .latitude,
+                                                        carpoolData[
+                                                                'startPoint']
+                                                            .longitude),
+                                                    startPointName: carpoolData[
+                                                        'startPointName'],
+                                                    endPoint: LatLng(
+                                                        carpoolData['endPoint']
+                                                            .latitude,
+                                                        carpoolData['endPoint']
+                                                            .longitude),
+                                                    endPointName: carpoolData[
+                                                        'endPointName'],
+                                                    startTime:
+                                                        formattedStartTime,
+                                                    carId: carpoolData['carId'],
+                                                    admin: carpoolData['admin'],
+                                                    roomGender:
+                                                        carpoolData['gender'],
+                                                  ),
+                                                  transitionsBuilder: (context,
+                                                      animation,
+                                                      secondaryAnimation,
+                                                      child) {
+                                                    const begin =
+                                                        Offset(0.0, 1.0);
+                                                    const end = Offset.zero;
+                                                    const curve =
+                                                        Curves.easeInOut;
+                                                    var tween = Tween(
+                                                            begin: begin,
+                                                            end: end)
+                                                        .chain(CurveTween(
+                                                            curve: curve));
+                                                    var offsetAnimation =
+                                                        animation.drive(tween);
+                                                    return SlideTransition(
+                                                        position:
+                                                            offsetAnimation,
+                                                        child: child);
+                                                  },
+                                                ),
+                                              );
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 55, bottom: 10),
+                                              child: Align(
+                                                alignment: Alignment.topRight,
+                                                child: Image.asset(
+                                                  'assets/image/icon/map.png',
+                                                  width: 30,
+                                                  height: 45,
+                                                  fit: BoxFit.fill,
+                                                ),
                                               ),
                                             ),
                                           ),
