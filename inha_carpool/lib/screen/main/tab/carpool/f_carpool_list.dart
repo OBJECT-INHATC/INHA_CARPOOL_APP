@@ -337,6 +337,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                           animation,
                                                           secondaryAnimation) =>
                                                       CarpoolMap(
+                                                    isStart: 'default',
                                                     isPopUp: true,
                                                     startPoint: LatLng(
                                                         carpoolData[

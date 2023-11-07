@@ -194,7 +194,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
         body: Stack(
           children: [
             Padding(
-              padding: EdgeInsets.only(bottom: context.height(0.25)),
+              padding: widget.isStart == 'default' ?
+              EdgeInsets.only(bottom: context.height(0.25))
+              : EdgeInsets.only(bottom: context.height(0.14)),
               child: GoogleMap(
                 onMapCreated: (controller) {
                   mapController = controller;
@@ -215,7 +217,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
               bottom: context.height(0),
               // 가운데 위치
               child: Container(
-                height: context.height(0.27),
+                height: widget.isStart == 'default'
+                    ? context.height(0.27)
+                    : context.height(0.14),  // 참가버튼 없을 때 높이 바꿈
                 width: context.width(1),
                 decoration: BoxDecoration(
                   //color: Colors.grey.shade100,

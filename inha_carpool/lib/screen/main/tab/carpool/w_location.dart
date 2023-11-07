@@ -66,17 +66,19 @@ class ChatLocation extends StatelessWidget {
                       Nav.globalContext,
                       MaterialPageRoute(
                           builder: (context) => CarpoolMap(
-                              startPoint: LatLng(
-                                point.latitude,
-                                point.longitude,
-                              ),
-                              startPointName: location,
-                              endPoint: LatLng(
-                                point.latitude,
-                                point.longitude,
-                              ),
-                              endPointName: location,
-                              isStart: isStart)),
+                                isStart: isStart,
+                                isPopUp: true,
+                                startPoint: LatLng(
+                                  point.latitude,
+                                  point.longitude,
+                                ),
+                                startPointName: location,
+                                endPoint: LatLng(
+                                  point.latitude,
+                                  point.longitude,
+                                ),
+                                endPointName: location,
+                              )),
                     );
                   },
                   child: const Icon(
