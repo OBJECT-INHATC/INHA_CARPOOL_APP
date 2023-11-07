@@ -328,9 +328,6 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () async {
                               setState(() {
                                 isLoading = true; // 로그인 로딩 시작
-                                print('챠챠챠챷챠챠ㅑ챷챠챠 ');
-                                print(email);
-                                print(academy);
                               });
 
                               if (loginButtonEnabled) {
