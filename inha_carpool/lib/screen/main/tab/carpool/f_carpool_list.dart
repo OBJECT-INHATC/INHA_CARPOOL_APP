@@ -328,13 +328,13 @@ class _CarpoolListState extends State<CarpoolList> {
                                         // 지도
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                              right: 50, bottom: 10),
+                                              right: 55, bottom: 10),
                                           child: Align(
                                             alignment: Alignment.topRight,
                                             child:
                                             Image.asset(
-                                              'assets/image/icon/map3.png',
-                                              width: 33,
+                                              'assets/image/icon/map5.png',
+                                              width: 30,
                                               height: 45,
                                               fit: BoxFit.fill,
                                             ),
