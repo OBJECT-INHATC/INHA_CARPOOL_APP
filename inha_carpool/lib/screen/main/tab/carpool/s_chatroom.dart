@@ -42,7 +42,8 @@ class ChatroomPage extends StatefulWidget {
   State<ChatroomPage> createState() => _ChatroomPageState();
 }
 
-class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver {
+class _ChatroomPageState extends State<ChatroomPage>
+    with WidgetsBindingObserver {
   /// 채팅 메시지 스트림
   Stream<QuerySnapshot>? chats;
 
@@ -116,9 +117,7 @@ class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver
     WidgetsBinding.instance.addObserver(this);
     Prefs.chatRoomOnRx.set(false); // 페이지가 활성화되면 true로 설정
     Prefs.chatRoomCarIdRx.set(widget.carId);
-
   }
-
 
   @override
   void dispose() {
@@ -126,7 +125,6 @@ class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver
     Prefs.chatRoomCarIdRx.set("carId");
     super.dispose();
   }
-
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -139,14 +137,13 @@ class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused: // 앱이 백그라운드에 있는 경우
       case AppLifecycleState.detached:
-      Prefs.chatRoomOnRx.set(true);
-      Prefs.chatRoomCarIdRx.set("carId");
-      break;
+        Prefs.chatRoomOnRx.set(true);
+        Prefs.chatRoomCarIdRx.set("carId");
+        break;
       case AppLifecycleState.hidden:
       // TODO: Handle this case.
     }
   }
-
 
   getLocalChat() async {
     print(widget.carId);
@@ -230,8 +227,10 @@ class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver
         startPointDetail = val['startDetailPoint'];
         endPoint = val['endPointName'];
         endPointDetail = val['endDetailPoint'];
-        endPointLnt = LatLng(val['endPoint'].latitude, val['endPoint'].longitude);
-        startPointLnt = LatLng(val['startPoint'].latitude, val['startPoint'].longitude);
+        endPointLnt =
+            LatLng(val['endPoint'].latitude, val['endPoint'].longitude);
+        startPointLnt =
+            LatLng(val['startPoint'].latitude, val['startPoint'].longitude);
         agreedTime = startTime.subtract(const Duration(minutes: 10));
       });
     });
@@ -370,9 +369,17 @@ class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver
                   padding: EdgeInsets.only(bottom: screenHeight * 0.01),
                   child: Column(
                     children: [
-                      ChatLocation(title: '출발지', location: startPoint, Point: startPointLnt,),
+                      ChatLocation(
+                          title: '출발지',
+                          location: startPoint,
+                          point: startPointLnt,
+                          isStart: 'true'),
                       const Line(height: 1),
-                      ChatLocation(title: '도착지', location: endPoint, Point: endPointLnt,),
+                      ChatLocation(
+                          title: '도착지',
+                          location: endPoint,
+                          point: endPointLnt,
+                          isStart: 'false'),
                     ],
                   ),
                 ),

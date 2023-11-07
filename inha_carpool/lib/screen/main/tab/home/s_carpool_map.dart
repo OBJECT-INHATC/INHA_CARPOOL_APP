@@ -23,23 +23,25 @@ class CarpoolMap extends StatefulWidget {
   final String startPointName;
   final LatLng endPoint;
   final String endPointName;
-  final String startTime;
-  final String carId;
-  final String admin;
-  final String roomGender;
-  final bool isPopUp;
+  final String? startTime;
+  final String? carId;
+  final String? admin;
+  final String? roomGender;
+  final bool? isPopUp;
+  final String? isStart;
 
   const CarpoolMap({
     super.key,
     required this.startPoint,
     required this.startPointName,
-    required this.startTime,
-    required this.carId,
-    required this.admin,
-    required this.roomGender,
     required this.endPoint,
     required this.endPointName,
-    required this.isPopUp,
+    this.startTime,
+    this.carId,
+    this.admin,
+    this.roomGender,
+    this.isPopUp,
+    this.isStart,
   });
 
   @override
@@ -122,6 +124,35 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
   @override
   Widget build(BuildContext context) {
+    Marker startMarker = Marker(
+      markerId: const MarkerId('start'),
+      position: widget.startPoint,
+      icon: startCustomIcon,
+      infoWindow: InfoWindow(
+        title: "출발 지점 : ${widget.startPointName}",
+      ),
+    );
+
+    Marker endMarker = Marker(
+      markerId: const MarkerId('end'),
+      position: widget.endPoint,
+      icon: endCustomIcon,
+      infoWindow: InfoWindow(
+        title: "도착 지점 : ${widget.endPointName}",
+      ),
+    );
+    Map<MarkerId, Marker> markers = {};
+
+    String isStart = widget.isStart ?? 'default';
+    if (isStart == 'true') {
+      markers[const MarkerId('start')] = startMarker;
+    } else if (isStart == 'false') {
+      markers[const MarkerId('end')] = endMarker;
+    } else {
+      markers[const MarkerId('start')] = startMarker;
+      markers[const MarkerId('end')] = endMarker;
+    }
+
     return WillPopScope(
       onWillPop: () async {
         if (isLoading) {
@@ -142,7 +173,12 @@ class _CarpoolMapState extends State<CarpoolMap> {
             fontWeight: FontWeight.bold,
           ),
           centerTitle: true,
-          title: '${widget.admin.split("_")[1]}님의 카풀 정보'.text.black.make(),
+          title: ((widget.admin?.split("_").length ?? 0) > 1
+                  ? '${widget.admin!.split("_")[1]}님의 카풀 정보'
+                  : '위치정보')
+              .text
+              .black
+              .make(),
           backgroundColor: isJoining ? Colors.black.withOpacity(0.5) : null,
           surfaceTintColor: Colors.white,
           toolbarHeight: 45,
@@ -171,27 +207,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                 cameraTargetBounds: CameraTargetBounds(
                   getCurrentBounds(widget.startPoint, widget.endPoint),
                 ),
-                markers: {
-                  /// 시작 지점 마커
-                  Marker(
-                    markerId: const MarkerId('start'),
-                    position: widget.startPoint,
-                    icon: startCustomIcon,
-                    infoWindow: InfoWindow(
-                      title: "출발 지점 : ${widget.startPointName}",
-                    ),
-                  ),
-
-                  /// 도착 지점 마커
-                  Marker(
-                    markerId: const MarkerId('end'),
-                    position: widget.endPoint,
-                    icon: endCustomIcon,
-                    infoWindow: InfoWindow(
-                      title: "도착 지점 : ${widget.endPointName}",
-                    ),
-                  ),
-                },
+                markers: Set<Marker>.of(markers.values),
                 onCameraIdle: () {},
               ),
             ),
@@ -226,147 +242,169 @@ class _CarpoolMapState extends State<CarpoolMap> {
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Column(
                               children: [
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.location_on,
-                                          color: Colors.blue),
-                                      const SizedBox(width: 3),
-                                      const Text(
-                                        "출발 지점",
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 10),
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 3, horizontal: 8),
-                                          // 내부 패딩
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300], // 회색 배경색
-                                            borderRadius: BorderRadius.circular(
-                                                20), // 동그란 모양 설정
-                                          ),
-                                          child: Text(
-                                            widget.startPointName,
-                                            style: const TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black, // 텍스트 색상
+                                widget.isStart == 'false'
+                                    ? Container()
+                                    : Container(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const Icon(Icons.location_on,
+                                                color: Colors.blue),
+                                            const SizedBox(width: 3),
+                                            const Text(
+                                              "출발 지점",
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.location_on,
-                                          color: Colors.lightGreenAccent),
-                                      const SizedBox(width: 3),
-                                      const Text(
-                                        "도착 지점",
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 10),
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 3, horizontal: 8),
-                                          // 내부 패딩
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300], // 회색 배경색
-                                            borderRadius: BorderRadius.circular(
-                                                20), // 동그란 모양 설정
-                                          ),
-                                          child: Text(
-                                            widget.endPointName,
-                                            style: const TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black, // 텍스트 색상
+                                            Expanded(
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                    left: 10),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 3,
+                                                        horizontal: 8),
+                                                // 내부 패딩
+                                                decoration: BoxDecoration(
+                                                  color: Colors
+                                                      .grey[300], // 회색 배경색
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20), // 동그란 모양 설정
+                                                ),
+                                                child: Text(
+                                                  widget.startPointName,
+                                                  style: const TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        Colors.black, // 텍스트 색상
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
                                             ),
-                                            textAlign: TextAlign.center,
-                                          ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      const Icon(Icons.access_time,
-                                          color: Colors.blue),
-                                      const SizedBox(width: 3),
-                                      const Text(
-                                        "출발 시간",
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Container(
-                                          margin:
-                                              const EdgeInsets.only(left: 10),
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 3, horizontal: 8),
-                                          // 내부 패딩
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300], // 회색 배경색
-                                            borderRadius: BorderRadius.circular(
-                                                20), // 동그란 모양 설정
-                                          ),
-                                          child: Text(
-                                            widget.startTime,
-                                            style: const TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black, // 텍스트 색상
+                                widget.isStart == 'true'
+                                    ? Container()
+                                    : Container(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const Icon(Icons.location_on,
+                                                color: Colors.lightGreenAccent),
+                                            const SizedBox(width: 3),
+                                            const Text(
+                                              "도착 지점",
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold,
+                                              ),
                                             ),
-                                            textAlign: TextAlign.center,
-                                          ),
+                                            Expanded(
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                    left: 10),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 3,
+                                                        horizontal: 8),
+                                                // 내부 패딩
+                                                decoration: BoxDecoration(
+                                                  color: Colors
+                                                      .grey[300], // 회색 배경색
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20), // 동그란 모양 설정
+                                                ),
+                                                child: Text(
+                                                  widget.endPointName,
+                                                  style: const TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        Colors.black, // 텍스트 색상
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ),
+                                widget.startTime == null
+                                    ? Container()
+                                    : Container(
+                                        padding: const EdgeInsets.all(5),
+                                        child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            const Icon(Icons.access_time,
+                                                color: Colors.blue),
+                                            const SizedBox(width: 3),
+                                            const Text(
+                                              "출발 시간",
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            Expanded(
+                                              child: Container(
+                                                margin: const EdgeInsets.only(
+                                                    left: 10),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 3,
+                                                        horizontal: 8),
+                                                // 내부 패딩
+                                                decoration: BoxDecoration(
+                                                  color: Colors
+                                                      .grey[300], // 회색 배경색
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20), // 동그란 모양 설정
+                                                ),
+                                                child: Text(
+                                                  widget.startTime ?? '',
+                                                  // startTime이 null인 경우 'default'를 사용
+                                                  style: const TextStyle(
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.bold,
+                                                    color:
+                                                        Colors.black, // 텍스트 색상
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                               ],
                             ),
-                            widget.isPopUp
+                            widget.isPopUp ?? false
                                 ? Container()
                                 : ElevatedButton(
                                     onPressed: () async {
-                                      String carId = widget.carId;
+                                      String carId = widget.carId ?? 'default';
                                       String memberID = uid;
                                       String memberName = nickName;
                                       String selectedRoomGender =
-                                          widget.roomGender;
+                                          widget.roomGender ?? 'default';
 
                                       if (joinButtonEnabled) {
                                         joinButtonEnabled = false;

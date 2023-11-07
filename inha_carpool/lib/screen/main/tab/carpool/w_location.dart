@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
+import 'package:nav/nav.dart';
 
 class ChatLocation extends StatelessWidget {
   final String title;
   final String location;
-  final LatLng Point;
-
+  final LatLng point;
+  final String isStart;
 
   const ChatLocation({
     Key? key,
     required this.title,
-    required this.location, required this.Point,
+    required this.location,
+    required this.point,
+    required this.isStart,
   }) : super(key: key);
 
   @override
@@ -53,10 +57,27 @@ class ChatLocation extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     print("위치 보기");
-                    print("위도경도 -> ${Point.latitude}, ${Point.longitude}");
+                    print("위도경도 -> ${point.latitude}, ${point.longitude}");
+
                     ///todo : 위치 보기 기능 구현
+                    Navigator.push(
+                      Nav.globalContext,
+                      MaterialPageRoute(
+                          builder: (context) => CarpoolMap(
+                              startPoint: LatLng(
+                                point.latitude,
+                                point.longitude,
+                              ),
+                              startPointName: location,
+                              endPoint: LatLng(
+                                point.latitude,
+                                point.longitude,
+                              ),
+                              endPointName: location,
+                              isStart: isStart)),
+                    );
                   },
                   child: const Icon(
                     Icons.map_outlined,
