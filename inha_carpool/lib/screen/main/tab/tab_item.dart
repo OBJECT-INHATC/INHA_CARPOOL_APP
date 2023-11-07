@@ -6,8 +6,8 @@ import 'carpool/f_carpool_list.dart';
 import 'home/f_home.dart';
 
 enum TabItem {
-  carpool(Icons.directions_car, '참여', CarpoolList()),
-  home(Icons.home, '홈', Home()),
+  carpool(Icons.group, '참여', CarpoolList()),
+  home(Icons.local_taxi, '홈', Home()),
   myPage(Icons.person, '내 정보', MyPage());
 
   final IconData activeIcon;
@@ -26,7 +26,7 @@ enum TabItem {
           key: ValueKey(tabName),
           isActivated ? activeIcon : inActiveIcon,
           color: isActivated
-              ? context.appColors.iconButton
+              ? context.appColors.logoColor
               : context.appColors.iconButtonInactivate,
         ),
         label: tabName);
