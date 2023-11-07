@@ -66,6 +66,9 @@ class _SecessionPageState extends State<SecessionPage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          foregroundColor: Colors.white,
+          shadowColor: Colors.white,
           leadingWidth: 56,
           leading: const Center(
             child: BackButton(
