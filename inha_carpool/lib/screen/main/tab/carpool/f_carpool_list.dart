@@ -10,7 +10,6 @@ import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-import '../home/s_carpool_map.dart';
 
 class CarpoolList extends StatefulWidget {
   const CarpoolList({Key? key}) : super(key: key);
@@ -333,7 +332,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                             alignment: Alignment.topRight,
                                             child:
                                             Image.asset(
-                                              'assets/image/icon/map5.png',
+                                              'assets/image/map.png',
                                               width: 30,
                                               height: 45,
                                               fit: BoxFit.fill,
@@ -349,7 +348,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                     //2번째 줄 출발지
                                     Padding(
                                       padding:
-                                      EdgeInsets.symmetric(horizontal: 15),
+                                      const EdgeInsets.symmetric(horizontal: 15),
                                       child: Row(
                                         children: [
                                           Icon(Icons.circle_outlined,

@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
@@ -87,11 +88,17 @@ class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver
   // 출발지
   String startPointDetail = "";
 
+  //도착지 위도경도
+  LatLng startPointLnt = const LatLng(0, 0);
+
   // 도착지
   String endPoint = "";
 
   // 도착지
   String endPointDetail = "";
+
+  //도착지 위도경도
+  LatLng endPointLnt = const LatLng(0, 0);
 
   @override
   void initState() {
@@ -223,6 +230,8 @@ class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver
         startPointDetail = val['startDetailPoint'];
         endPoint = val['endPointName'];
         endPointDetail = val['endDetailPoint'];
+        endPointLnt = LatLng(val['endPoint'].latitude, val['endPoint'].longitude);
+        startPointLnt = LatLng(val['startPoint'].latitude, val['startPoint'].longitude);
         agreedTime = startTime.subtract(const Duration(minutes: 10));
       });
     });
@@ -301,7 +310,6 @@ class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver
               //---------------------------------대화상대 목록
               //---------------------------------대화상대 목록
               //---------------------------------대화상대 목록
-              //---------------------------------대화상대 목록
               Expanded(
                 child: ListView.builder(
                   padding: const EdgeInsets.all(8.0),
@@ -362,9 +370,9 @@ class _ChatroomPageState extends State<ChatroomPage> with WidgetsBindingObserver
                   padding: EdgeInsets.only(bottom: screenHeight * 0.01),
                   child: Column(
                     children: [
-                      ChatLocation(title: '출발지', location: startPoint),
+                      ChatLocation(title: '출발지', location: startPoint, Point: startPointLnt,),
                       const Line(height: 1),
-                      ChatLocation(title: '도착지', location: endPoint),
+                      ChatLocation(title: '도착지', location: endPoint, Point: endPointLnt,),
                     ],
                   ),
                 ),
