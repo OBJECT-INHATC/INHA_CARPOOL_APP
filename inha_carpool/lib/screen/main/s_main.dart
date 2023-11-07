@@ -92,22 +92,7 @@ class MainScreenState extends State<MainScreen>
           foregroundColor: Colors.white,
           leading: GestureDetector(
             onTap: () {},
-            child: _currentTab == TabItem.carpool
-                ? const Padding(
-              padding: EdgeInsets.only(
-                  top: 5.0,
-                  bottom: 5.0,
-                  left: 25.0), // Adjust left padding here
-              child: Text(
-                "참여 중인 카풀",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            )
-                : Padding(
+            child:  Padding(
               padding: const EdgeInsets.all(3.0),
               child: Image.asset(
                 'assets/image/splash/banner.png',
