@@ -332,7 +332,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                             alignment: Alignment.topRight,
                                             child:
                                             Image.asset(
-                                              'assets/image/map.png',
+                                              'assets/image/icon/map.png',
                                               width: 30,
                                               height: 45,
                                               fit: BoxFit.fill,
