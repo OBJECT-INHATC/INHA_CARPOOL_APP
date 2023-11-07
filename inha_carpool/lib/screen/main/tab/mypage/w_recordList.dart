@@ -66,14 +66,7 @@ class _RecordListState extends State<RecordList> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const BackButton(
-            color: Colors.black,
-          ),
-        ),
+        centerTitle: true,
         title: const Text(
           '이용내역',
           style: TextStyle(
@@ -81,7 +74,7 @@ class _RecordListState extends State<RecordList> {
         ),
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
-        foregroundColor: Colors.white,
+        foregroundColor: Colors.black,
         shadowColor: Colors.white,
       ),
       body: RefreshIndicator(

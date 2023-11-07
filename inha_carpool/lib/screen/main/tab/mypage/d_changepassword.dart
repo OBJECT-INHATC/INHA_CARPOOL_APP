@@ -30,12 +30,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
-          foregroundColor: Colors.white,
+          foregroundColor: Colors.black,
           shadowColor: Colors.white,
           leadingWidth: 56,
-          leading: const BackButton(
-            color: Colors.black,
-          ),
           title:
             "비밀번호 변경".text.color(Colors.black).size(17).bold.make(),
           centerTitle: true,

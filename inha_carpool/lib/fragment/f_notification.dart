@@ -66,9 +66,6 @@ class _NotificationListState extends State<NotificationList> {
           fontSize: 20,
           fontWeight: FontWeight.normal,
         ),
-        leading: const BackButton(
-          color: Colors.black,
-        ),
         title: const Text(
           "알림 목록",
           style: TextStyle(color: Colors.black),

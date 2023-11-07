@@ -67,13 +67,9 @@ class _SecessionPageState extends State<SecessionPage> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.white,
-          foregroundColor: Colors.white,
+          foregroundColor: Colors.black,
           shadowColor: Colors.white,
           leadingWidth: 56,
-          leading: const BackButton(
-            color: Colors.black,
-          ),
-
           title: const Text(
             "회원 탈퇴",
             style: TextStyle(color: Colors.black, fontSize: 20),
