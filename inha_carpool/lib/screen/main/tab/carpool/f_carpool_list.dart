@@ -17,16 +17,14 @@ class CarpoolList extends StatefulWidget {
 }
 
 class _CarpoolListState extends State<CarpoolList> {
+  late final AnimationController _animationController;
+
   final storage = FlutterSecureStorage();
   late String nickName = ""; // Initialize with a default value
   late String uid = "";
   late String gender = "";
 
   DocumentSnapshot? oldLastMessage;
-
-  //구글맵 변수
-  LatLng? _myPoint;
-  String _distanceToLocation = ' ';
 
   late GoogleMapController mapController;
 
@@ -215,317 +213,310 @@ class _CarpoolListState extends State<CarpoolList> {
                         )
                         .make(),
                   ),
-                  body: Container(
-                    //이 부분 추가
-                    /*컨테이너 배경색 추가*/
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      // Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    /*--------------*/
+                  body: Column(
+                    children: [
+                       Line(
+                        height: 1,
+                        margin: const EdgeInsets.all(5),
+                        color: context.appColors.logoColor,
+                      ),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: myCarpools.length,
+                          itemBuilder: (context, i) {
+                            DocumentSnapshot carpool = myCarpools[i];
+                            // DocumentSnapshot carpool = widget.snapshot.data![index];
+                            Map<String, dynamic> carpoolData =
+                                carpool.data() as Map<String, dynamic>;
+                            String startPointName = carpool['startPointName'];
 
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: ListView.builder(
-                        itemCount: myCarpools.length,
-                        itemBuilder: (context, i) {
-                          DocumentSnapshot carpool = myCarpools[i];
-                          // DocumentSnapshot carpool = widget.snapshot.data![index];
-                          Map<String, dynamic> carpoolData =
-                              carpool.data() as Map<String, dynamic>;
-                          String startPointName = carpool['startPointName'];
+                            //카풀 날짜 및 시간 변환
+                            DateTime startTime =
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    carpool['startTime']);
+                            DateTime currentTime = DateTime.now();
+                            Duration difference =
+                                startTime.difference(currentTime);
 
-                          //카풀 날짜 및 시간 변환
-                          DateTime startTime =
-                              DateTime.fromMillisecondsSinceEpoch(
-                                  carpool['startTime']);
-                          DateTime currentTime = DateTime.now();
-                          Duration difference =
-                              startTime.difference(currentTime);
+                            String formattedDate =
+                                DateFormat('HH:mm').format(startTime);
 
-                          String formattedDate =
-                              DateFormat('HH:mm').format(startTime);
+                            String formattedStartTime =
+                                _getFormattedDateString(startTime);
 
-                          String formattedStartTime =
-                              _getFormattedDateString(startTime);
+                            return GestureDetector(
+                              onTap: () {
+                                if (isCarpoolOver(startTime)) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(
+                                          content:
+                                              Text('해당 방은 이미 종료된 카풀방입니다!')))
+                                      .closed
+                                      .then((value) {
+                                    _loadCarpools();
+                                    setState(() {});
+                                  });
+                                } else {
+                                  Navigator.push(
+                                    Nav.globalContext,
+                                    MaterialPageRoute(
+                                        builder: (context) => ChatroomPage(
+                                              carId: carpool['carId'],
+                                              groupName: '카풀네임',
+                                              userName: nickName,
+                                              uid: uid,
+                                              gender: gender,
+                                            )),
+                                  );
+                                }
+                              },
 
-                          return GestureDetector(
-                            onTap: () {
-                              if (isCarpoolOver(startTime)) {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                        content: Text('해당 방은 이미 종료된 카풀방입니다!')))
-                                    .closed
-                                    .then((value) {
-                                  _loadCarpools();
-                                  setState(() {});
-                                });
-                              } else {
-                                Navigator.push(
-                                  Nav.globalContext,
-                                  MaterialPageRoute(
-                                      builder: (context) => ChatroomPage(
-                                            carId: carpool['carId'],
-                                            groupName: '카풀네임',
-                                            userName: nickName,
-                                            uid: uid,
-                                            gender: gender,
-                                          )),
-                                );
-                              }
-                            },
+                              /*-----------------------------------------------Card---------------------------------------------------------------*/
+                              child: Card(
+                                color: Colors.white,
+                                surfaceTintColor: Colors.transparent,
+                                elevation: 3,
+                                // 그림자의 깊이를 조절하는 elevation 값
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 15),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
 
-                            /*-----------------------------------------------Card---------------------------------------------------------------*/
-                            child: Column(
-                              children: [
-                                const Line(
-                                    height: 1, margin: EdgeInsets.all(10)),
-                                Card(
-                                  color: Colors.white,
-                                  surfaceTintColor: Colors.transparent,
-                                  elevation: 3,
-                                  // 그림자의 깊이를 조절하는 elevation 값
-                                  margin: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 15),
-                                  shape: RoundedRectangleBorder(
+                                child: Container(
+                                  decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(12.0),
+                                    border: Border.all(
+                                      color: context.appColors.logoColor
+                                          .withOpacity(0.67),
+                                      width: 1,
+                                    ),
                                   ),
-                                  child: Container(
-                                    padding: const EdgeInsets.only(bottom: 15),
-                                    child: Column(
-                                      children: [
-                                        //첫번째 줄
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            // 왼쪽에 날짜 위젯 배치
-                                            Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 15, top: 15),
-                                                child: Row(
-                                                  children: [
-                                                    const Icon(
-                                                      Icons
-                                                          .calendar_today_outlined,
-                                                      color: Colors.black,
-                                                      size: 18,
-                                                    ),
-                                                    Width(screenWidth * 0.01),
-                                                    '${startTime.month}월 ${startTime.day}일 $formattedDate'
-                                                        .text
-                                                        .bold
-                                                        .color(Colors.grey)
-                                                        .bold
-                                                        .size(13)
-                                                        .make(),
-                                                  ],
-                                                )),
-                                            const Spacer(),
-
-                                            // 지도
-                                            Padding(
+                                  padding: const EdgeInsets.only(bottom: 15),
+                                  child: Column(
+                                    children: [
+                                      //첫번째 줄
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          // 왼쪽에 날짜 위젯 배치
+                                          Padding(
                                               padding: const EdgeInsets.only(
-                                                  right: 55, bottom: 10),
-                                              child: Align(
-                                                alignment: Alignment.topRight,
-                                                child: Image.asset(
-                                                  'assets/image/icon/map.png',
-                                                  width: 30,
-                                                  height: 45,
-                                                  fit: BoxFit.fill,
-                                                ),
+                                                  left: 15, top: 15),
+                                              child: Row(
+                                                children: [
+                                                   Icon(
+                                                    Icons
+                                                        .calendar_today_outlined,
+                                                    color: context.appColors.logoColor,
+                                                    size: 18,
+                                                  ),
+                                                  Width(screenWidth * 0.01),
+                                                  '${startTime.month}월 ${startTime.day}일 $formattedDate'
+                                                      .text
+                                                      .bold
+                                                      .color(Colors.grey)
+                                                      .size(13)
+                                                      .make(),
+                                                ],
+                                              )),
+                                          const Spacer(),
+
+                                          // 지도
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 55, bottom: 10),
+                                            child: Align(
+                                              alignment: Alignment.topRight,
+                                              child: Image.asset(
+                                                'assets/image/icon/map.png',
+                                                width: 30,
+                                                height: 45,
+                                                fit: BoxFit.fill,
                                               ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+
+                                      //출발지와 row의간격
+                                      Height(screenHeight * 0.01),
+
+                                      //2번째 줄 출발지
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.circle_outlined,
+                                                color:
+                                                    context.appColors.logoColor,
+                                                size: 12),
+
+                                            // 아이콘과 주소들 사이 간격
+                                            Width(screenWidth * 0.03),
+
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                // 출발지 요약주소
+                                                Text(
+                                                  "${carpoolData['startDetailPoint']}",
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                // 출발지 풀주소
+                                                Text(
+                                                  shortenText(
+                                                      carpoolData[
+                                                          'startPointName'],
+                                                      15),
+                                                  style: const TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
+                                      ),
 
-                                        //출발지와 row의간격
-                                        Height(screenHeight * 0.01),
-
-                                        //2번째 줄 출발지
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 15),
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.circle_outlined,
-                                                  color: context
-                                                      .appColors.logoColor,
-                                                  size: 12),
-
-                                              // 아이콘과 주소들 사이 간격
-                                              Width(screenWidth * 0.03),
-
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  // 출발지 요약주소
-                                                  Text(
-                                                    "${carpoolData['startDetailPoint']}",
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  // 출발지 풀주소
-                                                  Text(
-                                                    shortenText(
-                                                        carpoolData[
-                                                            'startPointName'],
-                                                        15),
-                                                    style: const TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 12),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Icon(
+                                              Icons.arrow_downward_rounded,
+                                              size: 18,
+                                              color: Colors.indigo,
+                                            ),
+                                          ],
                                         ),
+                                      ),
 
-                                        const Padding(
-                                          padding: EdgeInsets.symmetric(
-                                              horizontal: 12),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Icon(
-                                                Icons.arrow_downward_rounded,
-                                                size: 18,
-                                                color: Colors.indigo,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.circle,
+                                                color:
+                                                    context.appColors.logoColor,
+                                                size: 12),
 
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 15),
-                                          child: Row(
-                                            children: [
-                                              Icon(Icons.circle,
-                                                  color: context
-                                                      .appColors.logoColor,
-                                                  size: 12),
+                                            // 아이콘과 주소들 사이 간격
+                                            Width(screenWidth * 0.03),
 
-                                              // 아이콘과 주소들 사이 간격
-                                              Width(screenWidth * 0.03),
-
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  // 출발지 요약주소
-                                                  Text(
-                                                    "${carpoolData['endDetailPoint']}",
-                                                    style: const TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                // 출발지 요약주소
+                                                Text(
+                                                  "${carpoolData['endDetailPoint']}",
+                                                  style: const TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                  // 출발지 풀주소
-                                                  Text(
-                                                    shortenText(
-                                                        carpoolData[
-                                                            'endPointName'],
-                                                        15),
-                                                    style: const TextStyle(
-                                                      color: Colors.black54,
-                                                      fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
+                                                ),
+                                                // 출발지 풀주소
+                                                Text(
+                                                  shortenText(
+                                                      carpoolData[
+                                                          'endPointName'],
+                                                      15),
+                                                  style: const TextStyle(
+                                                    color: Colors.black54,
+                                                    fontSize: 11,
+                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ),
-                                        // 박스와 간격
-                                        Height(screenHeight * 0.01),
+                                      ),
+                                      // 박스와 간격
+                                      Height(screenHeight * 0.01),
 
-                                        //--------------------------------- 하단 메시지
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 15),
-                                          child: Divider(
-                                              height: 20,
-                                              color: Colors.grey[400]),
-                                        ),
+                                      //--------------------------------- 하단 메시지
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 15),
+                                        child: Divider(
+                                            height: 20,
+                                            color: context.appColors.logoColor),
+                                      ),
 
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(left: 15),
-                                          child: Row(
-                                            children: [
-                                              StreamBuilder<DocumentSnapshot?>(
-                                                stream: FireStoreService()
-                                                    .getLatestMessageStream(
-                                                        carpool['carId']),
-                                                builder: (context, snapshot) {
-                                                  if (snapshot
-                                                          .connectionState ==
-                                                      ConnectionState.waiting) {
-                                                    return const CircularProgressIndicator();
-                                                  } else if (snapshot
-                                                      .hasError) {
-                                                    return Text(
-                                                        'Error: ${snapshot.error}');
-                                                  } else if (!snapshot
-                                                          .hasData ||
-                                                      snapshot.data == null) {
-                                                    return const Text(
-                                                      '아직 채팅이 시작되지 않은 채팅방입니다!',
-                                                      style: TextStyle(
-                                                          color: Colors.grey),
-                                                    );
-                                                  }
-                                                  DocumentSnapshot lastMessage =
-                                                      snapshot.data!;
-                                                  String content =
-                                                      lastMessage['message'];
-                                                  String sender =
-                                                      lastMessage['sender'];
-
-                                                  // 글자가 16글자 이상인 경우, 17글자부터는 '...'로 대체
-                                                  if (content.length > 16) {
-                                                    content =
-                                                        '${content.substring(0, 16)}...';
-                                                  }
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 15),
+                                        child: Row(
+                                          children: [
+                                            StreamBuilder<DocumentSnapshot?>(
+                                              stream: FireStoreService()
+                                                  .getLatestMessageStream(
+                                                      carpool['carId']),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const CircularProgressIndicator();
+                                                } else if (snapshot.hasError) {
                                                   return Text(
-                                                    '$sender : $content',
-                                                    style: const TextStyle(
-                                                        fontSize: 13,
+                                                      'Error: ${snapshot.error}');
+                                                } else if (!snapshot.hasData ||
+                                                    snapshot.data == null) {
+                                                  return const Text(
+                                                    '아직 채팅이 시작되지 않은 채팅방입니다!',
+                                                    style: TextStyle(
                                                         color: Colors.grey),
                                                   );
-                                                },
-                                              ),
-                                            ],
-                                          ),
+                                                }
+                                                DocumentSnapshot lastMessage =
+                                                    snapshot.data!;
+                                                String content =
+                                                    lastMessage['message'];
+                                                String sender =
+                                                    lastMessage['sender'];
+
+                                                // 글자가 16글자 이상인 경우, 17글자부터는 '...'로 대체
+                                                if (content.length > 16) {
+                                                  content =
+                                                      '${content.substring(0, 16)}...';
+                                                }
+                                                return Text(
+                                                  '$sender : $content',
+                                                  style: const TextStyle(
+                                                      fontSize: 13,
+                                                      color: Colors.grey),
+                                                );
+                                              },
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
 
-                            /*-----------------------------------------------Card---------------------------------------------------------------*/
-                          );
-                        },
+                              /*-----------------------------------------------Card---------------------------------------------------------------*/
+                            );
+                          },
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               );

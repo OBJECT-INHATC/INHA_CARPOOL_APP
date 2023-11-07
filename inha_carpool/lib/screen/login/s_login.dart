@@ -213,6 +213,7 @@ class _LoginPageState extends State<LoginPage> {
                                   academy = "@itc.ac.kr";
                                 } else {
                                   academy = "@inha.edu";
+                                 // academy = "@inhatc.ac.kr"; 교수님 
                                 }
                                 selectedIndex = index;
                                 updateBackgroundColors();

@@ -183,6 +183,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         academy = "@itc.ac.kr";
                                       } else {
                                         academy = "@inha.edu";
+                                        //academy = "@inhatc.ac.kr"; 교수님들 메일
                                       }
                                       selectedIndex = index;
                                       updateBackgroundColors();
