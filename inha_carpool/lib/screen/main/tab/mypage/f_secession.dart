@@ -70,10 +70,8 @@ class _SecessionPageState extends State<SecessionPage> {
           foregroundColor: Colors.white,
           shadowColor: Colors.white,
           leadingWidth: 56,
-          leading: const Center(
-            child: BackButton(
-              color: Colors.black,
-            ),
+          leading: const BackButton(
+            color: Colors.black,
           ),
 
           title: const Text(

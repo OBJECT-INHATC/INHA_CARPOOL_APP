@@ -33,10 +33,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           foregroundColor: Colors.white,
           shadowColor: Colors.white,
           leadingWidth: 56,
-          leading: const Center(
-            child: BackButton(
-              color: Colors.black,
-            ),
+          leading: const BackButton(
+            color: Colors.black,
           ),
           title:
             "비밀번호 변경".text.color(Colors.black).size(17).bold.make(),

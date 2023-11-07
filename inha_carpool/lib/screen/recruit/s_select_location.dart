@@ -111,14 +111,7 @@ class _LocationInputState extends State<LocationInput> {
         // 해당 선을 내릴때만 나오게 해줘
         elevation: 0,
         backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.black,
-        )
+        surfaceTintColor: Colors.white
       ),
       body: Column(
         children: [
