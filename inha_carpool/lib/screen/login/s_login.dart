@@ -32,6 +32,9 @@ class _LoginPageState extends State<LoginPage> {
   late String uid = "";
   late String gender = "";
 
+  //이메일 temp
+  String emailTemp = "";
+
   // FCM 관련 설정 및 알림 처리를 위한 메서드
   Future<void> setupInteractedMessage() async {
     // 앱이 백그라운드 상태에서 푸시 알림 클릭하여 열릴 경우
@@ -211,9 +214,11 @@ class _LoginPageState extends State<LoginPage> {
                               setState(() {
                                 if (index == 0) {
                                   academy = "@itc.ac.kr";
+                                  email = emailTemp + academy;
                                 } else {
                                   academy = "@inha.edu";
-                                 // academy = "@inhatc.ac.kr"; 교수님 
+                                  email = emailTemp + academy;
+                                  //   academy = "@inhatc.ac.kr"; //교수님
                                 }
                                 selectedIndex = index;
                                 updateBackgroundColors();
@@ -256,6 +261,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               onChanged: (text) {
                                 email = text + academy;
+                                emailTemp = text;
                               },
                               validator: (val) {
                                 if (val!.isNotEmpty) {
@@ -322,6 +328,9 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () async {
                               setState(() {
                                 isLoading = true; // 로그인 로딩 시작
+                                print('챠챠챠챷챠챠ㅑ챷챠챠 ');
+                                print(email);
+                                print(academy);
                               });
 
                               if (loginButtonEnabled) {
@@ -378,26 +387,29 @@ class _LoginPageState extends State<LoginPage> {
                                       );
                                       String memberUser =
                                           "${uid}_${nickname}_${snapshot.docs[0].get('gender')}";
-                                      print("----------------------------------");
+                                      print(
+                                          "----------------------------------");
                                       print("memberUser: $memberUser");
 
                                       // Firestore에서 해당 사용자가 속한 모든 carId를 가져옵니다.
                                       FirebaseFirestore.instance
                                           .collection('carpool')
                                           .where('members',
-                                          arrayContains: memberUser)
+                                              arrayContains: memberUser)
                                           .get()
                                           .then((QuerySnapshot querySnapshot) {
                                         querySnapshot.docs.forEach((doc) {
                                           // 각 carId에 대해 푸시 알림을 구독합니다.
                                           String carId = doc.id;
-                                          print("----------------------------------");
+                                          print(
+                                              "----------------------------------");
                                           print("carId: $carId");
-                                        
 
-                                          FirebaseMessaging.instance.subscribeToTopic(carId);
-                                          FirebaseMessaging.instance.subscribeToTopic("${carId}_info");
-
+                                          FirebaseMessaging.instance
+                                              .subscribeToTopic(carId);
+                                          FirebaseMessaging.instance
+                                              .subscribeToTopic(
+                                                  "${carId}_info");
                                         });
                                       });
 
@@ -437,8 +449,6 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         );
                                       }
-
-
                                     } else {
                                       print("스프링부트 서버 실패 #############");
 
@@ -620,7 +630,7 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _loadUserData() async {
+  /*Future<void> _loadUserData() async {
     nickName = await storage.read(key: "nickName") ?? "";
     uid = await storage.read(key: "uid") ?? "";
     gender = await storage.read(key: "gender") ?? "";
@@ -628,5 +638,5 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       // nickName, email, gender를 업데이트했으므로 화면을 갱신합니다.
     });
-  }
+  }*/
 }

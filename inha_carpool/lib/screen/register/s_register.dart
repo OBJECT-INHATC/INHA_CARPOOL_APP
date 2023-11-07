@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/register/s_verifiedregister.dart';
 import 'package:nav/nav.dart';
 import '../../service/sv_auth.dart';
@@ -183,7 +184,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         academy = "@itc.ac.kr";
                                       } else {
                                         academy = "@inha.edu";
-                                        //academy = "@inhatc.ac.kr"; 교수님들 메일
+                                       // academy = "@inhatc.ac.kr"; //교수님들 메일
                                       }
                                       selectedIndex = index;
                                       updateBackgroundColors();
@@ -399,7 +400,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
                               padding: const EdgeInsets.symmetric(vertical: 11),
                               // 버튼 높이
-                              backgroundColor: Color.fromARGB(255, 70, 100, 192),
+                              backgroundColor: context.appColors.logoColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
