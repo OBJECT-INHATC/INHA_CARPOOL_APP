@@ -124,6 +124,9 @@ class _LocationInputState extends State<LocationInput> {
                   child: Stack(
                     children: [
                       TextField(
+                        onSubmitted: (value) {
+                          selectNearLocation(value);
+                        },
                       controller: _searchController,
                         decoration: InputDecoration(
                           hintText: '장소 검색',

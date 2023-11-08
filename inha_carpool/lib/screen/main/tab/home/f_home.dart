@@ -275,6 +275,11 @@ class _HomeState extends State<Home> {
                       child: Stack(
                         children: [
                           TextField(
+                            onSubmitted: (value) {
+                              setState(() {
+                                _searchKeyword = value;
+                              });
+                            },
                             controller: _searchKeywordController,
                             decoration: InputDecoration(
                               hintText: '검색어 입력',
