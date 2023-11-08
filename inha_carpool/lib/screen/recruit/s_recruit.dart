@@ -172,7 +172,7 @@ class _RecruitPageState extends State<RecruitPage> {
                         });
                       },
                       icon: Icon(
-                        Icons.swap_vert_circle_outlined,
+                        Icons.cached_rounded,
                         size: 30,
                         color: Colors.blue[300],
                       ),

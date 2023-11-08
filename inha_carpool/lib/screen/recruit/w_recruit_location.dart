@@ -97,9 +97,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                   ),
                 ),
                 const Icon(
-                  Icons.arrow_forward_ios,
+                  Icons.search_outlined,
                   color: Colors.black,
-                  size: 15,
+                  size: 20,
                 ),
               ],
             ),
