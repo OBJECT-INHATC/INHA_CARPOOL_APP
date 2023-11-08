@@ -323,14 +323,16 @@ class FireStoreService {
   /// 1025 서은율, 해당 carId의 토픽 구독 취소, 로컬 DB 정보 삭제
   Future<void> handleEndCarpoolSignal(String carId) async {
     // 메시지 전송
-    final carpoolDocRef = carpoolCollection.doc(carId);
 
     // FCM에서 해당 carId의 토픽 구독 취소
-    FirebaseMessaging.instance.unsubscribeFromTopic(carpoolDocRef.id);
-    FirebaseMessaging.instance.unsubscribeFromTopic("${carpoolDocRef.id}_info");
+    FirebaseMessaging.instance.unsubscribeFromTopic(carId);
+    FirebaseMessaging.instance.unsubscribeFromTopic("${carId}_info");
 
     // 로컬 DB에서 해당 카풀 정보 삭제
     ChatDao().deleteByCarId(carId);
+
+    /// todo : 서버 DB에서 해당 topic 삭제
+    ///
   }
 
   Future<int> getCarpoolStartTime(String carId) async {
