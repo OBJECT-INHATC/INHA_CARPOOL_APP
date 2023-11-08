@@ -21,6 +21,9 @@ class RecruitPage extends StatefulWidget {
 }
 
 class _RecruitPageState extends State<RecruitPage> {
+  Key key1 = UniqueKey();
+  Key key2 = UniqueKey();
+
   var _selectedDate = DateTime.now(); // 날짜 값 초기화
   var _selectedTime =
       DateTime.now().add(const Duration(minutes: 15)); // 시간 값 초기화 (현재시간 + 15분)
@@ -111,6 +114,7 @@ class _RecruitPageState extends State<RecruitPage> {
               child: Column(
                 children: [
                   startPointInput = LocationInputWidget(
+                    key: key1,
                     labelText: startPointName,
                     Point: startPoint,
                     pointText: '출발지',
@@ -130,7 +134,24 @@ class _RecruitPageState extends State<RecruitPage> {
                     detailPoint: '요약 주소 (ex 주안역)',
                     detailController: _startPointDetailController,
                   ),
+                  IconButton(onPressed: (){
+                    setState(() {
+                      String tempPointName = startPointName;
+                      LatLng tempPoint = startPoint;
+
+                      startPointName = endPointName;
+                      startPoint = endPoint;
+
+                      endPointName = tempPointName;
+                      endPoint = tempPoint;
+
+                      // Key를 변경하여 Flutter에게 위젯이 새로운 것임을 알림
+                      key1 = UniqueKey();
+                      key2 = UniqueKey();
+                    });
+                  }, icon: Icon(Icons.swap_calls)),
                   endPointInput = LocationInputWidget(
+                    key: key2,
                     labelText: endPointName,
                     Point: endPoint,
                     pointText: '도착지',
