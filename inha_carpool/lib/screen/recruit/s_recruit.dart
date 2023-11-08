@@ -110,67 +110,81 @@ class _RecruitPageState extends State<RecruitPage> {
         ),
         body: Stack(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  startPointInput = LocationInputWidget(
-                    key: key1,
-                    labelText: startPointName,
-                    Point: startPoint,
-                    pointText: '출발지',
-                    onLocationSelected: (String value) {
-                      setState(() {
-                        startPointName =
-                            LocationHandler.getStringBetweenUnderscores(value)
-                                .trim();
-                        startPoint = LatLng(
-                            LocationHandler.parseDoubleBeforeUnderscore(value),
-                            LocationHandler.getDoubleAfterSecondUnderscore(
-                                value));
-                        print("출발지 주소 : $startPointName");
-                        print("출발지 위도경도 : $startPoint");
-                      });
-                    },
-                    detailPoint: '요약 주소 (ex 주안역)',
-                    detailController: _startPointDetailController,
+        SingleChildScrollView(
+        child: Column(
+        children: [
+          // 출발지 입력 위젯
+          Container(
+            height:160,
+          child: startPointInput = LocationInputWidget(
+          key: key1,
+          labelText: startPointName,
+          Point: startPoint,
+          pointText: '출발지',
+          onLocationSelected: (String value) {
+            setState(() {
+              startPointName =
+                  LocationHandler.getStringBetweenUnderscores(value).trim();
+              startPoint = LatLng(
+                  LocationHandler.parseDoubleBeforeUnderscore(value),
+                  LocationHandler.getDoubleAfterSecondUnderscore(value));
+              print("출발지 주소 : $startPointName");
+              print("출발지 위도경도 : $startPoint");
+            });
+          },
+          detailPoint: '요약 주소 (ex 주안역)',
+          detailController: _startPointDetailController,
+        ),
+      ),
+      Container(
+        height: 13,
+        child: IconButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {
+            setState(() {
+              String tempPointName = startPointName;
+              LatLng tempPoint = startPoint;
+
+              startPointName = endPointName;
+              startPoint = endPoint;
+
+              endPointName = tempPointName;
+              endPoint = tempPoint;
+
+              // Key를 변경하여 Flutter에게 위젯이 새로운 것임을 알림
+              key1 = UniqueKey();
+              key2 = UniqueKey();
+            });
+          },
+          icon: Icon(
+            Icons.swap_vert_circle_outlined,
+            size: 30,
+            color: Colors.blue[300],
+          ),
+        ),
+      ),
+      // 도착지 입력 위젯
+      Container(
+        child: endPointInput = LocationInputWidget(
+          key: key2,
+          labelText: endPointName,
+          Point: endPoint,
+          pointText: '도착지',
+          onLocationSelected: (String value) {
+            setState(() {
+              endPointName =
+                  LocationHandler.getStringBetweenUnderscores(value).trim();
+              endPoint = LatLng(
+                  LocationHandler.parseDoubleBeforeUnderscore(value),
+                  LocationHandler.getDoubleAfterSecondUnderscore(value));
+              print("도착지 주소 : $endPointName");
+              print("도착지 위도경도 : $endPoint");
+            });
+          },
+          detailPoint: '요약 주소 (ex 인하대 후문)',
+          detailController: _endPointDetailController,
                   ),
-                  IconButton(onPressed: (){
-                    setState(() {
-                      String tempPointName = startPointName;
-                      LatLng tempPoint = startPoint;
-
-                      startPointName = endPointName;
-                      startPoint = endPoint;
-
-                      endPointName = tempPointName;
-                      endPoint = tempPoint;
-
-                      // Key를 변경하여 Flutter에게 위젯이 새로운 것임을 알림
-                      key1 = UniqueKey();
-                      key2 = UniqueKey();
-                    });
-                  }, icon: Icon(Icons.swap_calls)),
-                  endPointInput = LocationInputWidget(
-                    key: key2,
-                    labelText: endPointName,
-                    Point: endPoint,
-                    pointText: '도착지',
-                    onLocationSelected: (String value) {
-                      setState(() {
-                        endPointName =
-                            LocationHandler.getStringBetweenUnderscores(value)
-                                .trim();
-                        endPoint = LatLng(
-                            LocationHandler.parseDoubleBeforeUnderscore(value),
-                            LocationHandler.getDoubleAfterSecondUnderscore(
-                                value));
-                        print("도착지 주소 : $endPointName");
-                        print("도착지 위도경도 : $endPoint");
-                      });
-                    },
-                    detailPoint: '요약 주소 (ex 인하대 후문)',
-                    detailController: _endPointDetailController,
-                  ),
+      ),
 
                   Row(
                     children: [
