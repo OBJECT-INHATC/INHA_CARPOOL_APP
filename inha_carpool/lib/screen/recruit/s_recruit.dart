@@ -114,8 +114,7 @@ class _RecruitPageState extends State<RecruitPage> {
         child: Column(
         children: [
           // 출발지 입력 위젯
-          Container(
-            height:160,
+          SizedBox(
           child: startPointInput = LocationInputWidget(
           key: key1,
           labelText: startPointName,
@@ -128,25 +127,29 @@ class _RecruitPageState extends State<RecruitPage> {
               startPoint = LatLng(
                   LocationHandler.parseDoubleBeforeUnderscore(value),
                   LocationHandler.getDoubleAfterSecondUnderscore(value));
-              print("출발지 주소 : $startPointName");
-              print("출발지 위도경도 : $startPoint");
             });
           },
           detailPoint: '요약 주소 (ex 주안역)',
           detailController: _startPointDetailController,
         ),
       ),
-      Container(
-        height: 13,
+      // 출발지, 도착지 교환 버튼
+          SizedBox(
         child: IconButton(
           padding: EdgeInsets.zero,
           onPressed: () {
             setState(() {
+
               String tempPointName = startPointName;
               LatLng tempPoint = startPoint;
 
               startPointName = endPointName;
               startPoint = endPoint;
+
+              //요약 주소
+              String temp  = _endPointDetailController.text;
+              _endPointDetailController.text = _startPointDetailController.text;
+              _startPointDetailController.text = temp;
 
               endPointName = tempPointName;
               endPoint = tempPoint;
@@ -177,8 +180,6 @@ class _RecruitPageState extends State<RecruitPage> {
               endPoint = LatLng(
                   LocationHandler.parseDoubleBeforeUnderscore(value),
                   LocationHandler.getDoubleAfterSecondUnderscore(value));
-              print("도착지 주소 : $endPointName");
-              print("도착지 위도경도 : $endPoint");
             });
           },
           detailPoint: '요약 주소 (ex 인하대 후문)',
@@ -194,7 +195,6 @@ class _RecruitPageState extends State<RecruitPage> {
                         onDateTimeChanged: (newDate) {
                           setState(() {
                             _selectedDate = newDate;
-                            print("선택된 날짜: $_selectedDate");
                           });
                         },
                       ),
@@ -204,7 +204,6 @@ class _RecruitPageState extends State<RecruitPage> {
                         onDateTimeChanged: (newTime) {
                           setState(() {
                             _selectedTime = newTime;
-                            print("선택된 시간: $_selectedTime");
                           });
                         },
                       ),
@@ -225,7 +224,6 @@ class _RecruitPageState extends State<RecruitPage> {
                           }
                           setState(() {
                             selectedGender = value;
-                            print("선택된 성별: $selectedGender");
                           });
                         },
                       ),
@@ -254,7 +252,6 @@ class _RecruitPageState extends State<RecruitPage> {
 
                             setState(() {
                               selectedLimit = value;
-                              print("선택된 인원: $selectedLimit");
                             });
                           },
                         ),
