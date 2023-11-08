@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 
-import 'd_complainAlert.dart';
 
 class ComplainDialog extends StatefulWidget {
   const ComplainDialog({super.key});

@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 
-import '../common/util/carpool.dart';
 import '../screen/main/tab/carpool/s_chatroom.dart';
-import '../screen/main/tab/mypage/w_recordList.dart';
 import '../service/sv_firestore.dart';
 
 /// 0901 한승완 수정

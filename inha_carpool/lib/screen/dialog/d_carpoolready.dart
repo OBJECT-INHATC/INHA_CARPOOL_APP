@@ -10,7 +10,7 @@ class ReadyDialog extends StatelessWidget {
 
     return  AlertDialog(//경고창
       surfaceTintColor: Colors.transparent,
-      insetPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),//경고창의 내부여백
+      insetPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),//경고창의 내부여백
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),//모서리 둥글게
       content: SizedBox(//경고창의 크기
         width: width - 20,// -20을 해주는 이유는 경고창의 내부여백이 20이기 때문
@@ -21,7 +21,7 @@ class ReadyDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,//가로로 꽉 채우기
               children: [
                 RichText(//텍스트의 일부분만 스타일 적용
-                  text: TextSpan(//텍스트 일부분에 스타일 적용
+                  text: const TextSpan(//텍스트 일부분에 스타일 적용
                     children: [
                       WidgetSpan(//위젯을 텍스트 일부분에 적용
                         child: Icon(Icons.check_circle, color: Colors.blue),
@@ -45,17 +45,17 @@ class ReadyDialog extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(//구분선
+            const Divider(//구분선
               height: 1.5,
               color: Colors.grey,
             ),
-            SizedBox(height: 15),
-            Text(
+            const SizedBox(height: 15),
+            const Text(
               '카풀이 곧 시작됩니다!!',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               '1시간 뒤 주안역 - 인하공전 카풀이 시작됩니다. \n즐거운 카풀 되세요!',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -68,7 +68,7 @@ class ReadyDialog extends StatelessWidget {
       ),
       actions: [
         Container(
-          padding: EdgeInsets.only(right: 10),
+          padding: const EdgeInsets.only(right: 10),
           child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
@@ -77,7 +77,7 @@ class ReadyDialog extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('OK')),
+              child: const Text('OK')),
         )
       ],
     );;
