@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -166,5 +167,23 @@ class AuthService {
       return false;
     }
   }
+
+  ///1108 서은율 ,닉네임 중복 확인
+  Future<bool> checkNicknameAvailability(String newNickname) async {
+    try {
+      // 파이어베이스 데이터베이스에서 중복된 닉네임이 있는지 확인
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('nickName', isEqualTo: newNickname)
+          .limit(1)
+          .get();
+
+      return querySnapshot.docs.isEmpty; // 중복된 닉네임이 없으면 true 반환
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
+  }
+
 
 }

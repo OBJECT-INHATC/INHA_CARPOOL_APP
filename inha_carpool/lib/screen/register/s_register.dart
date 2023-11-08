@@ -45,6 +45,8 @@ class _RegisterPageState extends State<RegisterPage> {
   // 로딩 여부
   bool isLoading = false;
 
+  bool isNicknameAvailable = false;
+
   // 성별
   String? gender;
   var genders;
@@ -99,6 +101,21 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
+  void checkNicknameAvailability() async {
+    // 입력한 닉네임을 가져옴
+    String newNickname = nickname;
+
+    // 닉네임 중복 여부 확인
+    isNicknameAvailable =
+        await AuthService().checkNicknameAvailability(newNickname);
+
+    // 중복 여부에 따라 알림 메시지 표시
+    if (isNicknameAvailable) {
+      showSnackbar(context, Colors.green, '사용 가능한 닉네임입니다.');
+    } else {
+      showSnackbar(context, Colors.red, '이미 사용 중인 닉네임입니다.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -302,7 +319,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                     }
                                   },
                                   onChanged: (text) {
-                                    nickname = text;
+                                    setState(() {
+                                      nickname = text;
+                                      isNicknameAvailable = false; // 닉네임이 변경될 때 중복 확인 상태를 재설정
+                                    });
                                   },
                                 ),
                               ),
@@ -311,6 +331,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     // 중복확인 로직 추가해주세요구르트
+                                    checkNicknameAvailability();
                                   },
                                   child: Text(
                                     '중복확인',
@@ -323,9 +344,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                     primary: Colors.blue[100],
                                     onPrimary: Colors.white,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10), // 여기에서 모양을 조절합니다.
+                                      borderRadius: BorderRadius.circular(
+                                          10), // 여기에서 모양을 조절합니다.
                                     ),
-                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 10, vertical: 10),
                                   ),
                                 ),
                               )
@@ -460,7 +483,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               padding: const EdgeInsets.symmetric(vertical: 11),
                               // 버튼 높이
                               backgroundColor: //Colors.blue[200],
-                              context.appColors.logoColor,
+                                  context.appColors.logoColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -470,34 +493,27 @@ class _RegisterPageState extends State<RegisterPage> {
                               // 그림자 색상
                               surfaceTintColor: Colors.transparent,
                             ),
-                            onPressed:  ()  async {
+                            onPressed: () async {
                               String sampleText = await readTextFromFile();
                               print(sampleText);
-                              if (passwordCheck != "비밀번호가 일치합니다!" ||
+                              if (!isNicknameAvailable) {
+                                // 중복된 닉네임이 있는 경우, 회원가입 막기
+                                showSnackbar(context, Colors.red, '닉네임 중복체크 해주세요.');
+                              } else if (passwordCheck != "비밀번호가 일치합니다!" ||
                                   username == "" ||
                                   email == "" ||
                                   password == "" ||
                                   gender == "") {
-                                showSnackbar(context, Colors.red,
-                                    "정보가 올바르지 않습니다. 다시 확인해주세요.");
-                              } else if (containsProfanity(
-                                  nickname, splitStringBySpace(sampleText))) {
-                                showSnackbar(context, Colors.red,
-                                    "비속어가 포함되어 있습니다.");
-                                // 비속어 필터
+                                showSnackbar(context, Colors.red, "정보가 올바르지 않습니다. 다시 확인해주세요.");
+                              } else if (containsProfanity(nickname, splitStringBySpace(sampleText))) {
+                                showSnackbar(context, Colors.red, "비속어가 포함되어 있습니다.");
                               } else {
                                 AuthService()
                                     .registerUserWithEmailandPassword(
-                                        username,
-                                        nickname,
-                                        email,
-                                        password,
-                                        "dummy",
-                                        gender!)
+                                    username, nickname, email, password, "dummy", gender!)
                                     .then((value) async {
                                   if (value == true) {
-                                    await FirebaseAuth.instance.currentUser!
-                                        .sendEmailVerification();
+                                    await FirebaseAuth.instance.currentUser!.sendEmailVerification();
                                     if (!mounted) return;
                                     Nav.push(const VerifiedRegisterPage());
                                   } else {
