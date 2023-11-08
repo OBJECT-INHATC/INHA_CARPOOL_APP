@@ -6,9 +6,9 @@ import 'carpool/f_carpool_list.dart';
 import 'home/f_home.dart';
 
 enum TabItem {
-  carpool(Icons.group, '참여', CarpoolList()),
-  home(Icons.local_taxi, '홈', Home()),
-  myPage(Icons.person, '내 정보', MyPage());
+  carpool(Icons.local_taxi, '참여', CarpoolList()),
+  home(Icons.home, '홈', Home()),
+  myPage(Icons.account_circle, '내 정보', MyPage());
 
   final IconData activeIcon;
   final IconData inActiveIcon;
