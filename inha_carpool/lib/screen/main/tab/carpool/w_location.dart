@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
 import 'package:nav/nav.dart';
 
@@ -58,8 +59,6 @@ class ChatLocation extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-                    print("위치 보기");
-                    print("위도경도 -> ${point.latitude}, ${point.longitude}");
 
                     ///todo : 위치 보기 기능 구현
                     Navigator.push(
@@ -81,11 +80,14 @@ class ChatLocation extends StatelessWidget {
                               )),
                     );
                   },
-                  child: const Icon(
-                    Icons.map_outlined,
-                    color: Colors.black,
-                    size: 25,
-                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.map_outlined,
+                      color: Colors.black,
+                      size: 25,
+                    ),
+                  ).pOnly(bottom: 5)
                 ),
               ],
             ),
