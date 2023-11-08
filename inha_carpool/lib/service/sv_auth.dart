@@ -74,7 +74,7 @@ class AuthService {
   /// 1031 한승완 수정
   Future<bool> checkUserAvailable() async{
     User? user = FirebaseAuth.instance.currentUser;
-    if(user == null){
+    if(user == null || !user.emailVerified){
       signOut();
       return false;
     }
