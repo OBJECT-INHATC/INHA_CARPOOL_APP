@@ -92,7 +92,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
                           //overflow: TextOverflow.ellipsis,
                           maxLines: 2, // 최대 2줄
                           text: TextSpan(
-                            style: TextStyle(color: Colors.black, fontSize: 15),
+                            style: const TextStyle(color: Colors.black, fontSize: 15),
                             text: selectedLocation,
                             children: const [
                               TextSpan(
@@ -119,9 +119,8 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         Container(
           margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
           child: TextField(
+            maxLength: 10,
             decoration: InputDecoration(
-
-
               filled: true,
               fillColor: Colors.white,
               hintText: widget.detailPoint,
