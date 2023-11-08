@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/dto/UserDTO.dart';
 
 import '../../common/constants.dart';
-import '../../dto/ReportRequstDTO.dart';
 
 /// 0918 이상훈 - 서버 db에 유저 정보 관련 api
 class ApiUser {

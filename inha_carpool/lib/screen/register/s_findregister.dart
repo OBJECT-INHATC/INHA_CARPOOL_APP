@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FindRegisterPage extends StatefulWidget {

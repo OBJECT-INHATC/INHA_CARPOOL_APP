@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 
-import '../../common/constants.dart';
 import '../../dto/ReportRequstDTO.dart';
 
 class ApiService {

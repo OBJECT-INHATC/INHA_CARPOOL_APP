@@ -350,18 +350,7 @@ class _ChatroomPageState extends State<ChatroomPage>
                 ),
               ),
               const Line(height: 1),
-              /*   Flexible(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  startPointDetail.text.size(25).color(Colors.black).bold.make(),
-                  const Icon(Icons.arrow_downward_outlined,
-                      size: 40, color: Colors.black),
-                  endPointDetail.text.size(25).color(Colors.black).bold.make(),
-                ],
-              ),
-            ),*/
+
               const Line(height: 1),
               Align(
                 alignment: Alignment.bottomLeft,

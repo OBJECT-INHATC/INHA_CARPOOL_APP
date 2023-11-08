@@ -4,11 +4,7 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 import '../../../login/s_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/service/api/Api_user.dart';
-import 'package:inha_Carpool/service/sv_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:flutter_secure_storage/flutter_secure_storage';
+
 
 class LogoutConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;

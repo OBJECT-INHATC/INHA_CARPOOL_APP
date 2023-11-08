@@ -64,15 +64,15 @@ class _CarpoolListState extends State<CarpoolList> {
     }
 
     if (difference.inDays > 365) {
-      return '${(difference.inDays / 365).floor()}년 전';
+      return '${(difference.inDays / 365).floor()}년 후';
     } else if (difference.inDays >= 30) {
-      return '${(difference.inDays / 30).floor()}달 전';
+      return '${(difference.inDays / 30).floor()}달 후';
     } else if (difference.inDays >= 1) {
-      return '${difference.inDays}일 전';
+      return '${difference.inDays}일 후';
     } else if (difference.inHours >= 1) {
-      return '${difference.inHours}시간 전';
+      return '${difference.inHours}시간 남음';
     } else {
-      return '${difference.inMinutes}분 전';
+      return '${difference.inMinutes}분 남음';
     }
   }
 
