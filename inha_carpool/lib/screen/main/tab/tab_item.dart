@@ -7,7 +7,7 @@ import 'home/f_home.dart';
 
 enum TabItem {
   carpool(Icons.local_taxi, '카풀', CarpoolList()),
-  home(Icons.home, '출발 예정', Home()),
+  home(Icons.home, '홈', Home()),
   myPage(Icons.account_circle, '내 정보', MyPage());
 
   final IconData activeIcon;
