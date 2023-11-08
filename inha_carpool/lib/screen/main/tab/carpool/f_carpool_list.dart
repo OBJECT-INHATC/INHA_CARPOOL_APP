@@ -54,7 +54,7 @@ class _CarpoolListState extends State<CarpoolList> {
   //   return res.substring(res.indexOf("_") + 1);
   // }
 
-// 시간 포멧 ver.2 
+// 시간 포멧 ver.2
   String _getFormattedDateString(DateTime dateTime) {
     final now = DateTime.now();
     var difference = now.difference(dateTime);
@@ -95,16 +95,15 @@ class _CarpoolListState extends State<CarpoolList> {
     String myID = uid;
     String myNickName = nickName;
     String myGender = gender;
-    print(myID);
 
     List<DocumentSnapshot> carpools =
         await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
     return carpools;
   }
 
-/*  String _getFormattedDateString(DateTime dateTime) {
-    return '${dateTime.month}. ${dateTime.day}. ${_getWeekdayString(dateTime.weekday)}';
-  }*/
+  String _getFormattedDateForMap(DateTime dateTime) {
+    return '${dateTime.month}월 ${dateTime.day}일 ${dateTime.hour}시 ${dateTime.minute}분';
+  }
 
   String _getWeekdayString(int weekday) {
     switch (weekday) {
@@ -252,8 +251,18 @@ class _CarpoolListState extends State<CarpoolList> {
                             // DocumentSnapshot carpool = widget.snapshot.data![index];
                             Map<String, dynamic> carpoolData =
                                 carpool.data() as Map<String, dynamic>;
+
                             DateTime startTime = DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
+
+                            // 지도를 위한 변수
+                            String formattedForMap =
+                            _getFormattedDateForMap(startTime);
+
+                            // 채팅방을 위한 변수
                             String formattedStartTime = _getFormattedDateString(startTime);
+
+
+
 
 
                             return GestureDetector(
@@ -366,7 +375,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                     endPointName: carpoolData[
                                                         'endPointName'],
                                                     startTime:
-                                                        formattedStartTime,
+                                                        formattedForMap,
                                                     carId: carpoolData['carId'],
                                                     admin: carpoolData['admin'],
                                                     roomGender:
