@@ -572,7 +572,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                 :
             Positioned(
               top: context.height(0.01),
-              left: widget.isStart == 'true' ? 60 : 10,
+              left: widget.isStart == 'default' ? 60 : 10,
               child: FloatingActionButton(
                 heroTag: 'start',
                 backgroundColor: Colors.lightGreenAccent.shade700,
