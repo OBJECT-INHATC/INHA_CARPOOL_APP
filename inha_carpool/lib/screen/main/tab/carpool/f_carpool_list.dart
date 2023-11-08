@@ -64,7 +64,7 @@ class _CarpoolListState extends State<CarpoolList> {
       return '${difference.inDays}일 후';
     } else if (difference.inHours >= 1) {
       return '${difference.inHours}시간 남음, 출발 10분전 퇴장 불가';
-    } else {음
+    } else {
       return '${difference.inMinutes}분 남음, 출발지를 확인해 주세요';
     }
   }
