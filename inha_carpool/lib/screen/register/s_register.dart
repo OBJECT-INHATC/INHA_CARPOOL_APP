@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -105,6 +104,14 @@ class _RegisterPageState extends State<RegisterPage> {
     // 입력한 닉네임을 가져옴
     String newNickname = nickname;
 
+    String sampleText = await readTextFromFile();
+    if (containsProfanity(nickname, splitStringBySpace(sampleText))) {
+      showSnackbar(context, Colors.red, "금지어가 포함되어 있습니다.");
+      isNicknameAvailable = false;
+
+      return;
+    }
+
     // 닉네임 중복 여부 확인
     isNicknameAvailable =
         await AuthService().checkNicknameAvailability(newNickname);
@@ -119,7 +126,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    //const Color pastelSkyBlue = Color(0xff6CC0FF);
     return isLoading
         ? const Center(
             child: CircularProgressIndicator(
@@ -329,17 +335,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               Positioned(
                                 right: 5, // 버튼을 오른쪽에 배치
                                 child: ElevatedButton(
-                                  onPressed: () {
+                                  onPressed: () async {
                                     // 중복확인 로직 추가해주세요구르트
                                     checkNicknameAvailability();
                                   },
-                                  child: Text(
-                                    '중복확인',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
                                   style: ElevatedButton.styleFrom(
                                     primary: Colors.blue[100],
                                     onPrimary: Colors.white,
@@ -347,8 +346,15 @@ class _RegisterPageState extends State<RegisterPage> {
                                       borderRadius: BorderRadius.circular(
                                           10), // 여기에서 모양을 조절합니다.
                                     ),
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         horizontal: 10, vertical: 10),
+                                  ),
+                                  child: const Text(
+                                    '확인',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
                               )
@@ -493,20 +499,16 @@ class _RegisterPageState extends State<RegisterPage> {
                               // 그림자 색상
                               surfaceTintColor: Colors.transparent,
                             ),
-                            onPressed: () async {
-                              String sampleText = await readTextFromFile();
-                              print(sampleText);
+                            onPressed: ()  {
                               if (!isNicknameAvailable) {
                                 // 중복된 닉네임이 있는 경우, 회원가입 막기
-                                showSnackbar(context, Colors.red, '닉네임 중복체크 해주세요.');
+                                showSnackbar(context, Colors.red, '닉네임 확인을 해주세요.');
                               } else if (passwordCheck != "비밀번호가 일치합니다!" ||
                                   username == "" ||
                                   email == "" ||
                                   password == "" ||
                                   gender == "") {
                                 showSnackbar(context, Colors.red, "정보가 올바르지 않습니다. 다시 확인해주세요.");
-                              } else if (containsProfanity(nickname, splitStringBySpace(sampleText))) {
-                                showSnackbar(context, Colors.red, "비속어가 포함되어 있습니다.");
                               } else {
                                 AuthService()
                                     .registerUserWithEmailandPassword(
