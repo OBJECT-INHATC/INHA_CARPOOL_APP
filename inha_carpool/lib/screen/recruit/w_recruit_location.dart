@@ -123,7 +123,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,
+              counterText: "",
               hintText: widget.detailPoint,
+              suffix: Text("${widget.detailController.text.length}/10"), //글자 수 카운트
               labelStyle: const TextStyle(color: Colors.black, fontSize: 13),
               border: UnderlineInputBorder(
 
@@ -132,6 +134,12 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             ),
             style: const TextStyle(color: Colors.black, fontSize: 13),
             controller: widget.detailController,
+              onChanged: (text) {
+                // 글자수 업뎃
+                setState(() {
+                  widget.detailController.text = text;
+                });
+              }
           ),
         )
       ],
