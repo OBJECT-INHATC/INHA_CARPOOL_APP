@@ -54,6 +54,28 @@ class _CarpoolListState extends State<CarpoolList> {
   //   return res.substring(res.indexOf("_") + 1);
   // }
 
+// 시간 포멧 ver.2 
+  String _getFormattedDateString(DateTime dateTime) {
+    final now = DateTime.now();
+    var difference = now.difference(dateTime);
+
+    if (difference.isNegative) {
+      difference = difference.abs();
+    }
+
+    if (difference.inDays > 365) {
+      return '${(difference.inDays / 365).floor()}년 전';
+    } else if (difference.inDays >= 30) {
+      return '${(difference.inDays / 30).floor()}달 전';
+    } else if (difference.inDays >= 1) {
+      return '${difference.inDays}일 전';
+    } else if (difference.inHours >= 1) {
+      return '${difference.inHours}시간 전';
+    } else {
+      return '${difference.inMinutes}분 전';
+    }
+  }
+
   String getName(String res) {
     int start = res.indexOf("_") + 1;
     int end = res.lastIndexOf("_");
@@ -230,34 +252,8 @@ class _CarpoolListState extends State<CarpoolList> {
                             // DocumentSnapshot carpool = widget.snapshot.data![index];
                             Map<String, dynamic> carpoolData =
                                 carpool.data() as Map<String, dynamic>;
-
-                            String _getFormattedDateString(DateTime dateTime) {
-                              final now = DateTime.now();
-                              var difference = now.difference(dateTime);
-
-                              if (difference.isNegative) {
-                                difference = difference.abs();
-                              }
-
-                              if (difference.inDays > 365) {
-                                return '${(difference.inDays / 365).floor()}년 전';
-                              } else if (difference.inDays >= 30) {
-                                return '${(difference.inDays / 30).floor()}달 전';
-                              } else if (difference.inDays >= 1) {
-                                return '${difference.inDays}일 전';
-                              } else if (difference.inHours >= 1) {
-                                return '${difference.inHours}시간 전';
-                              } else {
-                                return '${difference.inMinutes}분 전';
-                              }
-                            }
-
-
                             DateTime startTime = DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
-                            print("============startTime========================");
-                            print(startTime);
                             String formattedStartTime = _getFormattedDateString(startTime);
-                            print(formattedStartTime);
 
 
                             return GestureDetector(
