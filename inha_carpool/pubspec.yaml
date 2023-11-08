@@ -139,7 +139,7 @@ flutter:
   assets:
     - assets/json/
     - assets/image/
-    - assets/image/icon/map.png
+    - assets/image/icon/
     - assets/image/flag/
     - assets/image/darkmode/
     - assets/translations/

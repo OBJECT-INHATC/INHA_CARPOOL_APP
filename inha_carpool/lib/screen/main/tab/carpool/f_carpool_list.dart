@@ -7,9 +7,9 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
-import 'package:inha_Carpool/service/sv_firestore.dart';
 
-import '../home/s_carpool_map.dart';
+import 'w_cardItem.dart';
+import 'w_lastChat.dart';
 
 class CarpoolList extends StatefulWidget {
   const CarpoolList({Key? key}) : super(key: key);
@@ -19,8 +19,6 @@ class CarpoolList extends StatefulWidget {
 }
 
 class _CarpoolListState extends State<CarpoolList> {
-  late final AnimationController _animationController;
-
   final storage = FlutterSecureStorage();
   late String nickName = ""; // Initialize with a default value
   late String uid = "";
@@ -49,11 +47,6 @@ class _CarpoolListState extends State<CarpoolList> {
     });
   }
 
-  // 카풀 컬렉션 이름 추출
-  // String getName(String res) {
-  //   return res.substring(res.indexOf("_") + 1);
-  // }
-
 // 시간 포멧 ver.2
   String _getFormattedDateString(DateTime dateTime) {
     final now = DateTime.now();
@@ -70,9 +63,9 @@ class _CarpoolListState extends State<CarpoolList> {
     } else if (difference.inDays >= 1) {
       return '${difference.inDays}일 후';
     } else if (difference.inHours >= 1) {
-      return '${difference.inHours}시간 남음';
+      return '${difference.inHours}시간 남음, 출발 10분전 퇴장 불가';
     } else {
-      return '${difference.inMinutes}분 남음';
+      return '${difference.inMinutes}분 남음 출발지를 확인해 주세요';
     }
   }
 
@@ -105,33 +98,20 @@ class _CarpoolListState extends State<CarpoolList> {
     return '${dateTime.month}월 ${dateTime.day}일 ${dateTime.hour}시 ${dateTime.minute}분';
   }
 
-  String _getWeekdayString(int weekday) {
-    switch (weekday) {
-      case DateTime.monday:
-        return '월';
-      case DateTime.tuesday:
-        return '화';
-      case DateTime.wednesday:
-        return '수';
-      case DateTime.thursday:
-        return '목';
-      case DateTime.friday:
-        return '금';
-      case DateTime.saturday:
-        return '토';
-      case DateTime.sunday:
-        return '일';
-      default:
-        return '';
-    }
-  }
-
   bool isCarpoolOver(DateTime startTime) {
     DateTime currentTime = DateTime.now();
     Duration difference = currentTime.difference(startTime);
     return difference.inHours >= 1;
   }
 
+  Color getColorBasedOnSuffix(String text) {
+    if (text.endsWith('가')) {
+      return context.appColors.logoColor; // '가'로 끝나면 초록색 반환
+    } else if (text.endsWith('요')) {
+      return Colors.red; // '요'로 끝나면 빨간색 반환
+    }
+    return Colors.grey; // 다른 경우에는 회색 반환
+  }
   @override
   Widget build(BuildContext context) {
     // 화면의 너비와 높이를 가져 와서 화면 비율 계산함
@@ -252,18 +232,17 @@ class _CarpoolListState extends State<CarpoolList> {
                             Map<String, dynamic> carpoolData =
                                 carpool.data() as Map<String, dynamic>;
 
-                            DateTime startTime = DateTime.fromMillisecondsSinceEpoch(carpool['startTime']);
+                            DateTime startTime =
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    carpool['startTime']);
 
                             // 지도를 위한 변수
                             String formattedForMap =
-                            _getFormattedDateForMap(startTime);
+                                _getFormattedDateForMap(startTime);
 
                             // 채팅방을 위한 변수
-                            String formattedStartTime = _getFormattedDateString(startTime);
-
-
-
-
+                            String formattedStartTime =
+                                _getFormattedDateString(startTime);
 
                             return GestureDetector(
                               onTap: () {
@@ -317,110 +296,13 @@ class _CarpoolListState extends State<CarpoolList> {
                                   child: Column(
                                     children: [
                                       //첫번째 줄
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          // 왼쪽에 날짜 위젯 배치
-                                          Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 15, top: 15),
-                                              child: Row(
-                                                children: [
-                                                  Icon(
-                                                    Icons
-                                                        .calendar_today_outlined,
-                                                    color: context
-                                                        .appColors.logoColor,
-                                                    size: 18,
-                                                  ),
-                                                  Width(screenWidth * 0.01),
-                                                  formattedStartTime
-                                                      .text
-                                                      .bold
-                                                      .color(Colors.grey)
-                                                      .size(13)
-                                                      .make(),
-                                                ],
-                                              )),
-                                          const Spacer(),
-
-                                          // 지도
-                                          GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                Nav.globalContext,
-                                                PageRouteBuilder(
-                                                  //아래에서 위로 올라오는 효과
-                                                  pageBuilder: (context,
-                                                          animation,
-                                                          secondaryAnimation) =>
-                                                      CarpoolMap(
-                                                    isStart: 'default',
-                                                    isPopUp: true,
-                                                    startPoint: LatLng(
-                                                        carpoolData[
-                                                                'startPoint']
-                                                            .latitude,
-                                                        carpoolData[
-                                                                'startPoint']
-                                                            .longitude),
-                                                    startPointName: carpoolData[
-                                                        'startPointName'],
-                                                    endPoint: LatLng(
-                                                        carpoolData['endPoint']
-                                                            .latitude,
-                                                        carpoolData['endPoint']
-                                                            .longitude),
-                                                    endPointName: carpoolData[
-                                                        'endPointName'],
-                                                    startTime:
-                                                        formattedForMap,
-                                                    carId: carpoolData['carId'],
-                                                    admin: carpoolData['admin'],
-                                                    roomGender:
-                                                        carpoolData['gender'],
-                                                  ),
-                                                  transitionsBuilder: (context,
-                                                      animation,
-                                                      secondaryAnimation,
-                                                      child) {
-                                                    const begin =
-                                                        Offset(0.0, 1.0);
-                                                    const end = Offset.zero;
-                                                    const curve =
-                                                        Curves.easeInOut;
-                                                    var tween = Tween(
-                                                            begin: begin,
-                                                            end: end)
-                                                        .chain(CurveTween(
-                                                            curve: curve));
-                                                    var offsetAnimation =
-                                                        animation.drive(tween);
-                                                    return SlideTransition(
-                                                        position:
-                                                            offsetAnimation,
-                                                        child: child);
-                                                  },
-                                                ),
-                                              );
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 55, bottom: 10),
-                                              child: Align(
-                                                alignment: Alignment.topRight,
-                                                child: Image.asset(
-                                                  'assets/image/icon/map.png',
-                                                  width: 30,
-                                                  height: 45,
-                                                  fit: BoxFit.fill,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                      w_cardItem(
+                                        colorTemp: getColorBasedOnSuffix(formattedStartTime),
+                                          screenWidth: screenWidth,
+                                          formattedStartTime:
+                                              formattedStartTime,
+                                          carpoolData: carpoolData,
+                                          formattedForMap: formattedForMap),
 
                                       //출발지와 row의간격
                                       Height(screenHeight * 0.01),
@@ -532,7 +414,6 @@ class _CarpoolListState extends State<CarpoolList> {
                                       // 박스와 간격
                                       Height(screenHeight * 0.01),
 
-                                      //--------------------------------- 하단 메시지
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 15),
@@ -541,53 +422,8 @@ class _CarpoolListState extends State<CarpoolList> {
                                             color: context.appColors.logoColor),
                                       ),
 
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 15),
-                                        child: Row(
-                                          children: [
-                                            StreamBuilder<DocumentSnapshot?>(
-                                              stream: FireStoreService()
-                                                  .getLatestMessageStream(
-                                                      carpool['carId']),
-                                              builder: (context, snapshot) {
-                                                if (snapshot.connectionState ==
-                                                    ConnectionState.waiting) {
-                                                  return const CircularProgressIndicator();
-                                                } else if (snapshot.hasError) {
-                                                  return Text(
-                                                      'Error: ${snapshot.error}');
-                                                } else if (!snapshot.hasData ||
-                                                    snapshot.data == null) {
-                                                  return const Text(
-                                                    '아직 채팅이 시작되지 않은 채팅방입니다!',
-                                                    style: TextStyle(
-                                                        color: Colors.grey),
-                                                  );
-                                                }
-                                                DocumentSnapshot lastMessage =
-                                                    snapshot.data!;
-                                                String content =
-                                                    lastMessage['message'];
-                                                String sender =
-                                                    lastMessage['sender'];
-
-                                                // 글자가 16글자 이상인 경우, 17글자부터는 '...'로 대체
-                                                if (content.length > 16) {
-                                                  content =
-                                                      '${content.substring(0, 16)}...';
-                                                }
-                                                return Text(
-                                                  '$sender : $content',
-                                                  style: const TextStyle(
-                                                      fontSize: 13,
-                                                      color: Colors.grey),
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                      //--------- 하단 라스트 메시지
+                                      chatLastMSG(carpool: carpool),
                                     ],
                                   ),
                                 ),
