@@ -44,8 +44,17 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // 출발지, 도착지
+        Container(
+          margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+          child: Row(
+            children: [
+              widget.pointText.text.size(16).bold.black.make(),
+              const SizedBox(width: 10),
+            ],
+          ),
+        ),
         GestureDetector(
           onTap: () async {
             FocusScope.of(context).unfocus();
@@ -63,55 +72,35 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               });
               widget.onLocationSelected(result);
             }
-          }, // isGestureEnabled가 false일 때는 onTap 이벤트 비활성화
+          },
           child: Container(
-
-            margin: const EdgeInsets.fromLTRB(30, 20, 30, 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+            color: Colors.white,
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  margin: const EdgeInsets.only(bottom: 5),
-                  child: Row(
-                    children: [
-                      widget.pointText.text.size(16).bold.black.make(),
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-
-
-                ),
-                Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: RichText(
-                          //overflow: TextOverflow.ellipsis,
-                          maxLines: 2, // 최대 2줄
-                          text: TextSpan(
-                            style: const TextStyle(color: Colors.black, fontSize: 15),
-                            text: selectedLocation,
-                            children: const [
-                              TextSpan(
-                                //text: "...", // 초과될 경우 '...' 표시
-                                style: TextStyle(fontSize: 12), // 초과될 경우 글자 크기(작게)
-                              ),
-                            ],
-                          ),
+                Expanded(
+                  child: RichText(
+                    //overflow: TextOverflow.ellipsis,
+                    maxLines: 2, // 최대 2줄
+                    text: TextSpan(
+                      style: const TextStyle(color: Colors.black, fontSize: 15),
+                      text: selectedLocation,
+                      children: const [
+                        TextSpan(
+                          //text: "...", // 초과될 경우 '...' 표시
+                          style: TextStyle(fontSize: 12), // 초과될 경우 글자 크기(작게)
                         ),
-                      ),
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.black,
-                        size: 15,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                )
-
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.black,
+                  size: 15,
+                ),
               ],
             ),
           ),
