@@ -146,6 +146,7 @@ flutter:
     - assets/
     - assets/image/splash/
     - assets/config/.env
+    - assets/fwordList.txt
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
