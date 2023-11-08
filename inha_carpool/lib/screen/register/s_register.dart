@@ -271,37 +271,65 @@ class _RegisterPageState extends State<RegisterPage> {
                         const SizedBox(height: 15), // 15 아래로 이동
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                          child: Container(
-                            // 닉네임 입력 필드
-                            height: inputFieldHeight, // 높이 변수 적용
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey[300]!, // 연한 회색 테두리
-                              ),
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.grey[100], // 연한 회색 배경색
-                            ),
-                            child: TextFormField(
-                              decoration: const InputDecoration(
-                                labelText: null,
-                                hintText: '닉네임',
-                                border: InputBorder.none,
-                                prefixIcon: Icon(
-                                  Icons.person,
-                                  color: Colors.grey,
+                          child: Stack(
+                            alignment: Alignment.centerRight, // 버튼을 오른쪽에 정렬
+                            children: [
+                              Container(
+                                // 닉네임 입력 필드
+                                height: inputFieldHeight, // 높이 변수 적용
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey[300]!, // 연한 회색 테두리
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.grey[100], // 연한 회색 배경색
+                                ),
+                                child: TextFormField(
+                                  decoration: const InputDecoration(
+                                    labelText: null,
+                                    hintText: '닉네임',
+                                    border: InputBorder.none,
+                                    prefixIcon: Icon(
+                                      Icons.person,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  validator: (val) {
+                                    if (val!.isNotEmpty) {
+                                      return null;
+                                    } else {
+                                      return "닉네임이 비어있습니다.";
+                                    }
+                                  },
+                                  onChanged: (text) {
+                                    nickname = text;
+                                  },
                                 ),
                               ),
-                              validator: (val) {
-                                if (val!.isNotEmpty) {
-                                  return null;
-                                } else {
-                                  return "닉네임이 비어있습니다.";
-                                }
-                              },
-                              onChanged: (text) {
-                                nickname = text;
-                              },
-                            ),
+                              Positioned(
+                                right: 5, // 버튼을 오른쪽에 배치
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    // 중복확인 로직 추가해주세요구르트
+                                  },
+                                  child: Text(
+                                    '중복확인',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.blue[100],
+                                    onPrimary: Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10), // 여기에서 모양을 조절합니다.
+                                    ),
+                                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                         const SizedBox(height: 15),
@@ -431,7 +459,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 11),
                               // 버튼 높이
-                              backgroundColor: context.appColors.logoColor,
+                              backgroundColor: //Colors.blue[200],
+                              context.appColors.logoColor,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
