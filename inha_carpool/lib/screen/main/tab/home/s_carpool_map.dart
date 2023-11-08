@@ -549,6 +549,9 @@ class _CarpoolMapState extends State<CarpoolMap> {
                 ),
               ),
             ),
+            widget.isStart == 'false'
+                ? Container()
+                :
             Positioned(
               top: context.height(0.01),
               left: 10,
@@ -564,9 +567,12 @@ class _CarpoolMapState extends State<CarpoolMap> {
                     const Icon(Icons.location_on_outlined, color: Colors.white),
               ),
             ),
+            widget.isStart == 'true'
+                ? Container()
+                :
             Positioned(
               top: context.height(0.01),
-              left: 60,
+              left: widget.isStart == 'true' ? 60 : 10,
               child: FloatingActionButton(
                 heroTag: 'start',
                 backgroundColor: Colors.lightGreenAccent.shade700,
