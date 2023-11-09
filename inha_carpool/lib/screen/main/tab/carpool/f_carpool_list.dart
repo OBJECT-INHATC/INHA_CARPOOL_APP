@@ -254,7 +254,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                 .semiBold
                                     .color(context.appColors.text)
                                     .make(),
-                                '지도 아이콘을 눌러주세요!'
+                                '위치 아이콘을 눌러주세요!'
                                     .text
                                     .size(10)
                                     .color(context.appColors.text)
