@@ -85,13 +85,13 @@ class _CarpoolMapState extends State<CarpoolMap> {
   /// 커스텀 아이콘 이미지 추가 - 0915 한승완
   void addCustomIcon() async {
     final Uint8List? starticon =
-        await getBytesFromAsset('assets/image/startmarker.png', 200);
+    await getBytesFromAsset('assets/image/startmarker.png', 200);
     setState(() {
       startCustomIcon = BitmapDescriptor.fromBytes(starticon!);
     });
 
     final Uint8List? endicon =
-        await getBytesFromAsset('assets/image/endmarker.png', 200);
+    await getBytesFromAsset('assets/image/endmarker.png', 200);
     setState(() {
       endCustomIcon = BitmapDescriptor.fromBytes(endicon!);
     });
@@ -173,9 +173,11 @@ class _CarpoolMapState extends State<CarpoolMap> {
             fontWeight: FontWeight.bold,
           ),
           centerTitle: true,
-          title: ((widget.admin?.split("_").length ?? 0) > 1
-                  ? '${widget.admin!.split("_")[1]}님의 카풀 정보'
-                  : '위치정보')
+          title: ((widget.admin
+              ?.split("_")
+              .length ?? 0) > 1
+              ? '${widget.admin!.split("_")[1]}님의 카풀 정보'
+              : '위치정보')
               .text
               .black
               .make(),
@@ -185,18 +187,18 @@ class _CarpoolMapState extends State<CarpoolMap> {
           shape: isJoining
               ? null
               : Border(
-                  bottom: BorderSide(
-                    color: Colors.grey.shade200,
-                    width: 1,
-                  ),
-                ),
+            bottom: BorderSide(
+              color: Colors.grey.shade200,
+              width: 1,
+            ),
+          ),
         ),
         body: Stack(
           children: [
             Padding(
-              padding: widget.isStart == 'default' ?
-              EdgeInsets.only(bottom: context.height(0.25))
-              : EdgeInsets.only(bottom: context.height(0.14)),
+              padding: widget.isStart == 'default' ? (widget.isPopUp!
+                  ? EdgeInsets.only(bottom: context.height(0.2)) : EdgeInsets.only(bottom: context.height(0.27)))
+                  : EdgeInsets.only(bottom: context.height(0.14)),
               child: GoogleMap(
                 onMapCreated: (controller) {
                   mapController = controller;
@@ -218,8 +220,10 @@ class _CarpoolMapState extends State<CarpoolMap> {
               // 가운데 위치
               child: Container(
                 height: widget.isStart == 'default'
-                    ? context.height(0.27)
-                    : context.height(0.14),  // 참가버튼 없을 때 높이 바꿈
+                    ? (widget.isPopUp! ? context.height(0.2) : context.height(
+                    0.27)) // 'default'일 때 isPop에 따라 높이 변경
+                    : context.height(0.14), // 'default'가 아닐 때 높이
+
                 width: context.width(1),
                 decoration: BoxDecoration(
                   //color: Colors.grey.shade100,
@@ -253,294 +257,294 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                 widget.isStart == 'false'
                                     ? Container()
                                     : Container(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            const Icon(Icons.location_on,
-                                                color: Colors.blue),
-                                            const SizedBox(width: 3),
-                                            const Text(
-                                              "출발 지점",
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 10),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 3,
-                                                        horizontal: 8),
-                                                // 내부 패딩
-                                                decoration: BoxDecoration(
-                                                  color: Colors
-                                                      .grey[300], // 회색 배경색
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20), // 동그란 모양 설정
-                                                ),
-                                                child: Text(
-                                                  widget.startPointName,
-                                                  style: const TextStyle(
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.bold,
-                                                    color:
-                                                        Colors.black, // 텍스트 색상
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.location_on,
+                                          color: Colors.blue),
+                                      const SizedBox(width: 3),
+                                      const Text(
+                                        "출발 지점",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      Expanded(
+                                        child: Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 10),
+                                          padding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 3,
+                                              horizontal: 8),
+                                          // 내부 패딩
+                                          decoration: BoxDecoration(
+                                            color: Colors
+                                                .grey[300], // 회색 배경색
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                20), // 동그란 모양 설정
+                                          ),
+                                          child: Text(
+                                            widget.startPointName,
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                              Colors.black, // 텍스트 색상
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 widget.isStart == 'true'
                                     ? Container()
                                     : Container(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            const Icon(Icons.location_on,
-                                                color: Colors.lightGreenAccent),
-                                            const SizedBox(width: 3),
-                                            const Text(
-                                              "도착 지점",
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 10),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 3,
-                                                        horizontal: 8),
-                                                // 내부 패딩
-                                                decoration: BoxDecoration(
-                                                  color: Colors
-                                                      .grey[300], // 회색 배경색
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20), // 동그란 모양 설정
-                                                ),
-                                                child: Text(
-                                                  widget.endPointName,
-                                                  style: const TextStyle(
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.bold,
-                                                    color:
-                                                        Colors.black, // 텍스트 색상
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.location_on,
+                                          color: Colors.lightGreenAccent),
+                                      const SizedBox(width: 3),
+                                      const Text(
+                                        "도착 지점",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      Expanded(
+                                        child: Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 10),
+                                          padding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 3,
+                                              horizontal: 8),
+                                          // 내부 패딩
+                                          decoration: BoxDecoration(
+                                            color: Colors
+                                                .grey[300], // 회색 배경색
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                20), // 동그란 모양 설정
+                                          ),
+                                          child: Text(
+                                            widget.endPointName,
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                              Colors.black, // 텍스트 색상
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 widget.startTime == null
                                     ? Container()
                                     : Container(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            const Icon(Icons.access_time,
-                                                color: Colors.blue),
-                                            const SizedBox(width: 3),
-                                            const Text(
-                                              "출발 시간",
-                                              style: TextStyle(
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Container(
-                                                margin: const EdgeInsets.only(
-                                                    left: 10),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 3,
-                                                        horizontal: 8),
-                                                // 내부 패딩
-                                                decoration: BoxDecoration(
-                                                  color: Colors
-                                                      .grey[300], // 회색 배경색
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20), // 동그란 모양 설정
-                                                ),
-                                                child: Text(
-                                                  widget.startTime ?? '',
-                                                  // startTime이 null인 경우 'default'를 사용
-                                                  style: const TextStyle(
-                                                    fontSize: 11,
-                                                    fontWeight: FontWeight.bold,
-                                                    color:
-                                                        Colors.black, // 텍스트 색상
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                  padding: const EdgeInsets.all(5),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.access_time,
+                                          color: Colors.blue),
+                                      const SizedBox(width: 3),
+                                      const Text(
+                                        "출발 시간",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
+                                      Expanded(
+                                        child: Container(
+                                          margin: const EdgeInsets.only(
+                                              left: 10),
+                                          padding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 3,
+                                              horizontal: 8),
+                                          // 내부 패딩
+                                          decoration: BoxDecoration(
+                                            color: Colors
+                                                .grey[300], // 회색 배경색
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                20), // 동그란 모양 설정
+                                          ),
+                                          child: Text(
+                                            widget.startTime ?? '',
+                                            // startTime이 null인 경우 'default'를 사용
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                              Colors.black, // 텍스트 색상
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                             widget.isPopUp ?? false
                                 ? Container()
                                 : ElevatedButton(
-                                    onPressed: () async {
-                                      String carId = widget.carId ?? 'default';
-                                      String memberID = uid;
-                                      String memberName = nickName;
-                                      String selectedRoomGender =
-                                          widget.roomGender ?? 'default';
+                              onPressed: () async {
+                                String carId = widget.carId ?? 'default';
+                                String memberID = uid;
+                                String memberName = nickName;
+                                String selectedRoomGender =
+                                    widget.roomGender ?? 'default';
 
-                                      if (joinButtonEnabled) {
-                                        joinButtonEnabled = false;
+                                if (joinButtonEnabled) {
+                                  joinButtonEnabled = false;
 
-                                        if (gender != selectedRoomGender &&
-                                            selectedRoomGender != '무관') {
-                                          context.showErrorSnackbar(
-                                              '입장할 수 없는 성별입니다.\n다른 카풀을 이용해주세요!');
-                                          return;
-                                        }
-                                        try {
-                                          setState(() {
-                                            isJoining = true;
-                                          });
+                                  if (gender != selectedRoomGender &&
+                                      selectedRoomGender != '무관') {
+                                    context.showErrorSnackbar(
+                                        '입장할 수 없는 성별입니다.\n다른 카풀을 이용해주세요!');
+                                    return;
+                                  }
+                                  try {
+                                    setState(() {
+                                      isJoining = true;
+                                    });
 
-                                          await FirebaseCarpool
-                                              .addMemberToCarpool(
-                                                  carId,
-                                                  memberID,
-                                                  memberName,
-                                                  gender,
-                                                  token!,
-                                                  selectedRoomGender);
-                                          if (!mounted) return;
+                                    await FirebaseCarpool
+                                        .addMemberToCarpool(
+                                        carId,
+                                        memberID,
+                                        memberName,
+                                        gender,
+                                        token!,
+                                        selectedRoomGender);
+                                    if (!mounted) return;
 
-                                          try {
-                                            ///  해당 카풀 알림 토픽 추가 0919 이상훈
-                                            if (Prefs.isPushOnRx.get() ==
-                                                true) {
-                                              /// 채팅 토픽
-                                              await FirebaseMessaging.instance
-                                                  .subscribeToTopic(carId);
+                                    try {
+                                      ///  해당 카풀 알림 토픽 추가 0919 이상훈
+                                      if (Prefs.isPushOnRx.get() ==
+                                          true) {
+                                        /// 채팅 토픽
+                                        await FirebaseMessaging.instance
+                                            .subscribeToTopic(carId);
 
-                                              /// 카풀 정보 토픽 - 서버 저장 X
-                                              await FirebaseMessaging.instance
-                                                  .subscribeToTopic(
-                                                      "${carId}_info");
-                                            }
-                                          } catch (e) {
-                                            print("토픽 추가 실패가 아닌 버전 이슈~");
-                                          }
-
-                                          ApiTopic apiTopic = ApiTopic();
-                                          TopicRequstDTO topicRequstDTO =
-                                              TopicRequstDTO(
-                                                  uid: memberID, carId: carId);
-                                          bool isOpen = await apiTopic
-                                              .saveTopoic(topicRequstDTO);
-
-                                          ///--------------------------------------------
-                                          if (isOpen) {
-                                            print("스프링부트 서버 성공 #############");
-                                            if (!mounted) return;
-                                            Navigator.pop(context);
-                                            Navigator.pushReplacement(
-                                                Nav.globalContext,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const MainScreen()));
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ChatroomPage(
-                                                          carId: carId,
-                                                          groupName: '카풀네임',
-                                                          userName: nickName,
-                                                          uid: uid,
-                                                          gender: gender,
-                                                        )));
-                                          } else {
-                                            print("스프링부트 서버 실패 #############");
-                                            await FireStoreService()
-                                                .exitCarpool(carId, nickName,
-                                                    uid, gender);
-                                            if (Prefs.isPushOnRx.get() ==
-                                                true) {
-                                              await FirebaseMessaging.instance
-                                                  .unsubscribeFromTopic(carId);
-                                              await FirebaseMessaging.instance
-                                                  .unsubscribeFromTopic(
-                                                      "${carId}_info");
-                                            }
-                                            if (!mounted) return;
-                                            Navigator.pop(context);
-                                            showErrorDialog(context,
-                                                '서버가 비정상 작동중입니다.\n잠시 후 다시 시도해주세요.');
-                                          }
-                                        } catch (error) {
-                                          if (error is DeletedRoomException) {
-                                            // 방 삭제 예외 처리
-                                            showErrorDialog(
-                                                context, error.message);
-                                          } else if (error
-                                              is MaxCapacityException) {
-                                            // 인원 초과 예외 처원리
-                                            showErrorDialog(
-                                                context, error.message);
-                                          } else {
-                                            // 기타 예외 처리
-                                            print('카풀 참가 실패 (다른 예외): $error');
-                                          }
-                                        }
-                                        setState(() {
-                                          joinButtonEnabled = true;
-                                        });
-                                      } else {
-                                        context.showErrorSnackbar(
-                                            '참가 중입니다. 잠시만 기다려주세요.');
+                                        /// 카풀 정보 토픽 - 서버 저장 X
+                                        await FirebaseMessaging.instance
+                                            .subscribeToTopic(
+                                            "${carId}_info");
                                       }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      surfaceTintColor: Colors.transparent,
-                                      backgroundColor: Colors.blue,
-                                      textStyle: const TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    child: Container(
-                                      width: context.width(0.8),
-                                      alignment: Alignment.center,
-                                      child: const Text(
-                                        '입장하기',
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
+                                    } catch (e) {
+                                      print("토픽 추가 실패가 아닌 버전 이슈~");
+                                    }
+
+                                    ApiTopic apiTopic = ApiTopic();
+                                    TopicRequstDTO topicRequstDTO =
+                                    TopicRequstDTO(
+                                        uid: memberID, carId: carId);
+                                    bool isOpen = await apiTopic
+                                        .saveTopoic(topicRequstDTO);
+
+                                    ///--------------------------------------------
+                                    if (isOpen) {
+                                      print("스프링부트 서버 성공 #############");
+                                      if (!mounted) return;
+                                      Navigator.pop(context);
+                                      Navigator.pushReplacement(
+                                          Nav.globalContext,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                              const MainScreen()));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ChatroomPage(
+                                                    carId: carId,
+                                                    groupName: '카풀네임',
+                                                    userName: nickName,
+                                                    uid: uid,
+                                                    gender: gender,
+                                                  )));
+                                    } else {
+                                      print("스프링부트 서버 실패 #############");
+                                      await FireStoreService()
+                                          .exitCarpool(carId, nickName,
+                                          uid, gender);
+                                      if (Prefs.isPushOnRx.get() ==
+                                          true) {
+                                        await FirebaseMessaging.instance
+                                            .unsubscribeFromTopic(carId);
+                                        await FirebaseMessaging.instance
+                                            .unsubscribeFromTopic(
+                                            "${carId}_info");
+                                      }
+                                      if (!mounted) return;
+                                      Navigator.pop(context);
+                                      showErrorDialog(context,
+                                          '서버가 비정상 작동중입니다.\n잠시 후 다시 시도해주세요.');
+                                    }
+                                  } catch (error) {
+                                    if (error is DeletedRoomException) {
+                                      // 방 삭제 예외 처리
+                                      showErrorDialog(
+                                          context, error.message);
+                                    } else if (error
+                                    is MaxCapacityException) {
+                                      // 인원 초과 예외 처원리
+                                      showErrorDialog(
+                                          context, error.message);
+                                    } else {
+                                      // 기타 예외 처리
+                                      print('카풀 참가 실패 (다른 예외): $error');
+                                    }
+                                  }
+                                  setState(() {
+                                    joinButtonEnabled = true;
+                                  });
+                                } else {
+                                  context.showErrorSnackbar(
+                                      '참가 중입니다. 잠시만 기다려주세요.');
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                surfaceTintColor: Colors.transparent,
+                                backgroundColor: Colors.blue,
+                                textStyle: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              child: Container(
+                                width: context.width(0.8),
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  '입장하기',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -564,7 +568,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                 },
                 // 도착지점을 나타내는 아이콘
                 child:
-                    const Icon(Icons.location_on_outlined, color: Colors.white),
+                const Icon(Icons.location_on_outlined, color: Colors.white),
               ),
             ),
             widget.isStart == 'true'
@@ -582,26 +586,29 @@ class _CarpoolMapState extends State<CarpoolMap> {
                 },
                 // 도착지점을 나타내는 아이콘
                 child:
-                    const Icon(Icons.location_on_outlined, color: Colors.white),
+                const Icon(Icons.location_on_outlined, color: Colors.white),
               ),
             ),
             isJoining
                 ? Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SpinKitThreeBounce(
-                            color: Colors.white,
-                            size: 25.0,
-                          ),
-                          const SizedBox(height: 16),
-                          '🚕 카풀 참가 중'.text.size(20).white.make(),
-                        ],
-                      ),
+              color: Colors.black.withOpacity(0.5),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SpinKitThreeBounce(
+                      color: Colors.white,
+                      size: 25.0,
                     ),
-                  )
+                    const SizedBox(height: 16),
+                    '🚕 카풀 참가 중'.text
+                        .size(20)
+                        .white
+                        .make(),
+                  ],
+                ),
+              ),
+            )
                 : Container(),
           ],
         ),
