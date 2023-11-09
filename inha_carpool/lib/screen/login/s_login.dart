@@ -572,7 +572,7 @@ class _LoginPageState extends State<LoginPage> {
                                   );
                                 },
                                 child: const Text(
-                                  '비밀번호찾기',
+                                  '비밀번호 찾기',
                                   style: TextStyle(
                                     color: Colors.indigo,
                                     decoration: TextDecoration.underline,

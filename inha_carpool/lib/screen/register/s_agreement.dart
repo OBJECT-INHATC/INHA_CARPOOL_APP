@@ -70,14 +70,14 @@ class _AgreementState extends State<Agreement> {
               const SizedBox(height: 10),
               const Padding(
                 padding: EdgeInsets.only(left: 10),
-                child: Text("약관동의",
+                child: Text("약관 동의",
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 25)),
               ),
               const SizedBox(height: 2),
               const Padding(
                 padding: EdgeInsets.only(left: 10),
-                child: Text("필수항목 및 선택항목 약관에 동의해 주세요."),
+                child: Text("필수 항목 및 선택항목 약관에 동의해 주세요."),
               ),
               Container(
                 padding: const EdgeInsets.only(top: 20, bottom: 20),
@@ -363,7 +363,7 @@ class _AgreementState extends State<Agreement> {
                             ),
                           );
                         } else {
-                          context.showSnackbar('필수 약관에 동의해주세요.');
+                          context.showSnackbar('필수 약관에 동의해 주세요.');
                         }
                       },
                       style: ElevatedButton.styleFrom(
