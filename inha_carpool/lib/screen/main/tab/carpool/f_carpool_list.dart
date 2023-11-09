@@ -150,7 +150,7 @@ class _CarpoolListState extends State<CarpoolList> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      '참가하고 계신 카풀이 없습니다.\n카풀을 등록해보세요!'
+                      '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!'
                           .text
                           .size(20)
                           .bold
