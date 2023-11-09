@@ -227,7 +227,7 @@ class _CarpoolListState extends State<CarpoolList> {
                       SizedBox(
                         height: 90,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -261,7 +261,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                     .make(),
                               ],
                             ),
-
+                             Width(screenWidth * 0.03),
                             Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
