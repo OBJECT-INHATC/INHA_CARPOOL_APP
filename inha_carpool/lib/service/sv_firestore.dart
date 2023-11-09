@@ -146,8 +146,8 @@ class FireStoreService {
         .collection("messages")
         .add(chatMessageMap);
     FcmService().sendMessage(
-        title: "새로운 멤버가 참가했습니다.",
-        body: "$userName님과 즐거운 카풀 되세요!",
+        title:  "$userName님이 참가했습니다.",
+        body: "즐거운 카풀 되세요!",
         chatMessage: chatMessage,
         type: NotificationType.status);
   }
@@ -177,8 +177,8 @@ class FireStoreService {
         .collection("messages")
         .add(chatMessageMap);
     FcmService().sendMessage(
-        title: "카풀에서 멤버가 퇴장했습니다.",
-        body: "$userName님이 퇴장하였습니다.",
+        title: "$userName님이 퇴장하였습니다.",
+        body: "카풀 인원을 확인하세요.",
         chatMessage: chatMessage,
         type: NotificationType.status);
 
