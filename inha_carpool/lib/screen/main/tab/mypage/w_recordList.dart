@@ -117,6 +117,52 @@ class _RecordListState extends State<RecordList> {
                     String member2 = historyList[index].member2;
                     String member3 = historyList[index].member3;
 
+                    // '함께 한 사람' 정보 리스트를 생성
+                    List<String> members = [member1, member2, member3];
+
+                    // 멤버 리스트에서 현재 유저와 동일한 이름의 멤버를 필터링
+                    List<String> validMembers = members.where((member) {
+                      return member != '' && member.split('_')[1] != nickName;
+                    }).toList();
+
+                    // 함께한 사람이 없는 경우에 대한 처리
+                    Widget buildMemberSection() {
+                      if (validMembers.isEmpty) {
+                        return const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '함께 한 사람이 없습니다',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        );
+                      } else {
+                        return Column(
+                          children: [
+                            const Row(
+                              children: [
+                                Text(
+                                  '함께 한 사람',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: screenHeight * 0.01),
+                            for (var member in validMembers)
+                              buildMemberRow(member, historyList[index].carPoolId),
+                          ],
+                        );
+                      }
+                    }
+
                     return GestureDetector(
                       child: Card(
                         color: Colors.white,
@@ -186,31 +232,8 @@ class _RecordListState extends State<RecordList> {
                                 ],
                               ),
                               SizedBox(height: screenHeight * 0.01),
-                              const Row(
-                                children: [
-                                  Text(
-                                    '함께 한 사람',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: screenHeight * 0.01),
-                              if (member1 != "" &&
-                                  member1.split('_')[1] != nickName)
-                                buildMemberRow(
-                                    member1, historyList[index].carPoolId),
-                              // 함께한 사람 정보 리스트
-                              if (member2 != "" &&
-                                  member2.split('_')[1] != nickName)
-                                buildMemberRow(
-                                    member2, historyList[index].carPoolId),
-                              if (member3 != "" &&
-                                  member3.split('_')[1] != nickName)
-                                buildMemberRow(
-                                    member3, historyList[index].carPoolId),
+
+                              buildMemberSection(),
                             ],
                           ),
                         ),
