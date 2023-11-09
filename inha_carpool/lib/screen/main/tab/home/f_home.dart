@@ -377,7 +377,6 @@ class _HomeState extends State<Home> {
     return FutureBuilder<List<DocumentSnapshot>>(
       future: carPoolList,
       builder: (context, snapshot) {
-        // print("로딩중");
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError ||

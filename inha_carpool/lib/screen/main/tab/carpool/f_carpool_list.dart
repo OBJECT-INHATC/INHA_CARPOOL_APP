@@ -169,6 +169,7 @@ class _CarpoolListState extends State<CarpoolList> {
                           //side: const BorderSide(color: Colors.white, width: 1),
                         ),
                         onPressed: () {
+
                           Navigator.push(
                             Nav.globalContext,
                             MaterialPageRoute(
@@ -244,7 +245,9 @@ class _CarpoolListState extends State<CarpoolList> {
                             String formattedStartTime =
                                 _getFormattedDateString(startTime);
 
-                            return GestureDetector(
+                            return InkWell(
+                              highlightColor: Colors.blue.withOpacity(0.2),
+                              splashColor: context.appColors.logoColor.withOpacity(0.2),
                               onTap: () {
                                 if (isCarpoolOver(startTime)) {
                                   ScaffoldMessenger.of(context)

@@ -50,7 +50,6 @@ class _RecruitPageState extends State<RecruitPage> {
   @override
   void initState() {
     super.initState();
-    //_getCurrentLocation();
     _loadUserData();
   }
 
@@ -65,7 +64,7 @@ class _RecruitPageState extends State<RecruitPage> {
     });
   }
 
-  String selectedLimit = '2인'; // 선택된 제한인원 초기값
+  String selectedLimit = '3인'; // 선택된 제한인원 초기값
   String selectedGender = '무관'; // 선택된 성별 초기값
 
   // 주소 입력 오류 확인
@@ -157,7 +156,7 @@ class _RecruitPageState extends State<RecruitPage> {
                           startPointName = endPointName;
                           startPoint = endPoint;
 
-                          //요약 주소
+                          //요약 주소 스왑
                           String temp = _endPointDetailController.text;
                           _endPointDetailController.text =
                               _startPointDetailController.text;
