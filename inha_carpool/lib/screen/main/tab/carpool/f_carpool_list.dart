@@ -254,11 +254,16 @@ class _CarpoolListState extends State<CarpoolList> {
                                 .semiBold
                                     .color(context.appColors.text)
                                     .make(),
+                                '지도 아이콘을 눌러주세요!'
+                                    .text
+                                    .size(10)
+                                    .color(context.appColors.text)
+                                    .make(),
                               ],
                             ),
 
                             Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
@@ -321,25 +326,6 @@ class _CarpoolListState extends State<CarpoolList> {
                                         .make(),
                                   ],
                                 ),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.circle,
-                                      color: Colors.black,
-                                      size: 10,
-                                    ),
-                                    Width(5),
-                                    '지도 아이콘을 눌러주세요!'
-                                        .text
-                                        .size(10)
-                                        .color(context.appColors.text)
-                                        .make(),
-                                  ],
-                                ),
-
-
-
-
                               ],
                             )
                           ],
