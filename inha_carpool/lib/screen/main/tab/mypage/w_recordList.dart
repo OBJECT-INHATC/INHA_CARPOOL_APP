@@ -181,7 +181,7 @@ class _RecordListState extends State<RecordList> {
                                 children: [
                                   const Icon(
                                     Icons.local_taxi_rounded,
-                                    color: Colors.blue,
+                                    color: Colors.indigoAccent,
                                     size: 30,
                                   ),
                                   SizedBox(width: screenWidth * 0.02),
@@ -198,7 +198,7 @@ class _RecordListState extends State<RecordList> {
                               Row(
                                 children: [
                                   const Text(
-                                    '출발지:',
+                                    '출발지',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 15,
@@ -217,7 +217,7 @@ class _RecordListState extends State<RecordList> {
                               Row(
                                 children: [
                                   const Text(
-                                    '도착지:',
+                                    '도착지',
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 15,
@@ -257,18 +257,18 @@ class _RecordListState extends State<RecordList> {
 
     return Row(
       children: [
-        const Icon(
-          Icons.account_circle,
-          size: 35,
-          color: Colors.black,
-        ),
+        // const Icon(
+        //   Icons.account_circle,
+        //   size: 35,
+        //   color: Colors.black,
+        // ),
         SizedBox(width: screenWidth * 0.03),
         Text(
           member.split('_')[1], // 함께한 사람 닉네임
           style: const TextStyle(color: Colors.black, fontSize: 16),
         ),
         IconButton(
-          icon: const Icon(Icons.arrow_forward),
+          icon: const Icon(Icons.warning_rounded, size: 20, color: Colors.red,),
           onPressed: () {
             showDialog(
               context: context,
