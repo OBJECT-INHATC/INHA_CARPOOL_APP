@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
@@ -188,14 +189,14 @@ class _NotificationListState extends State<NotificationList> {
                               title: Column(
                                 children: [
                                   Container(
-                                    alignment: Alignment.centerRight,
+                                    alignment: Alignment.centerLeft,
                                     child: Text(notificationList[i].title,
                                         style: const TextStyle(
                                             fontSize: 15,
                                             fontWeight: FontWeight.bold)),
-                                  ),
+                                  ).paddingOnly(bottom: 3, top: 3),
                                   Container(
-                                    alignment: Alignment.centerRight,
+                                    alignment: Alignment.centerLeft,
                                     child: Text(
                                       DateFormat('yyyy-MM-dd HH:mm')
                                           .format(

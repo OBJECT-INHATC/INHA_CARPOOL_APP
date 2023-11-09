@@ -10,7 +10,7 @@ class DoneDialog extends StatelessWidget {
 
     return  AlertDialog(//경고창
       surfaceTintColor: Colors.transparent,
-      insetPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),//경고창의 내부여백
+      insetPadding: const EdgeInsets.fromLTRB(20, 0, 20, 0),//경고창의 내부여백
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),//모서리 둥글게
       content: SizedBox(//경고창의 크기
         width: width - 20,// -20을 해주는 이유는 경고창의 내부여백이 20이기 때문
@@ -26,8 +26,8 @@ class DoneDialog extends StatelessWidget {
                       WidgetSpan(//위젯을 텍스트 일부분에 적용
                         child: Icon(Icons.check_circle, color: Colors.green[400]),
                       ),
-                      WidgetSpan(child: SizedBox(width: 10)),
-                      TextSpan(
+                      const WidgetSpan(child: SizedBox(width: 10)),
+                      const TextSpan(
                         text: "확인",
                         style: TextStyle(
                           fontSize: 18,
@@ -41,21 +41,21 @@ class DoneDialog extends StatelessWidget {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: Icon(Icons.clear),
+                  icon: const Icon(Icons.clear),
                 ),
               ],
             ),
-            Divider(//구분선
+            const Divider(//구분선
               height: 1.5,
               color: Colors.grey,
             ),
             SizedBox(height: 15),
-            Text(
+            const Text(
               '카풀이 종료되었습니다!!',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10),
-            Text(
+            const Text(
               '편하게 이용하셨다면 다시 또 찾아주세요. \n즐거운 여행 되셨길 바랍니다!',
               textAlign: TextAlign.center,
               style: TextStyle(
@@ -68,7 +68,7 @@ class DoneDialog extends StatelessWidget {
       ),
       actions: [
         Container(
-          padding: EdgeInsets.only(right: 10),
+          padding: const EdgeInsets.only(right: 10),
           child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor:
@@ -77,7 +77,7 @@ class DoneDialog extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text('OK')),
+              child: const Text('OK')),
         )
       ],
     );;

@@ -146,7 +146,7 @@ class FireStoreService {
         .collection("messages")
         .add(chatMessageMap);
     FcmService().sendMessage(
-        title: "카풀에 새로운 멤버가 참가했습니다.",
+        title: "새로운 멤버가 참가했습니다.",
         body: "$userName님과 즐거운 카풀 되세요!",
         chatMessage: chatMessage,
         type: NotificationType.status);
