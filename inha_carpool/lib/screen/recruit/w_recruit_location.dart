@@ -33,6 +33,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
   String selectedLocation = '';
 
+  String textContent= "";
+
+
   // bool isGestureEnabled = true;
 
   @override
@@ -43,6 +46,9 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
 
   @override
   Widget build(BuildContext context) {
+
+    final int maxLength = 10;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,7 +120,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               fillColor: Colors.white,
               counterText: "",
               hintText: widget.detailPoint,
-              suffix: Text("${widget.detailController.text.length}/10"), //글자 수 카운트
+              suffix: Text("${textContent.length}/$maxLength"), //글자 수 카운트
               labelStyle: const TextStyle(color: Colors.black, fontSize: 13),
               border: UnderlineInputBorder(
 
@@ -126,7 +132,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               onChanged: (text) {
                 // 글자수 업뎃
                 setState(() {
-                  widget.detailController.text = text;
+                  textContent = widget.detailController.text;
                 });
               }
           ),
