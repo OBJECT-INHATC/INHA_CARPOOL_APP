@@ -273,7 +273,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                       color: Colors.red,
                                       size: 10,
                                     ),
-                                    Width(5),
+                                    const Width(5),
                                     '1시간 전'
                                         .text
                                         .size(10)
@@ -303,7 +303,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                       color: Colors.grey,
                                       size: 10,
                                     ),
-                                    Width(5),
+                                    const Width(5),
                                     '24시간 이후'
                                         .text
                                         .size(10)
@@ -318,7 +318,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                       color: Colors.black,
                                       size: 10,
                                     ),
-                                    Width(5),
+                                    const Width(5),
                                     '10분 전 퇴장 불가'
                                         .text
                                         .size(10)
