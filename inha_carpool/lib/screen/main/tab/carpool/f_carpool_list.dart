@@ -248,7 +248,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                     ),
                                   ],
                                 ),
-                                '현재 참여 중인 방 개수 ${myCarpools.length}개'
+                                '현재 참여 중인 카풀 ${myCarpools.length}개'
                                     .text
                                     .size(10)
                                 .semiBold
@@ -274,7 +274,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                       size: 10,
                                     ),
                                     Width(5),
-                                    '출발 1시간 전'
+                                    '1시간 전'
                                         .text
                                         .size(10)
                                         .color(context.appColors.text)
@@ -289,7 +289,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                       size: 10,
                                     ),
                                     const Width(5),
-                                    '출발 24시간 전'
+                                    '24시간 전'
                                         .text
                                         .size(10)
                                         .color(context.appColors.text)
@@ -304,7 +304,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                       size: 10,
                                     ),
                                     Width(5),
-                                    '출발 24시간 이후'
+                                    '24시간 이후'
                                         .text
                                         .size(10)
                                         .color(context.appColors.text)
@@ -319,7 +319,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                       size: 10,
                                     ),
                                     Width(5),
-                                    '출발 10분 전 퇴장 불가'
+                                    '10분 전 퇴장 불가'
                                         .text
                                         .size(10)
                                         .color(context.appColors.text)
