@@ -26,7 +26,7 @@ class w_cardItem extends StatelessWidget {
      if (color == Colors.red) {
        return 'assets/image/icon/redMap.png';
      } else if (color == Colors.grey) {
-       return 'assets/image/icon/greenMap.png';
+       return 'assets/image/icon/greyMap.png';
      }
      return 'assets/image/icon/map.png'; // 기본 이미지
    }
