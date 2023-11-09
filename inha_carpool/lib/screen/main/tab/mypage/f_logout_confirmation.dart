@@ -81,7 +81,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
                   (value) {
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                       (Route<dynamic> route) => false,
                 );
               },

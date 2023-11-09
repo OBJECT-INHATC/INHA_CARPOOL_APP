@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class DeletedRoomException implements Exception {
   final String message;

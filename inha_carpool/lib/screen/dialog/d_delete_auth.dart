@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../service/sv_auth.dart';
 import '../login/s_login.dart';
@@ -18,12 +17,6 @@ class _DeleteAuthDialogState extends State<DeleteAuthDialog> {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
-    var width = MediaQuery.of(context).size.width;
-
-    double heightPercentage = 0.5; // 70% 화면 높이 사용
-    double widthPercentage = 0.9; // 90% 화면 너비 사용
-
     return AlertDialog(
       surfaceTintColor: Colors.transparent,
       insetPadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),

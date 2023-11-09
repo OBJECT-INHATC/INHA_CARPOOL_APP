@@ -17,7 +17,6 @@ class ComplainAlert extends StatefulWidget {
 }
 
 class _ComplainAlertState extends State<ComplainAlert> {
-  // 스트링 변수선언
 
   @override
   void initState() {

@@ -47,7 +47,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   @override
   Widget build(BuildContext context) {
 
-    final int maxLength = 10;
+    const int maxLength = 10;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

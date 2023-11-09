@@ -66,8 +66,6 @@ class _ChatroomPageState extends State<ChatroomPage>
   String admin = "";
   String token = "";
 
-  // User? user;
-
   //0927강지윤
   String? get uid => user?.uid; //uid가져오기
 
@@ -801,7 +799,7 @@ class _ChatroomPageState extends State<ChatroomPage>
       /// 스크롤 화면 하단으로 이동
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
 

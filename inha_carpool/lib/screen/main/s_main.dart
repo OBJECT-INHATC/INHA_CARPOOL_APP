@@ -22,9 +22,6 @@ class MainScreen extends StatefulWidget {
 class MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
 
-
-  FocusNode _focusNode = FocusNode();
-
   bool inCarpoolList = false; // Add this state
   late TabItem _currentTab;
   //시작 화면 지정

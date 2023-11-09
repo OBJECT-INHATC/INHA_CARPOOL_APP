@@ -131,7 +131,7 @@ class _HomeState extends State<Home> {
             Navigator.push(
               Nav.globalContext,
               MaterialPageRoute(
-                builder: (context) => RecruitPage(),
+                builder: (context) => const RecruitPage(),
               ),
             );
           },

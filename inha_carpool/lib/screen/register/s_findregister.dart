@@ -175,11 +175,11 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                         style: ElevatedButton.styleFrom(
                           surfaceTintColor: Colors.transparent,
                           minimumSize: const Size.fromHeight(50),
-                          backgroundColor: (onChanged != false)? Color.fromARGB(255, 70, 100, 192) : Colors.grey[400],
+                          backgroundColor: (onChanged != false)? const Color.fromARGB(255, 70, 100, 192) : Colors.grey[400],
                           shape: ContinuousRectangleBorder(
                               borderRadius: BorderRadius.circular(16.0)
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 12.0), //버튼 위아래 패딩 크기 늘리기
+                          padding: const EdgeInsets.symmetric(vertical: 12.0), //버튼 위아래 패딩 크기 늘리기
                         ),
                         child: const Text('비밀번호 재설정 요청',
                             style: TextStyle(

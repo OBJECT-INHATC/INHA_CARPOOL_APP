@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 
 import '../Colors/app_colors.dart';

@@ -12,13 +12,11 @@ import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/register/s_agreement.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
-import 'package:nav/nav.dart';
 
 import '../../common/data/preference/prefs.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
 import '../register/s_findregister.dart';
-import '../register/s_register.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -626,14 +624,4 @@ class _LoginPageState extends State<LoginPage> {
       email = id + academy;
     }
   }
-
-  /*Future<void> _loadUserData() async {
-    nickName = await storage.read(key: "nickName") ?? "";
-    uid = await storage.read(key: "uid") ?? "";
-    gender = await storage.read(key: "gender") ?? "";
-
-    setState(() {
-      // nickName, email, gender를 업데이트했으므로 화면을 갱신합니다.
-    });
-  }*/
 }

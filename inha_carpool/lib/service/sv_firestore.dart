@@ -215,8 +215,6 @@ class FireStoreService {
     DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
     DocumentSnapshot carpoolSnapshot = await carpoolDocRef.get();
 
-    int nowMember = carpoolSnapshot['nowMember'];
-
     /// 0902 김영재. 마지막 사람이 방을 나가면 status를 true로 변경
     await carpoolDocRef.update({
       'members': FieldValue.arrayRemove(['${uid}_${userName}_$gender']),
@@ -226,13 +224,6 @@ class FireStoreService {
     // 탈퇴 메시지 전송
     FireStoreService().sendExitMessage(carId, userName);
 
-    // members에서 해당 유저 삭제
-    // nowmember -1
-
-    // await userDocRef.update({
-    //   'carpools': FieldValue.arrayRemove([carId]),
-    // });
-    // // 유저의 carpools에서 해당 carId 삭제
   }
 
   // 방장의 카풀 나가기
