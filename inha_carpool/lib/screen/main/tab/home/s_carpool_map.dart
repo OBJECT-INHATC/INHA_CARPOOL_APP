@@ -198,7 +198,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
             Padding(
               padding: widget.isStart == 'default' ? (widget.isPopUp!
                   ? EdgeInsets.only(bottom: context.height(0.2)) : EdgeInsets.only(bottom: context.height(0.27)))
-                  : EdgeInsets.only(bottom: context.height(0.14)),
+                  : EdgeInsets.only(bottom: context.height(0.18)),
               child: GoogleMap(
                 onMapCreated: (controller) {
                   mapController = controller;
@@ -222,7 +222,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                 height: widget.isStart == 'default'
                     ? (widget.isPopUp! ? context.height(0.2) : context.height(
                     0.27)) // 'default'일 때 isPop에 따라 높이 변경
-                    : context.height(0.14), // 'default'가 아닐 때 높이
+                    : context.height(0.18), // 'default'가 아닐 때 높이
                 width: context.width(1),
                 decoration: BoxDecoration(
                   //color: Colors.grey.shade100,
