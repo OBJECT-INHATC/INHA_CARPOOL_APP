@@ -283,7 +283,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 child: TextFormField(
                                   inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z가-힣]')),
+                                    FilteringTextInputFormatter.allow(RegExp(r"^[a-zA-Z0-9ㄱ-ㅎ가-힣]+$")),
                                   ],
                                   decoration: const InputDecoration(
                                     labelText: null,
@@ -344,7 +344,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 child: TextFormField(
                                   inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z가-힣]')),
+                                    FilteringTextInputFormatter.allow(RegExp(r"^[a-zA-Z0-9ㄱ-ㅎ가-힣]+$")),
                                   ],
                                   decoration: const InputDecoration(
                                     labelText: null,
