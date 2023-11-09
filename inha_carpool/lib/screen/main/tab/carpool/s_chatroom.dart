@@ -380,7 +380,8 @@ class _ChatroomPageState extends State<ChatroomPage>
         //----------------------------------------------body
         //----------------------------------------------body
         //----------------------------------------------body
-        body: Column(
+          resizeToAvoidBottomInset: true,
+          body: Column(
           children: [
             //출발 목적지
             const Height(3),
@@ -419,6 +420,19 @@ class _ChatroomPageState extends State<ChatroomPage>
                                   borderRadius: BorderRadius.circular(30),
                                 ),
                                 child: TextField(
+                                  // 스크롤을 최하단으로
+                                  onTap: () {
+                                    //0.4초 기다렸다가 스크롤을 최하단으로
+                                    Future.delayed(const Duration(milliseconds: 400),
+                                        () {
+                                      _scrollController.animateTo(
+                                        _scrollController
+                                            .position.maxScrollExtent,
+                                        duration: const Duration(milliseconds: 300),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    });
+                                },
                                   cursorColor: Colors.white,
                                   controller: messageController,
                                   style: const TextStyle(
@@ -787,11 +801,13 @@ class _ChatroomPageState extends State<ChatroomPage>
       /// 스크롤 화면 하단으로 이동
       _scrollController.animateTo(
         _scrollController.position.maxScrollExtent,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.easeOut,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
       );
 
-      setState(() {
+
+
+    setState(() {
         /// 메시지 입력 컨트롤러 초기화
         messageController.clear();
         canSend = false;
