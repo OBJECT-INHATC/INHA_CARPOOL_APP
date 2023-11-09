@@ -63,7 +63,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
               },
             ),
             const SizedBox(height: 6),
-            const Text('위 계정에서 로그아웃 하시겠습니까?'),
+            const Text('위 계정에서 로그아웃하시겠습니까?'),
           ],
         ),
       ),

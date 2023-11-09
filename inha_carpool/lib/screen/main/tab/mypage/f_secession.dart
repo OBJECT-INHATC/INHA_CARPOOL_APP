@@ -118,7 +118,7 @@ class _SecessionPageState extends State<SecessionPage> {
                     ),
                     const SizedBox(height: 15), // 간격 조절
                     const Text(
-                      "지금 탈퇴하시면 서비스를 이용할 수 없어요!\n탈퇴하시려면 학번과 비밀번호를 입력해주세요.",
+                      "지금 탈퇴하시면 서비스를 이용할 수 없어요!\n탈퇴하시려면 학번과 비밀번호를 입력해 주세요.",
                       style: TextStyle(fontSize: 16, color: Colors.red),
                       textAlign: TextAlign.start,
                     ),

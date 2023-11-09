@@ -37,7 +37,7 @@ class _DeleteAuthDialogState extends State<DeleteAuthDialog> {
                  const Align(
                    alignment: Alignment.centerLeft,
                    child: Text(
-                     "탈퇴 사유를 입력해주세요!",
+                     "탈퇴 사유를 입력해 주세요!",
                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                      textAlign: TextAlign.left,
                    ),
@@ -52,7 +52,7 @@ class _DeleteAuthDialogState extends State<DeleteAuthDialog> {
                    ),
                    child: TextFormField(
                      decoration: const InputDecoration(
-                       hintText: "이유를 입력해주세요",
+                       hintText: "이유를 입력해 주세요",
                        border: InputBorder.none,
                      ),
                      maxLines: 10,
