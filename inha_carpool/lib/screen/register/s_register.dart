@@ -1,12 +1,9 @@
-import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/register/s_verifiedregister.dart';
-import 'package:nav/nav.dart';
 import '../../service/sv_auth.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 
@@ -197,6 +194,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                         children: [
                                           Expanded(
                                             child: TextFormField(
+                                              inputFormatters: [
+                                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
+                                              ],
                                               decoration: const InputDecoration(
                                                 labelText: null,
                                                 // labelText를 null로 설정하고 힌트 텍스트 숨김
@@ -282,6 +282,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   color: Colors.grey[100], // 연한 회색 배경색
                                 ),
                                 child: TextFormField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z가-힣]')),
+                                  ],
                                   decoration: const InputDecoration(
                                     labelText: null,
                                     hintText: '이름',
@@ -340,6 +343,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   color: Colors.grey[100], // 연한 회색 배경색
                                 ),
                                 child: TextFormField(
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z가-힣]')),
+                                  ],
                                   decoration: const InputDecoration(
                                     labelText: null,
                                     hintText: '닉네임',
