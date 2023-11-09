@@ -96,6 +96,10 @@ class AuthService {
     if (user != null) {
       print('Current user: ${user.email}');
         try {
+          // 같은 비밀번호로 바꾸려고 할 경우 예외처리
+          if(oldPassword == newPassword){
+            return 'Same Password';
+          }
           await user.updatePassword(newPassword);
 
           return 'Success';
