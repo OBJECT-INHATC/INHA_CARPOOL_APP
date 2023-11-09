@@ -224,6 +224,127 @@ class _CarpoolListState extends State<CarpoolList> {
                         margin: const EdgeInsets.all(5),
                         color: context.appColors.logoColor,
                       ),
+                      SizedBox(
+                        height: 90,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    '출발 예정 카풀'
+                                        .text
+                                        .size(20)
+                                        .bold
+                                        .color(context.appColors.text)
+                                        .make(),
+                                    Icon(
+                                      Icons.local_taxi_rounded,
+                                      color: context.appColors.logoColor,
+                                      size: 20,
+                                    ),
+                                  ],
+                                ),
+                                '현재 참여 중인 방 개수 ${myCarpools.length}개'
+                                    .text
+                                    .size(10)
+                                .semiBold
+                                    .color(context.appColors.text)
+                                    .make(),
+                              ],
+                            ),
+
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.circle,
+                                      color: Colors.red,
+                                      size: 10,
+                                    ),
+                                    Width(5),
+                                    '출발 1시간 전'
+                                        .text
+                                        .size(10)
+                                        .color(context.appColors.text)
+                                        .make(),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.circle,
+                                      color: Colors.blue,
+                                      size: 10,
+                                    ),
+                                    const Width(5),
+                                    '출발 24시간 전'
+                                        .text
+                                        .size(10)
+                                        .color(context.appColors.text)
+                                        .make(),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.circle,
+                                      color: Colors.grey,
+                                      size: 10,
+                                    ),
+                                    Width(5),
+                                    '출발 24시간 이후'
+                                        .text
+                                        .size(10)
+                                        .color(context.appColors.text)
+                                        .make(),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.circle,
+                                      color: Colors.black,
+                                      size: 10,
+                                    ),
+                                    Width(5),
+                                    '출발 10분 전 퇴장 불가'
+                                        .text
+                                        .size(10)
+                                        .color(context.appColors.text)
+                                        .make(),
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.circle,
+                                      color: Colors.black,
+                                      size: 10,
+                                    ),
+                                    Width(5),
+                                    '지도 아이콘을 눌러주세요!'
+                                        .text
+                                        .size(10)
+                                        .color(context.appColors.text)
+                                        .make(),
+                                  ],
+                                ),
+
+
+
+
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                       Expanded(
                         child: ListView.builder(
                           itemCount: myCarpools.length,
