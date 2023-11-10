@@ -95,11 +95,11 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                       alignment: Alignment.centerRight, // 텍스트를 오른쪽 중앙에 배치
                       children: [
                         TextFormField(
-                            decoration: InputDecoration(
-                              enabledBorder: const UnderlineInputBorder(
+                            decoration: const InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
-                              focusedBorder: const UnderlineInputBorder(
+                              focusedBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.blue),
                               ),
                               labelText: null,  // labelText를 null로 설정하고 힌트 텍스트 숨김

@@ -108,15 +108,16 @@ class _RegisterPageState extends State<RegisterPage> {
 
     // 중복 여부에 따라 알림 메시지 표시
     if (isNicknameAvailable) {
+      if (!mounted) return;
       showSnackbar(context, Colors.green, '사용 가능한 닉네임입니다.');
     } else {
+      if (!mounted) return;
       showSnackbar(context, Colors.red, '이미 사용 중인 닉네임입니다.');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    //const Color pastelSkyBlue = Color(0xff6CC0FF);
 
     final int namemaxLength = 5; //이름최대길이
     final int nicknamemaxLength = 7; //닉넴최대길이
@@ -124,7 +125,6 @@ class _RegisterPageState extends State<RegisterPage> {
     return isLoading
         ? const Center(
             child: CircularProgressIndicator(
-                // color: Theme.of(context).primaryColor,
                 ),
           )
         : GestureDetector(
@@ -397,6 +397,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         await readTextFromFile();
                                     if (containsProfanity(nickname,
                                         splitStringBySpace(sampleText))) {
+                                      if (!mounted) return;
                                       showSnackbar(context, Colors.red,
                                           "금지어가 포함되어 있습니다.");
                                     } else {

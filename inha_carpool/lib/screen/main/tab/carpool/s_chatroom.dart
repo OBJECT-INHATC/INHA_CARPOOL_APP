@@ -255,10 +255,6 @@ class _ChatroomPageState extends State<ChatroomPage>
 
         //----------------------------------------------drawer 대화상대
         //----------------------------------------------drawer 대화상대
-        //----------------------------------------------drawer 대화상대
-        //----------------------------------------------drawer 대화상대
-        //----------------------------------------------drawer 대화상대
-        //----------------------------------------------drawer 대화상대
         endDrawer: Drawer(
           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.white,
@@ -267,7 +263,6 @@ class _ChatroomPageState extends State<ChatroomPage>
           ),
           child: Column(
             children: [
-              //-------------------------------대화상대 상단
               //-------------------------------대화상대 상단
               //-------------------------------대화상대 상단
               Container(
@@ -304,7 +299,6 @@ class _ChatroomPageState extends State<ChatroomPage>
                 ),
               ),
 
-              //---------------------------------대화상대 목록
               //---------------------------------대화상대 목록
               //---------------------------------대화상대 목록
               Expanded(

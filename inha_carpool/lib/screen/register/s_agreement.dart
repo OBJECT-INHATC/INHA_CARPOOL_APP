@@ -30,7 +30,6 @@ class _AgreementState extends State<Agreement> {
     final bool isChecked1 = _agreementList[0]['value'];
     final bool isChecked2 = _agreementList[1]['value'];
     final bool isChecked3 = _agreementList[2]['value'];
-    // final bool isChecked4 = _agreementList[3]['value'];
 
     return Scaffold(
       appBar: AppBar(

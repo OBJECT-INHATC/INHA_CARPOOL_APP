@@ -69,7 +69,6 @@ class _LocationInputState extends State<LocationInput> {
             'content-type': 'application/x-www-form-urlencoded',
           },
         ).then((response) {
-          //   log(response.body);
           var json = jsonDecode(response.body);
             // 리스트의 0번 값을 저장
             if(json['results']['juso'].length > 0) {

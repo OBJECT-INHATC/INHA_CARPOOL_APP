@@ -6,7 +6,7 @@ import '../login/s_login.dart';
 class DeleteAuthDialog extends StatefulWidget {
   final String email;
   final String password;
-  const DeleteAuthDialog( this.email, String this.password, {super.key});
+  const DeleteAuthDialog( this.email, this.password, {super.key});
 
   @override
   State<DeleteAuthDialog> createState() => _DeleteAuthDialogState();
@@ -67,7 +67,7 @@ class _DeleteAuthDialogState extends State<DeleteAuthDialog> {
                          Navigator.pushAndRemoveUntil(
                            context,
                            MaterialPageRoute(
-                               builder: (context) => LoginPage()),
+                               builder: (context) => const LoginPage()),
                                (Route<dynamic> route) => false,
                          );
                        })

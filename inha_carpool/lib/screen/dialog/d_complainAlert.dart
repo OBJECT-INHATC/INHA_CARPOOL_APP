@@ -201,7 +201,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                     });
                   },
                 ),
-                Text(label1, style: TextStyle(fontSize: 13)),
+                Text(label1, style: const TextStyle(fontSize: 13)),
               ],
             ),
           ),
@@ -220,7 +220,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                       });
                     },
                   ),
-                  Text(label2, style: TextStyle(fontSize: 13)),
+                  Text(label2, style: const TextStyle(fontSize: 13)),
                 ],
               ),
             ),

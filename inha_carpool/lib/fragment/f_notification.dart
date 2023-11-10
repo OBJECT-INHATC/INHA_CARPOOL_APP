@@ -151,11 +151,13 @@ class _NotificationListState extends State<NotificationList> {
                           var currentTime = DateTime.now().millisecondsSinceEpoch;
                           if (currentTime > carpoolStartTime) {
                             // 현재 시간이 carpoolStartTime을 넘었다면, 카풀이 이미 시작되었으므로 접근을 막습니다.
+                            if(!mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('이미 끝난 카풀입니다.')));
+                                const SnackBar(content: Text('이미 끝난 카풀입니다.')));
                             Navigator.pop(context);
                           } else {
                             // 알림 리스트 스택 제거
+                            if(!mounted) return;
                             Navigator.pop(context);
                             // 특정 채팅방 이동
                             Navigator.push(

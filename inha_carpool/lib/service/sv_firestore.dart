@@ -258,12 +258,7 @@ class FireStoreService {
       // 탈퇴 메시지 전송
       FireStoreService().sendExitMessage(carId, userName);
 
-      // admin을 members[0]으로 변경
 
-      // await userDocRef.update({
-      //   'carpools': FieldValue.arrayRemove([carId]),
-      // });
-      // // 유저의 carpools에서 해당 carId 삭제
     }
   }
 
@@ -322,8 +317,7 @@ class FireStoreService {
     // 로컬 DB에서 해당 카풀 정보 삭제
     ChatDao().deleteByCarId(carId);
 
-    /// todo : 서버 DB에서 해당 topic 삭제
-    ///
+
   }
 
   Future<int> getCarpoolStartTime(String carId) async {

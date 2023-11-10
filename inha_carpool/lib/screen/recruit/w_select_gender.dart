@@ -54,22 +54,6 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
                 child: '${widget.gender}만'.text.white.size(16).make(),
               ),
             ),
-            // Container(
-            //   width: context.width(0.3),
-            //   margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-            //   child: TextButton(
-            //     onPressed: () {
-            //       widget.onGenderSelected('여성');
-            //     },
-            //     style: TextButton.styleFrom(
-            //       backgroundColor: widget.selectedGender == '여성'
-            //           ? Colors.lightBlue
-            //           : Colors.grey[300],
-            //     ),
-            //     child: '여성'.text.white.size(17).make(),
-            //
-            //   ),
-            // ),
             Container(
               width: context.width(0.4),
               margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),

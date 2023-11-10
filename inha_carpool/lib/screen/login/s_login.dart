@@ -346,8 +346,6 @@ class _LoginPageState extends State<LoginPage> {
                                         snapshot.docs[0].get("nickName");
                                     String uid = snapshot.docs[0].get("uid");
 
-                                    ///유저 정보저장 ------------ Topic 발급 - logout or 알림 Off 시 해제
-                                    // Todo: 이미 저장한 uid가 있으면 저장 안하는 로직 추가하기 - 상훈 0919
                                     // 유저 정보 서저에 저장 --풀기 1101================
                                     UserRequstDTO userDTO = UserRequstDTO(
                                         uid: uid,
@@ -488,14 +486,7 @@ class _LoginPageState extends State<LoginPage> {
                               padding:
                                   const EdgeInsets.symmetric(vertical: 12.0),
                             ),
-                            // onPressed: () {
-                            //   Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => const RegisterPage(),
-                            //     ),
-                            //   );
-                            // },
+
                             onPressed: () {
                               Navigator.of(context).push(
                                 PageRouteBuilder(

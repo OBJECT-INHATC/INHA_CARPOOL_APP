@@ -10,7 +10,7 @@ class VerifiedRegisterPage extends StatefulWidget {
 }
 
 class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   User? user;
   String verificationText = "본인인증 대기중...";
 
@@ -20,19 +20,7 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
     checkUserStatus();
   }
 
-  ///인증 여부에 따른 state 변경
-//   Future<void> checkUserStatus() async {
-//     user = _auth.currentUser;
-//     if (user != null) {
-//       await user!.reload();
-//       if (user!.emailVerified) {
-//         setState(() { // This will cause the widget to rebuild with the new text.
-//           verificationText = "본인 인증 완료!";
-//
-//         });
-//       }
-//     }
-//   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -58,8 +58,6 @@ class ChatLocation extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () {
-
-                    ///todo : 위치 보기 기능 구현
                     Navigator.push(
                       Nav.globalContext,
                       MaterialPageRoute(

@@ -24,7 +24,7 @@ class _SecessionPageState extends State<SecessionPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [Color.fromARGB(255, 70, 100, 192)];
+  List<Color> selectedBackgroundColors = [const Color.fromARGB(255, 70, 100, 192)];
   List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
 
   void updateBackgroundColors() {
@@ -39,7 +39,7 @@ class _SecessionPageState extends State<SecessionPage> {
         : [Colors.black54, Colors.black];
   }
 
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   late Future<String> nickNameFuture;
 
   @override
@@ -101,7 +101,7 @@ class _SecessionPageState extends State<SecessionPage> {
                               AsyncSnapshot<String> snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              return CircularProgressIndicator(); // 데이터를 기다리는 동안 로딩 스피너 표시
+                              return const CircularProgressIndicator(); // 데이터를 기다리는 동안 로딩 스피너 표시
                             } else if (snapshot.hasError) {
                               return const Text('닉네임을 불러오는 중 오류 발생');
                             } else {
@@ -156,8 +156,6 @@ class _SecessionPageState extends State<SecessionPage> {
                                       if (text != "") {
                                         setState(() {
                                           onChanges = true;
-
-
                                         });
                                       } else {
                                         setState(() {
@@ -165,12 +163,6 @@ class _SecessionPageState extends State<SecessionPage> {
                                         });
                                       }
                                     },
-                                    // setState(() {
-                                    //
-                                    //
-                                    // });
-
-                                    // },
 
                                     validator: (val) {
                                       if (val!.isNotEmpty) {
@@ -245,8 +237,6 @@ class _SecessionPageState extends State<SecessionPage> {
                           ),
                           onChanged: (text) {
                             password = text;
-
-
                           },
                         ),
                       ),
@@ -274,6 +264,7 @@ class _SecessionPageState extends State<SecessionPage> {
                             bool isValid = await validateCredentials(
                                 email + academy, password);
                             if (isValid) {
+                              if (!mounted) return;
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -282,8 +273,9 @@ class _SecessionPageState extends State<SecessionPage> {
                                 },
                               );
                             } else {
+                              if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('잘못된 정보입니다.')));
+                                  const SnackBar(content: Text('잘못된 정보입니다.')));
                             }
                           }),
                     ),

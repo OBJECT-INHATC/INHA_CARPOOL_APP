@@ -38,7 +38,7 @@ class ComplainComplete extends StatelessWidget {
       ),
       actions: [
         Container(
-          padding: EdgeInsets.only(right: 10),
+          padding: const EdgeInsets.only(right: 10),
           child: ElevatedButton(
 
             style: ButtonStyle(
@@ -48,7 +48,7 @@ class ComplainComplete extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('OK'),
+            child: const Text('OK'),
           ),
         ),
       ],
