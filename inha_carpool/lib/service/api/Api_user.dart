@@ -7,7 +7,6 @@ import '../../common/constants.dart';
 /// 0918 이상훈 - 서버 db에 유저 정보 관련 api
 class ApiUser {
   //유저 닉네임 업데이트
-  ///TOdo: 지윤이가 고치면 이거 추가하기 (닉네임 중복체크)
   /// 신고 하기 (저장)
   Future<bool> updateUserNickname(
       String myUid, String newNickName) async {
