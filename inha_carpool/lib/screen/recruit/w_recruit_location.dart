@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/recruit/s_select_location.dart';
@@ -113,7 +114,11 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
         ),
         Container(
           margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: TextField(
+          child: TextFormField(
+            inputFormatters: [
+              //띄어쓰기 허용 영우+숫자+한글
+              FilteringTextInputFormatter(RegExp(r'[a-zA-Z0-9ㄱ-ㅎ가-힣 ]'), allow: true)
+            ],
             maxLength: 10,
             decoration: InputDecoration(
               filled: true,

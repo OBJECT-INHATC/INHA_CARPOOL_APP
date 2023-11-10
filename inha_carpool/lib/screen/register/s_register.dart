@@ -169,7 +169,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 40),
                               child: Text(
-                                "* 이름과 닉네임은 추후 변경이 불가하므로\n 작성 시 참고 바랍니다.",
+                                "* 이름과 닉네임은 추후 변경이 불가하므로\n 작성 시 참고 바랍니다. (특수문자 불가)",
                                 style: TextStyle(color: Colors.red),
                               ),
                             ),
@@ -195,7 +195,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                           Expanded(
                                             child: TextFormField(
                                               inputFormatters: [
-                                                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]')),
+                                                //영어+숫자만 가능
+                                                FilteringTextInputFormatter(RegExp(r"^[a-zA-Z0-9]+$"), allow: true)
                                               ],
                                               decoration: const InputDecoration(
                                                 labelText: null,
@@ -283,7 +284,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 child: TextFormField(
                                   inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp(r"^[a-zA-Z0-9ㄱ-ㅎ가-힣]+$")),
+                                    //영어+한글만 가능
+                                    FilteringTextInputFormatter(RegExp(r"^[a-zA-Z0-9ㄱ-ㅎ가-힣]+$"), allow: true)
                                   ],
                                   decoration: const InputDecoration(
                                     labelText: null,
@@ -344,7 +346,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 child: TextFormField(
                                   inputFormatters: [
-                                    FilteringTextInputFormatter.allow(RegExp(r"^[a-zA-Z0-9ㄱ-ㅎ가-힣]+$")),
+                                    //영어+숫자+한글만 가능
+                                    FilteringTextInputFormatter(RegExp(r'[a-zA-Z0-9ㄱ-ㅎ가-힣 ]'), allow: true)
                                   ],
                                   decoration: const InputDecoration(
                                     labelText: null,
