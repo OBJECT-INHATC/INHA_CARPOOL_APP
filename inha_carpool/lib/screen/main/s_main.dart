@@ -124,8 +124,8 @@ class MainScreenState extends State<MainScreen>
                               borderRadius: BorderRadius.circular(6),
                             ),
                             constraints: const BoxConstraints(
-                              minWidth: 12,
-                              minHeight: 12,
+                              minWidth: 8,
+                              minHeight: 8,
                             ),
                           ),
                         ),

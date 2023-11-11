@@ -90,7 +90,12 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                       return Container(
                         margin: const EdgeInsets.all(10),
                         height: cardHeight / 6,
-                        color: Colors.blue[600],
+                        decoration: BoxDecoration(
+                          color: Colors.white, // 배경색 설정
+                          border: Border.all(
+                            color: Colors.blue[600]!, // 테두리 색 설정
+                          ),
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -99,7 +104,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                               style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: Colors.blue,
                               ),
                             ),
                           ],
@@ -362,6 +367,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
     }
   }
 
+  // 파이어베이스에서 데이터 가져오기
   Future<DocumentSnapshot?> getAdminData() async {
     try {
       DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
