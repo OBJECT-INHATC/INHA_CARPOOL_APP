@@ -22,6 +22,25 @@ class FirebaseCarpool {
   late String uid = "";
   late String gender = "";
 
+  static Future<DocumentSnapshot?> getAdminData(String type) async {
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection('admin')
+          .doc(type)
+          .get();
+
+      if (documentSnapshot.exists) {
+        return documentSnapshot;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching admin data: $e");
+      return null;
+    }
+  }
+
+
   /// 카풀 저장
   static Future<String> addDataToFirestore({
     required DateTime selectedDate,

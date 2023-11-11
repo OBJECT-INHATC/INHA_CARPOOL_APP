@@ -4,8 +4,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../../common/Colors/app_colors.dart';
 import '../../../../common/Colors/app_colors.dart';
+import '../../../../common/util/carpool.dart';
 import '../carpool/s_chatroom.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
 
 class CarpoolListWidget extends StatefulWidget {
@@ -63,6 +65,8 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
     // // 각 카드의 높이
      double cardHeight = listViewHeight * 0.53;
 
+     bool isOnUri = true;
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[100],
@@ -77,7 +81,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
         itemBuilder: (context, index) {
           if (index == 0) {
             return FutureBuilder(
-              future: getAdminData(), // 파이어베이스에서 데이터 가져오기
+              future:  FirebaseCarpool.getAdminData("mainList"), // 파이어베이스에서 데이터 가져오기
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   // 가져온 데이터를 이용하여 컨테이너 생성
@@ -85,29 +89,41 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                   if (adminData != null && adminData.exists) {
                     // 데이터가 존재하고 필요한 필드도 존재하는 경우
                     final contextValue = adminData['context'] as String?;
+                    // 가져온 uri가 "" 인 경우
+                    if(adminData['uri'] == "") {
+                      isOnUri = false;
+                    }
+                    final Uri url = Uri.parse(adminData['uri']! as String);
                     if (contextValue != null && contextValue.isNotEmpty) {
                       // 필드가 존재하고 값이 비어있지 않은 경우
-                      return Container(
-                        margin: const EdgeInsets.all(10),
-                        height: cardHeight / 6,
-                        decoration: BoxDecoration(
-                          color: Colors.white, // 배경색 설정
-                          border: Border.all(
-                            color: Colors.blue[600]!, // 테두리 색 설정
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              contextValue,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                              ),
+                      return GestureDetector (
+                        onTap: () async {
+                          if (!await launchUrl(url) && isOnUri) {
+                            throw Exception('Could not launch $url');
+                          }
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(10),
+                          height: cardHeight / 6,
+                          decoration: BoxDecoration(
+                            color: Colors.white, // 배경색 설정
+                            border: Border.all(
+                              color: Colors.blue[900]!, // 테두리 색 설정
                             ),
-                          ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                contextValue,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue[900],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
                     }
@@ -367,7 +383,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
     }
   }
 
-  // 파이어베이스에서 데이터 가져오기
+/*  // 파이어베이스에서 데이터 가져오기
   Future<DocumentSnapshot?> getAdminData() async {
     try {
       DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
@@ -384,6 +400,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
       print("Error fetching admin data: $e");
       return null;
     }
-  }
+  }*/
 
 } /**/
