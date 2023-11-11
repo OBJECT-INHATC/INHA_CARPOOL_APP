@@ -50,6 +50,9 @@ abstract class AbstractThemeColors {
 
   Color get logoColor => const Color.fromARGB(255, 70, 100, 192);
 
+  Color get mainList => const Color.fromARGB(255, 121, 181, 222);
+
+
   Color get snackbarBgColor => AppColors.mediumBlue;
 
   Color get blueButtonBackground => AppColors.darkBlue;
