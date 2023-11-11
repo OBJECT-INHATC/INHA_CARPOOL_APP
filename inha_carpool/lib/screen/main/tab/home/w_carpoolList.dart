@@ -75,32 +75,20 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
         controller: widget.scrollController,
         itemCount: widget.snapshot.data!.length,
         itemBuilder: (context, index) {
-          // null이거나 인덱스가 범위를 벗어날 때 오류를 방지
-          // if (widget.snapshot.data != null &&
-          //     index < widget.snapshot.data!.length) {
+
           DocumentSnapshot carpool = widget.snapshot.data![index];
           Map<String, dynamic> carpoolData =
           carpool.data() as Map<String, dynamic>;
 
           DateTime startTime =
           DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
+
           DateTime currentTime = DateTime.now();
           Duration difference = startTime.difference(currentTime);
 
           String formattedDate = DateFormat('HH:mm').format(startTime);
 
-          String formattedTime;
-          if (difference.inDays >= 365) {
-            formattedTime = '${difference.inDays ~/ 365}년 후';
-          } else if (difference.inDays >= 30) {
-            formattedTime = '${difference.inDays ~/ 30}달 후';
-          } else if (difference.inDays >= 1) {
-            formattedTime = '${difference.inDays}일 후';
-          } else if (difference.inHours >= 1) {
-            formattedTime = '${difference.inHours}시간 후';
-          } else {
-            formattedTime = '${difference.inMinutes}분 후';
-          }
+          String formattedTime = getDate(difference);
 
           // 각 아이템을 빌드하는 로직
           return GestureDetector(
@@ -125,8 +113,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                           gender: widget.gender,
                         )),
                   );
-                  print('현재 유저: $currentUser');
-                  print(carpoolData['members']);
                 } else {
                   Navigator.push(
                     Nav.globalContext,
@@ -286,5 +272,19 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
         },
       ),
     );
+  }
+
+  String getDate(Duration difference) {
+    if (difference.inDays >= 365) {
+      return  '${difference.inDays ~/ 365}년 후';
+    } else if (difference.inDays >= 30) {
+      return  '${difference.inDays ~/ 30}달 후';
+    } else if (difference.inDays >= 1) {
+      return  '${difference.inDays}일 후';
+    } else if (difference.inHours >= 1) {
+      return  '${difference.inHours}시간 후';
+    } else {
+      return  '${difference.inMinutes}분 후';
+    }
   }
 }/**/

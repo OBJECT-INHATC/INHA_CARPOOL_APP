@@ -419,6 +419,9 @@ class _LoginPageState extends State<LoginPage> {
                                       );
 
                                       try {
+                                        await FirebaseMessaging.instance
+                                            .subscribeToTopic(
+                                            "AppNotification");
                                         /// todo: 토픽 저장 추후 광고성도 추가하기
                                         if (Prefs.isSchoolPushOnRx.get() ==
                                             true) {

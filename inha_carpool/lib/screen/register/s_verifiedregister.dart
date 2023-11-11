@@ -20,8 +20,6 @@ class _VerifiedRegisterPageState extends State<VerifiedRegisterPage> {
     checkUserStatus();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
