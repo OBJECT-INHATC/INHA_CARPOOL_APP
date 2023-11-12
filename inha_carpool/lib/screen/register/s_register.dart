@@ -61,6 +61,8 @@ class _RegisterPageState extends State<RegisterPage> {
   // 입력 필드 높이 설정
   double inputFieldHeight = 50.0;
 
+  TextEditingController nickNameController = TextEditingController();
+
   // 토글 배경색 업데이트 메서드
   void updateBackgroundColors() {
     // 선택된 토글의 배경색을 변경
@@ -345,6 +347,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   color: Colors.grey[100], // 연한 회색 배경색
                                 ),
                                 child: TextFormField(
+                                  controller: nickNameController,
                                   inputFormatters: [
                                     //영어+숫자+한글만 가능
                                     FilteringTextInputFormatter(RegExp(r'[a-zA-Z0-9ㄱ-ㅎ가-힣 ]'), allow: true)
@@ -395,6 +398,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                   onPressed: () async {
                                     String sampleText =
                                         await readTextFromFile();
+                                    // 닉네임은 2글자에서 7글자 사이여야 함
+                                    if (!mounted) return;
+                                    if(nickNameController.text.length < 2 || nickNameController.text.length > 7){
+                                      showSnackbar(context, Colors.red,
+                                          "닉네임은 2글자에서 7글자 사이여야 합니다.");
+                                      return;
+                                    }
+
                                     if (containsProfanity(nickname,
                                         splitStringBySpace(sampleText))) {
                                       if (!mounted) return;
