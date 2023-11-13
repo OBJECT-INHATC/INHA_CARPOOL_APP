@@ -116,9 +116,10 @@ class _RecordListState extends State<RecordList> {
                     String member1 = historyList[index].member1;
                     String member2 = historyList[index].member2;
                     String member3 = historyList[index].member3;
+                    String member4 = historyList[index].member4;
 
                     // '함께 한 사람' 정보 리스트를 생성
-                    List<String> members = [member1, member2, member3];
+                    List<String> members = [member1, member2, member3, member4];
 
                     // 멤버 리스트에서 현재 유저와 동일한 이름의 멤버를 필터링
                     List<String> validMembers = members.where((member) {

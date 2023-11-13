@@ -5,6 +5,7 @@ class HistoryRequestDTO {
   final String member1;
   final String member2;
   final String member3;
+  final String member4;
   final int nowMember;
   final int maxMember;
   final String startDetailPoint;
@@ -22,6 +23,7 @@ class HistoryRequestDTO {
     required this.member1,
     required this.member2,
     required this.member3,
+    required this.member4,
     required this.nowMember,
     required this.maxMember,
     required this.startDetailPoint,
@@ -41,6 +43,7 @@ class HistoryRequestDTO {
       'member1': member1,
       'member2': member2,
       'member3': member3,
+      'member4': member4,
       'nowMember': nowMember,
       'maxMember': maxMember,
       'startDetailPoint': startDetailPoint,
@@ -63,6 +66,7 @@ class HistoryRequestDTO {
       member1: json['member1'],
       member2: json['member2'],
       member3: json['member3'],
+      member4: json['member4'],
       nowMember: json['nowMember'],
       maxMember: json['maxMember'],
       startDetailPoint: json['startDetailPoint'],
