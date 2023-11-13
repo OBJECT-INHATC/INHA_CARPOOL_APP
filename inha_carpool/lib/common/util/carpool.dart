@@ -22,6 +22,7 @@ class FirebaseCarpool {
   late String uid = "";
   late String gender = "";
 
+  // 광고 가져오기
   static Future<DocumentSnapshot?> getAdminData(String type) async {
     try {
       DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
@@ -253,7 +254,8 @@ class FirebaseCarpool {
     return sortedCarpools;
   }
 
-/* /// 시간순 조회 30일 후 테스트용 (30일 뒤 춟발예정만 보임)
+/*
+ /// 시간순 조회 30일 후 테스트용 (3일 뒤 춟발예정만 보임)
   static Future<List<DocumentSnapshot>> timeByFunction(
       int limit, DocumentSnapshot? startAfter,
       ) async {
@@ -264,7 +266,7 @@ class FirebaseCarpool {
     DateTime now = DateTime.now();
 
     // 현재 시간으로부터 30일 후의 시간
-    DateTime threeDaysLater = now.add(const Duration(days: 30));
+    DateTime threeDaysLater = now.add(const Duration(days: 3));
 
     Query query = carpoolCollection
         .where('startTime', isGreaterThan:threeDaysLater.millisecondsSinceEpoch)
@@ -293,7 +295,8 @@ class FirebaseCarpool {
       }
     }
     return sortedCarpools;
-  }*/
+  }
+*/
 
 
   /// 거리순 정렬
