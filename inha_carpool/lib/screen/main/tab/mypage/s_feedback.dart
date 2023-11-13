@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/dto/FeedbackRequestDTO.dart';
 
 import '../../../../dto/ReportRequstDTO.dart';
 import '../../../../service/api/ApiService.dart';
@@ -128,18 +129,16 @@ class _FeedBackPageState extends State<FeedBackPage> {
                   ),
                   onPressed: () async {
                     if (_controller.text.isNotEmpty && selectedValue != null) {
-                      final reportRequestDTO = ReportRequstDTO(
+                      final feedbackRequestDTO = FeedbackRequestDTO(
                         content: _controller.text,
-                        carpoolId: '피드백',
-                        reportedUser:'피드백',
                         reporter: widget.reporter,
-                        reportType: selectedValue.toString(),
-                        reportDate: DateTime.now().toString(),
+                        feedbackType: selectedValue.toString(),
+                        feedbackDate: DateTime.now().toString(),
                       );
 
                       // API 호출
                       bool isOpen =
-                          await apiService.saveReport(reportRequestDTO);
+                          await apiService.saveSuggest(feedbackRequestDTO);
                       if (isOpen) {
                         print("스프링부트 서버 성공 #############");
                         if (!mounted) return;
