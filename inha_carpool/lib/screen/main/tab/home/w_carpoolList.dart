@@ -59,11 +59,11 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
     final screenHeight = MediaQuery.of(context).size.height; //727
 
     // 화면 높이의 75%를 ListView.builder의 높이로 사용
-     double listViewHeight = screenHeight * 0.75;
+    double listViewHeight = screenHeight * 0.75;
     // // 각 카드의 높이
-     double cardHeight = listViewHeight * 0.53;
+    double cardHeight = listViewHeight * 0.53;
 
-     bool isOnUri = true;
+    bool isOnUri = true;
 
     return Container(
       decoration: BoxDecoration(
@@ -79,22 +79,18 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
         itemBuilder: (context, index) {
           if (index == 0) {
             return FutureBuilder(
-              future:  FirebaseCarpool.getAdminData("mainList"), // 파이어베이스에서 데이터 가져오기
+              future: FirebaseCarpool.getAdminData("mainList"),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  // 가져온 데이터를 이용하여 컨테이너 생성
                   final adminData = snapshot.data;
                   if (adminData != null && adminData.exists) {
-                    // 데이터가 존재하고 필요한 필드도 존재하는 경우
                     final contextValue = adminData['context'] as String?;
-                    // 가져온 uri가 "" 인 경우
-                    if(adminData['uri'] == "") {
+                    if (adminData['uri'] == "") {
                       isOnUri = false;
                     }
                     final Uri url = Uri.parse(adminData['uri']! as String);
                     if (contextValue != null && contextValue.isNotEmpty) {
-                      // 필드가 존재하고 값이 비어있지 않은 경우
-                      return GestureDetector (
+                      return GestureDetector(
                         onTap: () async {
                           if (!await launchUrl(url) && isOnUri) {
                             throw Exception('Could not launch $url');
@@ -104,9 +100,9 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                           margin: const EdgeInsets.all(10),
                           height: cardHeight / 6,
                           decoration: BoxDecoration(
-                            color: Colors.white, // 배경색 설정
+                            color: Colors.white,
                             border: Border.all(
-                              color: Colors.blue[900]!, // 테두리 색 설정
+                              color: Colors.blue[900]!,
                             ),
                           ),
                           child: Column(
@@ -126,10 +122,11 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                       );
                     }
                   }
+                  // 데이터가 없거나 필드가 없는 경우에 대한 처리
+                  return Container();
                 }
-
-                // 데이터가 없거나 필드가 없는 경우에 대한 처리
-                return const SizedBox.shrink(); // 빈 상자 반환 또는 다른 처리
+                // 데이터가 로드되지 않았을 때의 로딩 상태 표시 등의 처리
+                return CircularProgressIndicator();
               },
             );
           } else {
@@ -140,10 +137,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
               DocumentSnapshot carpool = widget.snapshot.data![originalIndex];
 
               Map<String, dynamic> carpoolData =
-              carpool.data() as Map<String, dynamic>;
+                  carpool.data() as Map<String, dynamic>;
 
               DateTime startTime =
-              DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
+                  DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
 
               DateTime currentTime = DateTime.now();
               Duration difference = startTime.difference(currentTime);
@@ -167,8 +164,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                       Navigator.push(
                         Nav.globalContext,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ChatroomPage(
+                            builder: (context) => ChatroomPage(
                                   carId: carpoolData['carId'],
                                   groupName: '카풀 네임',
                                   userName: widget.nickName,
@@ -180,14 +176,13 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                       Navigator.push(
                         Nav.globalContext,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              ChatroomPage(
-                                carId: carpoolData['carId'],
-                                groupName: '카풀 네임',
-                                userName: widget.nickName,
-                                uid: widget.uid,
-                                gender: widget.gender,
-                              ),
+                          builder: (context) => ChatroomPage(
+                            carId: carpoolData['carId'],
+                            groupName: '카풀 네임',
+                            userName: widget.nickName,
+                            uid: widget.uid,
+                            gender: widget.gender,
+                          ),
                         ),
                       );
                     }
@@ -238,8 +233,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                               size: 18,
                             ),
                             Width(screenHeight * 0.01),
-                            '${startTime.month}월 ${startTime
-                                .day}일 $formattedDate 예정'
+                            '${startTime.month}월 ${startTime.day}일 $formattedDate 예정'
                                 .text
                                 .size(13)
                                 .make(),
@@ -280,7 +274,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                               children: [
                                 // 출발지 요약주소
                                 _truncateText(
-                                    carpoolData['startDetailPoint'], 32)
+                                        carpoolData['startDetailPoint'], 32)
                                     .text
                                     .color(Colors.black)
                                     .size(15)
@@ -406,5 +400,4 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
       return null;
     }
   }*/
-
 } /**/

@@ -253,6 +253,49 @@ class FirebaseCarpool {
     return sortedCarpools;
   }
 
+/* /// 시간순 조회 30일 후 테스트용 (30일 뒤 춟발예정만 보임)
+  static Future<List<DocumentSnapshot>> timeByFunction(
+      int limit, DocumentSnapshot? startAfter,
+      ) async {
+    CollectionReference carpoolCollection =
+    FirebaseFirestore.instance.collection('carpool');
+
+    // 현재 시간
+    DateTime now = DateTime.now();
+
+    // 현재 시간으로부터 30일 후의 시간
+    DateTime threeDaysLater = now.add(const Duration(days: 30));
+
+    Query query = carpoolCollection
+        .where('startTime', isGreaterThan:threeDaysLater.millisecondsSinceEpoch)
+        .orderBy('startTime')
+        .limit(limit);
+
+    if (startAfter != null) {
+      query = query.startAfterDocument(startAfter);
+    }
+
+    QuerySnapshot querySnapshot = await query.get();
+
+    List<DocumentSnapshot> sortedCarpools = [];
+    print("추가된 카풀 수(시간순): ${querySnapshot.docs.length}");
+
+    // 현재 시간 가져옴
+    DateTime currentTime = DateTime.now();
+
+    for (var doc in querySnapshot.docs) {
+      DateTime startTime =
+      DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+
+      // 현재 시간보다 미래의 시간인 경우만 추가
+      if (startTime.isAfter(currentTime)) {
+        sortedCarpools.add(doc);
+      }
+    }
+    return sortedCarpools;
+  }*/
+
+
   /// 거리순 정렬
   static Future<List<DocumentSnapshot>> nearByCarpool(
       double myLat, double myLon) async {
