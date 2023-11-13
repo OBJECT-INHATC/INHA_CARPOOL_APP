@@ -143,7 +143,9 @@ class _ComplainAlertState extends State<ComplainAlert> {
                     Navigator.pop(context);
                     showDialog(
                       context: context,
-                      builder: (BuildContext context) => const ComplainComplete(),
+                      builder: (BuildContext context) => const ComplainComplete(
+                        isReport: false,
+                      ),
                     );
                   }else{
                     print("스프링부트 서버 실패 #############");

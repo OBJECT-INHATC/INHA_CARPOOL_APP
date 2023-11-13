@@ -5,6 +5,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/velocityx_extension.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/s_feedback.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_profile.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_recordList.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
@@ -27,6 +28,7 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
   final storage = FlutterSecureStorage();
   late String uid;
+  late String nickName;
 
   @override
   void initState() {
@@ -36,6 +38,7 @@ class _MyPageState extends State<MyPage> {
 
   Future<void> _loadUid() async {
     uid = await storage.read(key: 'uid') ?? "";
+    nickName = await storage.read(key: 'nickName') ?? "";
   }
 
   @override
@@ -77,8 +80,8 @@ class _MyPageState extends State<MyPage> {
                   onTap: () {
                     print("이용기록 onTap 이동준비");
                     // 이용기록 페이지로 이동
-                    Navigator.of(Nav.globalContext).push(MaterialPageRoute(
-                        builder: (context) =>  RecordList()));
+                    Navigator.of(Nav.globalContext).push(
+                        MaterialPageRoute(builder: (context) => RecordList()));
                   },
                 ),
                 ListTile(
@@ -232,6 +235,24 @@ class _MyPageState extends State<MyPage> {
                       ),
                     ],
                   ),
+                ),
+
+                ListTile(
+                  leading: const Icon(
+                    Icons.help_outline_rounded,
+                    color: Colors.grey,
+                  ),
+                  title: '건의/제안사항'.tr().text.make(),
+                  onTap: () {
+                    // 건의/제안사항 페이지로 이동
+                    Navigator.of(Nav.globalContext).push(
+                      MaterialPageRoute(
+                        builder: (context) => FeedBackPage(
+                          reporter: nickName,
+                        ),
+                      ),
+                    );
+                  },
                 ),
 
                 ListTile(
