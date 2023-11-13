@@ -5,5 +5,3 @@ export 'theme/shadows/abs_theme_shadows.dart';
 
 const basePath = 'assets/image';
 String? baseUrl = dotenv.env['BASE_URL']; // API 서버의 URL 영재
-//ee
-
