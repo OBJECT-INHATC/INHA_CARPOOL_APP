@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/models/m_chat.dart';
 
@@ -8,11 +9,7 @@ enum NotificationType { chat, status }
 /// 0829 한승완 - FCM 서비스 클래스
 class FcmService {
 
-  final String _serverKey =
-      "AAAA-NGypFk:APA91bGFNzWfZi-A_81lR4-TFxXvhCdombcWIMZyfk7GNBKd9NYrOtsL8iQUa5ghtB3UtGFCRIG0ciplrJXw9sgyHQ2gI-gkkggZbCFIDHz4rK9-S_y4_tgTPB9Qdi8OS0DhjOuL2Igb";
-
-  /// FCM 서버 키 -> .env 파일에 저장 해야 하지만 테스트 과정에는 하드 코딩
-  // final String _serverKey = dotenv.env['FCM_SERVER_KEY'] ?? "";
+  final String _serverKey = dotenv.env['FCM_SERVER_KEY'] ?? "";
 
   /// 알림 전송 메서드
   Future<void> sendMessage({

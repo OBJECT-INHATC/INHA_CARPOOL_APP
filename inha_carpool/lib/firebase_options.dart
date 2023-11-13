@@ -3,6 +3,7 @@
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -43,8 +44,8 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAG8L0QEa8KIyBlyunNpaVUfFOu91Rs4SU',
+  static FirebaseOptions web = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_WEB_KEY']!,
     appId: '1:1068670035033:web:b73157af91c4d7de2cbd48',
     messagingSenderId: '1068670035033',
     projectId: 'inhacarpool-b190f',
@@ -52,16 +53,16 @@ class DefaultFirebaseOptions {
     storageBucket: 'inhacarpool-b190f.appspot.com',
   );
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAsgLP8__VXvjDs4yadzLjRN7UfExsQmqA',
+  static FirebaseOptions android = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_ANDROID_KEY']!,
     appId: '1:1068670035033:android:30fbc48892f5569d2cbd48',
     messagingSenderId: '1068670035033',
     projectId: 'inhacarpool-b190f',
     storageBucket: 'inhacarpool-b190f.appspot.com',
   );
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAGPMhr2Zvsim_Mq_aXNUgQup3083rr6iA',
+  static FirebaseOptions ios = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_IOS_KEY']!,
     appId: '1:1068670035033:ios:b1f43d8b555dd7b62cbd48',
     messagingSenderId: '1068670035033',
     projectId: 'inhacarpool-b190f',
@@ -70,8 +71,8 @@ class DefaultFirebaseOptions {
     iosBundleId: 'com.objects.inha-carpool',
   );
 
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAGPMhr2Zvsim_Mq_aXNUgQup3083rr6iA',
+  static FirebaseOptions macos = FirebaseOptions(
+    apiKey: dotenv.env['FIREBASE_MACOS_KEY']!,
     appId: '1:1068670035033:ios:53db38e0874c0d0b2cbd48',
     messagingSenderId: '1068670035033',
     projectId: 'inhacarpool-b190f',
