@@ -338,7 +338,7 @@ class _CarpoolListState extends State<CarpoolList> {
                       ),
                       Expanded(
                         child: ListView.builder(
-                          itemCount: myCarpools.length + 1,
+                          itemCount: myCarpools.isNotEmpty ? myCarpools.length + 1 : 0,
                           itemBuilder: (context, i) {
                             if (i == 0) {
                               print(i);
