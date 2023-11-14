@@ -8,6 +8,7 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
+import 'package:inha_Carpool/screen/login/s_login.dart';
 import 'package:inha_Carpool/screen/login/s_login_professor.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/register/s_agreement.dart';
@@ -19,14 +20,14 @@ import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
 import '../register/s_findregister.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class ProfessorLoginPage extends StatefulWidget {
+  const ProfessorLoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<ProfessorLoginPage> createState() => _ProfessorLoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
   late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
   late String gender = "";
@@ -102,27 +103,27 @@ class _LoginPageState extends State<LoginPage> {
   String password = "";
 
   // 학교 도메인 기본값
-  String academy = "@itc.ac.kr";
+  // String academy = "@inhatc.ac.kr";
 
-  var selectedIndex = 0;
+  // var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [
-    const Color.fromARGB(255, 70, 100, 192)
-  ];
-  List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
+  // List<Color> selectedBackgroundColors = [
+  //   const Color.fromARGB(255, 70, 100, 192)
+  // ];
+  // List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
 
 // 토글 배경색 업데이트 메서드
-  void updateBackgroundColors() {
-    // 선택된 토글의 배경색을 변경
-    selectedBackgroundColors = selectedIndex == 0
-        ? [const Color.fromARGB(255, 70, 100, 192)]
-        : [const Color.fromARGB(255, 70, 100, 192)];
-
-    // 선택되지 않은 토글의 배경색을 변경
-    unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.black54, Colors.black]
-        : [Colors.black54, Colors.black];
-  }
+//   void updateBackgroundColors() {
+//     // 선택된 토글의 배경색을 변경
+//     selectedBackgroundColors = selectedIndex == 0
+//         ? [const Color.fromARGB(255, 70, 100, 192)]
+//         : [const Color.fromARGB(255, 70, 100, 192)];
+//
+//     // 선택되지 않은 토글의 배경색을 변경
+//     unSelectedBackgroundColors = selectedIndex == 0
+//         ? [Colors.black54, Colors.black]
+//         : [Colors.black54, Colors.black];
+//   }
 
   // 로딩 여부
   bool isLoading = false;
@@ -194,46 +195,26 @@ class _LoginPageState extends State<LoginPage> {
                           padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
                               screenHeight * 0.007, screenWidth * 0.1, 0),
                           // 학교 선택 토글 버튼
-                          child: FlutterToggleTab(
-                            width: 30,
-                            borderRadius: 40,
-                            height: 30,
-                            selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            unSelectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            labels: const ["인하공전", "인하대"],
-                            selectedLabelIndex: (index) {
-                              setState(() {
-                                if (index == 0) {
-                                  academy = "@itc.ac.kr"; // 인하공전생
-                                  email = emailTemp + academy;
-                                } else {
-                                  academy = "@inha.edu"; // 인하대생
-                                  email = emailTemp + academy;
-                                }
-                                selectedIndex = index;
-                                updateBackgroundColors();
-                              });
-                            },
-                            selectedBackgroundColors:
-                                selectedBackgroundColors,
-                            unSelectedBackgroundColors:
-                                unSelectedBackgroundColors,
-                            isScroll: false,
-                            selectedIndex: selectedIndex,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(right: 10),
+                                child: '교수님ver'
+                                    .text
+                                    .size(13)
+                                    .color(Colors.grey[500])
+                                    .bold
+                                    .make(),
+                              ),
+                            ],
                           ),
                         ),
                         // 학번 입력 필드
                         Container(
                           padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
-                              screenHeight * 0.02, screenWidth * 0.1, 0),
+                              screenHeight * 0.005, screenWidth * 0.1, 0),
                           child: Container(
                             // height: inputFieldHeight, // 높이 변수 적용
                             decoration: BoxDecoration(
@@ -250,23 +231,23 @@ class _LoginPageState extends State<LoginPage> {
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                                 labelText: null,
-                                hintText: '학번',
+                                hintText: '학교메일',
                                 hintStyle: TextStyle(
                                   fontSize: 12.0,
                                   color: Colors.grey,
                                 ),
                                 prefixIcon:
-                                    Icon(Icons.school, color: Colors.grey),
+                                    Icon(Icons.mail, color: Colors.grey),
                               ),
                               onChanged: (text) {
-                                email = text + academy;
+                                email = text;
                                 emailTemp = text;
                               },
                               validator: (val) {
                                 if (val!.isNotEmpty) {
                                   return null;
                                 } else {
-                                  return "학번이 비어있습니다.";
+                                  return "메일이 비어있습니다.";
                                 }
                               },
                             ),
@@ -590,7 +571,7 @@ class _LoginPageState extends State<LoginPage> {
                                         PageRouteBuilder(
                                           pageBuilder: (context, animation,
                                                   secondaryAnimation) =>
-                                              const ProfessorLoginPage(),
+                                              const LoginPage(),
                                           transitionsBuilder: (context,
                                               animation,
                                               secondaryAnimation,
@@ -613,7 +594,7 @@ class _LoginPageState extends State<LoginPage> {
                                       );
                                     },
                                     child: const Text(
-                                      '교직원이신가요?',
+                                      '학생이신가요?',
                                       style: TextStyle(
                                         color: Colors.indigo,
                                         decoration: TextDecoration.underline,
@@ -661,10 +642,10 @@ class _LoginPageState extends State<LoginPage> {
     // 텍스트 필드에 이미 값이 있는지 확인
     if (email.isNotEmpty) {
       // '@' 문자 앞부분만 가져옴 (학번 부분)
-      String id = email.split('@')[0];
+      String id = email;
 
       // 새로운 학교 도메인을 붙임
-      email = id + academy;
+      email = id;
     }
   }
 }

@@ -2,8 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/screen/login/s_login_professor.dart';
-import 'package:inha_Carpool/screen/register/s_register_professor.dart';
+import 'package:inha_Carpool/screen/register/s_register.dart';
 import 'package:inha_Carpool/screen/register/s_verifiedregister.dart';
 import '../../service/sv_auth.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
@@ -13,14 +12,14 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 /// 0830 / 0907 / 0910 / 0922 최은우
 /// 디자인 수정
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class ProfessorRegisterPage extends StatefulWidget {
+  const ProfessorRegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<ProfessorRegisterPage> createState() => _ProfessorRegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _ProfessorRegisterPageState extends State<ProfessorRegisterPage> {
   final formKey = GlobalKey<FormState>();
 
   // 이메일
@@ -39,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String nickname = "";
 
   // 학교
-  String academy = "@itc.ac.kr";
+  // String academy = "@inhatc.ac.kr";
 
   // 로딩 여부
   bool isLoading = false;
@@ -54,10 +53,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   var selectedIndex = 0;
 
-  List<Color> selectedBackgroundColors = [
-    const Color.fromARGB(255, 70, 100, 192)
-  ];
-  List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
+  // List<Color> selectedBackgroundColors = [
+  //   const Color.fromARGB(255, 70, 100, 192)
+  // ];
+  // List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
 
   // 입력 필드 높이 설정
   double inputFieldHeight = 50.0;
@@ -65,17 +64,17 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController nickNameController = TextEditingController();
 
   // 토글 배경색 업데이트 메서드
-  void updateBackgroundColors() {
-    // 선택된 토글의 배경색을 변경
-    selectedBackgroundColors = selectedIndex == 0
-        ? [const Color.fromARGB(255, 70, 100, 192)]
-        : [const Color.fromARGB(255, 70, 100, 192)];
-
-    // 선택되지 않은 토글의 배경색을 변경
-    unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.black54, Colors.black]
-        : [Colors.black54, Colors.black];
-  }
+  // void updateBackgroundColors() {
+  //   // 선택된 토글의 배경색을 변경
+  //   selectedBackgroundColors = selectedIndex == 0
+  //       ? [const Color.fromARGB(255, 70, 100, 192)]
+  //       : [const Color.fromARGB(255, 70, 100, 192)];
+  //
+  //   // 선택되지 않은 토글의 배경색을 변경
+  //   unSelectedBackgroundColors = selectedIndex == 0
+  //       ? [Colors.black54, Colors.black]
+  //       : [Colors.black54, Colors.black];
+  // }
 
   bool containsProfanity(String nickname, List<String> profanityList) {
     for (String profanity in profanityList) {
@@ -121,8 +120,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final int namemaxLength = 5; //이름최대길이
-    final int nicknamemaxLength = 7; //닉넴최대길이
+    const int nameMaxLength = 5; //이름최대길이
+    const int nickNameMaxLength = 7; //닉넴최대길이
 
     return isLoading
         ? const Center(
@@ -174,20 +173,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const ProfessorRegisterPage()));
+                                          const RegisterPage()));
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  '교수님 회원가입',
+                                  '학생 회원가입',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[600],
                                     fontWeight: FontWeight.bold,
                                     decoration: TextDecoration.underline,
                                     decorationColor: Colors.grey[600],
-
                                   ),
                                 ),
                                 const Icon(Icons.arrow_forward_ios,
@@ -235,7 +233,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                               decoration: const InputDecoration(
                                                 labelText: null,
                                                 // labelText를 null로 설정하고 힌트 텍스트 숨김
-                                                hintText: '학번',
+                                                hintText:
+                                                    '학교메일',
                                                 border: InputBorder.none,
                                                 prefixIcon: Icon(
                                                   Icons.school,
@@ -244,14 +243,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                               ),
                                               onChanged: (text) {
                                                 setState(() {
-                                                  email = text + academy;
+                                                  email = text;
                                                 });
                                               },
                                               validator: (val) {
                                                 if (val!.isNotEmpty) {
                                                   return null;
                                                 } else {
-                                                  return "학번이 비어있습니다.";
+                                                  return "메일이 비어있습니다.";
                                                 }
                                               },
                                             ),
@@ -259,43 +258,43 @@ class _RegisterPageState extends State<RegisterPage> {
                                         ],
                                       ),
                                     ),
-                                    Positioned(
-                                      right: 4,
-                                      child: FlutterToggleTab(
-                                        width: 30,
-                                        borderRadius: 10,
-                                        height: 38,
-                                        selectedTextStyle: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                        unSelectedTextStyle: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        labels: const ["인하공전", "인하대"],
-                                        selectedLabelIndex: (index) {
-                                          setState(() {
-                                            if (index == 0) {
-                                              academy = "@itc.ac.kr";
-                                            } else {
-                                              academy = "@inha.edu";
-                                              // academy = "@inhatc.ac.kr"; //교수님들 메일
-                                            }
-                                            selectedIndex = index;
-                                            updateBackgroundColors();
-                                          });
-                                        },
-                                        selectedBackgroundColors:
-                                            selectedBackgroundColors,
-                                        unSelectedBackgroundColors:
-                                            unSelectedBackgroundColors,
-                                        isScroll: false,
-                                        selectedIndex: selectedIndex,
-                                      ),
-                                    ),
+                                    // Positioned(
+                                    //   right: 4,
+                                    //   child: FlutterToggleTab(
+                                    //     width: 30,
+                                    //     borderRadius: 10,
+                                    //     height: 38,
+                                    //     selectedTextStyle: const TextStyle(
+                                    //       color: Colors.white,
+                                    //       fontSize: 12,
+                                    //       fontWeight: FontWeight.w700,
+                                    //     ),
+                                    //     unSelectedTextStyle: const TextStyle(
+                                    //       color: Colors.white,
+                                    //       fontSize: 10,
+                                    //       fontWeight: FontWeight.w500,
+                                    //     ),
+                                    //     labels: const ["인하공전", "인하대"],
+                                    //     selectedLabelIndex: (index) {
+                                    //       setState(() {
+                                    //         if (index == 0) {
+                                    //           academy = "@itc.ac.kr";
+                                    //         } else {
+                                    //           academy = "@inha.edu";
+                                    //           // academy = "@inhatc.ac.kr"; //교수님들 메일
+                                    //         }
+                                    //         selectedIndex = index;
+                                    //         updateBackgroundColors();
+                                    //       });
+                                    //     },
+                                    //     selectedBackgroundColors:
+                                    //         selectedBackgroundColors,
+                                    //     unSelectedBackgroundColors:
+                                    //         unSelectedBackgroundColors,
+                                    //     isScroll: false,
+                                    //     selectedIndex: selectedIndex,
+                                    //   ),
+                                    // ),
                                   ],
                                 )),
                           ],
@@ -333,7 +332,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  maxLength: namemaxLength,
+                                  maxLength: nameMaxLength,
                                   validator: (val) {
                                     if (val!.isNotEmpty) {
                                       return null;
@@ -354,7 +353,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               Positioned(
                                 right: 5,
                                 child: Text(
-                                  "${username.length}/$namemaxLength",
+                                  "${username.length}/$nameMaxLength",
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 12,
@@ -398,7 +397,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  maxLength: nicknamemaxLength,
+                                  maxLength: nickNameMaxLength,
                                   validator: (val) {
                                     if (val!.isNotEmpty) {
                                       return null;
@@ -420,7 +419,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               Positioned(
                                 right: 80,
                                 child: Text(
-                                  "${nickname.length}/$nicknamemaxLength",
+                                  "${nickname.length}/$nickNameMaxLength",
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 12,
@@ -692,10 +691,10 @@ class _RegisterPageState extends State<RegisterPage> {
     // 텍스트 필드에 이미 값이 있는지 확인
     if (email.isNotEmpty) {
       // '@' 문자 앞부분만 가져옴 (학번 부분)
-      String id = email.split('@')[0];
+      String id = email;
 
       // 새로운 학교 도메인을 붙임
-      email = id + academy;
+      email = id;
     }
   }
 }
