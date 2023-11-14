@@ -227,7 +227,7 @@ class _ProfessorRegisterPageState extends State<ProfessorRegisterPage> {
                                               inputFormatters: [
                                                 //영어+숫자만 가능
                                                 FilteringTextInputFormatter(
-                                                    RegExp(r"^[a-zA-Z0-9]+$"),
+                                                    RegExp(r'^[a-zA-Z0-9@.]+$'),
                                                     allow: true)
                                               ],
                                               decoration: const InputDecoration(
