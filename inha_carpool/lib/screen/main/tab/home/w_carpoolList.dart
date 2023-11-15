@@ -126,7 +126,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                   return Container();
                 }
                 // 데이터가 로드되지 않았을 때의 로딩 상태 표시 등의 처리
-                return const CircularProgressIndicator();
+                return const Center(child: CircularProgressIndicator());
               },
             );
           } else {
