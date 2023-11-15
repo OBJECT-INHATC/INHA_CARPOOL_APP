@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
@@ -21,9 +23,10 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
-
   bool inCarpoolList = false; // Add this state
+
   late TabItem _currentTab;
+
   //시작 화면 지정
   MainScreenState({String? temp}) {
     if (temp == 'MyPage') {
@@ -33,6 +36,7 @@ class MainScreenState extends State<MainScreen>
       _currentTab = TabItem.home; // Default or other cases
     }
   }
+
   //사용 가능한 화면 리스트
   final tabs = [TabItem.carpool, TabItem.home, TabItem.myPage];
 
@@ -49,6 +53,28 @@ class MainScreenState extends State<MainScreen>
   static double get bottomNavigationBarBorderRadius => 30.0;
 
   final storage = const FlutterSecureStorage();
+
+  // 피지컬 뒤로가기 활성화
+  DateTime? currentBackPressTime;
+
+  // 피지컬 뒤로가기 기능
+  Future<bool> onWillPop() {
+    DateTime now = DateTime.now();
+    if (currentBackPressTime == null ||
+        now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+      currentBackPressTime = now;
+      const msg = "한 번 더 누르면 종료됩니다.";
+
+      Fluttertoast.showToast(msg: msg);
+      return Future.value(false);
+    } else {
+      // 현재 탭이 홈이면 앱 종료
+      if (_currentTab == TabItem.home) {
+        SystemNavigator.pop();
+      }
+      return Future.value(true);
+    }
+  }
 
   @override
   void initState() {
@@ -89,7 +115,7 @@ class MainScreenState extends State<MainScreen>
           foregroundColor: Colors.white,
           leading: GestureDetector(
             onTap: () {},
-            child:  Padding(
+            child: Padding(
               padding: const EdgeInsets.all(3.0),
               child: Image.asset(
                 'assets/image/splash/banner.png',
@@ -147,11 +173,8 @@ class MainScreenState extends State<MainScreen>
         extendBody: extendBody,
         body: Padding(
           padding: EdgeInsets.only(
-            bottom: extendBody
-                ? 30 - bottomNavigationBarBorderRadius
-                : 0,
+            bottom: extendBody ? 30 - bottomNavigationBarBorderRadius : 0,
           ),
-
           child: SafeArea(
             bottom: !extendBody,
             child: pages,
@@ -166,34 +189,36 @@ class MainScreenState extends State<MainScreen>
       index: _currentIndex,
       children: tabs
           .mapIndexed((tab, index) => Offstage(
-        offstage: _currentTab != tab,
-        child: TabNavigator(
-          navigatorKey: navigatorKeys[index],
-          tabItem: tab,
-        ),
-      ))
+                offstage: _currentTab != tab,
+                child: TabNavigator(
+                  navigatorKey: navigatorKeys[index],
+                  tabItem: tab,
+                ),
+              ))
           .toList());
+
   //텝 내의서 뒤로 갈 수 있으면 해당 탭의 네비게이터를 이용, 아니면 홈으로 이동
 
   Future<bool> _handleBackPressed() async {
     final isFirstRouteInCurrentTab =
-    (await _currentTabNavigationKey.currentState?.maybePop() == false);
+        (await _currentTabNavigationKey.currentState?.maybePop() == false);
 
     if (isFirstRouteInCurrentTab) {
       if (_currentTab != TabItem.home) {
         _changeTab(tabs.indexOf(TabItem.home));
         return false;
       } else {
-        // 뒤로가기 버튼을 눌렀을 때 로그인으로 이동 여부
+        await onWillPop();
         return false;
       }
     }
     return isFirstRouteInCurrentTab;
   }
+
 //하단 네비게이션 바 스타일 지정
   Widget _buildBottomNavigationBar(BuildContext context) {
     return Container(
-      decoration:  const BoxDecoration(
+      decoration: const BoxDecoration(
         shape: BoxShape.rectangle,
         boxShadow: [
           BoxShadow(color: Colors.black26, spreadRadius: 0, blurRadius: 5),
@@ -218,19 +243,17 @@ class MainScreenState extends State<MainScreen>
     );
   }
 
-
   //하단 네비게이션 바 아이템 지정 ( 아이콘 색상 변경 )
   List<BottomNavigationBarItem> navigationBarItems(BuildContext context) {
     return tabs
         .mapIndexed(
           (tab, index) => tab.toNavigationBarItem(
-        context,
-        isActivated: _currentIndex == index,
-      ),
-    )
+            context,
+            isActivated: _currentIndex == index,
+          ),
+        )
         .toList();
   }
-
 
   // 선택한 탭의 인덱스로 현재 텝 변경
   void _changeTab(int index) {
@@ -238,7 +261,6 @@ class MainScreenState extends State<MainScreen>
       _currentTab = tabs[index];
     });
   }
-
 
   // 선택된 탭과 그렇지 않은 탭 아이콘 상태 변경
   BottomNavigationBarItem bottomItem(bool activate, IconData iconData,
@@ -253,6 +275,7 @@ class MainScreenState extends State<MainScreen>
         ),
         label: label);
   }
+
   //중요!
   //하단 네비게이션 바의 아이템이 탭됐을 때의 처리를 정의
   // 현재 탭과 타겟 탭이 같은 경우, 현재 탭의 네비게이터에서 모든 기록을 삭제
@@ -268,6 +291,7 @@ class MainScreenState extends State<MainScreen>
     }
     _changeTab(index);
   }
+
   // 선택된 탭의 네비게이터에서 모든 기록을 삭제
   void popAllHistory(GlobalKey<NavigatorState> navigationKey) {
     //스택에 해당 텝이 있는지 확인

@@ -109,6 +109,8 @@ dependencies:
 
   dropdown_button2: ^2.3.9 # 드롭다운 버튼 패키지
 
+  fluttertoast: ^8.2.4 # 토스트 패키지
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
