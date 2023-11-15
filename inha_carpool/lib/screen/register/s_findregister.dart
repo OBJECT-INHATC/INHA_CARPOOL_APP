@@ -100,7 +100,7 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                         return "올바른 이메일을 입력해주세요.";
                       } else if (val.length < 15 || !val.contains("@") || !val.contains(".") || val.length > 35) {
                         return "이메일의 형식이 맞지 않습니다.";
-                      } 
+                      }
                       else {
                         return null;
                       }
