@@ -65,7 +65,13 @@ class MainScreenState extends State<MainScreen>
       currentBackPressTime = now;
       const msg = "한 번 더 누르면 종료됩니다.";
 
-      Fluttertoast.showToast(msg: msg);
+      Fluttertoast.showToast(
+        msg: msg,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black.withOpacity(0.7),
+        textColor: Colors.white,
+      );
       return Future.value(false);
     } else {
       // 현재 탭이 홈이면 앱 종료
