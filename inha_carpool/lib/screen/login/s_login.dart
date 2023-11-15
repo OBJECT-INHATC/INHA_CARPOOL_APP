@@ -104,6 +104,14 @@ class _LoginPageState extends State<LoginPage> {
   // 학교 도메인 기본값
   String academy = "@itc.ac.kr";
 
+  bool isProfessor = false; // 학생과 교수님 구
+
+  void toggleProfessorLogin() {
+    setState(() {
+      isProfessor = !isProfessor;
+    });
+  }
+
   var selectedIndex = 0;
 
   List<Color> selectedBackgroundColors = [
@@ -194,46 +202,55 @@ class _LoginPageState extends State<LoginPage> {
                           padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
                               screenHeight * 0.007, screenWidth * 0.1, 0),
                           // 학교 선택 토글 버튼
-                          child: FlutterToggleTab(
-                            width: 30,
-                            borderRadius: 40,
-                            height: 30,
-                            selectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            unSelectedTextStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            labels: const ["인하공전", "인하대"],
-                            selectedLabelIndex: (index) {
-                              setState(() {
-                                if (index == 0) {
-                                  academy = "@itc.ac.kr"; // 인하공전생
-                                  email = emailTemp + academy;
-                                } else {
-                                  academy = "@inha.edu"; // 인하대생
-                                  email = emailTemp + academy;
-                                }
-                                selectedIndex = index;
-                                updateBackgroundColors();
-                              });
-                            },
-                            selectedBackgroundColors:
-                                selectedBackgroundColors,
-                            unSelectedBackgroundColors:
-                                unSelectedBackgroundColors,
-                            isScroll: false,
-                            selectedIndex: selectedIndex,
-                          ),
+                          child: isProfessor
+                              ? '교수님ver'
+                                  .text
+                                  .bold
+                                  .color(Colors.grey[500])
+                                  .make()
+                              : FlutterToggleTab(
+                                  width: 30,
+                                  borderRadius: 40,
+                                  height: 30,
+                                  selectedTextStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  unSelectedTextStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  labels: const ["인하공전", "인하대"],
+                                  selectedLabelIndex: (index) {
+                                    setState(() {
+                                      if (index == 0) {
+                                        academy = "@itc.ac.kr"; // 인하공전생
+                                        email = emailTemp + academy;
+                                      } else {
+                                        academy = "@inha.edu"; // 인하대생
+                                        email = emailTemp + academy;
+                                      }
+                                      selectedIndex = index;
+                                      updateBackgroundColors();
+                                    });
+                                  },
+                                  selectedBackgroundColors:
+                                      selectedBackgroundColors,
+                                  unSelectedBackgroundColors:
+                                      unSelectedBackgroundColors,
+                                  isScroll: false,
+                                  selectedIndex: selectedIndex,
+                                ),
                         ),
                         // 학번 입력 필드
                         Container(
-                          padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
-                              screenHeight * 0.02, screenWidth * 0.1, 0),
+                          padding: isProfessor
+                              ? EdgeInsets.fromLTRB(screenWidth * 0.1,
+                                  screenHeight * 0.005, screenWidth * 0.1, 0)
+                              : EdgeInsets.fromLTRB(screenWidth * 0.1,
+                                  screenHeight * 0.02, screenWidth * 0.1, 0),
                           child: Container(
                             // height: inputFieldHeight, // 높이 변수 적용
                             decoration: BoxDecoration(
@@ -244,22 +261,27 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.grey[200], // 연한 회색 배경색
                             ),
                             child: TextFormField(
-                              decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 10),
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                                 labelText: null,
-                                hintText: '학번',
-                                hintStyle: TextStyle(
+                                hintText: isProfessor ? '학교메일' : '학번',
+                                hintStyle: const TextStyle(
                                   fontSize: 12.0,
                                   color: Colors.grey,
                                 ),
-                                prefixIcon:
-                                    Icon(Icons.school, color: Colors.grey),
+                                prefixIcon: isProfessor
+                                    ? const Icon(Icons.email,
+                                        color: Colors.grey)
+                                    : const Icon(Icons.school,
+                                        color: Colors.grey),
                               ),
                               onChanged: (text) {
-                                email = text + academy;
+                                isProfessor
+                                    ? email = text
+                                    : email = text + academy;
                                 emailTemp = text;
                               },
                               validator: (val) {
@@ -586,40 +608,54 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      Navigator.of(context).pushReplacement(
-                                        PageRouteBuilder(
-                                          pageBuilder: (context, animation,
-                                                  secondaryAnimation) =>
-                                              const ProfessorLoginPage(),
-                                          transitionsBuilder: (context,
-                                              animation,
-                                              secondaryAnimation,
-                                              child) {
-                                            const begin = Offset(1.0, 0.0);
-                                            const end = Offset.zero;
-                                            const curve = Curves.easeInOut;
-                                            var tween = Tween(
-                                                    begin: begin, end: end)
-                                                .chain(
-                                                    CurveTween(curve: curve));
-                                            var offsetAnimation =
-                                                animation.drive(tween);
-                                            return SlideTransition(
-                                              position: offsetAnimation,
-                                              child: child,
-                                            );
-                                          },
-                                        ),
-                                      );
+                                      toggleProfessorLogin();
+                                      // Navigator.of(context).pushReplacement(
+                                      //   PageRouteBuilder(
+                                      //     pageBuilder: (context, animation,
+                                      //             secondaryAnimation) =>
+                                      //         const ProfessorLoginPage(),
+                                      //     transitionsBuilder: (context,
+                                      //         animation,
+                                      //         secondaryAnimation,
+                                      //         child) {
+                                      //       const begin = Offset(1.0, 0.0);
+                                      //       const end = Offset.zero;
+                                      //       const curve = Curves.easeInOut;
+                                      //       var tween = Tween(
+                                      //               begin: begin, end: end)
+                                      //           .chain(
+                                      //               CurveTween(curve: curve));
+                                      //       var offsetAnimation =
+                                      //           animation.drive(tween);
+                                      //       return SlideTransition(
+                                      //         position: offsetAnimation,
+                                      //         child: child,
+                                      //       );
+                                      //     },
+                                      //   ),
+                                      // );
                                     },
-                                    child: const Text(
-                                      '교직원이신가요?',
-                                      style: TextStyle(
-                                        color: Colors.indigo,
-                                        decoration: TextDecoration.underline,
-                                        decorationColor: Color(0xFF1976D2),
-                                      ),
-                                    ),
+                                    child: isProfessor
+                                        ? const Text(
+                                            '학생이신가요?',
+                                            style: TextStyle(
+                                              color: Colors.indigo,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationColor:
+                                                  Color(0xFF1976D2),
+                                            ),
+                                          )
+                                        : const Text(
+                                            '교직원이신가요?',
+                                            style: TextStyle(
+                                              color: Colors.indigo,
+                                              decoration:
+                                                  TextDecoration.underline,
+                                              decorationColor:
+                                                  Color(0xFF1976D2),
+                                            ),
+                                          ),
                                   ),
                                 ],
                               ),
@@ -658,13 +694,18 @@ class _LoginPageState extends State<LoginPage> {
 
   // 이메일 업데이트 메서드 추가
   void updateEmail() {
+    String id = "";
     // 텍스트 필드에 이미 값이 있는지 확인
-    if (email.isNotEmpty) {
+    if (email.isNotEmpty && isProfessor == false) {
       // '@' 문자 앞부분만 가져옴 (학번 부분)
-      String id = email.split('@')[0];
+      id = email.split('@')[0];
 
       // 새로운 학교 도메인을 붙임
       email = id + academy;
+    } else if (email.isNotEmpty && isProfessor == true) {
+      // 교수님버전
+      id = email;
+      email = id;
     }
   }
 }

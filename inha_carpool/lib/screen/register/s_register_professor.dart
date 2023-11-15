@@ -118,6 +118,12 @@ class _ProfessorRegisterPageState extends State<ProfessorRegisterPage> {
     }
   }
 
+  bool checkInhaMail(String userMail) {
+    RegExp emailRegex =
+        RegExp(r'^[\w-]+(\.[\w-]+)*@inhatc\.ac\.kr|inha\.ac\.kr$');
+    return emailRegex.hasMatch(userMail);
+  }
+
   @override
   Widget build(BuildContext context) {
     const int nameMaxLength = 5; //이름최대길이
@@ -233,8 +239,7 @@ class _ProfessorRegisterPageState extends State<ProfessorRegisterPage> {
                                               decoration: const InputDecoration(
                                                 labelText: null,
                                                 // labelText를 null로 설정하고 힌트 텍스트 숨김
-                                                hintText:
-                                                    '학교메일',
+                                                hintText: '학교메일',
                                                 border: InputBorder.none,
                                                 prefixIcon: Icon(
                                                   Icons.school,
@@ -615,7 +620,12 @@ class _ProfessorRegisterPageState extends State<ProfessorRegisterPage> {
                               surfaceTintColor: Colors.transparent,
                             ),
                             onPressed: () {
-                              if (!isNicknameAvailable) {
+                              // 회원가입 버튼 클릭 시
+                              // 이메일이 학교메일인지 체크
+                              if (!checkInhaMail(email)) {
+                                showSnackbar(
+                                    context, Colors.red, "학교메일로 가입해주세요.");
+                              } else if (!isNicknameAvailable) {
                                 // 중복된 닉네임이 있는 경우, 회원가입 막기
                                 showSnackbar(
                                     context, Colors.red, '닉네임 중복체크 해주세요.');
