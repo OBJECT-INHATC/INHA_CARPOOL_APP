@@ -16,7 +16,6 @@ class FirebaseCarpool {
   static FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static ApiTopic apiTopic = ApiTopic();
 
-
   static const storage = FlutterSecureStorage();
   late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
@@ -25,10 +24,8 @@ class FirebaseCarpool {
   // 광고 가져오기
   static Future<DocumentSnapshot?> getAdminData(String type) async {
     try {
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-          .collection('admin')
-          .doc(type)
-          .get();
+      DocumentSnapshot documentSnapshot =
+          await FirebaseFirestore.instance.collection('admin').doc(type).get();
 
       if (documentSnapshot.exists) {
         return documentSnapshot;
@@ -40,7 +37,6 @@ class FirebaseCarpool {
       return null;
     }
   }
-
 
   /// 카풀 저장
   static Future<String> addDataToFirestore({
@@ -78,9 +74,6 @@ class FirebaseCarpool {
 
       print(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''));
 
-
-
-
       DocumentReference carpoolDocRef = await users.add({
         'admin': '${memberID}_${memberName}_$memberGender',
         'startPointName': startPointName,
@@ -97,9 +90,6 @@ class FirebaseCarpool {
         'endDetailPoint': endDetailPoint,
       });
 
-
-
-
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
       tempCarId = carpoolDocRef.id;
       print("11uid : $memberID");
@@ -109,36 +99,39 @@ class FirebaseCarpool {
       if (Prefs.isPushOnRx.get() == true) {
         await FirebaseMessaging.instance.subscribeToTopic(carpoolDocRef.id);
         print("토픽 추가");
-        /// 카풀 정보 토픽 추가
-        await FirebaseMessaging.instance.subscribeToTopic("${carpoolDocRef.id}_info");
-      }
 
+        /// 카풀 정보 토픽 추가
+        await FirebaseMessaging.instance
+            .subscribeToTopic("${carpoolDocRef.id}_info");
+      }
     } catch (e) {
       print('Error adding data to Firestore: $e');
     }
 
-    TopicRequstDTO topicRequstDTO = TopicRequstDTO(uid: memberID, carId: tempCarId);
+    TopicRequstDTO topicRequstDTO =
+        TopicRequstDTO(uid: memberID, carId: tempCarId);
     bool isOpen = await apiTopic.saveTopoic(topicRequstDTO);
     if (isOpen) {
       print("스프링부트 서버 성공 #############");
+
       /// 0903 한승완 추가 : 참가 메시지 전송
       await FireStoreService().sendCreateMessage(tempCarId, memberName);
       print('Data added to Firestore.');
       print("carpoolDocRef.id : ${tempCarId}");
 
       return tempCarId;
-
     } else {
       print("스프링부트 서버 실패 #############");
+
       /// 토픽 및 카풀 삭제
-      if(Prefs.isPushOnRx.get() == true) {
+      if (Prefs.isPushOnRx.get() == true) {
         print("서버 이상으로 토픽 삭제");
         await FirebaseMessaging.instance.unsubscribeFromTopic(tempCarId);
-        await FirebaseMessaging.instance.unsubscribeFromTopic("${tempCarId}_info");
+        await FirebaseMessaging.instance
+            .unsubscribeFromTopic("${tempCarId}_info");
       }
 
       await _firestore.collection('carpool').doc(tempCarId).delete();
-
 
       return "";
     }
@@ -213,9 +206,6 @@ class FirebaseCarpool {
         // 예외 처리 코드 추가
       }
     }
-
-
-
   }
 
   /// 시간순으로 조회, 정렬
@@ -254,50 +244,49 @@ class FirebaseCarpool {
     return sortedCarpools;
   }
 
-/*
- /// 시간순 조회 30일 후 테스트용 (3일 뒤 춟발예정만 보임)
-  static Future<List<DocumentSnapshot>> timeByFunction(
-      int limit, DocumentSnapshot? startAfter,
-      ) async {
-    CollectionReference carpoolCollection =
-    FirebaseFirestore.instance.collection('carpool');
-
-    // 현재 시간
-    DateTime now = DateTime.now();
-
-    // 현재 시간으로부터 30일 후의 시간
-    DateTime threeDaysLater = now.add(const Duration(days: 3));
-
-    Query query = carpoolCollection
-        .where('startTime', isGreaterThan:threeDaysLater.millisecondsSinceEpoch)
-        .orderBy('startTime')
-        .limit(limit);
-
-    if (startAfter != null) {
-      query = query.startAfterDocument(startAfter);
-    }
-
-    QuerySnapshot querySnapshot = await query.get();
-
-    List<DocumentSnapshot> sortedCarpools = [];
-    print("추가된 카풀 수(시간순): ${querySnapshot.docs.length}");
-
-    // 현재 시간 가져옴
-    DateTime currentTime = DateTime.now();
-
-    for (var doc in querySnapshot.docs) {
-      DateTime startTime =
-      DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
-
-      // 현재 시간보다 미래의 시간인 경우만 추가
-      if (startTime.isAfter(currentTime)) {
-        sortedCarpools.add(doc);
-      }
-    }
-    return sortedCarpools;
-  }
-*/
-
+  // /// 시간순 조회 30일 후 테스트용 (3일 뒤 춟발예정만 보임)
+  // static Future<List<DocumentSnapshot>> timeByFunction(
+  //   int limit,
+  //   DocumentSnapshot? startAfter,
+  // ) async {
+  //   CollectionReference carpoolCollection =
+  //       FirebaseFirestore.instance.collection('carpool');
+  //
+  //   // 현재 시간
+  //   DateTime now = DateTime.now();
+  //
+  //   // 현재 시간으로부터 30일 후의 시간
+  //   DateTime threeDaysLater = now.add(const Duration(days: 3));
+  //
+  //   Query query = carpoolCollection
+  //       .where('startTime',
+  //           isGreaterThan: threeDaysLater.millisecondsSinceEpoch)
+  //       .orderBy('startTime')
+  //       .limit(limit);
+  //
+  //   if (startAfter != null) {
+  //     query = query.startAfterDocument(startAfter);
+  //   }
+  //
+  //   QuerySnapshot querySnapshot = await query.get();
+  //
+  //   List<DocumentSnapshot> sortedCarpools = [];
+  //   print("추가된 카풀 수(시간순): ${querySnapshot.docs.length}");
+  //
+  //   // 현재 시간 가져옴
+  //   DateTime currentTime = DateTime.now();
+  //
+  //   for (var doc in querySnapshot.docs) {
+  //     DateTime startTime =
+  //         DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+  //
+  //     // 현재 시간보다 미래의 시간인 경우만 추가
+  //     if (startTime.isAfter(currentTime)) {
+  //       sortedCarpools.add(doc);
+  //     }
+  //   }
+  //   return sortedCarpools;
+  // }
 
   /// 거리순 정렬
   static Future<List<DocumentSnapshot>> nearByCarpool(
@@ -314,7 +303,7 @@ class FirebaseCarpool {
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       DateTime startTime =
           DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
 
@@ -329,7 +318,7 @@ class FirebaseCarpool {
           'distance': distance,
         });
       }
-    });
+    }
 
     sortedCarpools.sort((a, b) {
       double distanceA = a['distance'];
@@ -364,7 +353,7 @@ class FirebaseCarpool {
     return distanceInMeters / 1000;
   }
 
-  /// 내가 참여한 카풀
+  /// 내가 참여한 카풀 - 메인 플로팅 버튼에 사용
   static Future<List<DocumentSnapshot>> getCarpoolsWithMember(
       String memberID, String memberName, String memberGender) async {
     QuerySnapshot querySnapshot = await _firestore
@@ -379,7 +368,7 @@ class FirebaseCarpool {
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       DateTime startTime =
           DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
 
@@ -387,7 +376,41 @@ class FirebaseCarpool {
       if (startTime.isAfter(currentTime)) {
         sortedCarpools.add(doc);
       }
+    }
+
+    sortedCarpools.sort((a, b) {
+      DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
+      DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b['startTime']);
+
+      return startTimeA.compareTo(startTimeB);
     });
+
+    return sortedCarpools;
+  }
+
+  /// 내가 참여한 카풀 - 내가참가한 카풀리스트에 사용
+  static Future<List<DocumentSnapshot>> getCarpoolsRemainingForDay(
+      String memberID, String memberName, String memberGender) async {
+    QuerySnapshot querySnapshot = await _firestore
+        .collection('carpool')
+        .where('members',
+            arrayContains: '${memberID}_${memberName}_$memberGender')
+        .get();
+
+    List<DocumentSnapshot> sortedCarpools = [];
+    print("조회된 카풀 수(참여): ${querySnapshot.docs.length}");
+
+    // 해당 도큐먼트의 출발시간을 기준으로 계산하니 필요없을 것 같아 주석처리함
+    DateTime currentTime = DateTime.now();
+    for (var doc in querySnapshot.docs) {
+      DateTime startTime =
+          DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+
+      // 하루가 지나기 전까지의 카풀 추가
+      if (startTime.isAfter(currentTime.subtract(const Duration(days: 1)))) {
+        sortedCarpools.add(doc);
+      }
+    }
 
     sortedCarpools.sort((a, b) {
       DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);

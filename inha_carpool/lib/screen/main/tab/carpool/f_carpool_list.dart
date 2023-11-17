@@ -20,7 +20,7 @@ class CarpoolList extends StatefulWidget {
 }
 
 class _CarpoolListState extends State<CarpoolList> {
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   late String nickName = ""; // Initialize with a default value
   late String uid = "";
   late String gender = "";
@@ -54,20 +54,36 @@ class _CarpoolListState extends State<CarpoolList> {
     var difference = now.difference(dateTime);
 
     if (difference.isNegative) {
-      difference = difference.abs();
-    }
-
-    if (difference.inDays > 365) {
-      return '${(difference.inDays / 365).floor()}년 후';
-    } else if (difference.inDays >= 30) {
-      return '${(difference.inDays / 30).floor()}달 후';
-    } else if (difference.inDays >= 1) {
-      return '${difference.inDays}일 후';
-    } else if (difference.inHours >= 1) {
-      return '${difference.inHours}시간 남음, 출발 10분전 퇴장 불가';
+      if (difference.inDays < -1) {
+        return '${(difference.inDays.abs())}일 후 예정';
+      } else if (difference.inDays == -1) {
+        return '하루 전';
+      } else if (difference.inHours < -1) {
+        return '${(difference.inHours.abs())}시간 후 예정';
+      } else if (difference.inHours == -1) {
+        return '한 시간 전';
+      } else if (difference.inMinutes < -1) {
+        return '${(difference.inMinutes.abs())}분 후, 출발지를 확인해 주세요';
+      } else if (difference.inMinutes <= 0) {
+        return '카풀 출발 시간입니다!';
+      }
     } else {
-      return '${difference.inMinutes}분 남음, 출발지를 확인해 주세요';
+      // if (difference.inDays > 365) {
+      //   return '${(difference.inDays / 365).floor()}년 전 진행된 카풀';
+      // } else if (difference.inDays >= 30) {
+      //   return '${(difference.inDays / 30).floor()}달 전 진행된 카풀';
+      // } else
+      if (difference.inDays >= 1) {
+        return '${difference.inDays}일 전 진행된 카풀';
+      } else if (difference.inDays == 1) {
+        return '하루 전 진행된 카풀';
+      } else if (difference.inHours >= 1) {
+        return '${difference.inHours}시간 지난 카풀';
+      } else {
+        return '${difference.inMinutes}분 지난 카풀';
+      }
     }
+    return '';
   }
 
   String getName(String res) {
@@ -91,7 +107,8 @@ class _CarpoolListState extends State<CarpoolList> {
     String myGender = gender;
 
     List<DocumentSnapshot> carpools =
-        await FirebaseCarpool.getCarpoolsWithMember(myID, myNickName, myGender);
+        await FirebaseCarpool.getCarpoolsRemainingForDay(
+            myID, myNickName, myGender);
     return carpools;
   }
 
@@ -102,7 +119,7 @@ class _CarpoolListState extends State<CarpoolList> {
   bool isCarpoolOver(DateTime startTime) {
     DateTime currentTime = DateTime.now();
     Duration difference = currentTime.difference(startTime);
-    return difference.inHours >= 1;
+    return difference.inHours >= 24;
   }
 
   Color getColorBasedOnSuffix(String text) {
@@ -155,7 +172,8 @@ class _CarpoolListState extends State<CarpoolList> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      carPoolFirstWidget(context, snapshot.requireData, screenWidth),
+                      carPoolFirstWidget(
+                          context, snapshot.requireData, screenWidth),
                       FutureBuilder(
                         future: FirebaseCarpool.getAdminData("carpoolList"),
                         // 파이어베이스에서 데이터 가져오기
@@ -593,113 +611,102 @@ class _CarpoolListState extends State<CarpoolList> {
     );
   }
 
-  SizedBox carPoolFirstWidget(BuildContext context, List<DocumentSnapshot<Object?>> myCarpools, double screenWidth) {
+  SizedBox carPoolFirstWidget(BuildContext context,
+      List<DocumentSnapshot<Object?>> myCarpools, double screenWidth) {
     return SizedBox(
-                      height: 90,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  '출발 예정 카풀'
-                                      .text
-                                      .size(20)
-                                      .bold
-                                      .color(context.appColors.text)
-                                      .make(),
-                                  Icon(
-                                    Icons.local_taxi_rounded,
-                                    color: context.appColors.logoColor,
-                                    size: 23,
-                                  ),
-                                ],
-                              ),
-                              '현재 참여 중인 카풀 ${myCarpools.length}개'
-                                  .text
-                                  .size(10)
-                                  .semiBold
-                                  .color(context.appColors.text)
-                                  .make(),
-                              '위치 아이콘을 눌러주세요!'
-                                  .text
-                                  .size(10)
-                                  .color(context.appColors.text)
-                                  .make(),
-                            ],
-                          ),
-                          Width(screenWidth * 0.03),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.circle,
-                                    color: Colors.red,
-                                    size: 10,
-                                  ),
-                                  const Width(5),
-                                  '1시간 전'
-                                      .text
-                                      .size(10)
-                                      .color(context.appColors.text)
-                                      .make(),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.circle,
-                                    color: Colors.blue,
-                                    size: 10,
-                                  ),
-                                  const Width(5),
-                                  '24시간 전'
-                                      .text
-                                      .size(10)
-                                      .color(context.appColors.text)
-                                      .make(),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.circle,
-                                    color: Colors.grey,
-                                    size: 10,
-                                  ),
-                                  const Width(5),
-                                  '24시간 이후'
-                                      .text
-                                      .size(10)
-                                      .color(context.appColors.text)
-                                      .make(),
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  const Icon(
-                                    Icons.circle,
-                                    color: Colors.black,
-                                    size: 10,
-                                  ),
-                                  const Width(5),
-                                  '10분 전 퇴장 불가'
-                                      .text
-                                      .size(10)
-                                      .color(context.appColors.text)
-                                      .make(),
-                                ],
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                    );
+      height: 90,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  '출발 예정 카풀'
+                      .text
+                      .size(20)
+                      .bold
+                      .color(context.appColors.text)
+                      .make(),
+                  Icon(
+                    Icons.local_taxi_rounded,
+                    color: context.appColors.logoColor,
+                    size: 23,
+                  ),
+                ],
+              ),
+              '현재 참여 중인 카풀 ${myCarpools.length}개'
+                  .text
+                  .size(10)
+                  .semiBold
+                  .color(context.appColors.text)
+                  .make(),
+              '위치 아이콘을 눌러주세요!'
+                  .text
+                  .size(10)
+                  .color(context.appColors.text)
+                  .make(),
+            ],
+          ),
+          Width(screenWidth * 0.03),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.circle,
+                    color: Colors.red,
+                    size: 10,
+                  ),
+                  const Width(5),
+                  '1시간 전'.text.size(10).color(context.appColors.text).make(),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.circle,
+                    color: Colors.blue,
+                    size: 10,
+                  ),
+                  const Width(5),
+                  '24시간 전'.text.size(10).color(context.appColors.text).make(),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.circle,
+                    color: Colors.grey,
+                    size: 10,
+                  ),
+                  const Width(5),
+                  '24시간 이후'.text.size(10).color(context.appColors.text).make(),
+                ],
+              ),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.circle,
+                    color: Colors.black,
+                    size: 10,
+                  ),
+                  const Width(5),
+                  '10분 전 퇴장 불가'
+                      .text
+                      .size(10)
+                      .color(context.appColors.text)
+                      .make(),
+                ],
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }
