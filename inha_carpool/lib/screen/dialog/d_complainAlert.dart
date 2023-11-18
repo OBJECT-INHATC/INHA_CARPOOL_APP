@@ -95,21 +95,21 @@ class _ComplainAlertState extends State<ComplainAlert> {
                             children: _buildCheckBoxes(),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: _controller,
-                      maxLines: 3, // 크기를 조절하기 위해 maxLines를 3으로 설정
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _controller,
+                            maxLines: 3, // 크기를 조절하기 위해 maxLines를 3으로 설정
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              labelText: '신고내용',
+                              prefixIcon: const Icon(Icons.edit, size: 18),
+                            ),
+                          ),
                         ),
-                        labelText: '신고내용',
-                        prefixIcon: const Icon(Icons.edit, size: 18),
-                      ),
+                      ],
                     ),
                   ),
                 ],
