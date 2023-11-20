@@ -42,7 +42,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    double heightPercentage = 0.5; // 70% 화면 높이 사용
+    double heightPercentage = 0.4; // 70% 화면 높이 사용
     double widthPercentage = 0.9; // 90% 화면 너비 사용
 
     return AlertDialog(
@@ -87,28 +87,30 @@ class _ComplainAlertState extends State<ComplainAlert> {
                     color: Colors.grey,
                   ),
                   Expanded(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: Column(
-                            children: _buildCheckBoxes(),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(top: 15),
+                            child: Column(
+                              children: _buildCheckBoxes(),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: _controller,
-                      maxLines: 3, // 크기를 조절하기 위해 maxLines를 3으로 설정
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        labelText: '신고내용',
-                        prefixIcon: const Icon(Icons.edit, size: 18),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _controller,
+                              maxLines: 3,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                labelText: '신고내용',
+                                prefixIcon: const Icon(Icons.edit, size: 18),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

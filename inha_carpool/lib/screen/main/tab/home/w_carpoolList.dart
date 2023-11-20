@@ -51,7 +51,10 @@ String _truncateText(String text, int maxLength) {
   }
 }
 
+
+
 class _CarpoolListWidgetState extends State<CarpoolListWidget> {
+
   @override
   Widget build(BuildContext context) {
     // 화면의 너비와 높이를 가져 와서 화면 비율 계산함
@@ -65,11 +68,12 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
 
     bool isOnUri = true;
 
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[100],
         // Colors.white,
-        borderRadius: BorderRadius.circular(10),
+        //borderRadius: BorderRadius.circular(10),
       ),
       child: ListView.builder(
         // 항상 스크롤이 가능하게 만들어서 리스트 갯수가 적을 때도 새로고침 가능하게 만듦
