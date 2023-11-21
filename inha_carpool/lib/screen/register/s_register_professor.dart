@@ -5,7 +5,6 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/register/s_register.dart';
 import 'package:inha_Carpool/screen/register/s_verifiedregister.dart';
 import '../../service/sv_auth.dart';
-import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 
 /// 0824 서은율 한승완
 /// 회원 가입 페이지
@@ -233,7 +232,7 @@ class _ProfessorRegisterPageState extends State<ProfessorRegisterPage> {
                                               inputFormatters: [
                                                 //영어+숫자만 가능
                                                 FilteringTextInputFormatter(
-                                                    RegExp(r'^[a-zA-Z0-9@.]+$'),
+                                                    RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣ]"),
                                                     allow: true)
                                               ],
                                               decoration: const InputDecoration(
@@ -322,9 +321,8 @@ class _ProfessorRegisterPageState extends State<ProfessorRegisterPage> {
                                 ),
                                 child: TextFormField(
                                   inputFormatters: [
-                                    //영어+한글만 가능
                                     FilteringTextInputFormatter(
-                                        RegExp(r"^[a-zA-Z0-9ㄱ-ㅎ가-힣]+$"),
+                                        RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣ]"),
                                         allow: true)
                                   ],
                                   decoration: const InputDecoration(
@@ -389,7 +387,7 @@ class _ProfessorRegisterPageState extends State<ProfessorRegisterPage> {
                                   inputFormatters: [
                                     //영어+숫자+한글만 가능
                                     FilteringTextInputFormatter(
-                                        RegExp(r'[a-zA-Z0-9ㄱ-ㅎ가-힣 ]'),
+                                        RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣ]"),
                                         allow: true)
                                   ],
                                   decoration: const InputDecoration(
