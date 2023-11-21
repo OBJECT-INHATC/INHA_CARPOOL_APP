@@ -267,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                                 labelText: null,
-                                hintText: isProfessor ? '학교메일' : '학번',
+                                hintText: isProfessor ? '학교 메일' : '학번',
                                 hintStyle: const TextStyle(
                                   fontSize: 12.0,
                                   color: Colors.grey,

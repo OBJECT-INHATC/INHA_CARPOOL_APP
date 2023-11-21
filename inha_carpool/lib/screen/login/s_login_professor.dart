@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
-import 'package:inha_Carpool/screen/login/s_login_professor.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
 import 'package:inha_Carpool/screen/register/s_agreement.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
@@ -88,7 +86,6 @@ class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
           context, MaterialPageRoute(builder: (context) => const MainScreen()));
       await setupInteractedMessage();
     } else {
-      print("로그인 안됨 + 스플래시 제거");
       FlutterNativeSplash.remove();
     }
   }
@@ -102,28 +99,6 @@ class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
   // 비밀번호
   String password = "";
 
-  // 학교 도메인 기본값
-  // String academy = "@inhatc.ac.kr";
-
-  // var selectedIndex = 0;
-
-  // List<Color> selectedBackgroundColors = [
-  //   const Color.fromARGB(255, 70, 100, 192)
-  // ];
-  // List<Color> unSelectedBackgroundColors = [Colors.black54, Colors.black];
-
-// 토글 배경색 업데이트 메서드
-//   void updateBackgroundColors() {
-//     // 선택된 토글의 배경색을 변경
-//     selectedBackgroundColors = selectedIndex == 0
-//         ? [const Color.fromARGB(255, 70, 100, 192)]
-//         : [const Color.fromARGB(255, 70, 100, 192)];
-//
-//     // 선택되지 않은 토글의 배경색을 변경
-//     unSelectedBackgroundColors = selectedIndex == 0
-//         ? [Colors.black54, Colors.black]
-//         : [Colors.black54, Colors.black];
-//   }
 
   // 로딩 여부
   bool isLoading = false;
@@ -142,7 +117,6 @@ class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
     }
 
     // 사용자의 uid를 가져옵니다.
-    String? uid = await storage.read(key: 'uid');
   }
 
   @override
@@ -231,7 +205,7 @@ class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                                 labelText: null,
-                                hintText: '학교메일',
+                                hintText: '학교 메일',
                                 hintStyle: TextStyle(
                                   fontSize: 12.0,
                                   color: Colors.grey,
