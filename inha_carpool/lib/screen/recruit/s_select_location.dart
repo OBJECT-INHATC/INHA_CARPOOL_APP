@@ -13,6 +13,7 @@ import 'package:inha_Carpool/common/common.dart';
 class LocationInput extends StatefulWidget {
   final LatLng Point;
 
+
   const LocationInput(this.Point, {super.key});
 
   @override
@@ -181,6 +182,7 @@ class _LocationInputState extends State<LocationInput> {
                       searchedPosition = position.target;
                   },
                   onCameraIdle: () {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
                     setState(() {
                       isMove = false;
                       if(searchedPosition != null){
@@ -232,6 +234,7 @@ class _LocationInputState extends State<LocationInput> {
                         GestureDetector(
                           onTap: () {
                             if (_address == null) {
+                              ScaffoldMessenger.of(context).removeCurrentSnackBar();
                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                 content: Text('주소를 입력해주세요.'),
                               ));
@@ -306,6 +309,8 @@ class _LocationInputState extends State<LocationInput> {
 
   // 카메라를 이동시키는 메서드
   void _moveCameraTo(LatLng target) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
     mapController.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(target: target, zoom: 16.0),
     ));
@@ -320,34 +325,52 @@ class _LocationInputState extends State<LocationInput> {
 
     // 결과가 있으면 주소를 가져옵니다.
     if (responseJson['results'] != null && responseJson['results'].length > 0) {
-      final addressComponents =
-          responseJson['results'][0]['address_components'];
+      final addressComponents = responseJson['results'][0]['address_components'];
 
-      // 컴포넌트가 역순으로 생성되기 때문에 그걸 역순으로 가져올 리스트
-      List<String> reversedAddressComponents = [];
-
-      // 국가와 인천시는 제외하고 가져오기
-      // ex) 123-12 인하로 미추홀구 --> 미추홀구 인하로 123-12)
-      for (var i = addressComponents.length - 1; i >= 0; i--) {
-        var component = addressComponents[i];
-        if (component['types'].contains('country') ||
-            component['long_name'] == 'Incheon') {
-          continue;
+      // 국가 정보 확인
+      String country = '';
+      for (var component in addressComponents) {
+        if (component['types'].contains('country')) {
+          country = component['short_name'];
+          break;
         }
-        reversedAddressComponents.add(component['long_name']);
       }
-      // 공백으로 연결
-      String reversedFormattedAddress = reversedAddressComponents.join(' ');
 
-      // 텍스트필드에 주소를 대입
-      setState(() {
-        _address = reversedFormattedAddress;
-        searchedPosition = LatLng(lat, lon);
-      });
+      // 대한민국이 아닌 경우 주소 설정
+      if (country != 'KR') {
+        ScffoldMsgAndListClear(context, "대한민국 내에서만 검색 가능합니다.");
+        setState(() {
+          _address = null;
+          searchedPosition = null;
+        });
+      } else {
+        // 우편번호와 국가, 인천시는 제외하고 가져오기
+        List<String> reversedAddressComponents = [];
+        for (var i = addressComponents.length - 1; i >= 0; i--) {
+          var component = addressComponents[i];
+          if (component['types'].contains('postal_code') ||
+              component['types'].contains('country') ||
+              component['long_name'] == 'Incheon') {
+            continue;
+          }
+          reversedAddressComponents.add(component['long_name']);
+        }
+
+        // 공백으로 연결
+        String reversedFormattedAddress = reversedAddressComponents.join(' ');
+
+        // 텍스트필드에 주소를 대입
+        setState(() {
+          _address = reversedFormattedAddress;
+          searchedPosition = LatLng(lat, lon);
+        });
+      }
     } else {
       print('No results found');
     }
   }
+
+
 
   //스낵바 알림 후 리스트 비우기
   void ScffoldMsgAndListClear(BuildContext context, String text) {
