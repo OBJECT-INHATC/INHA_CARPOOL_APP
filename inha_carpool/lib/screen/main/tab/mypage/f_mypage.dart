@@ -290,7 +290,7 @@ class _MyPageState extends State<MyPage> {
                       height: 30,
                       width: 100,
                       padding: const EdgeInsets.only(left: 15),
-                      child: '  © INHAtc 2023 컴퓨터시스템과 Object Beta ver.1.7'
+                      child: '  © INHAtc 2023 컴퓨터시스템과 Object Beta ver.1.9'
                           .text
                           .size(15)
                           .semiBold
