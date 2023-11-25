@@ -3,6 +3,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
 
+/// 채팅방에서 출-목적지 지도 위젯
+
 class ChatLocation extends StatelessWidget {
   final String title;
   final String location;

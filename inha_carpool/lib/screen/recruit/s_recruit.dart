@@ -7,7 +7,7 @@ import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
+import 'package:inha_Carpool/fragment/f_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_dateTime.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';

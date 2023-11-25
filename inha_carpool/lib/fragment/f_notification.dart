@@ -5,11 +5,11 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 
-import '../screen/main/tab/carpool/s_chatroom.dart';
+import 'f_chatroom.dart';
 import '../service/sv_firestore.dart';
 
-/// 0901 한승완 수정
 /// 알림 목록 페이지
+
 class NotificationList extends StatefulWidget {
   const NotificationList({Key? key}) : super(key: key);
 

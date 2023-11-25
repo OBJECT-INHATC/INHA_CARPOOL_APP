@@ -9,7 +9,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
 import 'package:inha_Carpool/screen/login/s_login_professor.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
+import 'package:inha_Carpool/fragment/f_chatroom.dart';
 import 'package:inha_Carpool/screen/register/s_agreement.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';

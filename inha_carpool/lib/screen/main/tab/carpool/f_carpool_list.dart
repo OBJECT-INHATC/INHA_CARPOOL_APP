@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 
 import 'package:inha_Carpool/common/util/carpool.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
+import 'package:inha_Carpool/fragment/f_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 import 'package:url_launcher/url_launcher.dart';
 

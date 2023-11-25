@@ -8,7 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/s_chatroom.dart';
+import 'package:inha_Carpool/fragment/f_chatroom.dart';
 import 'package:inha_Carpool/service/api/Api_Topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 

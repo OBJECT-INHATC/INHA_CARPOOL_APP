@@ -11,8 +11,8 @@ import 'package:inha_Carpool/screen/main/tab/mypage/w_recordList.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 
 import '../../../../common/data/preference/prefs.dart';
+import '../../../../fragment/opensource/s_opensource.dart';
 import '../../../dialog/d_message.dart';
-import '../../../opensource/s_opensource.dart';
 import 'd_changepassword.dart';
 import 'f_logout_confirmation.dart';
 import 'f_secession.dart';
