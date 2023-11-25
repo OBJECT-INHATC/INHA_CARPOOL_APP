@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:inha_Carpool/common/common.dart';
 
+/// 날짜/시간 선택 위젯
 class DateTimePickerWidget extends StatefulWidget {
   final String label;
   final DateTime selectedDateTime;
@@ -34,15 +35,11 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
         onTap: () {
           FocusScope.of(context).unfocus();
           showModalBottomSheet(
-            // backgroundColor: Colors.white,
-            // shape:
-            //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             context: context,
             builder: (BuildContext context) {
               return Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  // 컨테이너에서 틴트 값 빼고, 여기서 모서리 둥글게
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20),
@@ -89,7 +86,8 @@ class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
                               widget.onDateTimeChanged(newDate);
                             });
                           },
-                        )),
+                        ),
+                ),
               );
             },
           );

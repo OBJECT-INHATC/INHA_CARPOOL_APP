@@ -6,10 +6,11 @@ import 'package:inha_Carpool/screen/recruit/s_select_location.dart';
 
 import '../../common/util/location_handler.dart';
 
+/// 출발지/도착지 요약주소 입력 위젯
 class LocationInputWidget extends StatefulWidget {
   late TextEditingController detailController;
 
-  String labelText; // 생성자에서 받아온 문자열을 저장할 변수
+  String labelText;
   String pointText;
   final LatLng Point; // 출발지인지 도착지인지
   final String detailPoint; // 요약 주소
@@ -22,7 +23,7 @@ class LocationInputWidget extends StatefulWidget {
       required this.pointText,
       required this.onLocationSelected,
       required this.detailPoint,
-      required this.detailController}); // 생성자 추가
+      required this.detailController});
 
   @override
   _LocationInputWidgetState createState() => _LocationInputWidgetState();
@@ -30,7 +31,7 @@ class LocationInputWidget extends StatefulWidget {
 
 class _LocationInputWidgetState extends State<LocationInputWidget> {
   String get detailControllerText =>
-      widget.detailController.text; // 변수에 접근 가능한 메서드 추가
+      widget.detailController.text;
 
   String selectedLocation = '';
 
@@ -89,14 +90,12 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
               children: [
                 Expanded(
                   child: RichText(
-                    //overflow: TextOverflow.ellipsis,
                     maxLines: 2, // 최대 2줄
                     text: TextSpan(
                       style: const TextStyle(color: Colors.black, fontSize: 15),
                       text: selectedLocation,
                       children: const [
                         TextSpan(
-                          //text: "...", // 초과될 경우 '...' 표시
                           style: TextStyle(fontSize: 12), // 초과될 경우 글자 크기(작게)
                         ),
                       ],

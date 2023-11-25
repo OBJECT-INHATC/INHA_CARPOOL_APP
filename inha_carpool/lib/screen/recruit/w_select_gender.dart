@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 
+
+/// 성별 선택 위젯
 class GenderSelectorWidget extends StatefulWidget {
   final String selectedGender;
   final String gender;
@@ -71,7 +73,6 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
             ),
           ],
         ),
-
       ],
     );
   }

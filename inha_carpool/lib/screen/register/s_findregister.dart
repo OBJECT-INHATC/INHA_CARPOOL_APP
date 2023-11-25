@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+/// 비밀번호 찾기 페이지
 
 class FindRegisterPage extends StatefulWidget {
   const FindRegisterPage({super.key});

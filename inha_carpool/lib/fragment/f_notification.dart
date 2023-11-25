@@ -4,8 +4,8 @@ import 'package:get/get.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 
-import 'f_chatroom.dart';
 import '../service/sv_firestore.dart';
 
 /// 알림 목록 페이지

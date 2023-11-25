@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
 
+/// 인원수 선택 위젯
 class LimitSelectorWidget extends StatelessWidget {
   final List<String> options;
   final String selectedValue;

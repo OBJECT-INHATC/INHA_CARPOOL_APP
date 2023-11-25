@@ -2,16 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/screen/login/s_login_professor.dart';
 import 'package:inha_Carpool/screen/register/s_register_professor.dart';
 import 'package:inha_Carpool/screen/register/s_verifiedregister.dart';
 import '../../service/sv_auth.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 
-/// 0824 서은율 한승완
-/// 회원 가입 페이지
-/// 0830 / 0907 / 0910 / 0922 최은우
-/// 디자인 수정
+/// 학생 회원가입 페이지
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);

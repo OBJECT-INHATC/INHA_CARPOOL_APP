@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+/// 본인인증 완료 페이지
+
 class VerifiedRegisterPage extends StatefulWidget {
   const VerifiedRegisterPage({super.key});
 

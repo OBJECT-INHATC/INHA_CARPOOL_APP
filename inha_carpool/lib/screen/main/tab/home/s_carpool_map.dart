@@ -8,8 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/fragment/f_chatroom.dart';
-import 'package:inha_Carpool/service/api/Api_Topic.dart';
+import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../common/data/preference/prefs.dart';
@@ -17,6 +16,7 @@ import '../../../../common/util/carpool.dart';
 import '../../../../common/util/addMember_Exception.dart';
 import '../../../../dto/TopicDTO.dart';
 import '../../s_main.dart';
+import '../carpool/chat/f_chatroom.dart';
 
 class CarpoolMap extends StatefulWidget {
   final LatLng startPoint;

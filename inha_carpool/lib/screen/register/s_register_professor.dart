@@ -6,11 +6,7 @@ import 'package:inha_Carpool/screen/register/s_register.dart';
 import 'package:inha_Carpool/screen/register/s_verifiedregister.dart';
 import '../../service/sv_auth.dart';
 
-/// 0824 서은율 한승완
-/// 회원 가입 페이지
-/// 0830 / 0907 / 0910 / 0922 최은우
-/// 디자인 수정
-
+/// 교직원 회원 가입 페이지
 class ProfessorRegisterPage extends StatefulWidget {
   const ProfessorRegisterPage({Key? key}) : super(key: key);
 

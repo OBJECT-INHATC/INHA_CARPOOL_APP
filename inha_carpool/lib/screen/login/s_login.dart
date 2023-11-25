@@ -8,8 +8,6 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
-import 'package:inha_Carpool/screen/login/s_login_professor.dart';
-import 'package:inha_Carpool/fragment/f_chatroom.dart';
 import 'package:inha_Carpool/screen/register/s_agreement.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
@@ -17,6 +15,7 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
+import '../main/tab/carpool/chat/f_chatroom.dart';
 import '../register/s_findregister.dart';
 
 class LoginPage extends StatefulWidget {

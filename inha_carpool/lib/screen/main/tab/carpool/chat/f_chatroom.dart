@@ -6,16 +6,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
-import 'package:inha_Carpool/fragment/w_location.dart';
-import 'package:inha_Carpool/service/api/Api_Topic.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_location.dart';
+import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-import '../common/data/preference/prefs.dart';
 
 /// 0828 서은율, 한승완
 /// 채팅방 페이지 - 채팅방 정보 표시, 채팅 메시지 스트림, 메시지 입력, 메시지 전송

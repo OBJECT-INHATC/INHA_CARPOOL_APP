@@ -8,7 +8,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/dto/TopicDTO.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-import '../../service/api/Api_Topic.dart';
+import '../../service/api/Api_topic.dart';
 import '../data/preference/prefs.dart';
 import 'addMember_Exception.dart';
 

@@ -10,6 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
 
+/// 출-목적지의 위치 선택 페이지
 class LocationInput extends StatefulWidget {
   final LatLng Point;
 

@@ -11,7 +11,7 @@ import 'package:inha_Carpool/screen/main/tab/home/w_emptyCarpool.dart';
 
 import '../../../../common/util/carpool.dart';
 import '../../../recruit/s_recruit.dart';
-import '../../../../fragment/f_chatroom.dart';
+import '../carpool/chat/f_chatroom.dart';
 import 'carpoolFilter.dart';
 
 class Home extends StatefulWidget {

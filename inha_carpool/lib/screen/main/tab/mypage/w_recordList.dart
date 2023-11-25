@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
-import 'package:inha_Carpool/service/api/ApiService.dart';
+import 'package:inha_Carpool/service/api/Api_repot.dart';
 
 class RecordList extends StatefulWidget {
   RecordList({Key? key}) : super(key: key);

@@ -6,7 +6,7 @@ import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../common/util/carpool.dart';
-import '../../../../fragment/f_chatroom.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
+import '../carpool/chat/f_chatroom.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
 
 class CarpoolListWidget extends StatefulWidget {
   final AsyncSnapshot<List<DocumentSnapshot>> snapshot;

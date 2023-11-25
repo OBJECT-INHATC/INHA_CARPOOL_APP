@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 
+
+/// 약관 상세 페이지
 class AgreementDetailPage extends StatelessWidget {
   final String title;
   final String detail;

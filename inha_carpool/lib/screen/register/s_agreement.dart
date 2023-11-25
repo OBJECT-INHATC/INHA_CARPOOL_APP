@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/register/s_agreementDetail.dart';
 import 'package:inha_Carpool/screen/register/s_register.dart';
-import 'package:inha_Carpool/screen/register/w_detailContent.dart';
+import 'package:inha_Carpool/screen/register/detailContent.dart';
 
+/// 약관 동의 페이지
 class Agreement extends StatefulWidget {
   const Agreement({Key? key}) : super(key: key);
 
