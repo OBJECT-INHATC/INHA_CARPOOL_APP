@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -6,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../common/util/carpool.dart';
 import '../../../recruit/s_recruit.dart';
 
+/// 진행 중인 카풀이 없을 때 반환할 위젯
 class EmptyCarpool extends StatelessWidget {
 
   const EmptyCarpool({Key? key});

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// 검새 결과 없을 때 반환할 위젯
 class EmptySearchedCarpool extends StatelessWidget {
   const EmptySearchedCarpool({super.key});
-
 
   @override
   Widget build(BuildContext context) {

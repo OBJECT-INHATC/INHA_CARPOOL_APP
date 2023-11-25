@@ -5,7 +5,7 @@ import '../../../login/s_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:inha_Carpool/common/common.dart';
 
-
+/// 로그아웃 확인 다이얼로그
 class LogoutConfirmationDialog extends StatelessWidget {
   final VoidCallback onConfirm;
 
@@ -85,7 +85,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
                       (Route<dynamic> route) => false,
                 );
               },
-            ); // 로그아웃
+            );
             onConfirm();
           },
           child: const Text('예'),

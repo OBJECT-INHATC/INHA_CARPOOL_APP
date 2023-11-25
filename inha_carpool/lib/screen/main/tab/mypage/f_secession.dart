@@ -13,12 +13,8 @@ class SecessionPage extends StatefulWidget {
 class _SecessionPageState extends State<SecessionPage> {
   // 이메일
   String email = "";
-
   // 비밀번호
   String password = "";
-
-
-
   String academy = "@itc.ac.kr";
   var onChanges = false;
 
@@ -163,7 +159,6 @@ class _SecessionPageState extends State<SecessionPage> {
                                         });
                                       }
                                     },
-
                                     validator: (val) {
                                       if (val!.isNotEmpty) {
                                         return null;
@@ -283,7 +278,6 @@ class _SecessionPageState extends State<SecessionPage> {
                 ),
               ],
             ),
-
           ),
         ),
       ),
@@ -291,6 +285,8 @@ class _SecessionPageState extends State<SecessionPage> {
   }
 }
 
+/// 이메일과 비밀번호를 통해 로그인 사용자 재확인 함수
+/// ex) 비밀번호 변경, 회원탈퇴
 Future<bool> validateCredentials(String email, String password) async {
   try {
     User? user = FirebaseAuth.instance.currentUser;
@@ -304,4 +300,3 @@ Future<bool> validateCredentials(String email, String password) async {
   }
 }
 
-//탈퇴하기를 누르면 dialog 뜨고 아이디 비밀번호 입력하고 맞으면 확인 눌러서 탈퇴 로직 구현

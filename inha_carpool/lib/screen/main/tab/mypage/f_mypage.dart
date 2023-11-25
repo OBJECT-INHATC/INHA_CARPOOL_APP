@@ -57,7 +57,7 @@ class _MyPageState extends State<MyPage> {
                   margin: const EdgeInsets.symmetric(horizontal: 6.0),
                   color: Colors.grey[100],
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 14.0), // vertical 값을 조정
+                      horizontal: 16.0, vertical: 14.0),
                   child: const Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch, // 추가
                     children: [
@@ -161,7 +161,7 @@ class _MyPageState extends State<MyPage> {
                     if (isOn) {
                       print('채팅 알림 on');
 
-                      /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독
+                      /// 서버 db 에서 카풀Id 다 가져와서 다 구독
                       for (String carId in topicList) {
                         try {
                           await FirebaseMessaging.instance
@@ -172,7 +172,7 @@ class _MyPageState extends State<MyPage> {
                         print('채팅 구독 완료: $carId');
                       }
                     } else {
-                      /// Todo: 서버 db 에서 카풀Id 다 가져와서 다 구독 해제
+                      /// 서버 db 에서 카풀Id 다 가져와서 다 구독 해제
                       print('채팅 알림 off');
                       for (String carId in topicList) {
                         try {

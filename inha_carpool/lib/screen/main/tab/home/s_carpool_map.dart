@@ -165,8 +165,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
         }
       },
       child: Scaffold(
-        // backgroundColor:
-        //     isLoading ? Colors.black.withOpacity(0.3) : Colors.white,
         appBar: AppBar(
           titleTextStyle: const TextStyle(
             fontSize: 17,
@@ -538,7 +536,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           setState(() {
                                             isJoining = true;
                                           });
-
+                                          /// 카풀 참가
                                           await FirebaseCarpool
                                               .addMemberToCarpool(
                                                   carId,
@@ -550,7 +548,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           if (!mounted) return;
 
                                           try {
-                                            ///  해당 카풀 알림 토픽 추가 0919 이상훈
                                             if (Prefs.isPushOnRx.get() ==
                                                 true) {
                                               /// 채팅 토픽
@@ -573,7 +570,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           bool isOpen = await apiTopic
                                               .saveTopoic(topicRequstDTO);
 
-                                          ///--------------------------------------------
                                           if (isOpen) {
                                             print("스프링부트 서버 성공 #############");
                                             if (!mounted) return;
@@ -610,7 +606,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                             if (!mounted) return;
                                             Navigator.pop(context);
                                             showErrorDialog(context,
-                                                '서버가 비정상 작동중입니다.\n잠시 후 다시 시도해주세요.');
+                                                '서버에 오류가 발생했습니다.\n잠시 후 다시 시도해주세요.');
                                           }
                                         } catch (error) {
                                           if (error is DeletedRoomException) {

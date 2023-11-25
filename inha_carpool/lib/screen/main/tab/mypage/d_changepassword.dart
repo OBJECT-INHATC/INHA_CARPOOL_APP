@@ -4,6 +4,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 import '../../../login/s_login.dart';
 
+/// 비밀번호 변경 페이지
 class ChangePasswordPage extends StatefulWidget {
   @override
   State<ChangePasswordPage> createState() => _ChangePasswordPageState();

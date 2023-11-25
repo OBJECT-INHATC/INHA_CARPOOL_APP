@@ -23,7 +23,7 @@ class MainScreen extends StatefulWidget {
 
 class MainScreenState extends State<MainScreen>
     with SingleTickerProviderStateMixin {
-  bool inCarpoolList = false; // Add this state
+  bool inCarpoolList = false;
 
   late TabItem _currentTab;
 
@@ -33,7 +33,7 @@ class MainScreenState extends State<MainScreen>
       print("temp : $temp");
       _currentTab = TabItem.myPage;
     } else {
-      _currentTab = TabItem.home; // Default or other cases
+      _currentTab = TabItem.home;
     }
   }
 
@@ -43,8 +43,10 @@ class MainScreenState extends State<MainScreen>
   //각 화면별 네비게이터 키 리스트
   final List<GlobalKey<NavigatorState>> navigatorKeys = [];
 
+  // 현재 탭의 인덱스
   int get _currentIndex => tabs.indexOf(_currentTab);
 
+  // 현재 탭의 네비게이터 키
   GlobalKey<NavigatorState> get _currentTabNavigationKey =>
       navigatorKeys[_currentIndex];
 
@@ -204,7 +206,6 @@ class MainScreenState extends State<MainScreen>
           .toList());
 
   //텝 내의서 뒤로 갈 수 있으면 해당 탭의 네비게이터를 이용, 아니면 홈으로 이동
-
   Future<bool> _handleBackPressed() async {
     final isFirstRouteInCurrentTab =
         (await _currentTabNavigationKey.currentState?.maybePop() == false);
@@ -285,7 +286,6 @@ class MainScreenState extends State<MainScreen>
   //중요!
   //하단 네비게이션 바의 아이템이 탭됐을 때의 처리를 정의
   // 현재 탭과 타겟 탭이 같은 경우, 현재 탭의 네비게이터에서 모든 기록을 삭제
-
   void _handleOnTapNavigationBarItem(int index) {
     final oldTab = _currentTab;
     final targetTab = tabs[index];

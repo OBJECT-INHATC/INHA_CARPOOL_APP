@@ -17,8 +17,6 @@ import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 
-/// 0828 서은율, 한승완
-/// 채팅방 페이지 - 채팅방 정보 표시, 채팅 메시지 스트림, 메시지 입력, 메시지 전송
 class ChatroomPage extends StatefulWidget {
   /// 0829 서은율 TODO : 채팅방 페이지 최적화 고민 해볼 것
 
@@ -59,14 +57,12 @@ class _ChatroomPageState extends State<ChatroomPage>
   /// 로컬 저장소 SS
   final storage = const FlutterSecureStorage();
 
-  //0927강지윤
   User? user = FirebaseAuth.instance.currentUser;
 
   /// 관리자 이름, 토큰, 사용자 Auth 정보
   String admin = "";
   String token = "";
 
-  //0927강지윤
   String? get uid => user?.uid; //uid가져오기
 
   int previousItemCount = 0;
@@ -84,7 +80,7 @@ class _ChatroomPageState extends State<ChatroomPage>
   // 출발지
   String startPoint = "";
 
-  // 출발지
+  // 출발지 상세주소
   String startPointDetail = "";
 
   //도착지 위도경도
@@ -93,7 +89,7 @@ class _ChatroomPageState extends State<ChatroomPage>
   // 도착지
   String endPoint = "";
 
-  // 도착지
+  // 도착지 상세주소
   String endPointDetail = "";
 
   //도착지 위도경도
@@ -102,6 +98,7 @@ class _ChatroomPageState extends State<ChatroomPage>
   @override
   void initState() {
     super.initState();
+    /// 로컬 채팅 메시지 , 채팅 메시지 스트림, 관리자 이름 호출 메서드
     getChatandAdmin();
 
     /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
@@ -124,6 +121,7 @@ class _ChatroomPageState extends State<ChatroomPage>
     super.dispose();
   }
 
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -143,9 +141,8 @@ class _ChatroomPageState extends State<ChatroomPage>
     }
   }
 
-  getLocalChat() async {
-    print(widget.carId);
 
+  getLocalChat() async {
     await ChatDao().getChatbyCarIdSortedByTime(widget.carId).then((val) {
       setState(() {
         localChats = val;
@@ -254,7 +251,6 @@ class _ChatroomPageState extends State<ChatroomPage>
         ),
 
         //----------------------------------------------drawer 대화상대
-        //----------------------------------------------drawer 대화상대
         endDrawer: Drawer(
           surfaceTintColor: Colors.transparent,
           backgroundColor: Colors.white,
@@ -263,7 +259,6 @@ class _ChatroomPageState extends State<ChatroomPage>
           ),
           child: Column(
             children: [
-              //-------------------------------대화상대 상단
               //-------------------------------대화상대 상단
               Container(
                 height: AppBar().preferredSize.height * 2.2,
@@ -298,8 +293,6 @@ class _ChatroomPageState extends State<ChatroomPage>
                   ],
                 ),
               ),
-
-              //---------------------------------대화상대 목록
               //---------------------------------대화상대 목록
               Expanded(
                 child: ListView.builder(
@@ -342,7 +335,7 @@ class _ChatroomPageState extends State<ChatroomPage>
                 ),
               ),
               const Line(height: 1),
-
+              // 경계라인을 위젯으로 만들어서 사용
               const Line(height: 1),
               Align(
                 alignment: Alignment.bottomLeft,
@@ -370,8 +363,6 @@ class _ChatroomPageState extends State<ChatroomPage>
         ),
 
         //----------------------------------------------body
-        //----------------------------------------------body
-        //----------------------------------------------body
           resizeToAvoidBottomInset: true,
           body: Column(
           children: [
@@ -380,7 +371,7 @@ class _ChatroomPageState extends State<ChatroomPage>
             Expanded(
               child: Stack(
                 children: <Widget>[
-                  /// 채팅 메시지 스트림
+                  // 채팅 메시지
                   chatMessages(),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -463,7 +454,6 @@ class _ChatroomPageState extends State<ChatroomPage>
                           ],
                         ),
                       ),
-                      // 맨 밑 메세지 보내는 부분인데 반응형 디자인이 안되서 일단 주석처리함
                       Container(
                         color: Colors.white,
                         height: 20,
@@ -482,7 +472,6 @@ class _ChatroomPageState extends State<ChatroomPage>
   void _exitIconBtn(BuildContext context) {
     final currentTime = DateTime.now();
     final timeDifference = agreedTime.difference(currentTime);
-    // 현재 시간과 agreedTime 사이의 차이를 분 단위로 계산
     final minutesDifference = timeDifference.inMinutes;
 
     // 출발 시간과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
@@ -544,7 +533,6 @@ class _ChatroomPageState extends State<ChatroomPage>
           },
         );
         // // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
-        // _exitCarpool(context);
       } else {
         // 나가기 불가
         _exitImpossible(context);
@@ -553,17 +541,16 @@ class _ChatroomPageState extends State<ChatroomPage>
   }
 
   //--------------------------------------------------
-  //--------------------------------------------------
-  //--------------------------------------------------
 
-  /// 나가기 처리 메소드
+  // 나가기 처리 메소드
   void _exitCarpool(BuildContext context) async {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return FutureBuilder(
-          future: _exitCarpoolFuture(), // 나가기 처리를 수행하는 비동기 함수
+          // 나가기 처리를 수행하는 비동기 함수
+          future: _exitCarpoolFuture(),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return AlertDialog(
@@ -614,7 +601,7 @@ class _ChatroomPageState extends State<ChatroomPage>
                     );
                   },
                 );
-                return Container(); // 임시 컨테이너 반환
+                return Container(); // 빈 컨테이너를 반환
               }
             }
           },
@@ -678,8 +665,6 @@ class _ChatroomPageState extends State<ChatroomPage>
     );
   }
 
-  //--------------------------
-  //--------------------------
   //--------------------------
 
   /// 채팅 메시지 스트림
@@ -900,7 +885,6 @@ class _ChatroomPageState extends State<ChatroomPage>
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            //Icon(Icons.warning_rounded, color: (uid == memberId) ? Colors.grey : Colors.white),
                             Icon(
                                 (uid == memberId)
                                     ? Icons.double_arrow_rounded

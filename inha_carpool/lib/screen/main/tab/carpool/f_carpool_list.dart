@@ -12,6 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'w_cardItem.dart';
 import 'w_lastChat.dart';
 
+/// 참여중인 카풀 리스트
 class CarpoolList extends StatefulWidget {
   const CarpoolList({Key? key}) : super(key: key);
 
@@ -44,7 +45,6 @@ class _CarpoolListState extends State<CarpoolList> {
     gender = await storage.read(key: "gender") ?? "";
 
     setState(() {
-      // Update the state to trigger a UI refresh
     });
   }
 
@@ -68,11 +68,6 @@ class _CarpoolListState extends State<CarpoolList> {
         return '카풀 출발 시간입니다!';
       }
     } else {
-      // if (difference.inDays > 365) {
-      //   return '${(difference.inDays / 365).floor()}년 전 진행된 카풀';
-      // } else if (difference.inDays >= 30) {
-      //   return '${(difference.inDays / 30).floor()}달 전 진행된 카풀';
-      // } else
       if (difference.inDays >= 1) {
         return '${difference.inDays}일 전 진행된 카풀';
       } else if (difference.inDays == 1) {
@@ -297,9 +292,7 @@ class _CarpoolListState extends State<CarpoolList> {
                     child: '+'
                         .text
                         .size(50)
-                        .color(
-                          context.appColors.logoColor,
-                        )
+                        .color(context.appColors.logoColor,)
                         .make(),
                   ),
                   body: Column(
@@ -338,6 +331,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                           adminData['uri']! as String);
                                       if (contextValue != null &&
                                           contextValue.isNotEmpty) {
+
                                         // 필드가 존재하고 값이 비어있지 않은 경우
                                         return GestureDetector(
                                           onTap: () async {
@@ -377,7 +371,6 @@ class _CarpoolListState extends State<CarpoolList> {
                                       }
                                     }
                                   }
-
                                   // 데이터가 없거나 필드가 없는 경우에 대한 처리
                                   return const SizedBox
                                       .shrink(); // 빈 상자 반환 또는 다른 처리
@@ -391,15 +384,12 @@ class _CarpoolListState extends State<CarpoolList> {
                               DateTime startTime =
                                   DateTime.fromMillisecondsSinceEpoch(
                                       carpool['startTime']);
-
                               // 지도를 위한 변수
                               String formattedForMap =
                                   _getFormattedDateForMap(startTime);
-
                               // 채팅방을 위한 변수
                               String formattedStartTime =
                                   _getFormattedDateString(startTime);
-
                               return InkWell(
                                 highlightColor: Colors.blue.withOpacity(0.2),
                                 splashColor: context.appColors.logoColor
@@ -454,7 +444,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                     padding: const EdgeInsets.only(bottom: 15),
                                     child: Column(
                                       children: [
-                                        //첫번째 줄
+                                        /// 참여중인 카풀리스트의 카드 아이템 위젯 호출
                                         w_cardItem(
                                             colorTemp: getColorBasedOnSuffix(
                                                 formattedStartTime),
@@ -463,10 +453,8 @@ class _CarpoolListState extends State<CarpoolList> {
                                                 formattedStartTime,
                                             carpoolData: carpoolData,
                                             formattedForMap: formattedForMap),
-
                                         //출발지와 row의간격
                                         Height(screenHeight * 0.01),
-
                                         //2번째 줄 출발지
                                         Padding(
                                           padding: const EdgeInsets.symmetric(
@@ -474,10 +462,8 @@ class _CarpoolListState extends State<CarpoolList> {
                                           child: Row(
                                             children: [
                                               Icon(Icons.circle_outlined,
-                                                  color: context
-                                                      .appColors.logoColor,
+                                                  color: context.appColors.logoColor,
                                                   size: 12),
-
                                               // 아이콘과 주소들 사이 간격
                                               Width(screenWidth * 0.03),
 
@@ -491,8 +477,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                     style: const TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 13,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
                                                   // 출발지 풀주소
@@ -504,8 +489,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                                     style: const TextStyle(
                                                       color: Colors.black54,
                                                       fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.bold,
+                                                      fontWeight: FontWeight.bold,
                                                     ),
                                                   ),
                                                 ],
@@ -539,10 +523,8 @@ class _CarpoolListState extends State<CarpoolList> {
                                                   color: context
                                                       .appColors.logoColor,
                                                   size: 12),
-
                                               // 아이콘과 주소들 사이 간격
                                               Width(screenWidth * 0.03),
-
                                               Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -586,15 +568,12 @@ class _CarpoolListState extends State<CarpoolList> {
                                               color:
                                                   context.appColors.logoColor),
                                         ),
-
-                                        //--------- 하단 라스트 메시지
+                                        //--------- 하단 라스트 메시지 위젯 호출
                                         chatLastMSG(carpool: carpool),
                                       ],
                                     ),
                                   ),
                                 ),
-
-                                /*-----------------------------------------------Card---------------------------------------------------------------*/
                               );
                             }
                           },

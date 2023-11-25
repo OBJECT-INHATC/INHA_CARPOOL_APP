@@ -253,16 +253,11 @@ class _RecordListState extends State<RecordList> {
   Widget buildMemberRow(String member, String carpoolId) {
     // 함께한 사람 정보
 
-    final screenWidth = MediaQuery.of(context).size.width; //360
-    final screenHeight = MediaQuery.of(context).size.height; //727
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Row(
       children: [
-        // const Icon(
-        //   Icons.account_circle,
-        //   size: 35,
-        //   color: Colors.black,
-        // ),
         SizedBox(width: screenWidth * 0.03),
         Text(
           member.split('_')[1], // 함께한 사람 닉네임

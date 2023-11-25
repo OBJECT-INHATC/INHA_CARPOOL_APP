@@ -3,6 +3,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:inha_Carpool/common/common.dart';
 
+/// 상단 프로필 페이지 위젯
+/// 닉네임 수정 기능 모두 off
 class ProFile extends StatefulWidget {
   const ProFile({Key? key}) : super(key: key);
 
@@ -45,7 +47,6 @@ class _ProFileState extends State<ProFile> {
 
   @override
   Widget build(BuildContext context) {
-    surfaceTintColor:
     Colors.transparent; // 틴트 제외
     //프로필 수정 버튼 screenWidth,screenHeight 변수 선언
     double screenWidth = MediaQuery.of(context).size.width;

@@ -72,11 +72,8 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.grey[100],
-        // Colors.white,
-        //borderRadius: BorderRadius.circular(10),
       ),
       child: ListView.builder(
-        // 항상 스크롤이 가능하게 만들어서 리스트 갯수가 적을 때도 새로고침 가능하게 만듦
         physics: const AlwaysScrollableScrollPhysics(),
         controller: widget.scrollController,
         itemCount: (widget.snapshot.data?.length ?? 0) + 1,
@@ -191,9 +188,8 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                       );
                     }
                   } else {
-                    // 참여하기로
+                    // 현재 인원이 최대 인원보다 작을 때
                     if (nowMember < maxMember) {
-                      // 현재 인원이 최대 인원보다 작을 때
                       Nav.push(
                         CarpoolMap(
                           isStart: 'default',
@@ -346,8 +342,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                       width: 2),
                                 ),
                                 height: screenHeight * 0.05,
-                                // width:
-                                // MediaQuery.of(context).size.width * 0.50,
                                 child: Center(
                                   child: '$formattedTime 출발'
                                       .text
@@ -372,6 +366,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
     );
   }
 
+  // 날짜를 계산하는 함수
   String getDate(Duration difference) {
     if (difference.inDays >= 365) {
       return '${difference.inDays ~/ 365}년 후';
@@ -385,23 +380,4 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
       return '${difference.inMinutes}분 후';
     }
   }
-
-/*  // 파이어베이스에서 데이터 가져오기
-  Future<DocumentSnapshot?> getAdminData() async {
-    try {
-      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
-          .collection('admin')
-          .doc('mainList')
-          .get();
-
-      if (documentSnapshot.exists) {
-        return documentSnapshot;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print("Error fetching admin data: $e");
-      return null;
-    }
-  }*/
-} /**/
+}

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../service/sv_firestore.dart';
 
+/// 카드 리스트의 마지막 메세지 위젯
 class chatLastMSG extends StatelessWidget {
   const chatLastMSG({
     super.key,
