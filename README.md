@@ -1,7 +1,7 @@
 <img src="https://github.com/yeong0jae/Algorithm/assets/83624600/79fea122-e0d0-460e-8ba5-37b465ecda9f">
 
 <a href="https://itunes.apple.com/kr/app/인하카풀/id6471822092" target="_blank"><img src="https://user-images.githubusercontent.com/67373938/227817078-7aab7bea-3af0-4930-b341-1a166a39501d.svg" alt="Download on the App Store" width="168"></a>
-<a href="https://play.google.com/store/apps/details?id={앱의-Package-Name}" target="_blank"><img src="https://github.com/jitsi/jitsi-meet/raw/master/resources/img/google-play-badge.png" alt="Get it on Google Play" width="189"></a>
+<a href="https://play.google.com/store/apps/details?id=com.objects.inha_carpool&hl=ko-KR" target="_blank"><img src="https://github.com/jitsi/jitsi-meet/raw/master/resources/img/google-play-badge.png" alt="Get it on Google Play" width="189"></a>
 
 <br>
 
