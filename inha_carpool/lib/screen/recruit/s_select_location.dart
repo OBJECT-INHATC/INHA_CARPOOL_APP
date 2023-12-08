@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -32,9 +33,11 @@ class _LocationInputState extends State<LocationInput> {
   // Google Maps API Host
   final String _host = 'https://maps.googleapis.com/maps/api/geocode/json';
 
-  // Google Maps Controller
-  late GoogleMapController mapController;
+  // // Google Maps Controller
+  // late GoogleMapController mapController;
 
+  // 네이버 지도 컨트롤러
+  late NaverMapController mapController;
   // 검색창 컨트롤러
   final TextEditingController _searchController = TextEditingController();
 
@@ -168,35 +171,54 @@ class _LocationInputState extends State<LocationInput> {
             child: Stack(
               alignment: Alignment.center,
               children: [
-                // 구글맵 중앙에 위치한 마커
-                GoogleMap(
-                  onMapCreated: (controller) => mapController = controller,
-                  myLocationButtonEnabled: false,
-                  mapType: MapType.normal,
-                  markers: _markers,
-                  initialCameraPosition: CameraPosition(
-                    target: widget.Point,
-                    zoom: 17.0,
+                NaverMap(
+                  options: NaverMapViewOptions(
+                    indoorEnable: true,
+                    locationButtonEnable: true,
+                    consumeSymbolTapEvents: false,
+                    initialCameraPosition: NCameraPosition(
+                      target: NLatLng(widget.Point.latitude,
+                          widget.Point.longitude),
+                      zoom: 13.5,
+                    ),
+                    logoClickEnable: false,
+
                   ),
-                  // markers: _markers,
-                  onCameraMove: (position) {
-                      searchedPosition = position.target;
-                  },
-                  onCameraIdle: () {
-                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                    setState(() {
-                      isMove = false;
-                      if(searchedPosition != null){
-                            _getGooglecoo(
-                            searchedPosition!.latitude, searchedPosition!.longitude
-                        );
-                      }
-                    });
-                  },
-                  onCameraMoveStarted: () {
-                    isMove = true;
+                  onMapReady: (controller) async {
+                    mapController = controller;
+                    // mapController.addOverlayAll(
+                    //   {startMarker, endMarker},
                   },
                 ),
+                // 구글맵 중앙에 위치한 마커
+                // GoogleMap(
+                //   onMapCreated: (controller) => mapController = controller,
+                //   myLocationButtonEnabled: false,
+                //   mapType: MapType.normal,
+                //   markers: _markers,
+                //   initialCameraPosition: CameraPosition(
+                //     target: widget.Point,
+                //     zoom: 17.0,
+                //   ),
+                //   // markers: _markers,
+                //   onCameraMove: (position) {
+                //       searchedPosition = position.target;
+                //   },
+                //   onCameraIdle: () {
+                //     ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                //     setState(() {
+                //       isMove = false;
+                //       if(searchedPosition != null){
+                //             _getGooglecoo(
+                //             searchedPosition!.latitude, searchedPosition!.longitude
+                //         );
+                //       }
+                //     });
+                //   },
+                //   onCameraMoveStarted: () {
+                //     isMove = true;
+                //   },
+                // ),
                 Positioned(
                   // 지도의 왼쪽위에 본인의 위치로 이동하는 버튼
                   top: 10,
@@ -216,7 +238,7 @@ class _LocationInputState extends State<LocationInput> {
                             await Geolocator.getCurrentPosition(
                                 desiredAccuracy: LocationAccuracy.high);
                         // 현재 위치로 카메라 이동
-                        _moveCameraTo(LatLng(position.latitude, position.longitude));
+                        _moveCameraTo(NLatLng(position.latitude, position.longitude));
                       }
                     },
                     backgroundColor: Colors.white,
@@ -309,67 +331,69 @@ class _LocationInputState extends State<LocationInput> {
   }
 
   // 카메라를 이동시키는 메서드
-  void _moveCameraTo(LatLng target) {
+  void _moveCameraTo(NLatLng target) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: target, zoom: 16.0),
+    mapController.updateCamera(NCameraUpdate.fromCameraPosition(
+      NCameraPosition(
+        target: target,
+        zoom: 15,
+      ),
     ));
   }
 
-  // 좌표로 주소를 가져오는 메서드
-  Future<void> _getGooglecoo(double lat, double lon) async {
-    final uri = Uri.parse('$_host?key=$_apiKey&latlng=$lat,$lon&language=ko');
-
-    http.Response response = await http.get(uri);
-    final responseJson = json.decode(response.body);
-
-    // 결과가 있으면 주소를 가져옵니다.
-    if (responseJson['results'] != null && responseJson['results'].length > 0) {
-      final addressComponents = responseJson['results'][0]['address_components'];
-
-      // 국가 정보 확인
-      String country = '';
-      for (var component in addressComponents) {
-        if (component['types'].contains('country')) {
-          country = component['short_name'];
-          break;
-        }
-      }
-
-      // 대한민국이 아닌 경우 주소 설정
-      if (country != 'KR') {
-        ScffoldMsgAndListClear(context, "대한민국 내에서만 검색 가능합니다.");
-        setState(() {
-          _address = null;
-          searchedPosition = null;
-        });
-      } else {
-        // 우편번호와 국가, 인천시는 제외하고 가져오기
-        List<String> reversedAddressComponents = [];
-        for (var i = addressComponents.length - 1; i >= 0; i--) {
-          var component = addressComponents[i];
-          if (component['types'].contains('postal_code') ||
-              component['types'].contains('country') ||
-              component['long_name'] == 'Incheon') {
-            continue;
-          }
-          reversedAddressComponents.add(component['long_name']);
-        }
-
-        // 공백으로 연결
-        String reversedFormattedAddress = reversedAddressComponents.join(' ');
-
-        // 텍스트필드에 주소를 대입
-        setState(() {
-          _address = reversedFormattedAddress;
-          searchedPosition = LatLng(lat, lon);
-        });
-      }
-    } else {
-      print('No results found');
-    }
-  }
+  // // 좌표로 주소를 가져오는 메서드
+  // Future<void> _getGooglecoo(double lat, double lon) async {
+  //   final uri = Uri.parse('$_host?key=$_apiKey&latlng=$lat,$lon&language=ko');
+  //
+  //   http.Response response = await http.get(uri);
+  //   final responseJson = json.decode(response.body);
+  //
+  //   // 결과가 있으면 주소를 가져옵니다.
+  //   if (responseJson['results'] != null && responseJson['results'].length > 0) {
+  //     final addressComponents = responseJson['results'][0]['address_components'];
+  //
+  //     // 국가 정보 확인
+  //     String country = '';
+  //     for (var component in addressComponents) {
+  //       if (component['types'].contains('country')) {
+  //         country = component['short_name'];
+  //         break;
+  //       }
+  //     }
+  //
+  //     // 대한민국이 아닌 경우 주소 설정
+  //     if (country != 'KR') {
+  //       ScffoldMsgAndListClear(context, "대한민국 내에서만 검색 가능합니다.");
+  //       setState(() {
+  //         _address = null;
+  //         searchedPosition = null;
+  //       });
+  //     } else {
+  //       // 우편번호와 국가, 인천시는 제외하고 가져오기
+  //       List<String> reversedAddressComponents = [];
+  //       for (var i = addressComponents.length - 1; i >= 0; i--) {
+  //         var component = addressComponents[i];
+  //         if (component['types'].contains('postal_code') ||
+  //             component['types'].contains('country') ||
+  //             component['long_name'] == 'Incheon') {
+  //           continue;
+  //         }
+  //         reversedAddressComponents.add(component['long_name']);
+  //       }
+  //
+  //       // 공백으로 연결
+  //       String reversedFormattedAddress = reversedAddressComponents.join(' ');
+  //
+  //       // 텍스트필드에 주소를 대입
+  //       setState(() {
+  //         _address = reversedFormattedAddress;
+  //         searchedPosition = LatLng(lat, lon);
+  //       });
+  //     }
+  //   } else {
+  //     print('No results found');
+  //   }
+  // }
 
 
 
@@ -389,7 +413,7 @@ class _LocationInputState extends State<LocationInput> {
         firstStep = true;
         Location location = locations.first;
         searchedPosition = LatLng(location.latitude, location.longitude);
-        _moveCameraTo(searchedPosition!);
+        _moveCameraTo(NLatLng(location.latitude, location.longitude));
       }
     }
   }

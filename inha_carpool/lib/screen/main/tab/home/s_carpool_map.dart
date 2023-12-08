@@ -3,6 +3,8 @@ import 'dart:ui' as ui;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -49,7 +51,8 @@ class CarpoolMap extends StatefulWidget {
 }
 
 class _CarpoolMapState extends State<CarpoolMap> {
-  late GoogleMapController mapController;
+  // late GoogleMapController mapController;
+  late NaverMapController mapController;
   List<dynamic> list = [];
   bool firstStep = false;
   late double distanceInMeters;
@@ -124,33 +127,52 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
   @override
   Widget build(BuildContext context) {
-    Marker startMarker = Marker(
-      markerId: const MarkerId('start'),
-      position: widget.startPoint,
-      icon: startCustomIcon,
-      infoWindow: InfoWindow(
-        title: "출발 지점 : ${widget.startPointName}",
-      ),
+    // Marker startMarker = Marker(
+    //   markerId: const MarkerId('start'),
+    //   position: widget.startPoint,
+    //   icon: startCustomIcon,
+    //   infoWindow: InfoWindow(
+    //     title: "출발 지점 : ${widget.startPointName}",
+    //   ),
+    // );
+    //
+    // Marker endMarker = Marker(
+    //   markerId: const MarkerId('end'),
+    //   position: widget.endPoint,
+    //   icon: endCustomIcon,
+    //   infoWindow: InfoWindow(
+    //     title: "도착 지점 : ${widget.endPointName}",
+    //   ),
+    // );
+    // Map<MarkerId, Marker> markers = {};
+
+    // 네이버 마커 추가
+    NMarker startMarker = NMarker(
+      id: 'start',
+      position:
+          NLatLng(widget.startPoint.latitude, widget.startPoint.longitude),
+      // caption: NOverlayCaption(
+      //   text: widget.startPointName,
+      // ),
     );
 
-    Marker endMarker = Marker(
-      markerId: const MarkerId('end'),
-      position: widget.endPoint,
-      icon: endCustomIcon,
-      infoWindow: InfoWindow(
-        title: "도착 지점 : ${widget.endPointName}",
-      ),
+    NMarker endMarker = NMarker(
+      id: 'end',
+      position: NLatLng(widget.endPoint.latitude, widget.endPoint.longitude),
+      // caption: NOverlayCaption(
+      //   text: widget.endPointName,
+      // ),
     );
-    Map<MarkerId, Marker> markers = {};
+    Map<String, NMarker> markers = {};
 
     String isStart = widget.isStart ?? 'default';
     if (isStart == 'true') {
-      markers[const MarkerId('start')] = startMarker;
+      markers['start'] = startMarker;
     } else if (isStart == 'false') {
-      markers[const MarkerId('end')] = endMarker;
+      markers['end'] = endMarker;
     } else {
-      markers[const MarkerId('start')] = startMarker;
-      markers[const MarkerId('end')] = endMarker;
+      markers['start'] = startMarker;
+      markers['end'] = endMarker;
     }
 
     return WillPopScope(
@@ -197,21 +219,48 @@ class _CarpoolMapState extends State<CarpoolMap> {
                       ? EdgeInsets.only(bottom: context.height(0.2))
                       : EdgeInsets.only(bottom: context.height(0.27)))
                   : EdgeInsets.only(bottom: context.height(0.1)),
-              child: GoogleMap(
-                onMapCreated: (controller) {
+              child: NaverMap(
+                options: NaverMapViewOptions(
+                  indoorEnable: true,
+                  locationButtonEnable: true,
+                  consumeSymbolTapEvents: false,
+                  initialCameraPosition: NCameraPosition(
+                    target: NLatLng(widget.startPoint.latitude,
+                        widget.startPoint.longitude),
+                    zoom: 13.5,
+                  ),
+                  logoClickEnable: false,
+
+                ),
+                onMapReady: (controller) async {
                   mapController = controller;
+                  mapController.addOverlayAll(
+                    {startMarker, endMarker},
+                  );
                 },
-                myLocationButtonEnabled: false,
-                initialCameraPosition: CameraPosition(
-                  target: midPoint!,
-                  zoom: 13.5,
-                ),
-                cameraTargetBounds: CameraTargetBounds(
-                  getCurrentBounds(widget.startPoint, widget.endPoint),
-                ),
-                markers: Set<Marker>.of(markers.values),
-                onCameraIdle: () {},
+
+                // onMapTapped: onMapTapped,
+                // onSymbolTapped: onSymbolTapped,
+                // onCameraChange: ,
+                // onCameraIdle: onCameraIdle,
+                // onSelectedIndoorChanged: onSelectedIndoorChanged,
               ),
+
+              // GoogleMap(
+              //   onMapCreated: (controller) {
+              //     mapController = controller;
+              //   },
+              //   myLocationButtonEnabled: false,
+              //   initialCameraPosition: CameraPosition(
+              //     target: midPoint!,
+              //     zoom: 13.5,
+              //   ),
+              //   cameraTargetBounds: CameraTargetBounds(
+              //     getCurrentBounds(widget.startPoint, widget.endPoint),
+              //   ),
+              //   markers: Set<Marker>.of(markers.values),
+              //   onCameraIdle: () {},
+              // ),
             ),
             Positioned(
               bottom: context.height(0),
@@ -536,6 +585,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                           setState(() {
                                             isJoining = true;
                                           });
+
                                           /// 카풀 참가
                                           await FirebaseCarpool
                                               .addMemberToCarpool(
@@ -670,7 +720,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
                       backgroundColor: Colors.blue,
                       mini: true,
                       onPressed: () {
-                        _moveCameraTo(widget.startPoint);
+                        _moveCameraTo(NLatLng(widget.startPoint.latitude,
+                            widget.startPoint.longitude));
                       },
                       // 도착지점을 나타내는 아이콘
                       child: const Icon(Icons.location_on_outlined,
@@ -687,7 +738,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
                       backgroundColor: Colors.lightGreenAccent.shade700,
                       mini: true,
                       onPressed: () {
-                        _moveCameraTo(widget.endPoint);
+                        _moveCameraTo(NLatLng(widget.endPoint.latitude,
+                            widget.endPoint.longitude));
                       },
                       // 도착지점을 나타내는 아이콘
                       child: const Icon(Icons.location_on_outlined,
@@ -719,11 +771,23 @@ class _CarpoolMapState extends State<CarpoolMap> {
   }
 
   /// 카메라 이동 메서드
-  void _moveCameraTo(LatLng target) {
-    mapController.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(target: target, zoom: 15),
+  void _moveCameraTo(NLatLng target) {
+    mapController.updateCamera(NCameraUpdate.fromCameraPosition(
+      NCameraPosition(
+        target: target,
+        zoom: 15,
+      ),
     ));
   }
+
+  // void _moveCameraTo(NaverMapController mapController, LatLng target) {
+  //   mapController.updateCamera(NCameraUpdate(
+  //     cameraPosition: NCameraPosition(
+  //       target: NLatLng(target.latitude, target.longitude),
+  //       zoom: 15,
+  //     ),
+  //   ));
+  // }
 
   /// 페이지 로딩 완료 메서드
   void handlePageLoadComplete() {

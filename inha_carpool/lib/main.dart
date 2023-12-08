@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/firebase_options.dart';
@@ -21,53 +22,49 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   if (message.notification != null) {
     /// 백그라운드 상태에서 알림을 수신하면 로컬 알림에 저장
-    AlarmDao().insert(
-        AlarmMessage(
-          aid: "${notification?.title}${notification?.body}${nowTime.toString()}",
-          carId: message.data['groupId'] as String,
-          type: message.data['id'] as String,
-          title: notification?.title as String,
-          body: notification?.body as String,
-          time: nowTime,
-        )
-    );
+    AlarmDao().insert(AlarmMessage(
+      aid: "${notification?.title}${notification?.body}${nowTime.toString()}",
+      carId: message.data['groupId'] as String,
+      type: message.data['id'] as String,
+      title: notification?.title as String,
+      body: notification?.body as String,
+      time: nowTime,
+    ));
   }
 
   return;
-
 }
 
 /// 앱 실행 시 초기화 - 알림 설정
 void initializeNotification() async {
-
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   // Android용 알림 채널 생성
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(const AndroidNotificationChannel(
-    'high_importance_channel',
-    'high_importance_notification',
-    importance: Importance.max,
-  ));
+        'high_importance_channel',
+        'high_importance_notification',
+        importance: Importance.max,
+      ));
 
   DarwinInitializationSettings iosInitializationSettings =
-  const DarwinInitializationSettings(
+      const DarwinInitializationSettings(
     requestAlertPermission: true,
     requestBadgePermission: true,
     requestSoundPermission: true,
   );
 
   // 플랫폼별 초기화 설정
-   InitializationSettings initializationSettings = InitializationSettings(
+  InitializationSettings initializationSettings = InitializationSettings(
     android: const AndroidInitializationSettings("@mipmap/ic_launcher"),
     iOS: iosInitializationSettings,
   );
 
   await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      // onDidReceiveBackgroundNotificationResponse: backgroundHandler
+    initializationSettings,
+    // onDidReceiveBackgroundNotificationResponse: backgroundHandler
   );
 
   // 포그라운드 상태에서 알림을 받을 수 있도록 설정
@@ -87,14 +84,15 @@ void initializeNotification() async {
     provisional: true,
     sound: true,
   );
-
 }
-
 
 void main() async {
   //상태 변화와 렌더링을 관리하는 바인딩 초기화 => 추 후 백그라운드 및 포어그라운드 상태관리에 따라 기능 리팩토링
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // 네이버 지도 SDK 초기화
+  await NaverMapSdk.instance.initialize(clientId: '88driux0cg');
 
   //다국어 지원을 위해 필요한 초기화 과정
   await EasyLocalization.ensureInitialized();
@@ -107,6 +105,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  //네이버지도 초기화
+  // await NaverMapSdk.instance.initialize(clientId: dotenv.env['NAVER_MAP_CLIENT_ID']!);
 
   // 백그라운드 메시지 수신 호출 콜백 함수
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -115,7 +115,7 @@ void main() async {
   initializeNotification();
 
   runApp(
-      EasyLocalization(
+    EasyLocalization(
         supportedLocales: const [Locale('en'), Locale('ko')],
         //지원하지 않는 언어인 경우 한국어로 설정
         fallbackLocale: const Locale('ko'),
@@ -124,6 +124,5 @@ void main() async {
         //언어 코드만 사용하여 번역 파일 설 ex)en_US 대신 en만 사용
         useOnlyLangCode: true,
         child: const App()),
-      );
+  );
 }
-
