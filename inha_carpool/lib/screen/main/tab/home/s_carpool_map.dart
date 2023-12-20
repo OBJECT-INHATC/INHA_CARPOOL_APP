@@ -713,8 +713,12 @@ class _CarpoolMapState extends State<CarpoolMap> {
             widget.isStart == 'false'
                 ? Container()
                 : Positioned(
-                    top: context.height(0.01),
-                    left: 10,
+                    bottom: widget.isStart == 'default'
+                        ? (widget.isPopUp!
+                        ? context.height(0.22)
+                        : context.height(0.29)) // 'default'일 때 isPop에 따라 높이 변경
+                        : context.height(0.14), // 'default'가 아닐 때 높이
+                    right: widget.isStart == 'default' ? 65 : 15,
                     child: FloatingActionButton(
                       heroTag: 'definite',
                       backgroundColor: Colors.blue,
@@ -731,8 +735,12 @@ class _CarpoolMapState extends State<CarpoolMap> {
             widget.isStart == 'true'
                 ? Container()
                 : Positioned(
-                    top: context.height(0.01),
-                    left: widget.isStart == 'default' ? 60 : 10,
+                    bottom: widget.isStart == 'default'
+                        ? (widget.isPopUp!
+                        ? context.height(0.22)
+                        : context.height(0.29)) // 'default'일 때 isPop에 따라 높이 변경
+                        : context.height(0.14), // 'default'가 아닐 때 높이
+                    right: 15,
                     child: FloatingActionButton(
                       heroTag: 'start',
                       backgroundColor: Colors.lightGreenAccent.shade700,
