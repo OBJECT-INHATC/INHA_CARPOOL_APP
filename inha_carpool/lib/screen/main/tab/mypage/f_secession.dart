@@ -15,7 +15,7 @@ class _SecessionPageState extends State<SecessionPage> {
   String email = "";
   // 비밀번호
   String password = "";
-  String academy = "@itc.ac.kr";
+
   var onChanges = false;
 
   var selectedIndex = 0;
@@ -139,7 +139,7 @@ class _SecessionPageState extends State<SecessionPage> {
                                 Expanded(
                                   child: TextFormField(
                                     decoration: const InputDecoration(
-                                      labelText: '학번',
+                                      labelText: '이메일',
                                       floatingLabelBehavior: FloatingLabelBehavior.never,
                                       border: InputBorder.none,
                                       prefixIcon: Icon(
@@ -163,43 +163,12 @@ class _SecessionPageState extends State<SecessionPage> {
                                       if (val!.isNotEmpty) {
                                         return null;
                                       } else {
-                                        return "학번이 비어있습니다.";
+                                        return "이메일이 비어있습니다.";
                                       }
                                     },
                                   ),
                                 ),
-                                FlutterToggleTab(
-                                  width: 28,
-                                  borderRadius: 10,
-                                  height: 50.0,
-                                  // 높이 변수 적용
-                                  selectedTextStyle: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700),
-                                  unSelectedTextStyle: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500),
-                                  labels: const ["인하공전", "인하대"],
-                                  selectedLabelIndex: (index) {
-                                    setState(() {
-                                      if (index == 0) {
-                                        academy = "@itc.ac.kr";
-                                      } else {
-                                        academy = "@inha.edu";
-                                      }
-                                      selectedIndex = index;
-                                      updateBackgroundColors();
-                                    });
-                                  },
-                                  selectedBackgroundColors:
-                                  selectedBackgroundColors,
-                                  unSelectedBackgroundColors:
-                                  unSelectedBackgroundColors,
-                                  isScroll: false,
-                                  selectedIndex: selectedIndex,
-                                ),
+
                               ],
                             ),
                           ),
@@ -257,14 +226,14 @@ class _SecessionPageState extends State<SecessionPage> {
 
                           onPressed: () async {
                             bool isValid = await validateCredentials(
-                                email + academy, password);
+                                email , password);
                             if (isValid) {
                               if (!mounted) return;
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return DeleteAuthDialog(
-                                      email + academy, password);
+                                      email , password);
                                 },
                               );
                             } else {
