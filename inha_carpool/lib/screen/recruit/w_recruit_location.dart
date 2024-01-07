@@ -116,7 +116,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
           child: TextFormField(
             inputFormatters: [
               //띄어쓰기 허용 영우+숫자+한글
-              FilteringTextInputFormatter(RegExp(r'[a-zA-Z0-9ㄱ-ㅎ가-힣 ]'), allow: true)
+              FilteringTextInputFormatter(RegExp(r'[a-zA-Z0-9ㄱ-ㅎ가-힣ㆍᆢ ]'), allow: true)
             ],
             maxLength: 10,
             decoration: InputDecoration(
