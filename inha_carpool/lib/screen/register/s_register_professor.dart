@@ -318,7 +318,7 @@ class _ProfessorRegisterPageState extends State<ProfessorRegisterPage> {
                                 child: TextFormField(
                                   inputFormatters: [
                                     FilteringTextInputFormatter(
-                                        RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣ]"),
+                                        RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣㆍᆢ]"),
                                         allow: true)
                                   ],
                                   decoration: const InputDecoration(
@@ -383,7 +383,7 @@ class _ProfessorRegisterPageState extends State<ProfessorRegisterPage> {
                                   inputFormatters: [
                                     //영어+숫자+한글만 가능
                                     FilteringTextInputFormatter(
-                                        RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣ]"),
+                                        RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣㆍᆢ]"),
                                         allow: true)
                                   ],
                                   decoration: const InputDecoration(
