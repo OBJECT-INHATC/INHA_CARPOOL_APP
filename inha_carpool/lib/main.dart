@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/firebase_options.dart';
@@ -105,6 +106,6 @@ void main() async {
         path: 'assets/translations',
         //언어 코드만 사용하여 번역 파일 설 ex)en_US 대신 en만 사용
         useOnlyLangCode: true,
-        child: const App()),
+        child: const ProviderScope(child: App())),
   );
 }
