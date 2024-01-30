@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
@@ -12,6 +13,7 @@ import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
 import '../../common/common.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../fragment/f_notification.dart';
+import '../../provider/notification_provider.dart';
 import '../../service/sv_firestore.dart';
 
 class MainScreen extends StatefulWidget {
@@ -182,7 +184,6 @@ class MainScreenState extends State<MainScreen>
   @override
   void initState() {
     super.initState();
-
     gettingNickName();
     /// 앱 알림 설정 초기화
     initializeNotification(context);
@@ -206,6 +207,9 @@ class MainScreenState extends State<MainScreen>
 
   @override
   Widget build(BuildContext context) {
+
+
+
     // WillPopScope : 뒤로가기 버튼을 눌렀을 때의 동작을 정의
     return WillPopScope(
       onWillPop: _handleBackPressed,
@@ -237,47 +241,64 @@ class MainScreenState extends State<MainScreen>
           ),
           leadingWidth: 170,
           actions: [
-            FutureBuilder<bool>(
-              future: AlarmDao().checkAlarms(),
-              builder: (context, snapshot) {
-                bool hasLocalNotification = snapshot.data ?? false;
+            Consumer(builder: (context, ref, child) {
+              bool isCheckNewAlarm = ref.watch(isCheckAlarm);
+              print("main에서 isCheckAlarm : $isCheckNewAlarm");
+              return Stack(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      ref
+                          .read(isCheckAlarm.notifier)
+                          .state = false;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationList(),
+                        ),
+                      );
+                    },
+                    icon:  const Icon(
+                      Icons.notifications_outlined,
+                      size: 30,
+                      color: Colors.black,
+                    ),
 
-                return IconButton(
-                  icon: Stack(
-                    children: [
-                      const Icon(
-                        Icons.notifications_outlined,
-                        size: 30,
-                        color: Colors.black,
-                      ),
-                      if (hasLocalNotification)
-                        Positioned(
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 8,
-                              minHeight: 8,
+                  ),
+                  if (isCheckNewAlarm == true)
+                    Positioned(
+                      right: 2, // "new" 텍스트를 아이콘 오른쪽에 위치
+                      top: 2, // "new" 텍스트를 아이콘 위쪽에 위치
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: GestureDetector(
+                          onTap: () async {
+                            ref.read(isCheckAlarm.notifier).state = false;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const NotificationList(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'new',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const NotificationList(),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
+                    ),
+                ],
+              );
+            }),
           ],
         ),
         extendBody: extendBody,

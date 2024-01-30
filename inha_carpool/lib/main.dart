@@ -107,5 +107,9 @@ void main() async {
         //언어 코드만 사용하여 번역 파일 설 ex)en_US 대신 en만 사용
         useOnlyLangCode: true,
         child: const ProviderScope(child: App())),
+    /// 상태관리로 관리할 리스트
+    /// 1. 사용자 정보 -> 스토리지에서 그만 처 들고오자!
+    /// 2. 자신이 카풀에 참가하고있는지 ! -> 로그인시 한 번만 쳐 묻자
+    /// 3. 알림 받았는지 유무 -> 상태관리 안하니까 재빌드 해야만 알림 표시 뜸
   );
 }
