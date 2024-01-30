@@ -35,56 +35,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   return;
 }
 
-/// 앱 실행 시 초기화 - 알림 설정
-void initializeNotification() async {
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  // Android용 알림 채널 생성
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(const AndroidNotificationChannel(
-        'high_importance_channel',
-        'high_importance_notification',
-        importance: Importance.max,
-      ));
-
-  DarwinInitializationSettings iosInitializationSettings =
-      const DarwinInitializationSettings(
-    requestAlertPermission: true,
-    requestBadgePermission: true,
-    requestSoundPermission: true,
-  );
-
-  // 플랫폼별 초기화 설정
-  InitializationSettings initializationSettings = InitializationSettings(
-    android: const AndroidInitializationSettings("@mipmap/ic_launcher"),
-    iOS: iosInitializationSettings,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(
-    initializationSettings,
-    // onDidReceiveBackgroundNotificationResponse: backgroundHandler
-  );
-
-  // 포그라운드 상태에서 알림을 받을 수 있도록 설정
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: false,
-    badge: true,
-    sound: false,
-  );
-
-  // 알림 권한 요청
-  await FirebaseMessaging.instance.requestPermission(
-    alert: true,
-    announcement: true,
-    badge: true,
-    carPlay: true,
-    criticalAlert: true,
-    provisional: true,
-    sound: true,
-  );
-}
 
 void main() async {
   //상태 변화와 렌더링을 관리하는 바인딩 초기화 => 추 후 백그라운드 및 포어그라운드 상태관리에 따라 기능 리팩토링
@@ -110,9 +61,6 @@ void main() async {
 
   // 백그라운드 메시지 수신 호출 콜백 함수
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  // 알림 설정
-  initializeNotification();
 
   runApp(
     EasyLocalization(

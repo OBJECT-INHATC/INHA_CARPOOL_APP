@@ -33,6 +33,9 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
+    /// 앱 알림 설정 초기화
+    initializeNotification();
+
     /// 알림 수신 시 호출되는 콜백 함수
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification? notification = message.notification;
@@ -78,6 +81,58 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
          deleteTopic(message);
       }
     });
+  }
+
+  /// 앱 실행 시 초기화 - 알림 설정
+  void initializeNotification() async {
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    // Android용 알림 채널 생성
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(const AndroidNotificationChannel(
+      'high_importance_channel',
+      'high_importance_notification',
+      importance: Importance.max,
+    ));
+
+    DarwinInitializationSettings iosInitializationSettings =
+    const DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    // 플랫폼별 초기화 설정
+    InitializationSettings initializationSettings = InitializationSettings(
+      android: const AndroidInitializationSettings("@mipmap/ic_launcher"),
+      iOS: iosInitializationSettings,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+  
+      // onDidReceiveBackgroundNotificationResponse: backgroundHandler
+    );
+
+    // 포그라운드 상태에서 알림을 받을 수 있도록 설정
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+      alert: false,
+      badge: true,
+      sound: false,
+    );
+
+    // 알림 권한 요청
+    await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: true,
+      badge: true,
+      carPlay: true,
+      criticalAlert: true,
+      provisional: true,
+      sound: true,
+    );
   }
 
   void deleteTopic(RemoteMessage message) async {

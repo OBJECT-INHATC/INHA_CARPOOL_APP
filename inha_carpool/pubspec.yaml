@@ -86,6 +86,7 @@ dependencies:
   #network
   dio: ^5.0.0
   retrofit: ^4.0.1
+  http: ^1.1.0
 
   #json 직렬화 등 .d 파일 생성 관련
   freezed: ^2.3.4
