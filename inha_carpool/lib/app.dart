@@ -1,11 +1,13 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
+import 'package:inha_Carpool/provider/notification_provider.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
@@ -14,17 +16,17 @@ import 'common/theme/custom_theme_app.dart';
 
 /// 0829 한승완 - FCM 기본 연결 및 알림 설정
 
-class App extends StatefulWidget {
+class App extends ConsumerStatefulWidget {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   static bool isForeground = true;
 
   const App({super.key});
 
   @override
-  State<App> createState() => AppState();
+  ConsumerState<App> createState() => AppState();
 }
 
-class AppState extends State<App> with Nav, WidgetsBindingObserver {
+class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
   @override
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
 
@@ -47,6 +49,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
 
       if (notification != null && message.data['sender'] != nickName) {
         /// todo : 알림 상태관리 업데이트
+        ref.read(isCheckAlarm.notifier).state = true;
 
         if (notification.title == "새로운 채팅이 도착했습니다." &&
             !Prefs.chatRoomOnRx.get() &&

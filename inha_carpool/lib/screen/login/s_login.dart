@@ -14,6 +14,8 @@ import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 
 import '../../common/data/preference/prefs.dart';
+import '../../common/database/d_alarm_dao.dart';
+import '../../provider/notification_provider.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
 import '../main/tab/carpool/chat/f_chatroom.dart';
@@ -27,6 +29,10 @@ class LoginPage extends ConsumerStatefulWidget {
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
+
+  /// 상태관리로 사용자 정보 가져오기
+
+
   late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
   late String gender = "";
@@ -48,6 +54,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   // FCM 푸시 알림 클릭 시 처리 메서드
   void _handleMessage(RemoteMessage message) async {
+    ref.read(isCheckAlarm.notifier).state = true;
+
     // 닉네임 가져오기
     String? nickName = await storage.read(key: "nickName");
     // uid 가져오기

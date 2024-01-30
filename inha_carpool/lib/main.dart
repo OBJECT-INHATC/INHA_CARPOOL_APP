@@ -14,13 +14,15 @@ import 'package:permission_handler/permission_handler.dart';
 import 'app.dart';
 import 'common/data/preference/app_preferences.dart';
 
-/// 0829 한승완 - FCM 기본 연결 및 알림 설정
 
 /// 백그라운드 메시지 수신 호출 콜백 함수
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   RemoteNotification? notification = message.notification;
   var nowTime = DateTime.now().millisecondsSinceEpoch; // 알림 도착 시각
+
+  /// 백그라운드에서 알림 클릭시 알림 new 부분 상태관리 연결하기
+  /// 01.30 -> 백그라운드 알림을 클릭해서 들어오면 정상이나, 그냥 아이콘 눌러서 들어오면 상태관리 반영 x
 
   if (message.notification != null) {
     /// 백그라운드 상태에서 알림을 수신하면 로컬 알림에 저장

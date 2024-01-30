@@ -5,7 +5,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
@@ -16,17 +15,17 @@ import '../../fragment/f_notification.dart';
 import '../../provider/notification_provider.dart';
 import '../../service/sv_firestore.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   // 마이페이지 이동 변수
   final String? temp;
 
   const MainScreen({Key? key, this.temp}) : super(key: key);
 
   @override
-  State<MainScreen> createState() => MainScreenState(temp: temp);
+  ConsumerState<MainScreen> createState() => MainScreenState(temp: temp);
 }
 
-class MainScreenState extends State<MainScreen>
+class MainScreenState extends ConsumerState<MainScreen>
     with SingleTickerProviderStateMixin {
 
   final storage = const FlutterSecureStorage();
@@ -35,12 +34,20 @@ class MainScreenState extends State<MainScreen>
   String? nickName;
   String? uid;
   String? gender;
+  bool? isCheckNewAlarm;
 
-  gettingNickName() async {
+  getNickName() async {
     nickName = await storage.read(key: "nickName");
     uid = await storage.read(key: "uid");
     gender = await storage.read(key: "gender");
   }
+
+  getIsCheckNewAlarm() async {
+    isCheckNewAlarm = Prefs.isCheckAlarmOnRx.get();
+    ref.read(isCheckAlarm.notifier).state = isCheckNewAlarm!;
+  }
+
+
 
 
   bool inCarpoolList = false;
@@ -81,7 +88,7 @@ class MainScreenState extends State<MainScreen>
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
-        now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+        now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
       const msg = "한 번 더 누르면 종료됩니다.";
 
@@ -153,13 +160,6 @@ class MainScreenState extends State<MainScreen>
               const SnackBar(content: Text('이미 끝난 카풀입니다.')));
           Navigator.pop(context);
         } else {
-          print("카풀 시작 시간: $carpoolStartTime");
-          print("현재 시간: $currentTime");
-          print("카풀 시작 닉네임 : $nickName");
-          print("카풀 시작 uid : $uid");
-          print("gender : $gender");
-          print("carid : $carId");
-
           if(!mounted) return;
           // 특정 채팅방 이동
           Navigator.push(
@@ -176,7 +176,6 @@ class MainScreenState extends State<MainScreen>
           );
         }
       },
-      // onDidReceiveBackgroundNotificationResponse: backgroundHandler
     );
   }
 
@@ -184,7 +183,8 @@ class MainScreenState extends State<MainScreen>
   @override
   void initState() {
     super.initState();
-    gettingNickName();
+    getNickName();
+    getIsCheckNewAlarm();
     /// 앱 알림 설정 초기화
     initializeNotification(context);
 
@@ -208,6 +208,7 @@ class MainScreenState extends State<MainScreen>
   @override
   Widget build(BuildContext context) {
 
+    final width = MediaQuery.of(context).size.width;
 
 
     // WillPopScope : 뒤로가기 버튼을 눌렀을 때의 동작을 정의
@@ -243,7 +244,7 @@ class MainScreenState extends State<MainScreen>
           actions: [
             Consumer(builder: (context, ref, child) {
               bool isCheckNewAlarm = ref.watch(isCheckAlarm);
-              print("main에서 isCheckAlarm : $isCheckNewAlarm");
+              print("s_main 247번줄 isCheckAlarm : $isCheckNewAlarm");
               return Stack(
                 children: [
                   IconButton(
@@ -265,14 +266,14 @@ class MainScreenState extends State<MainScreen>
                     ),
 
                   ),
-                  if (isCheckNewAlarm == true)
+                  if (ref.watch(isCheckAlarm))
                     Positioned(
-                      right: 2, // "new" 텍스트를 아이콘 오른쪽에 위치
+                      right: 3.5, // "new" 텍스트를 아이콘 오른쪽에 위치
                       top: 2, // "new" 텍스트를 아이콘 위쪽에 위치
                       child: Container(
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color: context.appColors.blueButtonBackground,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: GestureDetector(
@@ -285,11 +286,11 @@ class MainScreenState extends State<MainScreen>
                               ),
                             );
                           },
-                          child: const Text(
+                          child:  Text(
                             'new',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 13,
+                              fontSize: width * 0.025,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
