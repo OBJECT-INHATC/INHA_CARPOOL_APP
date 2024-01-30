@@ -27,11 +27,20 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
   @override
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
 
+  void setAlarmCheckRiverPod() async {
+/*    bool alarm =  await SecurityStorage.getFCMNotificationStatus();
+    ref.read(isAlarmAble.notifier).state = alarm;
+    print("==이닛에서 알람 사용 여부 상태 초기화 완료== ${ref.read(isAlarmAble)}");*/
+  }
+
   //상태관리 옵저버 실행 + 디바이스 토큰 저장
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    // 알림 체크 상태 초기화
+    setAlarmCheckRiverPod();
 
     /// 앱 알림 설정 초기화
     initializeNotification();
@@ -44,12 +53,12 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
       const secureStorage = FlutterSecureStorage();
       String? nickName = await secureStorage.read(key: 'nickName');
 
+      if (notification != null && message.data['sender'] != nickName) {
+        /// todo : 알림 상태관리 업데이트
 
-      if(notification != null && message.data['sender'] != nickName){
-        // Prefs.chatRoomOnRx.get()이 true이고, 알람 수신 시 앱이 포어그라운드 상태이고
-        if(notification.title == "새로운 채팅이 도착했습니다." && !Prefs.chatRoomOnRx.get() && Prefs.chatRoomCarIdRx.get() == message.data['groupId']){
-          print("=====================알람 꺼둠");
-
+        if (notification.title == "새로운 채팅이 도착했습니다." &&
+            !Prefs.chatRoomOnRx.get() &&
+            Prefs.chatRoomCarIdRx.get() == message.data['groupId']) {
           /// 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
           AlarmInsert(notification, nowTime, message);
 
@@ -57,9 +66,8 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
           deleteTopic(message);
           return;
         }
-        print("${notification.title!} <-- 타이틀");
-        print("${Prefs.chatRoomOnRx.get()} <-- Prefs.chatRoomOnRx.get()");
-        final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+        final flutterLocalNotificationsPlugin =
+            FlutterLocalNotificationsPlugin();
         await flutterLocalNotificationsPlugin.show(
           notification.hashCode,
           notification.title,
@@ -72,15 +80,44 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
               priority: Priority.high,
             ),
           ),
+          payload: message.data['groupId'],
         );
 
         /// 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
         AlarmInsert(notification, nowTime, message);
 
         // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
-         deleteTopic(message);
+        deleteTopic(message);
       }
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomThemeApp(
+      child: Builder(builder: (context) {
+        return MaterialApp(
+          /// 0916 한승완 - 텍스트의 전체적인 크기를 고정
+          builder: (context, child) {
+            final MediaQueryData data = MediaQuery.of(context);
+            return MediaQuery(
+              data: data.copyWith(textScaleFactor: 1.0),
+              child: child!,
+            );
+          },
+          //네비게이터 관리
+          navigatorKey: App.navigatorKey,
+          //언어 영역
+          localizationsDelegates: context.localizationDelegates,
+          supportedLocales: context.supportedLocales,
+          locale: context.locale,
+          //언어 영역 끝
+          title: 'Image Finder',
+          theme: context.themeType.themeData,
+          home: const LoginPage(),
+        );
+      }),
+    );
   }
 
   /// 앱 실행 시 초기화 - 알림 설정
@@ -90,15 +127,15 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     // Android용 알림 채널 생성
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(const AndroidNotificationChannel(
-      'high_importance_channel',
-      'high_importance_notification',
-      importance: Importance.max,
-    ));
+          'high_importance_channel',
+          'high_importance_notification',
+          importance: Importance.max,
+        ));
 
     DarwinInitializationSettings iosInitializationSettings =
-    const DarwinInitializationSettings(
+        const DarwinInitializationSettings(
       requestAlertPermission: true, // 알림 권한 요청: Alert
       requestBadgePermission: true, // 알림 권한 요청: Badge
       requestSoundPermission: true, // 알림 권한 요청: Sound
@@ -120,30 +157,27 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
       },
       // onDidReceiveBackgroundNotificationResponse: backgroundHandler
     );
-
-
   }
 
   void deleteTopic(RemoteMessage message) async {
-       if(message.data['id'] == 'carpoolDone'){
+    if (message.data['id'] == 'carpoolDone') {
       // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
       String carId = message.data['groupId'];
-    await FireStoreService().handleEndCarpoolSignal(carId);
+      await FireStoreService().handleEndCarpoolSignal(carId);
     }
   }
 
   /// 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
-  void AlarmInsert(RemoteNotification notification, int nowTime, RemoteMessage message) {
-    AlarmDao().insert(
-        AlarmMessage(
-          aid: "${notification.title}${notification.body}${nowTime.toString()}",
-          carId: message.data['groupId'] as String,
-          type: message.data['id'] as String,
-          title: notification.title as String,
-          body: notification.body as String,
-          time: nowTime,
-        )
-    );
+  void AlarmInsert(
+      RemoteNotification notification, int nowTime, RemoteMessage message) {
+    AlarmDao().insert(AlarmMessage(
+      aid: "${notification.title}${notification.body}${nowTime.toString()}",
+      carId: message.data['groupId'] as String,
+      type: message.data['id'] as String,
+      title: notification.title as String,
+      body: notification.body as String,
+      time: nowTime,
+    ));
   }
 
   // 클래스가 삭제될 때 옵저버 등록을 해제
@@ -151,37 +185,6 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomThemeApp(
-      child: Builder(builder: (context) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-
-          /// 0916 한승완 - 텍스트의 전체적인 크기를 고정
-          builder: (context, child) {
-            final MediaQueryData data = MediaQuery.of(context);
-            return MediaQuery(
-              data: data.copyWith(textScaleFactor: 1.0),
-              child: child!,
-            );
-          },
-          //네비게이터 관리
-          navigatorKey: App.navigatorKey,
-          //언어 영역
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          //언어 영역 끝
-          title: 'Image Finder',
-          theme: context.themeType.themeData,
-          home:  const LoginPage(),
-
-        );
-      }),
-    );
   }
 
   //옵저버의 함수로 상태관리 변화를 감지하면 앱의 포어그라운드 상태를 변경
@@ -199,9 +202,9 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
       case AppLifecycleState.detached:
         break;
       default:
-      // Handle any other states that might be added in the future
+        // Handle any other states that might be added in the future
         break;
-        // TODO: Handle this case.
+      // TODO: Handle this case.
     }
     super.didChangeAppLifecycleState(state);
   }

@@ -79,6 +79,9 @@ void main() async {
   // 네이버 지도 SDK 초기화
   await NaverMapSdk.instance.initialize(clientId: '88driux0cg');
 
+  //다국어 지원을 위해 필요한 초기화 과정
+  await EasyLocalization.ensureInitialized();
+
   //애플리케이션의 환경설정을 초기화 과정
   await AppPreferences.init();
   await dotenv.load(fileName: 'assets/config/.env');
@@ -87,10 +90,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-   // FCM 알림 설정
-   initializeNotification();
-
-
   //네이버지도 초기화
   // await NaverMapSdk.instance.initialize(clientId: dotenv.env['NAVER_MAP_CLIENT_ID']!);
 
@@ -98,6 +97,14 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(
-    const App(),
+    EasyLocalization(
+        supportedLocales: const [Locale('en'), Locale('ko')],
+        //지원하지 않는 언어인 경우 한국어로 설정
+        fallbackLocale: const Locale('ko'),
+        //번역 파일들이 위치하는 경로를 설정
+        path: 'assets/translations',
+        //언어 코드만 사용하여 번역 파일 설 ex)en_US 대신 en만 사용
+        useOnlyLangCode: true,
+        child: const App()),
   );
 }
