@@ -99,9 +99,9 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
 
     DarwinInitializationSettings iosInitializationSettings =
     const DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+      requestAlertPermission: true, // 알림 권한 요청: Alert
+      requestBadgePermission: true, // 알림 권한 요청: Badge
+      requestSoundPermission: true, // 알림 권한 요청: Sound
     );
 
     // 플랫폼별 초기화 설정
@@ -121,23 +121,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
       // onDidReceiveBackgroundNotificationResponse: backgroundHandler
     );
 
-    // 포그라운드 상태에서 알림을 받을 수 있도록 설정
-    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-      alert: false,
-      badge: true,
-      sound: false,
-    );
 
-    // 알림 권한 요청
-    await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: true,
-      badge: true,
-      carPlay: true,
-      criticalAlert: true,
-      provisional: true,
-      sound: true,
-    );
   }
 
   void deleteTopic(RemoteMessage message) async {
