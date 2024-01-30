@@ -265,16 +265,14 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                           children: [
                             Icon(Icons.circle_outlined,
                                 color: context.appColors.logoColor, size: 12),
-
                             // 아이콘과 주소들 사이 간격
                             Width(screenWidth * 0.03),
-
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // 출발지 요약주소
                                 _truncateText(
-                                        carpoolData['startDetailPoint'], 32)
+                                    carpoolData['startDetailPoint'], 32)
                                     .text
                                     .color(Colors.black)
                                     .size(15)

@@ -27,6 +27,9 @@ class LogoutConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final width = context.width(1);
+
     return AlertDialog(
       surfaceTintColor: Colors.transparent, // 틴트 빼기
       backgroundColor: Colors.white, // 다이얼로그 배경색
@@ -63,7 +66,8 @@ class LogoutConfirmationDialog extends StatelessWidget {
               },
             ),
             const SizedBox(height: 6),
-            const Text('위 계정에서 로그아웃하시겠습니까?'),
+             Text('위 계정에서 로그아웃하시겠습니까?', style: TextStyle(fontSize: width * 0.035)),
+
           ],
         ),
       ),

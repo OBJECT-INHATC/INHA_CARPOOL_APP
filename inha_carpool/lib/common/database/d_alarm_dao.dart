@@ -45,7 +45,7 @@ class AlarmDao {
 
   /// 알림 리스트에 알림이 존재하는지 확인
   Future<bool> checkAlarms() async {
-    print('알람 체크');
+    print('common/database/d_alarm_dao 알람 체크');
     Prefs.chatRoomCarIdRx.set("");
     final recordSnapshots = await _alarmFolder.find(await _db);
     if(recordSnapshots.isEmpty) {
