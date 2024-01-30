@@ -7,6 +7,7 @@ import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import 'common/theme/custom_theme_app.dart';
@@ -27,23 +28,14 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
   @override
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
 
-  void setAlarmCheckRiverPod() async {
-/*    bool alarm =  await SecurityStorage.getFCMNotificationStatus();
-    ref.read(isAlarmAble.notifier).state = alarm;
-    print("==이닛에서 알람 사용 여부 상태 초기화 완료== ${ref.read(isAlarmAble)}");*/
-  }
+
+
 
   //상태관리 옵저버 실행 + 디바이스 토큰 저장
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
-    // 알림 체크 상태 초기화
-    setAlarmCheckRiverPod();
-
-    /// 앱 알림 설정 초기화
-    initializeNotification();
 
     /// 알림 수신 시 호출되는 콜백 함수
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
@@ -120,44 +112,6 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     );
   }
 
-  /// 앱 실행 시 초기화 - 알림 설정
-  void initializeNotification() async {
-    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-    // Android용 알림 채널 생성
-    await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(const AndroidNotificationChannel(
-          'high_importance_channel',
-          'high_importance_notification',
-          importance: Importance.max,
-        ));
-
-    DarwinInitializationSettings iosInitializationSettings =
-        const DarwinInitializationSettings(
-      requestAlertPermission: true, // 알림 권한 요청: Alert
-      requestBadgePermission: true, // 알림 권한 요청: Badge
-      requestSoundPermission: true, // 알림 권한 요청: Sound
-    );
-
-    // 플랫폼별 초기화 설정
-    InitializationSettings initializationSettings = InitializationSettings(
-      android: const AndroidInitializationSettings("@mipmap/ic_launcher"),
-      iOS: iosInitializationSettings,
-    );
-
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (notification) async {
-        // 알림을 클릭하면 해당 알림의 페이로드를 출력
-        /// todo :  페이로드 받아서 네비게이션으로 채팅창으로 이동 시키기
-        /// 페이로드는 송신측에서 추가로 담아주는데 내가 이번에 추가함 깃 커밋 내역 보셈 24.01.30 이상훈
-        print('notification payload: ${notification.payload}');
-      },
-      // onDidReceiveBackgroundNotificationResponse: backgroundHandler
-    );
-  }
 
   void deleteTopic(RemoteMessage message) async {
     if (message.data['id'] == 'carpoolDone') {
