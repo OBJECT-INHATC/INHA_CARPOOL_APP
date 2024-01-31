@@ -8,6 +8,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/common.dart';
 import '../../common/data/preference/prefs.dart';
@@ -34,23 +35,12 @@ class MainScreenState extends ConsumerState<MainScreen>
   String? nickName;
   String? uid;
   String? gender;
-  bool? isCheckNewAlarm;
 
   getNickName() async {
     nickName = await storage.read(key: "nickName");
     uid = await storage.read(key: "uid");
     gender = await storage.read(key: "gender");
   }
-
-  getIsCheckNewAlarm() async {
-    isCheckNewAlarm = Prefs.isCheckAlarmOnRx.get();
-    ref.read(isCheckAlarm.notifier).state = isCheckNewAlarm!;
-  }
-
-
-
-
-  bool inCarpoolList = false;
 
   late TabItem _currentTab;
 
@@ -180,16 +170,19 @@ class MainScreenState extends ConsumerState<MainScreen>
   }
 
 
+
   @override
   void initState() {
     super.initState();
     getNickName();
-    getIsCheckNewAlarm();
+
     /// 앱 알림 설정 초기화
     initializeNotification(context);
 
     Prefs.chatRoomOnRx.set(true);
     Prefs.chatRoomCarIdRx.set("");
+
+
     print("=========메인====================");
     initNavigatorKeys();
     removeSplash();
@@ -248,7 +241,7 @@ class MainScreenState extends ConsumerState<MainScreen>
               return Stack(
                 children: [
                   IconButton(
-                    onPressed: () {
+                    onPressed: () async {
                       ref
                           .read(isCheckAlarm.notifier)
                           .state = false;

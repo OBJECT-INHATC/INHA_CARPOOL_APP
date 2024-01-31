@@ -6,11 +6,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'common/data/preference/app_preferences.dart';
 
@@ -34,6 +36,14 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       body: notification?.body as String,
       time: nowTime,
     ));
+
+
+/*    const storage = FlutterSecureStorage();
+    storage.write(key: 'isCheckAlarm', value: 'true');
+    print(" ======== 백그라운드 ${storage.read(key: 'isCheckAlarm')} ========}");*/
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isCheckAlarm', true);
   }
 
   return;

@@ -9,8 +9,8 @@ import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/provider/notification_provider.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'common/theme/custom_theme_app.dart';
 
@@ -29,7 +29,6 @@ class App extends ConsumerStatefulWidget {
 class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
   @override
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
-
 
 
 
@@ -115,7 +114,6 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
     );
   }
 
-
   void deleteTopic(RemoteMessage message) async {
     if (message.data['id'] == 'carpoolDone') {
       // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
@@ -144,12 +142,24 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
     super.dispose();
   }
 
+  // 백그라운드 알림 표시 여부 상태관리 연결
+  void setAlarmBackgroundState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.getBool('isCheckAlarm');
+
+    if(prefs.getBool('isCheckAlarm') == true) {
+      ref.read(isCheckAlarm.notifier).state = true;
+    }
+
+  }
+
   //옵저버의 함수로 상태관리 변화를 감지하면 앱의 포어그라운드 상태를 변경
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
         App.isForeground = true;
+        setAlarmBackgroundState();
         break;
       case AppLifecycleState.inactive:
         break;
@@ -157,6 +167,7 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
         App.isForeground = false;
         break;
       case AppLifecycleState.detached:
+
         break;
       default:
         // Handle any other states that might be added in the future

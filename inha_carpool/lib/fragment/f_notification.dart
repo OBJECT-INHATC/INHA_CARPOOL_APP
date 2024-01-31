@@ -6,6 +6,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../provider/notification_provider.dart';
 import '../service/sv_firestore.dart';
@@ -38,8 +39,18 @@ class _NotificationListState extends ConsumerState<NotificationList> {
     gettingLocalAlarm();
     gettingNickName();
 
+    // 알림 값 변경
+    setBackgroundAlarmState();
+
 
     super.initState();
+  }
+
+  Future<void> setBackgroundAlarmState() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("isCheckAlarm");
+
   }
 
   gettingLocalAlarm() async {
