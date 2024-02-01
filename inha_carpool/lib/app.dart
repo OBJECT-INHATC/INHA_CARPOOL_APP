@@ -7,6 +7,7 @@ import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
+import 'package:inha_Carpool/screen/login/user_register.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import 'common/theme/custom_theme_app.dart';
@@ -133,7 +134,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
           //언어 영역 끝
           title: 'Image Finder',
           theme: context.themeType.themeData,
-          home:  const LoginPage(),
+          home:  const UserRegisterPage(),
 
         );
       }),

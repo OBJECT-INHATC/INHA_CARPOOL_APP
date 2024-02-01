@@ -8,8 +8,7 @@ import '../../common/constants.dart';
 class ApiUser {
   //유저 닉네임 업데이트
   /// 신고 하기 (저장)
-  Future<bool> updateUserNickname(
-      String myUid, String newNickName) async {
+  Future<bool> updateUserNickname(String myUid, String newNickName) async {
     final String apiUrl = '$baseUrl/user/update/$myUid/$newNickName';
 
     try {
@@ -25,16 +24,16 @@ class ApiUser {
       } else {
         return false;
       }
-    }catch(e){
+    } catch (e) {
       print(e);
       return false;
     }
   }
 
   Future<bool> saveUser(UserRequstDTO userDTO) async {
-     String apiUrl = '$baseUrl/user/save';
+    String apiUrl = '$baseUrl/user/save';
     final String requestBody = jsonEncode(userDTO);
-    try{
+    try {
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: <String, String>{
@@ -42,15 +41,22 @@ class ApiUser {
         },
         body: requestBody,
       );
-      if(response.statusCode == 200) {
-        return true;
-      } else {
-        print("에러 코드 ${response.statusCode}");
-        return false;
-      }
+      String check = response.body;
+      print(check);
+      if (response.statusCode == 200) {
+        if(check == "true") {
+          return true;
+        }
+        else {
+          return false;
+        }
+    } else {
+    print("에러 코드 ${response.statusCode}");
+    return false;
+    }
     } catch(e) {
-      print(e);
-      return false;
+    print(e);
+    return false;
     }
 
   }

@@ -51,10 +51,7 @@ String _truncateText(String text, int maxLength) {
   }
 }
 
-
-
 class _CarpoolListWidgetState extends State<CarpoolListWidget> {
-
   @override
   Widget build(BuildContext context) {
     // 화면의 너비와 높이를 가져 와서 화면 비율 계산함
@@ -67,7 +64,6 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
     double cardHeight = listViewHeight * 0.53;
 
     bool isOnUri = true;
-
 
     return Container(
       decoration: BoxDecoration(
@@ -158,10 +154,11 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
 
                   String currentUser =
                       '${widget.uid}_${widget.nickName}_${widget.gender}';
+
+                  /// 이미 참여한 경우
                   if (carpoolData['members'].contains(currentUser)) {
-                    // 이미 참여한 경우
+                    /// 방장인 경우
                     if (carpoolData['admin'] == currentUser) {
-                      // 방장인 경우
                       Navigator.push(
                         Nav.globalContext,
                         MaterialPageRoute(
@@ -173,7 +170,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                                   gender: widget.gender,
                                 )),
                       );
-                    } else {
+                    }
+
+                    /// 방장이 아닌 경우 (없애도 될 듯)
+                    else {
                       Navigator.push(
                         Nav.globalContext,
                         MaterialPageRoute(
@@ -187,8 +187,11 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                         ),
                       );
                     }
-                  } else {
-                    // 현재 인원이 최대 인원보다 작을 때
+                  }
+
+                  /// 참가한 카풀이 아닐 경우
+                  else {
+                    /// 현재 인원이 최대 인원보다 작을 때 ( 카풀에 자리가 있을 때 )
                     if (nowMember < maxMember) {
                       Nav.push(
                         CarpoolMap(
@@ -206,7 +209,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                           roomGender: carpoolData['gender'],
                         ),
                       );
-                    } else {
+                    }
+
+                    /// 자리가 없을 때
+                    else {
                       context.showSnackbarMaxmember(context);
                     }
                   }
