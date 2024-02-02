@@ -20,7 +20,6 @@ class _ComplainAlertState extends State<ComplainAlert> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

@@ -132,8 +132,6 @@ class MainScreenState extends ConsumerState<MainScreen>
     await flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (notification) async {
-        // 알림을 클릭하면 해당 알림의 페이로드를 출력
-        /// todo :  페이로드 받아서 네비게이션으로 채팅창으로 이동 시키기
         /// 페이로드는 송신측에서 추가로 담아주는데 내가 이번에 추가함 깃 커밋 내역 보셈 24.01.30 이상훈
         print('===================notification payload: ${notification.payload}');
         final carId = notification.payload;

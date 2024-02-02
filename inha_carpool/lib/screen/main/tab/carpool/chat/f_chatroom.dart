@@ -137,7 +137,6 @@ class _ChatroomPageState extends State<ChatroomPage>
         Prefs.chatRoomCarIdRx.set("carId");
         break;
       case AppLifecycleState.hidden:
-      // TODO: Handle this case.
     }
   }
 

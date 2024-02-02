@@ -47,7 +47,6 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
       String? nickName = await secureStorage.read(key: 'nickName');
 
       if (notification != null && message.data['sender'] != nickName) {
-        /// todo : 알림 상태관리 업데이트
         ref.read(isCheckAlarm.notifier).state = true;
 
         if (notification.title == "새로운 채팅이 도착했습니다." &&
@@ -172,7 +171,6 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
       default:
         // Handle any other states that might be added in the future
         break;
-      // TODO: Handle this case.
     }
     super.didChangeAppLifecycleState(state);
   }
