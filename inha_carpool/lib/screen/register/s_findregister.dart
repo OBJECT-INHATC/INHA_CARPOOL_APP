@@ -11,6 +11,7 @@ class FindRegisterPage extends StatefulWidget {
 }
 
 class _FindRegisterPageState extends State<FindRegisterPage> {
+
   String email = "";
   final auth = FirebaseAuth.instance;
   bool onChanged = false;
@@ -150,7 +151,7 @@ class _FindRegisterPageState extends State<FindRegisterPage> {
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                      const SnackBar(
                         content: Text('올바른 이메일을 입력해주세요.'),
                       ),
                     );

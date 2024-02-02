@@ -24,28 +24,6 @@ class FcmService {
 
     http.Response response;
 
-    /// 알림 권한 요청
-    NotificationSettings settings =
-    await FirebaseMessaging.instance.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: false,
-    );
-
-    /// 알림 권한 상태 확인
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      print('User granted provisional permission');
-    } else {
-      print('User declined or has not accepted permission');
-    }
-
     /// 어떤 알림 인지 구분
     if ( type == NotificationType.chat) {
       notiStatus = "chat";
@@ -55,6 +33,7 @@ class FcmService {
       /// TODO : 카풀 내용 수신 토픽 이름 바뀌면 수정 해야함
       notiTopic = "/topics/${chatMessage.carId}_info";
     }
+
 
     try {
       /// FCM 서버에 알림 전송

@@ -67,8 +67,11 @@ dependencies:
   #ui - resource
   eva_icons_flutter: ^3.1.0
   google_fonts: ^4.0.4
-  easy_localization: ^3.0.2
   flutter_cache_manager: ^3.3.0
+
+  #다국어 지원 패키지
+  easy_localization: ^3.0.2
+
 
   #ui - widget
   nav: ^1.3.9
@@ -83,11 +86,14 @@ dependencies:
   #network
   dio: ^5.0.0
   retrofit: ^4.0.1
-  http: ^1.1.0 #주소기반 서비스 api http 호출
+  http: ^1.1.0
 
+  #json 직렬화 등 .d 파일 생성 관련
   freezed: ^2.3.4
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.0
+
+  # Url 웹 띄워주는 패키지
   url_launcher: ^6.2.1
 
   #firebase / fcm
@@ -108,12 +114,17 @@ dependencies:
   geocoding: ^2.1.0 # 위치정보
   permission_handler: ^10.4.3 #권한 핸들러
 
+  #naver map
+  flutter_naver_map: ^1.0.2
+
   #app setting
   app_settings: ^5.0.0 #어플 설정 열기
 
   #animation
   animations: ^2.0.7
 
+  # 상태 관리 (riverpod) 상훈 24.01.30
+  flutter_riverpod: ^2.4.0
 
 dev_dependencies:
   flutter_test:

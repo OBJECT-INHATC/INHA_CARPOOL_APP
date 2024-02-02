@@ -4,14 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/firebase_options.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'common/data/preference/app_preferences.dart';
 
-/// 0829 한승완 - FCM 기본 연결 및 알림 설정
 
 /// 백그라운드 메시지 수신 호출 콜백 함수
 @pragma('vm:entry-point')
@@ -19,82 +23,74 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   RemoteNotification? notification = message.notification;
   var nowTime = DateTime.now().millisecondsSinceEpoch; // 알림 도착 시각
 
+  /// 백그라운드에서 알림 클릭시 알림 new 부분 상태관리 연결하기
+  /// 01.30 -> 백그라운드 알림을 클릭해서 들어오면 정상이나, 그냥 아이콘 눌러서 들어오면 상태관리 반영 x
+
   if (message.notification != null) {
     /// 백그라운드 상태에서 알림을 수신하면 로컬 알림에 저장
-    AlarmDao().insert(
-        AlarmMessage(
-          aid: "${notification?.title}${notification?.body}${nowTime.toString()}",
-          carId: message.data['groupId'] as String,
-          type: message.data['id'] as String,
-          title: notification?.title as String,
-          body: notification?.body as String,
-          time: nowTime,
-        )
-    );
+    AlarmDao().insert(AlarmMessage(
+      aid: "${notification?.title}${notification?.body}${nowTime.toString()}",
+      carId: message.data['groupId'] as String,
+      type: message.data['id'] as String,
+      title: notification?.title as String,
+      body: notification?.body as String,
+      time: nowTime,
+    ));
+
+
+/*    const storage = FlutterSecureStorage();
+    storage.write(key: 'isCheckAlarm', value: 'true');
+    print(" ======== 백그라운드 ${storage.read(key: 'isCheckAlarm')} ========}");*/
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isCheckAlarm', true);
   }
 
   return;
-
 }
 
 /// 앱 실행 시 초기화 - 알림 설정
 void initializeNotification() async {
 
-  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  // Android용 알림 채널 생성
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(const AndroidNotificationChannel(
-    'high_importance_channel',
-    'high_importance_notification',
-    importance: Importance.max,
-  ));
-
-  DarwinInitializationSettings iosInitializationSettings =
-  const DarwinInitializationSettings(
-    requestAlertPermission: true,
-    requestBadgePermission: true,
-    requestSoundPermission: true,
-  );
-
-  // 플랫폼별 초기화 설정
-   InitializationSettings initializationSettings = InitializationSettings(
-    android: const AndroidInitializationSettings("@mipmap/ic_launcher"),
-    iOS: iosInitializationSettings,
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      // onDidReceiveBackgroundNotificationResponse: backgroundHandler
-  );
-
-  // 포그라운드 상태에서 알림을 받을 수 있도록 설정
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: false,
-    badge: true,
-    sound: false,
+    alert: false, // 포그라운드에서 알림 팝업 표시 여부 (false이면 팝업 미표시) -> 로직에 맞게 수정
+    badge: true, // 뱃지 표시 여부 (true이면 뱃지 표시)
+    sound: false, // 소리 효과 표시 여부 (false이면 소리 효과 미표시)
   );
 
-  // 알림 권한 요청
+  if (await Permission.notification.isDenied) {
+    await Permission.notification.request();
+  } else {
+    print("알림 권한 허용됨");
+  }
+
+// 알림 권한 요청
   await FirebaseMessaging.instance.requestPermission(
     alert: true,
+    // 알림 메시지 수신 허용 여부
     announcement: true,
+    // 음성 알림 메시지 수신 허용 여부
     badge: true,
+    // 뱃지 알림 허용 여부
     carPlay: true,
+    // CarPlay 알림 허용 여부
     criticalAlert: true,
+    // 중요 알림 허용 여부 (사용자의 주의를 요하는 알림)
     provisional: true,
-    sound: true,
+    // 임시 알림 허용 여부 (사용자가 앱을 열 때까지 임시로 알림 보류)
+    sound: true, // 소리 효과 표시 여부
   );
-
 }
+
 
 
 void main() async {
   //상태 변화와 렌더링을 관리하는 바인딩 초기화 => 추 후 백그라운드 및 포어그라운드 상태관리에 따라 기능 리팩토링
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // 네이버 지도 SDK 초기화
+  await NaverMapSdk.instance.initialize(clientId: '88driux0cg');
 
   //다국어 지원을 위해 필요한 초기화 과정
   await EasyLocalization.ensureInitialized();
@@ -107,15 +103,14 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  //네이버지도 초기화
+  // await NaverMapSdk.instance.initialize(clientId: dotenv.env['NAVER_MAP_CLIENT_ID']!);
 
   // 백그라운드 메시지 수신 호출 콜백 함수
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  // 알림 설정
-  initializeNotification();
-
   runApp(
-      EasyLocalization(
+    EasyLocalization(
         supportedLocales: const [Locale('en'), Locale('ko')],
         //지원하지 않는 언어인 경우 한국어로 설정
         fallbackLocale: const Locale('ko'),
@@ -123,7 +118,10 @@ void main() async {
         path: 'assets/translations',
         //언어 코드만 사용하여 번역 파일 설 ex)en_US 대신 en만 사용
         useOnlyLangCode: true,
-        child: const App()),
-      );
+        child: const ProviderScope(child: App())),
+    /// 상태관리로 관리할 리스트
+    /// 1. 사용자 정보 -> 스토리지에서 그만 처 들고오자!
+    /// 2. 자신이 카풀에 참가하고있는지 ! -> 로그인시 한 번만 쳐 묻자
+    /// 3. 알림 받았는지 유무 -> 상태관리 안하니까 재빌드 해야만 알림 표시 뜸
+  );
 }
-

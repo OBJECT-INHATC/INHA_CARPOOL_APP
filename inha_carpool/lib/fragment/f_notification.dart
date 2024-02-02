@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../provider/notification_provider.dart';
 import '../service/sv_firestore.dart';
 
 /// 알림 목록 페이지
 
-class NotificationList extends StatefulWidget {
+class NotificationList extends ConsumerStatefulWidget {
   const NotificationList({Key? key}) : super(key: key);
 
   @override
-  State<NotificationList> createState() => _NotificationListState();
+  ConsumerState<NotificationList> createState() => _NotificationListState();
 }
 
-class _NotificationListState extends State<NotificationList> {
+class _NotificationListState extends ConsumerState<NotificationList> {
+
+
   final storage = const FlutterSecureStorage();
 
   /// 알림 리스트
@@ -34,7 +39,18 @@ class _NotificationListState extends State<NotificationList> {
     gettingLocalAlarm();
     gettingNickName();
 
+    // 알림 값 변경
+    setBackgroundAlarmState();
+
+
     super.initState();
+  }
+
+  Future<void> setBackgroundAlarmState() async {
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("isCheckAlarm");
+
   }
 
   gettingLocalAlarm() async {
@@ -49,6 +65,10 @@ class _NotificationListState extends State<NotificationList> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    print("ref.read(isCheckAlarm.notifier).state : ${ref.read(isCheckAlarm.notifier).state}");
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 45,

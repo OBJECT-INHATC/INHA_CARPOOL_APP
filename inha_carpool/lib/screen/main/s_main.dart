@@ -1,29 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../common/common.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../fragment/f_notification.dart';
+import '../../provider/notification_provider.dart';
+import '../../service/sv_firestore.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   // 마이페이지 이동 변수
   final String? temp;
 
   const MainScreen({Key? key, this.temp}) : super(key: key);
 
   @override
-  State<MainScreen> createState() => MainScreenState(temp: temp);
+  ConsumerState<MainScreen> createState() => MainScreenState(temp: temp);
 }
 
-class MainScreenState extends State<MainScreen>
+class MainScreenState extends ConsumerState<MainScreen>
     with SingleTickerProviderStateMixin {
-  bool inCarpoolList = false;
+
+  final storage = const FlutterSecureStorage();
+
+  /// 사용자 닉네임
+  String? nickName;
+  String? uid;
+  String? gender;
+
+  getNickName() async {
+    nickName = await storage.read(key: "nickName");
+    uid = await storage.read(key: "uid");
+    gender = await storage.read(key: "gender");
+  }
 
   late TabItem _currentTab;
 
@@ -54,8 +71,6 @@ class MainScreenState extends State<MainScreen>
 
   static double get bottomNavigationBarBorderRadius => 30.0;
 
-  final storage = const FlutterSecureStorage();
-
   // 피지컬 뒤로가기 활성화
   DateTime? currentBackPressTime;
 
@@ -63,7 +78,7 @@ class MainScreenState extends State<MainScreen>
   Future<bool> onWillPop() {
     DateTime now = DateTime.now();
     if (currentBackPressTime == null ||
-        now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+        now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
       const msg = "한 번 더 누르면 종료됩니다.";
 
@@ -84,15 +99,96 @@ class MainScreenState extends State<MainScreen>
     }
   }
 
+
+
+
+  /// 앱 실행 시 초기화 - 알림 설정
+  void initializeNotification(BuildContext context) async {
+    final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    // Android용 알림 채널 생성
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(const AndroidNotificationChannel(
+      'high_importance_channel',
+      'high_importance_notification',
+      importance: Importance.max,
+    ));
+
+    DarwinInitializationSettings iosInitializationSettings =
+    const DarwinInitializationSettings(
+      requestAlertPermission: true, // 알림 권한 요청: Alert
+      requestBadgePermission: true, // 알림 권한 요청: Badge
+      requestSoundPermission: true, // 알림 권한 요청: Sound
+    );
+
+    // 플랫폼별 초기화 설정
+    InitializationSettings initializationSettings = InitializationSettings(
+      android: const AndroidInitializationSettings("@mipmap/ic_launcher"),
+      iOS: iosInitializationSettings,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (notification) async {
+        // 알림을 클릭하면 해당 알림의 페이로드를 출력
+        /// todo :  페이로드 받아서 네비게이션으로 채팅창으로 이동 시키기
+        /// 페이로드는 송신측에서 추가로 담아주는데 내가 이번에 추가함 깃 커밋 내역 보셈 24.01.30 이상훈
+        print('===================notification payload: ${notification.payload}');
+        final carId = notification.payload;
+        if(carId == null) return;
+        var carpoolStartTime = await FireStoreService()
+            .getCarpoolStartTime(carId);
+
+        // 현재 시간을 밀리초 단위의 epoch time으로 변환합니다.
+        var currentTime = DateTime.now().millisecondsSinceEpoch;
+        if (currentTime > carpoolStartTime) {
+          // 현재 시간이 carpoolStartTime을 넘었다면, 카풀이 이미 시작되었으므로 접근을 막습니다.
+          if(!mounted) return;
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('이미 끝난 카풀입니다.')));
+          Navigator.pop(context);
+        } else {
+          if(!mounted) return;
+          // 특정 채팅방 이동
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChatroomPage(
+                carId: carId,
+                groupName: "그룹 이름",
+                userName: nickName ?? "닉네임",
+                uid: uid ?? "uid",
+                gender: gender ?? "불분명",
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+
+
   @override
   void initState() {
     super.initState();
-    // 각 텝의 네비게이터 초기화
+    getNickName();
+
+    /// 앱 알림 설정 초기화
+    initializeNotification(context);
+
     Prefs.chatRoomOnRx.set(true);
     Prefs.chatRoomCarIdRx.set("");
+
+
     print("=========메인====================");
     initNavigatorKeys();
     removeSplash();
+
+    // 각 텝의 네비게이터 초기화
+
   }
 
   void removeSplash() async {
@@ -104,6 +200,10 @@ class MainScreenState extends State<MainScreen>
 
   @override
   Widget build(BuildContext context) {
+
+    final width = MediaQuery.of(context).size.width;
+
+
     // WillPopScope : 뒤로가기 버튼을 눌렀을 때의 동작을 정의
     return WillPopScope(
       onWillPop: _handleBackPressed,
@@ -135,47 +235,64 @@ class MainScreenState extends State<MainScreen>
           ),
           leadingWidth: 170,
           actions: [
-            FutureBuilder<bool>(
-              future: AlarmDao().checkAlarms(),
-              builder: (context, snapshot) {
-                bool hasLocalNotification = snapshot.data ?? false;
+            Consumer(builder: (context, ref, child) {
+              bool isCheckNewAlarm = ref.watch(isCheckAlarm);
+              print("s_main 247번줄 isCheckAlarm : $isCheckNewAlarm");
+              return Stack(
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      ref
+                          .read(isCheckAlarm.notifier)
+                          .state = false;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NotificationList(),
+                        ),
+                      );
+                    },
+                    icon:  const Icon(
+                      Icons.notifications_outlined,
+                      size: 30,
+                      color: Colors.black,
+                    ),
 
-                return IconButton(
-                  icon: Stack(
-                    children: [
-                      const Icon(
-                        Icons.notifications_outlined,
-                        size: 30,
-                        color: Colors.black,
-                      ),
-                      if (hasLocalNotification)
-                        Positioned(
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(1),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 8,
-                              minHeight: 8,
+                  ),
+                  if (ref.watch(isCheckAlarm))
+                    Positioned(
+                      right: 3.5, // "new" 텍스트를 아이콘 오른쪽에 위치
+                      top: 2, // "new" 텍스트를 아이콘 위쪽에 위치
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: context.appColors.blueButtonBackground,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: GestureDetector(
+                          onTap: () async {
+                            ref.read(isCheckAlarm.notifier).state = false;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const NotificationList(),
+                              ),
+                            );
+                          },
+                          child:  Text(
+                            'new',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: width * 0.025,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const NotificationList(),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
+                    ),
+                ],
+              );
+            }),
           ],
         ),
         extendBody: extendBody,
