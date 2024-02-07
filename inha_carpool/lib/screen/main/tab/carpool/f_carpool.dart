@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 
 import 'package:inha_Carpool/common/util/carpool.dart';
+import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -13,18 +15,17 @@ import 'w_card_Item.dart';
 import 'w_last_chat.dart';
 
 /// 참여중인 카풀 리스트
-class CarpoolList extends StatefulWidget {
+class CarpoolList extends ConsumerStatefulWidget {
   const CarpoolList({Key? key}) : super(key: key);
 
   @override
-  State<CarpoolList> createState() => _CarpoolListState();
+  ConsumerState<CarpoolList> createState() => _CarpoolListState();
 }
 
-class _CarpoolListState extends State<CarpoolList> {
-  final storage = FlutterSecureStorage();
-  late String nickName = ""; // Initialize with a default value
-  late String uid = "";
-  late String gender = "";
+class _CarpoolListState extends ConsumerState<CarpoolList> {
+  late String nickName = ref.read(authProvider).nickName!;
+  late String uid = ref.read(authProvider).uid!;
+  late String gender = ref.read(authProvider).gender!;
 
   DocumentSnapshot? oldLastMessage;
 
@@ -32,21 +33,6 @@ class _CarpoolListState extends State<CarpoolList> {
 
   bool isPopUp = true;
 
-  @override
-  void initState() {
-    super.initState();
-    _loadUserData();
-  }
-
-  // User data retrieval
-  Future<void> _loadUserData() async {
-    nickName = await storage.read(key: "nickName") ?? "";
-    uid = await storage.read(key: "uid") ?? "";
-    gender = await storage.read(key: "gender") ?? "";
-
-    setState(() {
-    });
-  }
 
 // 시간 포멧 ver.2
   String _getFormattedDateString(DateTime dateTime) {
