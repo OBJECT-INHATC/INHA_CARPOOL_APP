@@ -85,6 +85,8 @@ class FirebaseCarpool {
         'startTime': dateAsInt,
         'nowMember': 1,
         'status': false,
+        'recentMessageTime': DateTime.now().millisecondsSinceEpoch,
+        'recentMessageSender': memberName,
         'members': members,
         'startDetailPoint': startDetailPoint,
         'endDetailPoint': endDetailPoint,

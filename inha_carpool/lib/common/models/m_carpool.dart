@@ -11,7 +11,7 @@ class CarpoolModel {
 
   // 최근 메시지 보낸 사람
   final String? recentMessageSender;
-  final String? recentMessageTime;
+  final int? recentMessageTime;
 
   CarpoolModel(
       {this.endDetailPoint,
@@ -31,7 +31,7 @@ class CarpoolModel {
       endPointName: map['endPointName'] as String,
       startTime: map['startTime'] as int,
       recentMessageSender: map['recentMessageSender'] as String,
-      recentMessageTime: map['recentMessageTime'] as String,
+      recentMessageTime: map['recentMessageTime'] as int,
     );
   }
 
@@ -57,7 +57,7 @@ class CarpoolModel {
       startDetailPoint: json['startDetailPoint'] as String,
       startTime: json['startTime'] as int,
       recentMessageSender: json['recentMessageSender'] as String ?? '',
-      recentMessageTime: json['recentMessageTime'] as String ?? '',
+      recentMessageTime: json['recentMessageTime'] as int ?? 0,
     );
   }
 
