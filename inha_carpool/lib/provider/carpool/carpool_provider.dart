@@ -55,5 +55,14 @@ class CarpoolProvider extends StateNotifier<CarPoolState> {
     }
   }
 
+  //카풀 리스트에서 제거
+  Future removeCarpool(String carId) async {
+    try {
+      state = state.copyWith(data: state.data.where((element) => element.carId != carId).toList());
+    } catch (e) {
+      print("CarpoolProvider [removeCarpool] 에러: $e");
+    }
+  }
+
 
 }

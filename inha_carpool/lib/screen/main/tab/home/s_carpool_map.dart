@@ -621,6 +621,7 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                                             print("스프링부트 서버 성공 #############");
                                             carpoolProvider.addCarpool(CarpoolModel(
                                               /// 디테일 주소 수정 필요 0207
+                                                carId: carId,
                                                 endDetailPoint: widget.endPointName,
                                                 endPointName: widget.endPointName,
                                                 startPointName: widget.startPointName,

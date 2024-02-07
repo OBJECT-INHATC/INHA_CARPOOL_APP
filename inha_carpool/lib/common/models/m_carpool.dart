@@ -1,6 +1,8 @@
 /// 참여중인 카풀 정보를 담는 모델
 class CarpoolModel {
   // 카풀 정보
+
+  final String? carId;
   final String? endDetailPoint;
   final String? endPointName;
   final String? startPointName;
@@ -17,6 +19,7 @@ class CarpoolModel {
   CarpoolModel(
       {this.endDetailPoint,
       this.endPointName,
+      this.carId,
       this.startPointName,
       this.startDetailPoint,
       this.startTime,
@@ -28,6 +31,7 @@ class CarpoolModel {
   static CarpoolModel fromMap(Map<String, dynamic> map) {
     return CarpoolModel(
       endDetailPoint: map['endDetailPoint'] as String,
+      carId: map['carId'] as String,
       startDetailPoint: map['startDetailPoint'] as String,
       startPointName: map['startPointName'] as String,
       endPointName: map['endPointName'] as String,
@@ -42,6 +46,7 @@ class CarpoolModel {
     return {
       'endDetailPoint': endDetailPoint,
       'startDetailPoint': startDetailPoint,
+      'carId': carId,
       'endPointName': endPointName,
       'startPointName': startPointName,
       'startTime': startTime,
@@ -54,6 +59,7 @@ class CarpoolModel {
   factory CarpoolModel.fromJson(Map<String, dynamic> json) {
     return CarpoolModel(
       endDetailPoint: json['endDetailPoint'] as String,
+      carId: json['carId'] as String,
       endPointName: json['endPointName'] as String,
       startPointName: json['startPointName'] as String,
       startDetailPoint: json['startDetailPoint'] as String,
