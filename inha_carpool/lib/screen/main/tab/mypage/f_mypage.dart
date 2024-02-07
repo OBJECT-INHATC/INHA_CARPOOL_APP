@@ -207,7 +207,7 @@ class _MyPageState extends ConsumerState<MyPage> {
                 //}
                 //}),
                 //),
-                ListTile(
+          /*      ListTile(
                   leading: const Icon(
                     Icons.notifications_none_rounded,
                     color: Colors.grey,
@@ -221,7 +221,7 @@ class _MyPageState extends ConsumerState<MyPage> {
                     uid: uid, nickName:nickName, gender: gender));
 
                   },
-                ),
+                ),*/
 
                 Obx(
                   () => Switchmenu('학교 공지사항', Prefs.isSchoolPushOnRx.get(),

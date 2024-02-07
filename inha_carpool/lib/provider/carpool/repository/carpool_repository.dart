@@ -4,13 +4,13 @@ import 'package:inha_Carpool/common/models/m_carpool.dart';
 import 'package:inha_Carpool/common/models/m_member.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 
-//final carpoolRepositoryProvider = Provider((ref) => CarpoolRepository(ref));
+final carpoolRepositoryProvider = Provider((ref) => CarpoolRepository(ref));
 
 class CarpoolRepository {
-
+  final Ref _ref;
   final _fireStore = FirebaseFirestore.instance;
 
-  CarpoolRepository();
+  CarpoolRepository(this._ref);
 
   Future<List<CarpoolModel>> getCarPoolList(MemberModel memberModel) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
@@ -48,22 +48,6 @@ class CarpoolRepository {
       return startTimeA.compareTo(startTimeB);
     });
 
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    for (var carModel in carpoolList) {
-      print("CarpoolModel 내용:");
-      print("endDetailPoint: ${carModel.endDetailPoint}");
-      print("endPointName: ${carModel.endPointName}");
-      print("startPointName: ${carModel.startPointName}");
-      print("startDetailPoint: ${carModel.startDetailPoint}");
-      print("startTime: ${carModel.startTime}");
-      print("recentMessageSender: ${carModel.recentMessageSender}");
-      print("recentMessageTime: ${carModel.recentMessageTime}");
-      print("===========================");
-    }    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
 
     return carpoolList;
 

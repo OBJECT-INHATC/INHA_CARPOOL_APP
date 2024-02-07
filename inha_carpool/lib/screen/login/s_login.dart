@@ -92,7 +92,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (result) {
       if (!mounted) return;
 
-      setAuthState(MemberModel(
+      /// 상태관리에 로그인 정보 저장
+      setAuthStateProvider(MemberModel(
         uid: await storage.read(key: 'uid'),
         nickName: await storage.read(key: 'nickName'),
         gender: await storage.read(key: 'gender'),
@@ -178,7 +179,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   // 로그인 정보 객체에 담기 0207 이상훈
-  void setAuthState(MemberModel memberModel) async {
+  void setAuthStateProvider(MemberModel memberModel) async {
     if (memberModel.uid == "" ||
         memberModel.nickName == "" ||
         memberModel.gender == "" ||
@@ -473,7 +474,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       print("memberUser: $memberUser");
 
                                       ///  로그인 정보 상태관리 업데이트 0207 이상훈
-                                      setAuthState(MemberModel(
+                                      setAuthStateProvider(MemberModel(
                                         uid: uid,
                                         nickName: nickname,
                                         gender: gender,
