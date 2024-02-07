@@ -56,8 +56,8 @@ class CarpoolModel {
       startPointName: json['startPointName'] as String,
       startDetailPoint: json['startDetailPoint'] as String,
       startTime: json['startTime'] as int,
-      recentMessageSender: json['recentMessageSender'] as String,
-      recentMessageTime: json['recentMessageTime'] as String,
+      recentMessageSender: json['recentMessageSender'] as String ?? '',
+      recentMessageTime: json['recentMessageTime'] as String ?? '',
     );
   }
 

@@ -82,6 +82,13 @@ class CarpoolRepository {
       }
     }
 
+    carpoolList.sort((a, b) {
+      DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a.startTime!.toInt());
+      DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b.startTime!.toInt());
+
+      return startTimeA.compareTo(startTimeB);
+    });
+
     print("============레파지에서 조회한 내가 참여한 카풀 리스트");
     print("============레파지에서 조회한 내가 참여한 카풀 리스트");
     print("============레파지에서 조회한 내가 참여한 카풀 리스트");

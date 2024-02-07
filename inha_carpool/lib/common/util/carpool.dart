@@ -92,12 +92,18 @@ class FirebaseCarpool {
 
       await carpoolDocRef.update({'carId': carpoolDocRef.id});
       tempCarId = carpoolDocRef.id;
-      print("11uid : $memberID");
-      print("22carId : ${carpoolDocRef.id}");
+
+      // 해당 carid에 message collection 생성
+      await carpoolDocRef.collection("messages").add({
+        'message': "$memberName님이 새로운 카풀을 생성하였습니다.",
+        'sender': 'service',
+        'time': DateTime.now().millisecondsSinceEpoch,
+      });
+
 
       /// 0918 해당 카풀 알림 토픽 추가
       if (Prefs.isPushOnRx.get() == true) {
-        await FirebaseMessaging.instance.subscribeToTopic(carpoolDocRef.id);
+        await FirebaseMessaging.instance.subscribeToTopic(tempCarId);
         print("토픽 추가");
 
         /// 카풀 정보 토픽 추가
@@ -116,8 +122,6 @@ class FirebaseCarpool {
 
       /// 0903 한승완 추가 : 참가 메시지 전송
       await FireStoreService().sendCreateMessage(tempCarId, memberName);
-      print('Data added to Firestore.');
-      print("carpoolDocRef.id : ${tempCarId}");
 
       return tempCarId;
     } else {
