@@ -35,51 +35,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
 
 
 // 시간 포멧 ver.2
-  String _getFormattedDateString(DateTime dateTime) {
-    final now = DateTime.now();
-    var difference = now.difference(dateTime);
 
-    if (difference.isNegative) {
-      if (difference.inDays < -1) {
-        return '${(difference.inDays.abs())}일 후 예정';
-      } else if (difference.inDays == -1) {
-        return '하루 전';
-      } else if (difference.inHours < -1) {
-        return '${(difference.inHours.abs())}시간 후 예정';
-      } else if (difference.inHours == -1) {
-        return '한 시간 전';
-      } else if (difference.inMinutes < -1) {
-        return '${(difference.inMinutes.abs())}분 후, 출발지를 확인해 주세요';
-      } else if (difference.inMinutes <= 0) {
-        return '카풀 출발 시간입니다!';
-      }
-    } else {
-      if (difference.inDays >= 1) {
-        return '${difference.inDays}일 전 진행된 카풀';
-      } else if (difference.inDays == 1) {
-        return '하루 전 진행된 카풀';
-      } else if (difference.inHours >= 1) {
-        return '${difference.inHours}시간 지난 카풀';
-      } else {
-        return '${difference.inMinutes}분 지난 카풀';
-      }
-    }
-    return '';
-  }
-
-  String getName(String res) {
-    int start = res.indexOf("_") + 1;
-    int end = res.lastIndexOf("_");
-    return res.substring(start, end);
-  }
-
-  String shortenText(String text, int maxLength) {
-    if (text.length <= maxLength) {
-      return text;
-    } else {
-      return '${text.substring(0, maxLength - 4)}...';
-    }
-  }
 
   // Retrieve carpools and apply FutureBuilder
   Future<List<DocumentSnapshot>> _loadCarpools() async {
@@ -628,58 +584,69 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.circle,
-                    color: Colors.red,
-                    size: 10,
-                  ),
-                   const Width(5),
-                  redText.text.size(10).color(context.appColors.text).make(),
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.circle,
-                    color: Colors.blue,
-                    size: 10,
-                  ),
-                  const Width(5),
-                  blueText.text.size(10).color(context.appColors.text).make(),
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.circle,
-                    color: Colors.grey,
-                    size: 10,
-                  ),
-                  const Width(5),
-                  greyText.text.size(10).color(context.appColors.text).make(),
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(
-                    Icons.circle,
-                    color: Colors.black,
-                    size: 10,
-                  ),
-                  const Width(5),
-                  blackText
-                      .text
-                      .size(10)
-                      .color(context.appColors.text)
-                      .make(),
-                ],
-              ),
+              timeNotice(redText, Colors.red),
+              timeNotice(blueText, Colors.blue),
+              timeNotice(greyText, Colors.grey),
+              timeNotice(blackText, Colors.black),
             ],
           )
         ],
       ),
     );
+  }
+
+  Widget timeNotice(String text, Color color) {
+    return Row(
+      children: [
+        Icon(
+          Icons.circle,
+          color: color,
+          size: 10,
+        ),
+        const Width(5),
+        text.text.size(10).color(context.appColors.text).make(),
+      ],
+    );
+  }
+
+  String _getFormattedDateString(DateTime dateTime) {
+    final now = DateTime.now();
+    var difference = now.difference(dateTime);
+
+    if (difference.isNegative) {
+      if (difference.inDays < -1) {
+        return '${(difference.inDays.abs())}일 후 예정';
+      } else if (difference.inDays == -1) {
+        return '하루 전';
+      } else if (difference.inHours < -1) {
+        return '${(difference.inHours.abs())}시간 후 예정';
+      } else if (difference.inHours == -1) {
+        return '한 시간 전';
+      } else if (difference.inMinutes < -1) {
+        return '${(difference.inMinutes.abs())}분 후, 출발지를 확인해 주세요';
+      } else if (difference.inMinutes <= 0) {
+        return '카풀 출발 시간입니다!';
+      }
+    } else {
+      if (difference.inDays >= 1) {
+        return '${difference.inDays}일 전 진행된 카풀';
+      } else if (difference.inDays == 1) {
+        return '하루 전 진행된 카풀';
+      } else if (difference.inHours >= 1) {
+        return '${difference.inHours}시간 지난 카풀';
+      } else {
+        return '${difference.inMinutes}분 지난 카풀';
+      }
+    }
+    return '';
+  }
+
+
+  String shortenText(String text, int maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      return '${text.substring(0, maxLength - 4)}...';
+    }
   }
 }
