@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:inha_Carpool/common/common.dart';
 
-import '../../../../provider/auth_provider.dart';
+import '../../../../provider/auth/auth_provider.dart';
 
 /// 상단 프로필 페이지 위젯
 /// 닉네임 수정 기능 모두 off

@@ -6,7 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
-import 'package:inha_Carpool/provider/auth_provider.dart';
+import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptySearchedCarpool.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptyCarpool.dart';

@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/common.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../fragment/f_notification.dart';
-import '../../provider/notification_provider.dart';
+import '../../provider/notification/notification_provider.dart';
 import '../../service/sv_firestore.dart';
 
 class MainScreen extends ConsumerStatefulWidget {

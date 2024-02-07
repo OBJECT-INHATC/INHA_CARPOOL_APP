@@ -5,6 +5,8 @@ import '../../../../service/sv_firestore.dart';
 
 /// 카드 리스트의 마지막 메세지 위젯
 class chatLastMSG extends StatelessWidget {
+  final emptyChat = '아직 채팅이 시작되지 않은 채팅방입니다.';
+
   const chatLastMSG({
     super.key,
     required this.carpool,
@@ -32,9 +34,9 @@ class chatLastMSG extends StatelessWidget {
                     'Error: ${snapshot.error}');
               } else if (!snapshot.hasData ||
                   snapshot.data == null) {
-                return const Text(
-                  '아직 채팅이 시작되지 않은 채팅방입니다!',
-                  style: TextStyle(
+                return  Text(
+                  emptyChat,
+                  style: const TextStyle(
                       color: Colors.grey),
                 );
               }

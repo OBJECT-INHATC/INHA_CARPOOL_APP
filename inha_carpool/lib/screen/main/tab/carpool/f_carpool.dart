@@ -163,13 +163,12 @@ class _CarpoolListState extends State<CarpoolList> {
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              /// 참가하고 있는 카풀이 없는 경우
               return SafeArea(
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      carPoolFirstWidget(
-                          context, snapshot.requireData, screenWidth),
                       FutureBuilder(
                         future: FirebaseCarpool.getAdminData("carpoolList"),
                         // 파이어베이스에서 데이터 가져오기
@@ -593,6 +592,11 @@ class _CarpoolListState extends State<CarpoolList> {
 
   SizedBox carPoolFirstWidget(BuildContext context,
       List<DocumentSnapshot<Object?>> myCarpools, double screenWidth) {
+    const redText = '1시간 전';
+    const blueText = '24시간 전';
+    const greyText = '24시간 이후';
+    const blackText = '10분전 퇴장 불가';
+
     return SizedBox(
       height: 90,
       child: Row(
@@ -642,8 +646,8 @@ class _CarpoolListState extends State<CarpoolList> {
                     color: Colors.red,
                     size: 10,
                   ),
-                  const Width(5),
-                  '1시간 전'.text.size(10).color(context.appColors.text).make(),
+                   const Width(5),
+                  redText.text.size(10).color(context.appColors.text).make(),
                 ],
               ),
               Row(
@@ -654,7 +658,7 @@ class _CarpoolListState extends State<CarpoolList> {
                     size: 10,
                   ),
                   const Width(5),
-                  '24시간 전'.text.size(10).color(context.appColors.text).make(),
+                  blueText.text.size(10).color(context.appColors.text).make(),
                 ],
               ),
               Row(
@@ -665,7 +669,7 @@ class _CarpoolListState extends State<CarpoolList> {
                     size: 10,
                   ),
                   const Width(5),
-                  '24시간 이후'.text.size(10).color(context.appColors.text).make(),
+                  greyText.text.size(10).color(context.appColors.text).make(),
                 ],
               ),
               Row(
@@ -676,7 +680,7 @@ class _CarpoolListState extends State<CarpoolList> {
                     size: 10,
                   ),
                   const Width(5),
-                  '10분 전 퇴장 불가'
+                  blackText
                       .text
                       .size(10)
                       .color(context.appColors.text)

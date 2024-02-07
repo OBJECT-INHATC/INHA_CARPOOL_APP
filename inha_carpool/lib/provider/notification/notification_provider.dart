@@ -2,7 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
-/// todo : 초기값 알림 읽은 값으로 대체 필요
+/// 알람을 설정을 관리하는 provider
 final isCheckAlarm = StateProvider<bool>((ref) => false);
 
 

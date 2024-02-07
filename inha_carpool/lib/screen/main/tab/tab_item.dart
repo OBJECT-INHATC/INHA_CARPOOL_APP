@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/f_mypage.dart';
 
-import 'carpool/f_carpool_list.dart';
+import 'carpool/f_carpool.dart';
 import 'home/f_home.dart';
 
 enum TabItem {
