@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/velocityx_extension.dart';
+import 'package:inha_Carpool/common/models/m_member.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/s_feedback.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_profile.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_recordList.dart';
@@ -14,6 +15,7 @@ import 'package:inha_Carpool/service/api/Api_user.dart';
 import '../../../../common/data/preference/prefs.dart';
 import '../../../../fragment/opensource/s_opensource.dart';
 import '../../../../provider/auth/auth_provider.dart';
+import '../../../../provider/carpool/repository/carpool_repository.dart';
 import '../../../dialog/d_message.dart';
 import 'd_changepassword.dart';
 import 'f_logout_confirmation.dart';
@@ -21,6 +23,7 @@ import 'f_secession.dart';
 import 'notificationButton/w_switch_menu.dart';
 
 class MyPage extends ConsumerStatefulWidget {
+
   const MyPage({Key? key}) : super(key: key);
 
   @override
@@ -30,6 +33,8 @@ class MyPage extends ConsumerStatefulWidget {
 class _MyPageState extends ConsumerState<MyPage> {
   late String uid;
   late String nickName;
+  late String gender;
+
 
   @override
   void initState() {
@@ -40,6 +45,7 @@ class _MyPageState extends ConsumerState<MyPage> {
   Future<void> _loadUid() async {
     nickName = ref.read(authProvider).nickName!;
     uid = ref.read(authProvider).uid!;
+    gender = ref.read(authProvider).gender!;
   }
 
   @override
@@ -201,6 +207,21 @@ class _MyPageState extends ConsumerState<MyPage> {
                 //}
                 //}),
                 //),
+                ListTile(
+                  leading: const Icon(
+                    Icons.notifications_none_rounded,
+                    color: Colors.grey,
+                  ),
+                  title: '테스트 버튼'.text.make(),
+                  onTap: () {
+                    // 알림 설정 페이지로 이동
+                    final CarpoolRepository carpoolRepository = CarpoolRepository();
+
+                    carpoolRepository.getCarPoolList2(MemberModel(
+                    uid: uid, nickName:nickName, gender: gender));
+
+                  },
+                ),
 
                 Obx(
                   () => Switchmenu('학교 공지사항', Prefs.isSchoolPushOnRx.get(),

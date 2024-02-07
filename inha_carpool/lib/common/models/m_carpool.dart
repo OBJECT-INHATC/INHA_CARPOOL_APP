@@ -3,11 +3,11 @@ class CarpoolModel {
   // 카풀 정보
   final String? endDetailPoint;
   final String? endPointName;
-  final String? startPoint;
+  final String? startPointName;
   final String? startDetailPoint;
 
   // 출발 시간
-  final String? startTime;
+  final int? startTime;
 
   // 최근 메시지 보낸 사람
   final String? recentMessageSender;
@@ -16,7 +16,7 @@ class CarpoolModel {
   CarpoolModel(
       {this.endDetailPoint,
       this.endPointName,
-      this.startPoint,
+      this.startPointName,
       this.startDetailPoint,
       this.startTime,
       this.recentMessageSender,
@@ -26,10 +26,10 @@ class CarpoolModel {
   static CarpoolModel fromMap(Map<String, dynamic> map) {
     return CarpoolModel(
       endDetailPoint: map['endDetailPoint'] as String,
-      endPointName: map['endPointName'] as String,
-      startPoint: map['startPoint'] as String,
       startDetailPoint: map['startDetailPoint'] as String,
-      startTime: map['startTime'] as String,
+      startPointName: map['startPointName'] as String,
+      endPointName: map['endPointName'] as String,
+      startTime: map['startTime'] as int,
       recentMessageSender: map['recentMessageSender'] as String,
       recentMessageTime: map['recentMessageTime'] as String,
     );
@@ -39,9 +39,9 @@ class CarpoolModel {
   Map<String, dynamic> toMap() {
     return {
       'endDetailPoint': endDetailPoint,
-      'endPointName': endPointName,
-      'startPoint': startPoint,
       'startDetailPoint': startDetailPoint,
+      'endPointName': endPointName,
+      'startPointName': startPointName,
       'startTime': startTime,
       'recentMessageSender': recentMessageSender,
       'recentMessageTime': recentMessageTime,
@@ -53,26 +53,14 @@ class CarpoolModel {
     return CarpoolModel(
       endDetailPoint: json['endDetailPoint'] as String,
       endPointName: json['endPointName'] as String,
-      startPoint: json['startPoint'] as String,
+      startPointName: json['startPointName'] as String,
       startDetailPoint: json['startDetailPoint'] as String,
-      startTime: json['startTime'] as String,
+      startTime: json['startTime'] as int,
       recentMessageSender: json['recentMessageSender'] as String,
       recentMessageTime: json['recentMessageTime'] as String,
     );
   }
 
-  // toJson
-  Map<String, dynamic> toJson() {
-    return {
-      'endDetailPoint': endDetailPoint,
-      'endPointName': endPointName,
-      'startPoint': startPoint,
-      'startDetailPoint': startDetailPoint,
-      'startTime': startTime,
-      'recentMessageSender': recentMessageSender,
-      'recentMessageTime': recentMessageTime,
-    };
-  }
 
 
 }
