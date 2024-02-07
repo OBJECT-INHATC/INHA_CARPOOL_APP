@@ -269,7 +269,10 @@ class _CarpoolListState extends State<CarpoolList> {
                   ),
                 ),
               );
-            } else {
+            }
+
+            /// 참가하고 있는 카풀이 있는 경우
+            else {
               List<DocumentSnapshot> myCarpools = snapshot.data!;
 
               return SafeArea(
