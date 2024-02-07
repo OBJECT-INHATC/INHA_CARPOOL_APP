@@ -5,8 +5,8 @@ import 'package:inha_Carpool/common/common.dart';
 import '../home/s_carpool_map.dart';
 
 /// 참여중인 카풀리스트의 카드 아이템 위젯
-class w_cardItem extends StatelessWidget {
-   const w_cardItem({
+class CardItem extends StatelessWidget {
+   const CardItem({
     super.key,
     required this.screenWidth,
     required this.formattedStartTime,

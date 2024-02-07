@@ -9,8 +9,8 @@ import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'w_cardItem.dart';
-import 'w_lastChat.dart';
+import 'w_card_Item.dart';
+import 'w_last_chat.dart';
 
 /// 참여중인 카풀 리스트
 class CarpoolList extends StatefulWidget {
@@ -147,6 +147,7 @@ class _CarpoolListState extends State<CarpoolList> {
         color: Colors.white,
       ),
       child: RefreshIndicator(
+        color: context.appColors.logoColor,
         onRefresh: () async {
           setState(() {
             _loadCarpools();
@@ -445,7 +446,7 @@ class _CarpoolListState extends State<CarpoolList> {
                                     child: Column(
                                       children: [
                                         /// 참여중인 카풀리스트의 카드 아이템 위젯 호출
-                                        w_cardItem(
+                                        CardItem(
                                             colorTemp: getColorBasedOnSuffix(
                                                 formattedStartTime),
                                             screenWidth: screenWidth,

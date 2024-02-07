@@ -341,6 +341,7 @@ class _HomeState extends ConsumerState<Home> {
               Container(height: 2, color: context.appColors.divider),
               Expanded(
                 child: RefreshIndicator(
+                  color: context.appColors.logoColor,
                   onRefresh: _refreshCarpoolList,
                   // 카풀 리스트 불러오기
                   child: Stack(
