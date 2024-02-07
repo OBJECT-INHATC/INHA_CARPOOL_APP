@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
+import 'package:inha_Carpool/provider/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptySearchedCarpool.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptyCarpool.dart';
@@ -14,17 +16,16 @@ import '../../../recruit/s_recruit.dart';
 import '../carpool/chat/f_chatroom.dart';
 import 'carpoolFilter.dart';
 
-class Home extends StatefulWidget {
+class Home extends ConsumerStatefulWidget {
   //내 정보
   const Home({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  ConsumerState<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends ConsumerState<Home> {
   // 로그인 정보
-  final storage = const FlutterSecureStorage();
 
   // 내 위치
   late LatLng myPoint;
@@ -436,13 +437,10 @@ class _HomeState extends State<Home> {
 
   /// 유저 정보 받아오기
   Future<void> _loadUserData() async {
-    nickName = await storage.read(key: "nickName") ?? "";
-    uid = await storage.read(key: "uid") ?? "";
-    gender = await storage.read(key: "gender") ?? "";
-    email = await storage.read(key: "email") ?? "";
-    setState(() {
-      // nickName, email, gender를 업데이트했으므로 화면을 갱신
-    });
+    nickName = ref.read(authProvider).nickName!;
+    uid = ref.read(authProvider).uid!;
+    gender = ref.read(authProvider).gender!;
+    email = ref.read(authProvider).email!;
   }
 
   /// 내 위치 받아오기

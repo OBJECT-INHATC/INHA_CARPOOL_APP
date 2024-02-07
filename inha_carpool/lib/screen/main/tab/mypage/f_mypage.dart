@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/common/common.dart';
@@ -12,21 +13,21 @@ import 'package:inha_Carpool/service/api/Api_user.dart';
 
 import '../../../../common/data/preference/prefs.dart';
 import '../../../../fragment/opensource/s_opensource.dart';
+import '../../../../provider/auth_provider.dart';
 import '../../../dialog/d_message.dart';
 import 'd_changepassword.dart';
 import 'f_logout_confirmation.dart';
 import 'f_secession.dart';
 import 'notificationButton/w_switch_menu.dart';
 
-class MyPage extends StatefulWidget {
+class MyPage extends ConsumerStatefulWidget {
   const MyPage({Key? key}) : super(key: key);
 
   @override
-  State<MyPage> createState() => _MyPageState();
+  ConsumerState<MyPage> createState() => _MyPageState();
 }
 
-class _MyPageState extends State<MyPage> {
-  final storage = FlutterSecureStorage();
+class _MyPageState extends ConsumerState<MyPage> {
   late String uid;
   late String nickName;
 
@@ -37,8 +38,8 @@ class _MyPageState extends State<MyPage> {
   }
 
   Future<void> _loadUid() async {
-    uid = await storage.read(key: 'uid') ?? "";
-    nickName = await storage.read(key: 'nickName') ?? "";
+    nickName = ref.read(authProvider).nickName!;
+    uid = ref.read(authProvider).uid!;
   }
 
   @override

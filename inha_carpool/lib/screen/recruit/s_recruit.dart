@@ -57,8 +57,8 @@ class _RecruitPageState extends State<RecruitPage> {
 
   // 로그인한 사용자의 정보를 불러옵니다.
   Future<void> _loadUserData() async {
-    nickName = await storage.read(key: "nickName") ?? "";
     uid = await storage.read(key: "uid") ?? "";
+    nickName = await storage.read(key: "nickName") ?? "";
     gender = await storage.read(key: "gender") ?? "";
 
     setState(() {

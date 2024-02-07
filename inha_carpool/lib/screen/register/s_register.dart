@@ -44,6 +44,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // 성별
   String? gender;
+
   var genders;
 
   String passwordCheck = "";

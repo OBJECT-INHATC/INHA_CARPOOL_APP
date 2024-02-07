@@ -15,6 +15,8 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 
 import '../../common/data/preference/prefs.dart';
 import '../../common/database/d_alarm_dao.dart';
+import '../../common/models/m_member.dart';
+import '../../provider/auth_provider.dart';
 import '../../provider/notification_provider.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
@@ -32,10 +34,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   /// 상태관리로 사용자 정보 가져오기
 
-
-  late String nickName = ""; // 기본값으로 초기화
-  late String uid = "";
-  late String gender = "";
 
   //이메일 temp
   String emailTemp = "";
@@ -85,12 +83,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     }
   }
 
+
+
   // 로그인 여부 확인 메서드
   void checkLogin() async {
     // 로그인 여부 확인
     var result = await AuthService().checkUserAvailable();
     if (result) {
       if (!mounted) return;
+
+      setAuthState(MemberModel(
+        uid: await storage.read(key: 'uid'),
+        nickName: await storage.read(key: 'nickName'),
+        gender: await storage.read(key: 'gender'),
+        email: await storage.read(key: 'email'),
+        userName: await storage.read(key: 'userName'),
+      ));
+
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MainScreen()));
       await setupInteractedMessage();
@@ -166,6 +175,49 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     checkLogin();
     getMyDeviceToken();
     super.initState();
+  }
+
+  // 로그인 정보 객체에 담기 0207 이상훈
+  void setAuthState(MemberModel memberModel) async {
+    if (memberModel.uid == "" ||
+        memberModel.nickName == "" ||
+        memberModel.gender == "" ||
+        memberModel.email == "" ||
+        memberModel.userName == "") {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: const Text("로그인 정보가 없습니다."),
+              content: const Text("다시 로그인 해주세요."),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()));
+                    },
+                    child: Text("확인")),
+              ],
+            );
+          });
+    } else {
+      ref.read(authProvider.notifier).state = MemberModel(
+        uid: memberModel.uid,
+        nickName: memberModel.nickName,
+        gender: memberModel.gender,
+        email: memberModel.email,
+        userName: memberModel.userName,
+      );
+      print("===========상태관리 저장 완료==================");
+      print("상태관리 로그인 성별 :  ${ref.read(authProvider).gender}");
+      print("상태관리 로그인 닉네임 :  ${ref.read(authProvider).nickName}");
+      print("상태관리 로그인 이메일 :  ${ref.read(authProvider).email}");
+      print("상태관리 로그인 유저아이디 :  ${ref.read(authProvider).uid}");
+      print("상태관리 로그인 유저이름 :  ${ref.read(authProvider).userName}");
+      print("==========================================");
+    }
   }
 
   @override
@@ -373,9 +425,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         await FireStoreService()
                                             .gettingUserData(email);
 
-                                    String nickname =
-                                        snapshot.docs[0].get("nickName");
+                                    String nickname = snapshot.docs[0].get("nickName");
                                     String uid = snapshot.docs[0].get("uid");
+                                    String userName = snapshot.docs[0].get('userName');
+                                    String gender = snapshot.docs[0].get('gender');
+
+
 
                                     // 유저 정보 서저에 저장 --풀기 1101================
                                     UserRequstDTO userDTO = UserRequstDTO(
@@ -399,21 +454,32 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       );
                                       storage.write(
                                         key: "gender",
-                                        value: snapshot.docs[0].get('gender'),
+                                        value: gender,
                                       );
                                       storage.write(
                                         key: "email",
                                         value: email,
                                       );
+
                                       storage.write(
                                         key: "userName",
-                                        value: snapshot.docs[0].get('userName'),
+                                        value: userName,
                                       );
+
                                       String memberUser =
                                           "${uid}_${nickname}_${snapshot.docs[0].get('gender')}";
                                       print(
                                           "----------------------------------");
                                       print("memberUser: $memberUser");
+
+                                      ///  로그인 정보 상태관리 업데이트 0207 이상훈
+                                      setAuthState(MemberModel(
+                                        uid: uid,
+                                        nickName: nickname,
+                                        gender: gender,
+                                        email: email,
+                                        userName: userName,
+                                      ));
 
                                       // Firestore에서 해당 사용자가 속한 모든 carId를 가져옵니다.
                                       FirebaseFirestore.instance

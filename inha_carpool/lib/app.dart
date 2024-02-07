@@ -7,11 +7,13 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
+import 'package:inha_Carpool/provider/auth_provider.dart';
 import 'package:inha_Carpool/provider/notification_provider.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'common/models/m_member.dart';
 import 'common/theme/custom_theme_app.dart';
 
 /// 0829 한승완 - FCM 기본 연결 및 알림 설정
@@ -29,8 +31,6 @@ class App extends ConsumerStatefulWidget {
 class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
   @override
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
-
-
 
   //상태관리 옵저버 실행 + 디바이스 토큰 저장
   @override
@@ -135,25 +135,26 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
     ));
   }
 
-  // 클래스가 삭제될 때 옵저버 등록을 해제
+
+
+// 클래스가 삭제될 때 옵저버 등록을 해제
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  // 백그라운드 알림 표시 여부 상태관리 연결
+// 백그라운드 알림 표시 여부 상태관리 연결
   void setAlarmBackgroundState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.getBool('isCheckAlarm');
 
-    if(prefs.getBool('isCheckAlarm') == true) {
+    if (prefs.getBool('isCheckAlarm') == true) {
       ref.read(isCheckAlarm.notifier).state = true;
     }
-
   }
 
-  //옵저버의 함수로 상태관리 변화를 감지하면 앱의 포어그라운드 상태를 변경
+//옵저버의 함수로 상태관리 변화를 감지하면 앱의 포어그라운드 상태를 변경
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
@@ -167,7 +168,6 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
         App.isForeground = false;
         break;
       case AppLifecycleState.detached:
-
         break;
       default:
         // Handle any other states that might be added in the future
