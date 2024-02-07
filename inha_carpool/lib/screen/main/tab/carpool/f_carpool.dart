@@ -7,6 +7,7 @@ import 'package:inha_Carpool/common/common.dart';
 
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
+import 'package:inha_Carpool/provider/carpool/carpool_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,6 +27,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   late String nickName = ref.read(authProvider).nickName!;
   late String uid = ref.read(authProvider).uid!;
   late String gender = ref.read(authProvider).gender!;
+  late int carpoolCount = ref.read(participatingCarpoolProvider.notifier).carpoolListLength;
 
   DocumentSnapshot? oldLastMessage;
 
@@ -172,6 +174,8 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                           return const SizedBox.shrink(); // 빈 상자 반환 또는 다른 처리
                         },
                       ),
+                      carPoolFirstWidget(context, carpoolCount, screenWidth),
+
                       Height(MediaQuery.of(context).size.height * 0.15),
                       '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!'
                           .text
@@ -247,7 +251,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                         margin: const EdgeInsets.all(5),
                         color: context.appColors.logoColor,
                       ),
-                      carPoolFirstWidget(context, myCarpools, screenWidth),
+                      carPoolFirstWidget(context, carpoolCount, screenWidth),
                       Expanded(
                         child: ListView.builder(
                           itemCount:
@@ -536,7 +540,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   }
 
   SizedBox carPoolFirstWidget(BuildContext context,
-      List<DocumentSnapshot<Object?>> myCarpools, double screenWidth) {
+      int countCarpool, double screenWidth) {
     const redText = '1시간 전';
     const blueText = '24시간 전';
     const greyText = '24시간 이후';
@@ -566,7 +570,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                   ),
                 ],
               ),
-              '현재 참여 중인 카풀 ${myCarpools.length}개'
+              '현재 참여 중인 카풀 $countCarpool개'
                   .text
                   .size(10)
                   .semiBold
@@ -580,14 +584,15 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
             ],
           ),
           Width(screenWidth * 0.03),
+          /// 우축 상단 색갈별 시간 안내 위젯
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              timeNotice(redText, Colors.red),
-              timeNotice(blueText, Colors.blue),
-              timeNotice(greyText, Colors.grey),
-              timeNotice(blackText, Colors.black),
+              colorTimeNotice(redText, Colors.red),
+              colorTimeNotice(blueText, Colors.blue),
+              colorTimeNotice(greyText, Colors.grey),
+              colorTimeNotice(blackText, Colors.black),
             ],
           )
         ],
@@ -595,7 +600,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     );
   }
 
-  Widget timeNotice(String text, Color color) {
+  Widget colorTimeNotice(String text, Color color) {
     return Row(
       children: [
         Icon(

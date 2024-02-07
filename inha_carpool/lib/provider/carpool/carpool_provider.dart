@@ -8,7 +8,7 @@ import '../../common/models/m_member.dart';
 import '../auth/auth_provider.dart';
 /// 참여중인 카풀의 수를 관리하는 provider 0207 이상훈
 
-final carpoolCountProvider =
+final participatingCarpoolProvider =
     StateNotifierProvider<CarpoolProvider, CarPoolStateBase>(
   (ref) {
     final carpoolRepository = ref.read(carpoolRepositoryProvider);
@@ -36,6 +36,15 @@ class CarpoolProvider
       print('state' + state.toString());
     } catch (e) {
       state = CarPoolStateError(error: e.toString());
+    }
+  }
+
+  //가지고 있는 리스트 수 반환
+  int get carpoolListLength {
+    if (state is CarPoolState) {
+      return (state as CarPoolState).data.length;
+    } else {
+      return 0;
     }
   }
 
