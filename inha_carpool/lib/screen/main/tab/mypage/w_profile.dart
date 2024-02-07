@@ -64,9 +64,9 @@ class _ProFileState extends ConsumerState<ProFile> {
                             color: Colors.black,
                           ),
                         ),
-                         SizedBox(
-                          width: screenWidth * 0.03,
-                        ),
+                        const Width(15),
+
+
                         Text(
                           // nickNameFuture의 닉네임 값
                           nickName ?? ' ',
@@ -76,15 +76,18 @@ class _ProFileState extends ConsumerState<ProFile> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                         SizedBox(
-                          width: screenWidth * 0.03,
-                        ),
-                        Text(
-                          userName ?? '',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey, // 이름 색 변경
-                          ),
+                        Width(screenWidth * 0.3),
+                        Column(
+                          children: [
+                            Height(screenHeight * 0.01),
+                            Text(
+                              userName ?? '',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black45, // 이름 색 변경
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
