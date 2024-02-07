@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -16,8 +17,10 @@ import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_location.dart';
 import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
+import '../../../../../provider/carpool/carpool_provider.dart';
 
-class ChatroomPage extends StatefulWidget {
+
+class ChatroomPage extends ConsumerStatefulWidget {
   /// 0829 서은율 TODO : 채팅방 페이지 최적화 고민 해볼 것
 
   final String carId;
@@ -37,10 +40,10 @@ class ChatroomPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ChatroomPage> createState() => _ChatroomPageState();
+  ConsumerState<ChatroomPage> createState() => _ChatroomPageState();
 }
 
-class _ChatroomPageState extends State<ChatroomPage>
+class _ChatroomPageState extends  ConsumerState<ChatroomPage>
     with WidgetsBindingObserver {
   /// 채팅 메시지 스트림
   Stream<QuerySnapshot>? chats;
@@ -233,6 +236,10 @@ class _ChatroomPageState extends State<ChatroomPage>
 
   @override
   Widget build(BuildContext context) {
+
+    final carpoolProvider = ref.watch(participatingCarpoolProvider.notifier);
+
+
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -469,6 +476,10 @@ class _ChatroomPageState extends State<ChatroomPage>
     );
   }
 
+  void removeProvider(String carId) {
+    ref.read(participatingCarpoolProvider.notifier).removeCarpool(carId);
+  }
+
   void _exitIconBtn(BuildContext context) {
     final currentTime = DateTime.now();
     final timeDifference = agreedTime.difference(currentTime);
@@ -495,6 +506,9 @@ class _ChatroomPageState extends State<ChatroomPage>
               TextButton(
                 onPressed: () async {
                   Navigator.pop(context);
+
+
+
                   // 나가기 메소드
                   _exitCarpool(context);
                 },
@@ -589,6 +603,7 @@ class _ChatroomPageState extends State<ChatroomPage>
                   content: Text('카풀 나가기에 실패했습니다.'),
                 );
               } else {
+                removeProvider(widget.carId);
                 // 나가기 처리가 완료된 경우
                 WidgetsBinding.instance.addPostFrameCallback(
                   (_) {
