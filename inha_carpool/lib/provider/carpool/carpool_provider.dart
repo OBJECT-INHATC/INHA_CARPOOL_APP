@@ -30,10 +30,14 @@ class CarpoolProvider
 
   Future getCarpool(MemberModel memberModel) async {
     try {
+      print("====================================getCarpool start==========================");
       List<CarpoolModel> carpoolList = await repository.getCarPoolList(memberModel);
       state = CarPoolState(data: carpoolList);
 
-      print('state' + state.toString());
+      // state 값 확인
+      print("state: $state");
+
+
     } catch (e) {
       state = CarPoolStateError(error: e.toString());
     }
@@ -42,6 +46,7 @@ class CarpoolProvider
   //가지고 있는 리스트 수 반환
   int get carpoolListLength {
     if (state is CarPoolState) {
+      print("get carpoolListLength: ${(state as CarPoolState).data.length}");
       return (state as CarPoolState).data.length;
     } else {
       return 0;

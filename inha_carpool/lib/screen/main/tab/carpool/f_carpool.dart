@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 
 import 'package:inha_Carpool/common/util/carpool.dart';
@@ -29,17 +27,8 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   late String gender = ref.read(authProvider).gender!;
   late int carpoolCount = ref.read(participatingCarpoolProvider.notifier).carpoolListLength;
 
-  DocumentSnapshot? oldLastMessage;
 
-  late GoogleMapController mapController;
-
-  bool isPopUp = true;
-
-
-// 시간 포멧 ver.2
-
-
-  // Retrieve carpools and apply FutureBuilder
+  /// 카풀 조회 메서드
   Future<List<DocumentSnapshot>> _loadCarpools() async {
     String myID = uid;
     String myNickName = nickName;
@@ -51,24 +40,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     return carpools;
   }
 
-  String _getFormattedDateForMap(DateTime dateTime) {
-    return '${dateTime.month}월 ${dateTime.day}일 ${dateTime.hour}시 ${dateTime.minute}분';
-  }
 
-  bool isCarpoolOver(DateTime startTime) {
-    DateTime currentTime = DateTime.now();
-    Duration difference = currentTime.difference(startTime);
-    return difference.inHours >= 24;
-  }
-
-  Color getColorBasedOnSuffix(String text) {
-    if (text.endsWith('가')) {
-      return context.appColors.logoColor; // '가'로 끝나면 초록색 반환
-    } else if (text.endsWith('요')) {
-      return Colors.red; // '요'로 끝나면 빨간색 반환
-    }
-    return Colors.grey; // 다른 경우에는 회색 반환
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +52,9 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     double listViewHeight = screenHeight * 0.7;
     // 각 카드의 높이
     double cardHeight = listViewHeight * 0.3; //1101
-    // 카드 높이의 1/2 사용
-    double containerHeight = cardHeight / 2;
+
+    print("---------------------------------");
+    print("carpoolCount : $carpoolCount");
 
     // uri 확인
     bool isOnUri = true;
@@ -653,5 +626,24 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     } else {
       return '${text.substring(0, maxLength - 4)}...';
     }
+  }
+
+  String _getFormattedDateForMap(DateTime dateTime) {
+    return '${dateTime.month}월 ${dateTime.day}일 ${dateTime.hour}시 ${dateTime.minute}분';
+  }
+
+  bool isCarpoolOver(DateTime startTime) {
+    DateTime currentTime = DateTime.now();
+    Duration difference = currentTime.difference(startTime);
+    return difference.inHours >= 24;
+  }
+
+  Color getColorBasedOnSuffix(String text) {
+    if (text.endsWith('가')) {
+      return context.appColors.logoColor; // '가'로 끝나면 초록색 반환
+    } else if (text.endsWith('요')) {
+      return Colors.red; // '요'로 끝나면 빨간색 반환
+    }
+    return Colors.grey; // 다른 경우에는 회색 반환
   }
 }
