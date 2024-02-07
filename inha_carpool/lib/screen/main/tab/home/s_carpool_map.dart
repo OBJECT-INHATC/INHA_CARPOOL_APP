@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,13 +15,15 @@ import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../common/data/preference/prefs.dart';
+import '../../../../common/models/m_carpool.dart';
 import '../../../../common/util/carpool.dart';
 import '../../../../common/util/addMember_Exception.dart';
 import '../../../../dto/TopicDTO.dart';
+import '../../../../provider/carpool/carpool_provider.dart';
 import '../../s_main.dart';
 import '../carpool/chat/f_chatroom.dart';
 
-class CarpoolMap extends StatefulWidget {
+class CarpoolMap extends ConsumerStatefulWidget {
   final LatLng startPoint;
   final String startPointName;
   final LatLng endPoint;
@@ -47,10 +50,10 @@ class CarpoolMap extends StatefulWidget {
   });
 
   @override
-  State<CarpoolMap> createState() => _CarpoolMapState();
+  ConsumerState<CarpoolMap> createState() => _CarpoolMapState();
 }
 
-class _CarpoolMapState extends State<CarpoolMap> {
+class _CarpoolMapState extends ConsumerState<CarpoolMap> {
   // late GoogleMapController mapController;
   late NaverMapController mapController;
   List<dynamic> list = [];
@@ -141,6 +144,8 @@ class _CarpoolMapState extends State<CarpoolMap> {
     //   ),
     // );
     // Map<MarkerId, Marker> markers = {};
+    final carpoolProvider = ref.watch(participatingCarpoolProvider.notifier);
+
 
     // 네이버 마커 추가
     NMarker startMarker = NMarker(
@@ -614,6 +619,16 @@ class _CarpoolMapState extends State<CarpoolMap> {
 
                                           if (isOpen) {
                                             print("스프링부트 서버 성공 #############");
+                                            carpoolProvider.addCarpool(CarpoolModel(
+                                              /// 디테일 주소 수정 필요 0207
+                                                endDetailPoint: widget.endPointName,
+                                                endPointName: widget.endPointName,
+                                                startPointName: widget.startPointName,
+                                                startDetailPoint: widget.startPointName,
+                                                startTime: 0,
+                                                recentMessageSender: "service",
+                                                recentMessage: "$nickName님이 입장하였습니다."
+                                            ));
                                             if (!mounted) return;
                                             Navigator.pop(context);
                                             Navigator.pushReplacement(

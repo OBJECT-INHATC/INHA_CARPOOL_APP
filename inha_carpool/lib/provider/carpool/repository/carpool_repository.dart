@@ -54,59 +54,5 @@ class CarpoolRepository {
 
   }
 
-  void getCarPoolList2(MemberModel memberModel) async {
-    QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
-        .collection('carpool')
-        .where('members',
-        arrayContains:
-        '${memberModel.uid}_${memberModel.nickName}_${memberModel.gender}')
-        //.orderBy('startTime', descending: true)
-        .get();
-
-    // 리턴을 담아줄 리스트
-    List<CarpoolModel> carpoolList = [];
-
-    // 현재 시간과 출발시간을 비교할 변수
-    DateTime currentTime = DateTime.now();
-
-    // 스냅샷을 돌면서 조건에 맞는 카풀을 리스트에 추가
-    for (var doc in snapshot.docs) {
-      CarpoolModel carModel = CarpoolModel.fromJson(doc.data());
-
-      // 가져온 데이터의 출발시간을 DateTime으로 변환
-      DateTime startTime =
-      DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
-
-      // 하루가 지나기 전까지의 카풀만 리스트에 추가하기 위한 비교 작업
-      if (startTime.isAfter(currentTime.subtract(const Duration(days: 1)))) {
-        carpoolList.add(carModel);
-      }
-    }
-
-    carpoolList.sort((a, b) {
-      DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a.startTime!.toInt());
-      DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b.startTime!.toInt());
-
-      return startTimeA.compareTo(startTimeB);
-    });
-
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    for (var carModel in carpoolList) {
-      print("CarpoolModel 내용:");
-      print("endDetailPoint: ${carModel.endDetailPoint}");
-      print("endPointName: ${carModel.endPointName}");
-      print("startPointName: ${carModel.startPointName}");
-      print("startDetailPoint: ${carModel.startDetailPoint}");
-      print("startTime: ${carModel.startTime}");
-      print("recentMessageSender: ${carModel.recentMessageSender}");
-      print("===========================");
-    }    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-
-
-  }
 
 }

@@ -5,13 +5,14 @@ class CarpoolModel {
   final String? endPointName;
   final String? startPointName;
   final String? startDetailPoint;
-  final String? recentMessage;
 
   // 출발 시간
   final int? startTime;
 
   // 최근 메시지 보낸 사람
   final String? recentMessageSender;
+  final String? recentMessage;
+
 
   CarpoolModel(
       {this.endDetailPoint,
