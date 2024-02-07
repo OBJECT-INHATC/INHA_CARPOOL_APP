@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/common/models/m_carpool.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
@@ -13,16 +15,19 @@ import 'package:inha_Carpool/screen/recruit/w_select_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
+import '../../provider/carpool/carpool_provider.dart';
+
 
 /// 카풀 생성 페이지
-class RecruitPage extends StatefulWidget {
+class RecruitPage extends ConsumerStatefulWidget {
   const RecruitPage({super.key});
 
   @override
-  State<RecruitPage> createState() => _RecruitPageState();
+  ConsumerState<RecruitPage> createState() => _RecruitPageState();
 }
 
-class _RecruitPageState extends State<RecruitPage> {
+class _RecruitPageState extends ConsumerState<RecruitPage> {
+
   Key key1 = UniqueKey();
   Key key2 = UniqueKey();
 
@@ -92,6 +97,9 @@ class _RecruitPageState extends State<RecruitPage> {
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
+    final carpoolProvider = ref.watch(participatingCarpoolProvider.notifier);
+
 
     return GestureDetector(
       onTap: () {
@@ -387,6 +395,15 @@ class _RecruitPageState extends State<RecruitPage> {
                           context.showErrorSnackbar("카풀 생성에 실패했습니다.");
                         } else {
                           context.showSnackbar("카풀 생성 성공! 채팅방으로 이동합니다");
+                          carpoolProvider.addCarpool(CarpoolModel(
+                            endDetailPoint: endDetailPoint,
+                            endPointName: endPointName,
+                            startPointName: startPointName,
+                            startDetailPoint: startDetailPoint,
+                            startTime: selectedDateTime.millisecondsSinceEpoch,
+                            recentMessageSender: "service",
+                            recentMessage: "$nickName님이 새로운 카풀을 생성하였습니다."
+                          ));
                           Navigator.push(
                             context,
                             MaterialPageRoute(

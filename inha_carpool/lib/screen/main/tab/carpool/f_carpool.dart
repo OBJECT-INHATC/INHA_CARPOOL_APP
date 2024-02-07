@@ -49,6 +49,9 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
 
     final carpoolCount = ref.watch(participatingCarpoolProvider);
 
+    print("-----------------rebuild-----------------");
+    print("carpoolCount.data.length : ${carpoolCount.data.length}");
+
 
 
 
