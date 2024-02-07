@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:inha_Carpool/common/common.dart';
 
+import '../../../../provider/auth_provider.dart';
+
 /// 상단 프로필 페이지 위젯
 /// 닉네임 수정 기능 모두 off
-class ProFile extends StatefulWidget {
+class ProFile extends ConsumerStatefulWidget {
   const ProFile({Key? key}) : super(key: key);
 
   @override
   _ProFileState createState() => _ProFileState();
 }
 
-class _ProFileState extends State<ProFile> {
-  final storage = FlutterSecureStorage();
-  late Future<String> nickNameFuture;
-  late Future<String> genderFuture;
-  late Future<String> emailFuture;
-  late Future<String> userNameFuture;
+class _ProFileState extends ConsumerState<ProFile> {
   late String email;
   late String uid;
-
-  String? nickName;
-  String? gender;
+  late String nickName;
+  late String gender;
+  late String userName;
 
   @override
   void initState() {
@@ -31,18 +28,11 @@ class _ProFileState extends State<ProFile> {
   }
 
   Future<void> _loadUserData() async {
-    nickNameFuture = _loadUserDataForKey("nickName");
-    genderFuture = _loadUserDataForKey("gender");
-    emailFuture = _loadUserDataForKey("email");
-    userNameFuture = _loadUserDataForKey("userName");
-    uid = await storage.read(key: 'uid') ?? "";
-    nickName = await storage.read(key: "nickName");
-    gender = await storage.read(key: "gender");
-    email = await storage.read(key: "email") ?? "";
-  }
-
-  Future<String> _loadUserDataForKey(String key) async {
-    return await storage.read(key: key) ?? "";
+    email = ref.read(authProvider).email!;
+    gender = ref.read(authProvider).gender!;
+    nickName = ref.read(authProvider).nickName!;
+    uid = ref.read(authProvider).uid!;
+    userName = ref.read(authProvider).userName!;
   }
 
   @override
@@ -59,72 +49,41 @@ class _ProFileState extends State<ProFile> {
           Center(
             child: Column(
               children: [
-                const SizedBox(height: 10),
+                const Height(1),
                 // 기본정보 항목 중 프로필사진, 닉네임 부분
                 Row(
                   children: [
-                    Stack(
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              const Padding(
-                                padding: EdgeInsets.only(left: 5.0),
-                                child: Icon(
-                                  Icons.account_circle,
-                                  size: 60,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              FutureBuilder<String?>(
-                                future: nickNameFuture,
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  } else {
-                                    return Text(
-                                      // nickNameFuture의 닉네임 값
-                                      snapshot.data ?? ' ',
-                                      style: const TextStyle(
-                                        fontSize: 21,
-                                        color: Colors.black54,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              FutureBuilder<String?>(
-                                future: userNameFuture,
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const CircularProgressIndicator();
-                                  } else if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  } else {
-                                    return Text(
-                                      snapshot.data ?? '',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey, // 이름 색 변경
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                            ],
+                         Padding(
+                          padding: EdgeInsets.only(left: screenWidth * 0.03),
+                          child: const Icon(
+                            Icons.account_circle,
+                            size: 60,
+                            color: Colors.black,
+                          ),
+                        ),
+                         SizedBox(
+                          width: screenWidth * 0.03,
+                        ),
+                        Text(
+                          // nickNameFuture의 닉네임 값
+                          nickName ?? ' ',
+                          style: const TextStyle(
+                            fontSize: 21,
+                            color: Colors.black54,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                         SizedBox(
+                          width: screenWidth * 0.03,
+                        ),
+                        Text(
+                          userName ?? '',
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey, // 이름 색 변경
                           ),
                         ),
                       ],
@@ -184,7 +143,7 @@ class _ProFileState extends State<ProFile> {
     );
   }
 
- /* Future<void> _showEditNicknameDialog(
+/* Future<void> _showEditNicknameDialog(
       BuildContext context, String uid, String nickName, String gender) async {
     TextEditingController nicknameController = TextEditingController();
 
