@@ -25,7 +25,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   late String nickName = ref.read(authProvider).nickName!;
   late String uid = ref.read(authProvider).uid!;
   late String gender = ref.read(authProvider).gender!;
-  late int carpoolCount = ref.read(participatingCarpoolProvider.notifier).carpoolListLength;
 
 
   /// 카풀 조회 메서드
@@ -48,14 +47,16 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
+    final carpoolCount = ref.watch(participatingCarpoolProvider);
+
+
+
+
     // 화면 높이의 70%를 ListView.builder의 높이로 사용
     double listViewHeight = screenHeight * 0.7;
     // 각 카드의 높이
     double cardHeight = listViewHeight * 0.3; //1101
-
-    print("---------------------------------");
-    print("carpoolCount : $carpoolCount");
-
+    
     // uri 확인
     bool isOnUri = true;
 
@@ -147,7 +148,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                           return const SizedBox.shrink(); // 빈 상자 반환 또는 다른 처리
                         },
                       ),
-                      carPoolFirstWidget(context, carpoolCount, screenWidth),
+                      carPoolFirstWidget(context, carpoolCount.data.length, screenWidth),
 
                       Height(MediaQuery.of(context).size.height * 0.15),
                       '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!'
@@ -224,7 +225,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                         margin: const EdgeInsets.all(5),
                         color: context.appColors.logoColor,
                       ),
-                      carPoolFirstWidget(context, carpoolCount, screenWidth),
+                      carPoolFirstWidget(context, carpoolCount.data.length, screenWidth),
                       Expanded(
                         child: ListView.builder(
                           itemCount:

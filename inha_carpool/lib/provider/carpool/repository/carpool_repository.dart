@@ -48,19 +48,6 @@ class CarpoolRepository {
       return startTimeA.compareTo(startTimeB);
     });
 
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    for (var carModel in carpoolList) {
-      print("CarpoolModel 내용:");
-      print("endDetailPoint: ${carModel.endDetailPoint}");
-      print("endPointName: ${carModel.endPointName}");
-      print("startPointName: ${carModel.startPointName}");
-      print("startDetailPoint: ${carModel.startDetailPoint}");
-      print("startTime: ${carModel.startTime}");
-      print("recentMessageSender: ${carModel.recentMessageSender}");
-      print("recentMessageTime: ${carModel.recentMessageTime}");
-    }
-
-
     return carpoolList;
 
   }
