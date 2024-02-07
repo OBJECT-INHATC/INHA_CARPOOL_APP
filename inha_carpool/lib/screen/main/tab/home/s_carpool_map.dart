@@ -62,7 +62,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
   late String uid = "";
   late String gender = "";
 
-  String? token = "";
 
   DateTime? currentBackPressTime;
 
@@ -82,7 +81,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
     addCustomIcon();
     _moveCamera();
     _loadUserData();
-    _getLocalToken();
   }
 
   /// 커스텀 아이콘 이미지 추가 - 0915 한승완
@@ -111,9 +109,7 @@ class _CarpoolMapState extends State<CarpoolMap> {
     handlePageLoadComplete();
   }
 
-  _getLocalToken() async {
-    token = await storage.read(key: "token");
-  }
+
 
   Future<void> _loadUserData() async {
     nickName = await storage.read(key: "nickName") ?? "";
@@ -590,7 +586,6 @@ class _CarpoolMapState extends State<CarpoolMap> {
                                                   memberID,
                                                   memberName,
                                                   gender,
-                                                  token!,
                                                   selectedRoomGender);
                                           if (!mounted) return;
 
