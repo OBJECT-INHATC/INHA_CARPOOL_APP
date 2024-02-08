@@ -8,7 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../common/util/carpool.dart';
 import '../carpool/chat/f_chatroom.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
 
-class CarpoolListWidget extends StatefulWidget {
+class CarpoolListItem extends StatefulWidget {
   final AsyncSnapshot<List<DocumentSnapshot>> snapshot;
   final ScrollController scrollController;
   final int visibleItemCount;
@@ -16,7 +16,7 @@ class CarpoolListWidget extends StatefulWidget {
   final String uid; // uid 추가
   final String gender;
 
-  const CarpoolListWidget({
+  const CarpoolListItem({
     super.key,
     required this.snapshot,
     required this.scrollController,
@@ -27,7 +27,7 @@ class CarpoolListWidget extends StatefulWidget {
   });
 
   @override
-  State<CarpoolListWidget> createState() => _CarpoolListWidgetState();
+  State<CarpoolListItem> createState() => _CarpoolListItemState();
 }
 
 Color getColorForGender(String gender) {
@@ -53,7 +53,7 @@ String _truncateText(String text, int maxLength) {
 
 
 
-class _CarpoolListWidgetState extends State<CarpoolListWidget> {
+class _CarpoolListItemState extends State<CarpoolListItem> {
 
   @override
   Widget build(BuildContext context) {
@@ -76,63 +76,10 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
       child: ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
         controller: widget.scrollController,
-        itemCount: (widget.snapshot.data?.length ?? 0) + 1,
+        itemCount: (widget.snapshot.data?.length ?? 0) ,
         itemBuilder: (context, index) {
-          if (index == 0) {
-            return FutureBuilder(
-              future: FirebaseCarpool.getAdminData("mainList"),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  final adminData = snapshot.data;
-                  if (adminData != null && adminData.exists) {
-                    final contextValue = adminData['context'] as String?;
-                    if (adminData['uri'] == "") {
-                      isOnUri = false;
-                    }
-                    final Uri url = Uri.parse(adminData['uri']! as String);
-                    if (contextValue != null && contextValue.isNotEmpty) {
-                      return GestureDetector(
-                        onTap: () async {
-                          if (!await launchUrl(url) && isOnUri) {
-                            throw Exception('Could not launch $url');
-                          }
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          height: cardHeight / 6,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.blue[900]!,
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                contextValue,
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue[900],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                  // 데이터가 없거나 필드가 없는 경우에 대한 처리
-                  return Container();
-                }
-                // 데이터가 로드되지 않았을 때의 로딩 상태 표시 등의 처리
-                return const Center(child: CircularProgressIndicator());
-              },
-            );
-          } else {
             // 원래의 리스트 아이템
-            final originalIndex = index - 1;
+            final originalIndex = index;
             if (widget.snapshot.data != null &&
                 originalIndex < widget.snapshot.data!.length) {
               DocumentSnapshot carpool = widget.snapshot.data![originalIndex];
@@ -358,7 +305,7 @@ class _CarpoolListWidgetState extends State<CarpoolListWidget> {
                 ),
               );
             }
-          }
+
         },
       ),
     );

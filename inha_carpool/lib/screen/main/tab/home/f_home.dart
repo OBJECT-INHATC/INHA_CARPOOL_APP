@@ -7,6 +7,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptySearchedCarpool.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptyCarpool.dart';
@@ -145,6 +146,9 @@ class _HomeState extends ConsumerState<Home> {
 
   @override
   Widget build(BuildContext context) {
+
+    final double height = context.screenHeight;
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
@@ -265,7 +269,9 @@ class _HomeState extends ConsumerState<Home> {
                   Colors.white),
           child: Column(
             children: [
-              Container(height: 5, color: Colors.white),
+              const Height(5),
+              NoticeBox(height * 0.25, "main"),
+
               Container(
                 color: Colors.white,
                 height: context.height(0.05),
@@ -289,6 +295,7 @@ class _HomeState extends ConsumerState<Home> {
                               filled: true,
                               // 배경색을 활성화
                               border: const OutlineInputBorder(
+                                ///todo : 여기 작업
                                 borderSide: BorderSide.none, // 외곽선 없음
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(20)),
@@ -299,6 +306,7 @@ class _HomeState extends ConsumerState<Home> {
                             ),
                             style: const TextStyle(
                                 color: Colors.black, fontSize: 11),
+
                           ),
                           Positioned(
                             // 텍스트필드에 맞춰서 위치 정렬
@@ -338,7 +346,7 @@ class _HomeState extends ConsumerState<Home> {
                 ),
               ),
               const Height(5),
-              Container(height: 2, color: context.appColors.divider),
+              Line(height: 2, color: context.appColors.divider),
               Expanded(
                 child: RefreshIndicator(
                   color: context.appColors.logoColor,
@@ -417,7 +425,7 @@ class _HomeState extends ConsumerState<Home> {
             return const EmptySearchedCarpool(); // 검색 결과가 없을 경우 빈 상태 표시
           }
 
-          return CarpoolListWidget(
+          return CarpoolListItem(
             snapshot: AsyncSnapshot<List<DocumentSnapshot>>.withData(
               ConnectionState.done,
               filteredCarpools.sublist(0, itemCount),

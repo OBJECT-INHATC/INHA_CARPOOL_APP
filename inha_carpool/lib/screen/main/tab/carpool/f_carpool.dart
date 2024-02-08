@@ -9,7 +9,6 @@ import 'package:inha_Carpool/provider/carpool/carpool_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'w_card_Item.dart';
 import 'w_last_chat.dart';
@@ -57,11 +56,12 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
 
     return Column(
       children: [
-        // 상단에 참여중인 카풀 수와 안내문구 위젯 호출
+        /// 공지사항 위젯 호출
+        NoticeBox(cardHeight, "carpool"),
+        /// 상단에 참여중인 카풀 수와 안내문구 위젯 호출
         carPoolFirstWidget(context, carpoolCount.data.length, screenWidth),
 
-        // 공지사항 위젯 호출
-        NoticeBox(cardHeight, "carpool"),
+
 
         Expanded(
           child: Container(
