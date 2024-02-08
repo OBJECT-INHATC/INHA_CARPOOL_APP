@@ -7,7 +7,7 @@ import 'package:inha_Carpool/common/models/m_carpool.dart';
 class CarPoolStateModel {
   final List<CarpoolModel> data;
 
-  CarPoolStateModel({required this.data});
+  const CarPoolStateModel({required this.data});
 
   CarPoolStateModel copyWith({List<CarpoolModel>? data}) {
     return CarPoolStateModel(data: data ?? this.data);

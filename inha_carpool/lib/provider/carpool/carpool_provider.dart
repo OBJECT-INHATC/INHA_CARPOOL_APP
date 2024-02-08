@@ -20,7 +20,7 @@ class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
 
   //생성자
   CarpoolStateNotifier(this._ref, {required this.repository})
-      : super(CarPoolStateModel(data: const [])) {
+      : super(const CarPoolStateModel(data: [])) {
     // 생성과 함께 파이어스토어에서 데이터를 가져와서 초기화
     getCarpool(_ref.read(authProvider.notifier).state);
   }

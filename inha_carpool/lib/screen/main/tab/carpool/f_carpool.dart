@@ -7,6 +7,7 @@ import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/provider/carpool/carpool_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -60,8 +61,12 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
 
     return Column(
       children: [
+        // 상단에 참여중인 카풀 수와 안내문구 위젯 호출
         carPoolFirstWidget(context, carpoolCount.data.length, screenWidth),
-        
+
+        // 공지사항 위젯 호출
+        NoticeBox(cardHeight, "carpool"),
+
         Expanded(
           child: Container(
             decoration: const BoxDecoration(
@@ -90,62 +95,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            FutureBuilder(
-                              future: FirebaseCarpool.getAdminData("carpoolList"),
-                              // 파이어베이스에서 데이터 가져오기
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.done) {
-                                  // 가져온 데이터를 이용하여 컨테이너 생성
-                                  final adminData = snapshot.data;
-                                  if (adminData != null && adminData.exists) {
-                                    // 데이터가 존재하고 필요한 필드도 존재하는 경우
-                                    final contextValue =
-                                        adminData['context'] as String?;
-                                    // 가져온 uri가 "" 인 경우
-                                    if (adminData['uri'] == "") {
-                                      isOnUri = false;
-                                    }
-                                    final Uri url =
-                                        Uri.parse(adminData['uri']! as String);
-                                    if (contextValue != null &&
-                                        contextValue.isNotEmpty) {
-                                      // 필드가 존재하고 값이 비어있지 않은 경우
-                                      return GestureDetector(
-                                        onTap: () async {
-                                          if (!await launchUrl(url) && isOnUri) {
-                                            throw Exception('Could not launch $url');
-                                          }
-                                        },
-                                        child: Container(
-                                          margin: const EdgeInsets.all(10),
-                                          height: cardHeight / 4,
-                                          width: screenWidth,
-                                          alignment: Alignment.center, // 가운데 정렬 추가
-                                          decoration: BoxDecoration(
-                                            color: Colors.white, // 배경색 설정
-                                            border: Border.all(
-                                              color: context
-                                                  .appColors.logoColor, // 테두리 색 설정
-                                            ),
-                                          ),
-                                          child: Text(
-                                            contextValue,
-                                            style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              color: context.appColors.logoColor,
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  }
-                                }
-                                // 데이터가 없거나 필드가 없는 경우에 대한 처리
-                                return const SizedBox.shrink(); // 빈 상자 반환 또는 다른 처리
-                              },
-                            ),
                             Height(MediaQuery.of(context).size.height * 0.15),
                             '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!'
                                 .text
@@ -224,78 +173,10 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                             Expanded(
                               child: ListView.builder(
                                 itemCount:
-                                    myCarpools.isNotEmpty ? myCarpools.length + 1 : 0,
+                                    myCarpools.isNotEmpty ? myCarpools.length : 0,
                                 itemBuilder: (context, i) {
-                                  if (i == 0) {
-                                    print(i);
-                                    return FutureBuilder(
-                                      future:
-                                          FirebaseCarpool.getAdminData("carpoolList"),
-                                      // 파이어베이스에서 데이터 가져오기
-                                      builder: (context, snapshot) {
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.done) {
-                                          // 가져온 데이터를 이용하여 컨테이너 생성
-                                          final adminData = snapshot.data;
-                                          if (adminData != null && adminData.exists) {
-                                            // 데이터가 존재하고 필요한 필드도 존재하는 경우
-                                            final contextValue =
-                                                adminData['context'] as String?;
-                                            // 가져온 uri가 "" 인 경우
-                                            if (adminData['uri'] == "") {
-                                              isOnUri = false;
-                                            }
-                                            final Uri url = Uri.parse(
-                                                adminData['uri']! as String);
-                                            if (contextValue != null &&
-                                                contextValue.isNotEmpty) {
 
-                                              // 필드가 존재하고 값이 비어있지 않은 경우
-                                              return GestureDetector(
-                                                onTap: () async {
-                                                  if (!await launchUrl(url) &&
-                                                      isOnUri) {
-                                                    throw Exception(
-                                                        'Could not launch $url');
-                                                  }
-                                                },
-                                                child: Container(
-                                                  margin: const EdgeInsets.all(10),
-                                                  height: cardHeight / 4,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.white, // 배경색 설정
-                                                    border: Border.all(
-                                                      color: context.appColors
-                                                          .logoColor, // 테두리 색 설정
-                                                    ),
-                                                  ),
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.center,
-                                                    children: [
-                                                      Text(
-                                                        contextValue,
-                                                        style: TextStyle(
-                                                          fontSize: 15,
-                                                          fontWeight: FontWeight.bold,
-                                                          color: context
-                                                              .appColors.logoColor,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          }
-                                        }
-                                        // 데이터가 없거나 필드가 없는 경우에 대한 처리
-                                        return const SizedBox
-                                            .shrink(); // 빈 상자 반환 또는 다른 처리
-                                      },
-                                    );
-                                  } else {
-                                    DocumentSnapshot carpool = myCarpools[i - 1];
+                                    DocumentSnapshot carpool = myCarpools[i];
                                     Map<String, dynamic> carpoolData =
                                         carpool.data() as Map<String, dynamic>;
 
@@ -493,7 +374,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                                         ),
                                       ),
                                     );
-                                  }
                                 },
                               ),
                             ),

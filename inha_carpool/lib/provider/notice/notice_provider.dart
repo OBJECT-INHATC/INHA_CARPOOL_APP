@@ -1,12 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inha_Carpool/provider/carpool/repository/carpool_repository.dart';
-import 'package:inha_Carpool/provider/carpool/state/carpool_state.dart';
 import 'package:inha_Carpool/provider/notice/repository/notice_repository.dart';
 import 'package:inha_Carpool/provider/notice/state/notice_state.dart';
 
-import '../../common/models/m_carpool.dart';
-import '../../common/models/m_member.dart';
-import '../auth/auth_provider.dart';
+
 
 ///* 공지사항을 관리하는 provider 0207 이상훈
 
