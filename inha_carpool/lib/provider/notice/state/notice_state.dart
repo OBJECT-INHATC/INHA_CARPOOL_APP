@@ -1,16 +1,28 @@
-
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/models/m_carpool.dart';
 
-
 @immutable
 class NoticeStateModel {
-  final String context;
-  final String uri;
+  final String carpoolContext;
+  final String carpoolUri;
+  final String mainContext;
+  final String mainUri;
 
-  const NoticeStateModel({required this.context, required this.uri} );
+  const NoticeStateModel(
+      {required this.carpoolContext,
+      required this.carpoolUri,
+      required this.mainContext,
+      required this.mainUri});
 
-  NoticeStateModel copyWith({String? context, String? uri}) {
-    return NoticeStateModel(context: context ?? this.context, uri: uri ?? this.uri);
+  NoticeStateModel copyWith(
+      {String? carpoolContext,
+      String? carpoolUri,
+      String? mainContext,
+      String? mainUri}) {
+    return NoticeStateModel(
+        carpoolContext: carpoolContext ?? this.carpoolContext,
+        carpoolUri: carpoolUri ?? this.carpoolUri,
+        mainContext: mainContext ?? this.mainContext,
+        mainUri: mainUri ?? this.mainUri);
   }
 }

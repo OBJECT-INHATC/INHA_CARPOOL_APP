@@ -12,13 +12,18 @@ class NoticeRepository {
 
   NoticeRepository(this._ref);
 
-  Future<NoticeStateModel> getCarpoolListNoticeList(String noticeType) async {
-    DocumentSnapshot documentSnapshot =
-        await _fireStore.collection('admin').doc(noticeType).get();
+  Future<NoticeStateModel> getNotice() async {
+    DocumentSnapshot carpool =
+        await _fireStore.collection('admin').doc("carpoolList").get();
+
+    DocumentSnapshot main =
+    await _fireStore.collection('admin').doc("mainList").get();
 
     return NoticeStateModel(
-      context: documentSnapshot.get('context'),
-      uri: documentSnapshot.get('uri'),
+      carpoolContext : carpool.get('context'),
+      carpoolUri : carpool.get('uri'),
+      mainContext: main.get('context'),
+      mainUri: main.get('uri'),
     );
   }
 }
