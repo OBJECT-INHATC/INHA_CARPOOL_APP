@@ -24,8 +24,6 @@ class NoticeStateNotifier extends StateNotifier<NoticeStateModel> {
     getNotice();
   }
 
-
-
   Future getNotice() async {
     try {
       NoticeStateModel noticeStateModel = await repository.getNotice();
