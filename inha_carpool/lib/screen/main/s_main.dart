@@ -47,7 +47,6 @@ class MainScreenState extends ConsumerState<MainScreen>
   //시작 화면 지정
   MainScreenState({String? temp}) {
     if (temp == 'MyPage') {
-      print("temp : $temp");
       _currentTab = TabItem.myPage;
     } else {
       _currentTab = TabItem.home;
@@ -135,7 +134,6 @@ class MainScreenState extends ConsumerState<MainScreen>
         // 알림을 클릭하면 해당 알림의 페이로드를 출력
         /// todo :  페이로드 받아서 네비게이션으로 채팅창으로 이동 시키기
         /// 페이로드는 송신측에서 추가로 담아주는데 내가 이번에 추가함 깃 커밋 내역 보셈 24.01.30 이상훈
-        print('===================notification payload: ${notification.payload}');
         final carId = notification.payload;
         if(carId == null) return;
         var carpoolStartTime = await FireStoreService()
@@ -194,7 +192,6 @@ class MainScreenState extends ConsumerState<MainScreen>
   void removeSplash() async {
     // 1.5초 후에 스플래시 제거
     await Future.delayed(const Duration(milliseconds: 1500));
-    print("removeSplash");
     FlutterNativeSplash.remove();
   }
 

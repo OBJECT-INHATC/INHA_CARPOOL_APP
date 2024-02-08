@@ -47,13 +47,14 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
       String? nickName = await secureStorage.read(key: 'nickName');
 
       if (notification != null && message.data['sender'] != nickName) {
-        /// todo : 알림 상태관리 업데이트
+        /// 알림 상태관리 업데이트
         ref.read(isCheckAlarm.notifier).state = true;
 
         if (notification.title == "새로운 채팅이 도착했습니다." &&
             !Prefs.chatRoomOnRx.get() &&
             Prefs.chatRoomCarIdRx.get() == message.data['groupId']) {
-          /// 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
+
+          // 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
           AlarmInsert(notification, nowTime, message);
 
           // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제

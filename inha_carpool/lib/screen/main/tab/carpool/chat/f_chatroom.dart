@@ -21,7 +21,6 @@ import '../../../../../provider/carpool/carpool_provider.dart';
 
 
 class ChatroomPage extends ConsumerStatefulWidget {
-  /// 0829 서은율 TODO : 채팅방 페이지 최적화 고민 해볼 것
 
   final String carId;
   final String groupName;
@@ -119,7 +118,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     Prefs.chatRoomCarIdRx.set("carId");
     super.dispose();
   }
@@ -140,7 +139,6 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
         Prefs.chatRoomCarIdRx.set("carId");
         break;
       case AppLifecycleState.hidden:
-      // TODO: Handle this case.
     }
   }
 
@@ -506,9 +504,6 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
               TextButton(
                 onPressed: () async {
                   Navigator.pop(context);
-
-
-
                   // 나가기 메소드
                   _exitCarpool(context);
                 },
@@ -631,7 +626,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
     bool isOpen = await apiTopic.deleteTopic(widget.uid, widget.carId);
 
     if (isOpen) {
-      print("스프링부트 서버 성공 #############");
+      print("스프링부트 서버 성공 ##########");
       try {
         if (Prefs.isPushOnRx.get() == true) {
           await FirebaseMessaging.instance.unsubscribeFromTopic(widget.carId);

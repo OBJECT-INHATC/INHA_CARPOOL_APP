@@ -470,8 +470,6 @@ class _HomeState extends ConsumerState<Home> {
     carPoolList.then((list) {
       // setState(() {
       _visibleItemCount = list.length < 5 ? list.length : 5;
-      print('초기 리스트 갯수: $_visibleItemCount');
-      // });
     });
 
     // 로딩과정
@@ -502,7 +500,6 @@ class _HomeState extends ConsumerState<Home> {
     if (_scrollController.position.atEdge) {
       if (_scrollController.position.pixels == 0) {
         // 맨 위에 도달했을 경우
-        print('맨 위');
       } else if (_scrollController.position.extentAfter == 0 && !_isLoading) {
         // 추가 데이터를 로드할 조건: 맨 아래에 도달하고 로딩 중이 아닐 때
         setState(() {

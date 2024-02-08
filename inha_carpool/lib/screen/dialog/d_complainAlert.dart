@@ -18,11 +18,6 @@ class ComplainAlert extends StatefulWidget {
 
 class _ComplainAlertState extends State<ComplainAlert> {
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   final apiService = ApiService();
   final _controller = TextEditingController();

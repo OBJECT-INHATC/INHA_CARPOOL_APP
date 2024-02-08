@@ -7,6 +7,7 @@ import '../common/models/m_chat.dart';
 
 /// DatabaseService class - Firebase Firestore Database 관련 함수들을 모아놓은 클래스
 class FireStoreService {
+
   /// uid - 현재 사용자의 uid
   final String? uid;
 
@@ -46,7 +47,6 @@ class FireStoreService {
     return snapshot;
   }
 
-  /// 1031 한승완
   /// uid로 사용자가 존재하는지 확인
   Future<bool> isUserExist(String uid) async {
     QuerySnapshot snapshot =
@@ -54,7 +54,6 @@ class FireStoreService {
     return snapshot.docs.isNotEmpty;
   }
 
-  /// 0828 한승완
   /// 특정 시점 이후의 채팅 메시지 스트림 가져오기
   getChatsAfterSpecTime(String carId, int time) async {
     return carpoolCollection
@@ -64,7 +63,6 @@ class FireStoreService {
         .startAfter([time]).snapshots();
   }
 
-  /// 0828 한승완
   /// 채팅 메시지 스트림 가져오기
   getChats(String carId) async {
     return carpoolCollection
@@ -74,7 +72,6 @@ class FireStoreService {
         .snapshots();
   }
 
-  /// 0828 한승완
   /// 그룹 관리자 가져오기
   Future getGroupAdmin(String carId) async {
     DocumentReference d = carpoolCollection.doc(carId);
@@ -82,7 +79,6 @@ class FireStoreService {
     return documentSnapshot['admin'];
   }
 
-  /// 0828 한승완
   /// 메시지 전송
   sendMessage(String carId, Map<String, dynamic> chatMessageData) async {
     final carpoolDocRef = carpoolCollection.doc(carId);
@@ -121,7 +117,6 @@ class FireStoreService {
     });
   }
 
-  ///0831 서은율, 한승완
   ///카풀 참가시 유저 입장 메시지 전송 + 로컬 DB에 저장
   Future<void> sendEntryMessage(String carId, String userName) async {
     const String sender = 'service';
@@ -152,7 +147,6 @@ class FireStoreService {
         type: NotificationType.status);
   }
 
-  /// 0905 한승완
   /// 카풀 탈퇴시 유저 퇴장 메시지 전송 + 로컬 DB 삭제
   Future<void> sendExitMessage(String carId, String userName) async {
     const String sender = 'service';
@@ -188,7 +182,6 @@ class FireStoreService {
     ChatDao().deleteByCarId(carId);
   }
 
-  ///0903 한승완
   ///카풀 생성 + 로컬 DB에 저장
   Future<void> sendCreateMessage(String carId, String userName) async {
     final ChatMessage chatMessage = ChatMessage(
@@ -274,20 +267,18 @@ class FireStoreService {
             snapshot.docs.isNotEmpty ? snapshot.docs.first : null);
   }
 
-  /// 0919 한승완, 사용자가 현재 참가한 카풀이 존재하는지 확인하는 메서드
+  ///  사용자가 현재 참가한 카풀이 존재하는지 확인하는 메서드
   Future<bool> isUserInCarpool(
       String uid, String nickName, String gender) async {
     QuerySnapshot snapshot = await carpoolCollection
         .where("members", arrayContains: "${uid}_${nickName}_$gender")
         .limit(1)
         .get();
-    for (QueryDocumentSnapshot doc in snapshot.docs) {
-      print(doc.id);
-    }
+
     return snapshot.docs.isNotEmpty;
   }
 
-  /// 0919 한승완, 사용자가 현재 참가한 카풀이 존재하는지 확인하는 메서드
+  ///  사용자가 현재 참가한 카풀이 존재하는지 확인하는 메서드
   Future<bool> StartTimeInCarpool(
       String uid, String nickName, String gender) async {
     DateTime currentTime = DateTime.now();

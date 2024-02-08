@@ -48,8 +48,6 @@ class CarpoolRepository {
       return startTimeA.compareTo(startTimeB);
     });
 
-    print("============레파지에서 조회한 내가 참여한 카풀 리스트");
-    print("carpoolList.length: ${carpoolList.length}");
     return carpoolList;
 
   }

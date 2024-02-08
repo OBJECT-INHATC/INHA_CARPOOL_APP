@@ -54,7 +54,6 @@ class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
 
     String? gender = await storage.read(key: "gender");
 
-    // 한승완 TODO: 알림의 id에 따라서 이동 경로 구분 기능
     if ((message.data['id'] == 'status' || message.data['id'] == 'chat') &&
         nickName != null) {
       if (!mounted) return;

@@ -368,7 +368,6 @@ class FirebaseCarpool {
         .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
-    print("조회된 카풀 수(참여): ${querySnapshot.docs.length}");
 
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
@@ -403,7 +402,6 @@ class FirebaseCarpool {
         .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
-    print("조회된 카풀 수(참여): ${querySnapshot.docs.length}");
 
     // 해당 도큐먼트의 출발시간을 기준으로 계산하니 필요없을 것 같아 주석처리함
     DateTime currentTime = DateTime.now();
