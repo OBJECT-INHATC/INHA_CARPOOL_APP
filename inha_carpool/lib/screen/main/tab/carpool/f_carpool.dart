@@ -40,16 +40,12 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     return carpools;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     // 화면의 너비와 높이를 가져 와서 화면 비율 계산함
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final carpoolCount = ref.watch(carpoolNotifierProvider);
-    print("조회된 참여중인 카풀 수 : ${carpoolCount.data.length}");
-
 
     // 화면 높이의 70%를 ListView.builder의 높이로 사용
     double listViewHeight = screenHeight * 0.7;

@@ -20,20 +20,19 @@ class _NoticeBoxState extends ConsumerState<NoticeBox> {
 
   @override
   Widget build(BuildContext context) {
-
     final noticeNotifier = ref.watch(noticeNotifierProvider);
-
-
     final screenWidth = context.screenWidth;
+
+    if(widget.noticeType == "main"){
+      noticeText = noticeNotifier.mainContext;
+      uri = Uri.parse(noticeNotifier.mainUri);
+    }else{
+      noticeText = noticeNotifier.carpoolContext;
+      uri = Uri.parse(noticeNotifier.carpoolUri);
+    }
 
     return GestureDetector(
       onTap: () async {
-        if(widget.noticeType == "main"){
-          uri = Uri.parse(noticeNotifier.mainUri);
-        }else{
-          uri = Uri.parse(noticeNotifier.carpoolUri);
-        }
-
         if (!await launchUrl(uri)) {
           throw Exception('Could not launch $uri');
         }
@@ -51,7 +50,7 @@ class _NoticeBoxState extends ConsumerState<NoticeBox> {
           ),
         ),
         child: Text(
-          widget.noticeType == "main" ? noticeNotifier.mainContext : noticeNotifier.carpoolContext ,
+          noticeText,
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.bold,
