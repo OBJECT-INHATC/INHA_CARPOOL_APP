@@ -144,8 +144,7 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
     //   ),
     // );
     // Map<MarkerId, Marker> markers = {};
-    final carpoolProvider = ref.watch(participatingCarpoolProvider.notifier);
-
+    final carpoolProvider = ref.watch(carpoolNotifierProvider.notifier);
 
     // 네이버 마커 추가
     NMarker startMarker = NMarker(

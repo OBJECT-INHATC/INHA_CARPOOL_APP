@@ -237,7 +237,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   @override
   Widget build(BuildContext context) {
 
-    final carpoolProvider = ref.watch(participatingCarpoolProvider.notifier);
+   // final carpoolProvider = ref.watch(carpoolNotifierProvider.notifier);
 
 
     final screenWidth = MediaQuery.of(context).size.width;
@@ -477,7 +477,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   }
 
   void removeProvider(String carId) {
-    ref.read(participatingCarpoolProvider.notifier).removeCarpool(carId);
+    ref.read(carpoolNotifierProvider.notifier).removeCarpool(carId);
   }
 
   void _exitIconBtn(BuildContext context) {

@@ -98,7 +98,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    final carpoolProvider = ref.watch(participatingCarpoolProvider.notifier);
+    final carpoolProvider = ref.watch(carpoolNotifierProvider.notifier);
 
 
     return GestureDetector(

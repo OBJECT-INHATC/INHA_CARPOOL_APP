@@ -8,7 +8,7 @@ import '../auth/auth_provider.dart';
 
 ///* 참여중인 카풀의 수를 관리하는 provider 0207 이상훈
 
-final participatingCarpoolProvider =
+final carpoolNotifierProvider =
     StateNotifierProvider<CarpoolStateNotifier, CarPoolStateModel>(
   (ref) => CarpoolStateNotifier(ref, repository: ref.read(carpoolRepositoryProvider)),
 );
