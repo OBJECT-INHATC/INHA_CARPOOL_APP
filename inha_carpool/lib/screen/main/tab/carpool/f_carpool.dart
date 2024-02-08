@@ -121,6 +121,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                                           margin: const EdgeInsets.all(10),
                                           height: cardHeight / 4,
                                           width: screenWidth,
+                                          alignment: Alignment.center, // 가운데 정렬 추가
                                           decoration: BoxDecoration(
                                             color: Colors.white, // 배경색 설정
                                             border: Border.all(
@@ -128,19 +129,13 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                                                   .appColors.logoColor, // 테두리 색 설정
                                             ),
                                           ),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                contextValue,
-                                                style: TextStyle(
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: context.appColors.logoColor,
-                                                ),
-                                              ),
-                                            ],
+                                          child: Text(
+                                            contextValue,
+                                            style: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold,
+                                              color: context.appColors.logoColor,
+                                            ),
                                           ),
                                         ),
                                       );
