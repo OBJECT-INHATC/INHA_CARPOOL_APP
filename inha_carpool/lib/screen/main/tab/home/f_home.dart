@@ -146,7 +146,6 @@ class _HomeState extends ConsumerState<Home> {
 
   @override
   Widget build(BuildContext context) {
-
     final double height = context.screenHeight;
 
     return SafeArea(
@@ -271,7 +270,6 @@ class _HomeState extends ConsumerState<Home> {
             children: [
               const Height(5),
               NoticeBox(height * 0.25, "main"),
-
               Container(
                 color: Colors.white,
                 height: context.height(0.05),
@@ -279,51 +277,51 @@ class _HomeState extends ConsumerState<Home> {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Stack(
-                        children: [
-                          TextField(
-                            onSubmitted: (value) {
-                              setState(() {
-                                _searchKeyword = value;
-                              });
-                            },
-                            controller: _searchKeywordController,
-                            decoration: InputDecoration(
-                              hintText: '검색어 입력',
-                              fillColor: Colors.grey[200],
-                              // 배경색 설정
-                              filled: true,
-                              // 배경색을 활성화
-                              border: const OutlineInputBorder(
-                                ///todo : 여기 작업
-                                borderSide: BorderSide.none, // 외곽선 없음
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(20)),
-                              ),
-                              // 글씨의 위치를 가운데 정렬
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 0),
-                            ),
-                            style: const TextStyle(
-                                color: Colors.black, fontSize: 11),
-
+                      child: TextField(
+                        onSubmitted: (value) {
+                          setState(() {
+                            _searchKeyword = value;
+                          });
+                        },
+                        controller: _searchKeywordController,
+                        decoration: InputDecoration(
+                          hintText: '검색어 입력',
+                          fillColor: Colors.grey[200],
+                          // 배경색 설정
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 0, horizontal: 20.0),
+                          border: const OutlineInputBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
                           ),
-                          Positioned(
-                            // 텍스트필드에 맞춰서 위치 정렬
-                            right: 0,
-                            top: 0,
-                            bottom: 0,
-                            child: IconButton(
-                              onPressed: () {
-                                setState(() {
+                          enabledBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.blueAccent, width: 1.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(
+                                color: Colors.blueAccent, width: 2.0),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
+                          ),
+                          suffixIcon: GestureDetector(
+                            child: const Icon(
+                              Icons.search_rounded,
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                            onTap: () {
+                              setState(
+                                () {
                                   _searchKeyword =
                                       _searchKeywordController.text;
-                                });
-                              },
-                              icon: const Icon(Icons.search_rounded),
-                            ),
+                                },
+                              );
+                            },
                           ),
-                        ],
+                        ),
                       ),
                     ),
                     const SizedBox(width: 10),

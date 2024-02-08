@@ -161,11 +161,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                         ),
                         body: Column(
                           children: [
-                            Line(
-                              height: 1,
-                              margin: const EdgeInsets.all(5),
-                              color: context.appColors.logoColor,
-                            ),
+
                             Expanded(
                               child: ListView.builder(
                                 itemCount:
@@ -396,53 +392,64 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
 
     return SizedBox(
       height: 90,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Column(
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Row(
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  '출발 예정 카풀'
+                  Row(
+                    children: [
+                      '출발 예정 카풀'
+                          .text
+                          .size(20)
+                          .bold
+                          .color(context.appColors.text)
+                          .make(),
+                      Icon(
+                        Icons.local_taxi_rounded,
+                        color: context.appColors.logoColor,
+                        size: 23,
+                      ),
+                    ],
+                  ),
+                  '현재 참여 중인 카풀 $countCarpool개'
                       .text
-                      .size(20)
-                      .bold
+                      .size(10)
+                      .semiBold
                       .color(context.appColors.text)
                       .make(),
-                  Icon(
-                    Icons.local_taxi_rounded,
-                    color: context.appColors.logoColor,
-                    size: 23,
-                  ),
+                  '위치 아이콘을 눌러주세요!'
+                      .text
+                      .size(10)
+                      .color(context.appColors.text)
+                      .make(),
                 ],
               ),
-              '현재 참여 중인 카풀 $countCarpool개'
-                  .text
-                  .size(10)
-                  .semiBold
-                  .color(context.appColors.text)
-                  .make(),
-              '위치 아이콘을 눌러주세요!'
-                  .text
-                  .size(10)
-                  .color(context.appColors.text)
-                  .make(),
+              Width(screenWidth * 0.03),
+              /// 우축 상단 색갈별 시간 안내 위젯
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  colorTimeNotice(redText, Colors.red),
+                  colorTimeNotice(blueText, Colors.blue),
+                  colorTimeNotice(greyText, Colors.grey),
+                  colorTimeNotice(blackText, Colors.black),
+                ],
+              )
             ],
           ),
-          Width(screenWidth * 0.03),
-          /// 우축 상단 색갈별 시간 안내 위젯
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              colorTimeNotice(redText, Colors.red),
-              colorTimeNotice(blueText, Colors.blue),
-              colorTimeNotice(greyText, Colors.grey),
-              colorTimeNotice(blackText, Colors.black),
-            ],
-          )
+          Line(
+            height: 1,
+            margin: const EdgeInsets.all(5),
+            color: context.appColors.logoColor,
+          ),
+
         ],
       ),
     );
