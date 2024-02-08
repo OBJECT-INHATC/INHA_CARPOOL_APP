@@ -11,23 +11,17 @@ import '../auth/auth_provider.dart';
 /// 참여중인 카풀의 수를 관리하는 provider 0207 이상훈
 
 final participatingCarpoolProvider =
-    StateNotifierProvider<CarpoolProvider, CarPoolState>(
-  (ref) {
-    final carpoolRepository = ref.read(carpoolRepositoryProvider);
-    final provider = CarpoolProvider(ref, repository: carpoolRepository);
-    provider.getCarpool(ref.read(authProvider.notifier).state); // 초기 상태 설정
-
-    return provider;
-  },
+    StateNotifierProvider<CarpoolStateNotifier, CarPoolStateModel>(
+  (ref) => CarpoolStateNotifier(ref, repository: ref.read(carpoolRepositoryProvider)),
 );
 
-class CarpoolProvider extends StateNotifier<CarPoolState> {
+class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
   final Ref _ref;
   final CarpoolRepository repository;
 
 
-  CarpoolProvider(this._ref, {required this.repository})
-      : super(CarPoolState(data: [])) {
+  CarpoolStateNotifier(this._ref, {required this.repository})
+      : super(CarPoolStateModel(data: const [])) {
     getCarpool(_ref.read(authProvider.notifier).state);
   }
 

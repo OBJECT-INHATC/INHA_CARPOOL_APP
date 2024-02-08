@@ -59,7 +59,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     double listViewHeight = screenHeight * 0.7;
     // 각 카드의 높이
     double cardHeight = listViewHeight * 0.3; //1101
-    
+
     // uri 확인
     bool isOnUri = true;
 

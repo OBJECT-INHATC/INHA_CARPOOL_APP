@@ -4,12 +4,12 @@ import 'package:inha_Carpool/common/models/m_carpool.dart';
 
 
 @immutable
-class CarPoolState {
+class CarPoolStateModel {
   final List<CarpoolModel> data;
 
-  CarPoolState({required this.data});
+  CarPoolStateModel({required this.data});
 
-  CarPoolState copyWith({List<CarpoolModel>? data}) {
-    return CarPoolState(data: data ?? this.data);
+  CarPoolStateModel copyWith({List<CarpoolModel>? data}) {
+    return CarPoolStateModel(data: data ?? this.data);
   }
 }
