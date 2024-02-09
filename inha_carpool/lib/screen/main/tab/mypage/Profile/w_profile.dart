@@ -57,7 +57,7 @@ class _ProFileState extends ConsumerState<ProFile> {
 
 
         //프로필 정보
-    //  const AuthInfoRow(),
+      const AuthInfoRow(),
 
 
 

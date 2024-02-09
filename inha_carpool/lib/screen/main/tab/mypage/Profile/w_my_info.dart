@@ -13,41 +13,61 @@ class AuthInfoRow extends ConsumerStatefulWidget {
 }
 
 class _AuthInfoState extends ConsumerState<AuthInfoRow> {
-
   @override
   Widget build(BuildContext context) {
-
-    final  state = ref.watch(authProvider);
+    final state = ref.watch(authProvider);
     final width = context.screenWidth;
 
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-
-        Column(
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.only(top: width * 0.02),
+        child: Column(
           children: [
-            Height(width * 0.06),
-
-            state.nickName!.text.size(10).make(),
-
-            Height(width * 0.03),
+            CustomPng(
+              fileDirectory: 'splash',
+              fileName: 'school_logo',
+              height: width * 0.12,
+              width: width * 0.5,
+            ),
             // 사람 이미지 아이콘
-            const Icon(Icons.account_circle, size: 70, color: Colors.white,),
+            Icon(Icons.account_circle, size: width * 0.2, color: Colors.white),
 
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                // 앱 이용횟수
+                _buildCountColumn('카풀 이용', 5, width),
+                Column(
+                  children: [
+                    // 이름
+                    // 이름
+                    state.userName!.text.size(width * 0.05).bold.make(),
+
+                    // 닉네임
+                    "# ${state.nickName!}"
+                        .text
+                        .sky900
+                        .size(width * 0.045)
+                        .make(),
+                  ],
+                ),
+                // todo : 경고 횟수 받아와서 때리기 (지금은 0 고정)
+                _buildCountColumn('경고 누적', 0, width),
+              ],
+            ),
+            // 이메일
+            state.email!.text.size(width * 0.03).make(),
           ],
         ),
-        Spacer(),
+      ),
+    );
+  }
 
-        CustomPng(
-          fileDirectory: 'splash',
-          fileName: 'school_logo',
-          height: width * 0.15,
-          width: width * 0.3,
-        ),
-        // 이미지 아이콘 추가
-
-
+  _buildCountColumn(String text, int num, double width) {
+    return Column(
+      children: [
+        text.text.size(width * 0.04).make(),
+        '$num 회'.text.size(width * 0.045).sky900.make(),
       ],
     );
   }
