@@ -75,6 +75,7 @@ class _RecordListState extends State<RecordList> {
         shadowColor: Colors.white,
       ),
       body: RefreshIndicator(
+        color: context.appColors.logoColor,
         onRefresh: () async {
           setState(() {
             _loadHistoryData();
