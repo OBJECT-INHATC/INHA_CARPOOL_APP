@@ -1,32 +1,31 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/service/api/Api_repot.dart';
 
-class RecordList extends StatefulWidget {
+import '../../../../../provider/auth/auth_provider.dart';
+
+class RecordList extends ConsumerStatefulWidget {
   RecordList({Key? key}) : super(key: key);
 
   @override
-  State<RecordList> createState() => _RecordListState();
+  ConsumerState<RecordList> createState() => _RecordListState();
 }
 
-class _RecordListState extends State<RecordList> {
-  final storage = FlutterSecureStorage();
+class _RecordListState extends ConsumerState<RecordList> {
   final ApiService apiService = ApiService();
   late String uid;
   late String nickName;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
   Future<List<HistoryRequestDTO>> _loadHistoryData() async {
-    await _loadUser();
-    final response = await apiService.selectHistoryList(uid);
+    await _loadUserData();
+    final response = await apiService.selectHistoryCount(uid);
     if (response.statusCode == 200) {
       final List<dynamic> histories =
           jsonDecode(utf8.decode(response.body.runes.toList()));
@@ -46,9 +45,9 @@ class _RecordListState extends State<RecordList> {
     }
   }
 
-  Future<void> _loadUser() async {
-    uid = await storage.read(key: 'uid') ?? "";
-    nickName = await storage.read(key: 'nickName') ?? "";
+  Future<void> _loadUserData() async {
+    uid = ref.read(authProvider.notifier).state.uid!;
+    nickName = ref.read(authProvider.notifier).state.nickName!;
   }
 
   @override
@@ -75,7 +74,6 @@ class _RecordListState extends State<RecordList> {
         shadowColor: Colors.white,
       ),
       body: RefreshIndicator(
-        color: context.appColors.logoColor,
         onRefresh: () async {
           setState(() {
             _loadHistoryData();

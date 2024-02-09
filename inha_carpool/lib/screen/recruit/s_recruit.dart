@@ -18,6 +18,7 @@ import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 import '../../provider/ParticipatingCrpool/carpool_provider.dart';
 
 
+/// todo : 최적화 하기 0209
 
 /// 카풀 생성 페이지
 class RecruitPage extends ConsumerStatefulWidget {
@@ -136,7 +137,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                     child: startPointInput = LocationInputWidget(
                       key: key1,
                       labelText: startPointName,
-                      Point: startPoint,
+                      point: startPoint,
                       pointText: '출발지',
                       onLocationSelected: (String value) {
                         setState(() {
@@ -194,7 +195,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                     child: endPointInput = LocationInputWidget(
                       key: key2,
                       labelText: endPointName,
-                      Point: endPoint,
+                      point: endPoint,
                       pointText: '도착지',
                       onLocationSelected: (String value) {
                         setState(() {

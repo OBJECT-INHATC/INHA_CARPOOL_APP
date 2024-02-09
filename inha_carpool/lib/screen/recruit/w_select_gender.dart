@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 
 
@@ -8,6 +7,7 @@ class GenderSelectorWidget extends StatefulWidget {
   final String selectedGender;
   final String gender;
   final Function(String) onGenderSelected;
+
 
   const GenderSelectorWidget({
     super.key,
@@ -21,12 +21,9 @@ class GenderSelectorWidget extends StatefulWidget {
 }
 
 class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
-  final storage = const FlutterSecureStorage();
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  final String anyone = '무관';
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +58,14 @@ class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
               margin: const EdgeInsets.fromLTRB(10, 0, 10, 0),
               child: TextButton(
                 onPressed: () {
-                  widget.onGenderSelected('무관');
+                  widget.onGenderSelected(anyone);
                 },
                 style: TextButton.styleFrom(
-                  backgroundColor: widget.selectedGender == '무관'
+                  backgroundColor: widget.selectedGender == anyone
                       ? Colors.blue[200]
                       : Colors.grey[300],
                 ),
-                child: '무관'.text.white.size(16).make(),
+                child: anyone.text.white.size(16).make(),
               ),
             ),
           ],

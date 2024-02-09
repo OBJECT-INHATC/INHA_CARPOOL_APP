@@ -12,14 +12,14 @@ class LocationInputWidget extends StatefulWidget {
 
   String labelText;
   String pointText;
-  final LatLng Point; // 출발지인지 도착지인지
+  final LatLng point; // 출발지인지 도착지인지
   final String detailPoint; // 요약 주소
   final ValueChanged<String> onLocationSelected;
 
   LocationInputWidget(
       {super.key,
       required this.labelText,
-      required this.Point,
+      required this.point,
       required this.pointText,
       required this.onLocationSelected,
       required this.detailPoint,
@@ -69,7 +69,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LocationInput(widget.Point)),
+                  builder: (context) => LocationInput(widget.point)),
             );
             // result가 null이 아니면 setState로 selectedLocation을 변경
             if (result != null) {

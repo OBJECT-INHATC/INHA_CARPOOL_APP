@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 class EmptySearched extends StatelessWidget {
   const EmptySearched({super.key});
 
-  final String message = '검색 결과가 없습니다.';
-
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    const String message = '검색 결과가 없습니다.';
+    return  const SafeArea(
       child: Center(
         child: Text(
           message,

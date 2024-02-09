@@ -13,6 +13,8 @@ class AuthInfoRow extends ConsumerStatefulWidget {
 }
 
 class _AuthInfoState extends ConsumerState<AuthInfoRow> {
+
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(authProvider);

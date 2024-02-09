@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
@@ -78,7 +77,6 @@ class _LocationInputState extends State<LocationInput> {
             }
             setState(() {}); // _addressList 상태 업데이트
           }
-          print('addr리스트 : $_addressList');
         }).catchError((a, stackTrace) {
           log(a.toString()); // 로그찍기
           print('주소 검색 오류 : $a'); // 에러 출력
