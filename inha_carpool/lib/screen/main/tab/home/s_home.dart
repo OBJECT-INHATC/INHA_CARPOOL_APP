@@ -417,7 +417,7 @@ class _HomeState extends ConsumerState<Home> {
               : filteredCarpools.length;
 
           if (filteredCarpools.isEmpty) {
-            return const EmptySearchedCarpool(); // 검색 결과가 없을 경우 빈 상태 표시
+            return const EmptySearched(); // 검색 결과가 없을 경우 빈 상태 표시
           }
 
           return CarpoolListItem(
