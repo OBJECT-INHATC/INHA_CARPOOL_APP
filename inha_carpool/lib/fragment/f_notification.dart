@@ -59,7 +59,7 @@ class _NotificationListState extends ConsumerState<NotificationList> {
           fontWeight: FontWeight.normal,
         ),
         title: const Text(
-          "알림 목록",
+          "인하카풀",
           style: TextStyle(color: Colors.black),
         ),
         actions: [
@@ -92,6 +92,10 @@ class _NotificationListState extends ConsumerState<NotificationList> {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Text('오류 발생: ${snapshot.error}');
+            }  else if (snapshot.data == null || snapshot.data!.isEmpty) {
+              // 알림이 없는 경우에 대한 UI 처리
+              return const Center(child: Text('알림이 없습니다.', style: TextStyle(fontSize: 15)),
+              );
             } else {
               final notificationList = snapshot.data;
               return ListView.builder(
