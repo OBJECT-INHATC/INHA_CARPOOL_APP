@@ -3,7 +3,6 @@ import 'dart:ui' as ui;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -19,7 +18,7 @@ import '../../../../common/models/m_carpool.dart';
 import '../../../../common/util/carpool.dart';
 import '../../../../common/util/addMember_Exception.dart';
 import '../../../../dto/TopicDTO.dart';
-import '../../../../provider/carpool/carpool_provider.dart';
+import '../../../../provider/ParticipatingCrpool/carpool_provider.dart';
 import '../../s_main.dart';
 import '../carpool/chat/s_chatroom.dart';
 

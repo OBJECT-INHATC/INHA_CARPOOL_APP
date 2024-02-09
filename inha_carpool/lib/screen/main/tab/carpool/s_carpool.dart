@@ -5,12 +5,12 @@ import 'package:inha_Carpool/common/common.dart';
 
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
-import 'package:inha_Carpool/provider/carpool/carpool_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 
 import '../../../../common/widget/empty_list.dart';
+import '../../../../provider/ParticipatingCrpool/carpool_provider.dart';
 import 'w_card_Item.dart';
 import 'w_last_chat.dart';
 

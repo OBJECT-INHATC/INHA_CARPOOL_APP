@@ -15,7 +15,8 @@ import 'package:inha_Carpool/screen/recruit/w_select_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
-import '../../provider/carpool/carpool_provider.dart';
+import '../../provider/ParticipatingCrpool/carpool_provider.dart';
+
 
 
 /// 카풀 생성 페이지

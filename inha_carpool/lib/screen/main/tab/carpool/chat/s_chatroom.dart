@@ -17,8 +17,8 @@ import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_location.dart';
 import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
+import '../../../../../provider/ParticipatingCrpool/carpool_provider.dart';
 import '../../../../../provider/auth/auth_provider.dart';
-import '../../../../../provider/carpool/carpool_provider.dart';
 
 
 class ChatroomPage extends ConsumerStatefulWidget {
