@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/service/api/Api_repot.dart';
 
 import '../../../../../provider/auth/auth_provider.dart';
+import '../../../../../provider/record/record_provider.dart';
 
 class RecordList extends ConsumerStatefulWidget {
   RecordList({Key? key}) : super(key: key);
@@ -29,6 +29,10 @@ class _RecordListState extends ConsumerState<RecordList> {
     if (response.statusCode == 200) {
       final List<dynamic> histories =
           jsonDecode(utf8.decode(response.body.runes.toList()));
+
+      /// 이용횟수 상태 업데이트 
+      ref.read(recordCountProvider.notifier).state = histories.length;
+
       List<HistoryRequestDTO> historyList =
           histories.map((data) => HistoryRequestDTO.fromJson(data)).toList();
 
