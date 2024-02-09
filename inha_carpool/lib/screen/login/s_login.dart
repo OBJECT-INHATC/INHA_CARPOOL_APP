@@ -20,7 +20,7 @@ import '../../provider/auth/auth_provider.dart';
 import '../../provider/notification/notification_provider.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
-import '../main/tab/carpool/chat/f_chatroom.dart';
+import '../main/tab/carpool/chat/s_chatroom.dart';
 import '../register/s_findregister.dart';
 
 class LoginPage extends ConsumerStatefulWidget {

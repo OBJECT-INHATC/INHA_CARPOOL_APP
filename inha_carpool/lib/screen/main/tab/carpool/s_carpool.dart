@@ -6,10 +6,11 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/provider/carpool/carpool_provider.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 
+import '../../../../common/widget/empty_list.dart';
 import 'w_card_Item.dart';
 import 'w_last_chat.dart';
 
@@ -86,52 +87,12 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                     return Text('Error: ${snapshot.error}');
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     /// 참가하고 있는 카풀이 없는 경우
-                    return SafeArea(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Height(MediaQuery.of(context).size.height * 0.15),
-                            '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!'
-                                .text
-                                .size(20)
-                                .bold
-                                .color(context.appColors.text)
-                                .align(TextAlign.center)
-                                .make(),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            FloatingActionButton(
-                              heroTag: "recruit_from_myCarpool",
-                              elevation: 10,
-                              backgroundColor: Colors.white,
-                              shape: ContinuousRectangleBorder(
-                                borderRadius: BorderRadius.circular(40),
-                                //side: const BorderSide(color: Colors.white, width: 1),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  Nav.globalContext,
-                                  MaterialPageRoute(
-                                      builder: (context) => const RecruitPage()),
-                                );
-                              },
-                              child: '+'
-                                  .text
-                                  .size(50)
-                                  .color(
-                                    Colors.blue[200],
-                                    //Color.fromARGB(255, 70, 100, 192),
-                                  )
-                                  .make(),
-                            ),
-                          ],
-                        ),
+                    return const SafeArea(
+                      child: EmptyCarpoolList(
+                        message: '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!',
                       ),
                     );
                   }
-
                   /// 참가하고 있는 카풀이 있는 경우
                   else {
                     List<DocumentSnapshot> myCarpools = snapshot.data!;

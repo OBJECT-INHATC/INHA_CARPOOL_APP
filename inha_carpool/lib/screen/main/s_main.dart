@@ -5,7 +5,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/chat/f_chatroom.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
 import 'package:shared_preferences/shared_preferences.dart';

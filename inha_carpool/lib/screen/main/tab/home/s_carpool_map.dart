@@ -21,7 +21,7 @@ import '../../../../common/util/addMember_Exception.dart';
 import '../../../../dto/TopicDTO.dart';
 import '../../../../provider/carpool/carpool_provider.dart';
 import '../../s_main.dart';
-import '../carpool/chat/f_chatroom.dart';
+import '../carpool/chat/s_chatroom.dart';
 
 class CarpoolMap extends ConsumerStatefulWidget {
   final LatLng startPoint;

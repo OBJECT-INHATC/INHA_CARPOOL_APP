@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
@@ -10,11 +9,11 @@ import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptySearchedCarpool.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
-import 'package:inha_Carpool/screen/main/tab/home/w_emptyCarpool.dart';
 
 import '../../../../common/util/carpool.dart';
+import '../../../../common/widget/empty_list.dart';
 import '../../../recruit/s_recruit.dart';
-import '../carpool/chat/f_chatroom.dart';
+import '../carpool/chat/s_chatroom.dart';
 import 'carpoolFilter.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -391,7 +390,9 @@ class _HomeState extends ConsumerState<Home> {
             !snapshot.hasData ||
             snapshot.data!.isEmpty) {
           // 카풀 에러 or 비었을 시
-          return const EmptyCarpool();
+          return const EmptyCarpoolList(
+            message: '카풀을 등록하여\n택시 비용을 줄여 보세요!',
+          );
         } else {
           // 카풀 리스트가 있을 경우 리스트 뷰 빌드 위젯 호출
 
