@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../common/common.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../fragment/f_notification.dart';
+import '../../provider/auth/auth_provider.dart';
 import '../../provider/notification/notification_provider.dart';
 import '../../service/sv_firestore.dart';
 
@@ -28,19 +29,6 @@ class MainScreen extends ConsumerStatefulWidget {
 
 class MainScreenState extends ConsumerState<MainScreen>
     with SingleTickerProviderStateMixin {
-
-  final storage = const FlutterSecureStorage();
-
-  /// 사용자 닉네임
-  String? nickName;
-  String? uid;
-  String? gender;
-
-  getNickName() async {
-    nickName = await storage.read(key: "nickName");
-    uid = await storage.read(key: "uid");
-    gender = await storage.read(key: "gender");
-  }
 
   late TabItem _currentTab;
 
@@ -80,7 +68,6 @@ class MainScreenState extends ConsumerState<MainScreen>
         now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
       currentBackPressTime = now;
       const msg = "한 번 더 누르면 종료됩니다.";
-
       Fluttertoast.showToast(
         msg: msg,
         toastLength: Toast.LENGTH_SHORT,
@@ -168,8 +155,6 @@ class MainScreenState extends ConsumerState<MainScreen>
   @override
   void initState() {
     super.initState();
-    getNickName();
-
     /// 앱 알림 설정 초기화
     initializeNotification(context);
 

@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
-import '../../../dialog/d_delete_auth.dart';
+import '../../../../dialog/d_delete_auth.dart';
 
 class SecessionPage extends StatefulWidget {
   @override

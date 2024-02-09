@@ -1,7 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
-import '../../../login/s_login.dart';
+import '../../../../login/s_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:inha_Carpool/common/common.dart';
 

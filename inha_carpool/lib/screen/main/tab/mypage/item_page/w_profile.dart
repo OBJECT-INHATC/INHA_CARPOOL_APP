@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:inha_Carpool/common/common.dart';
 
-import '../../../../provider/auth/auth_provider.dart';
+import '../../../../../provider/auth/auth_provider.dart';
 
-/// 상단 프로필 페이지 위젯
-/// 닉네임 수정 기능 모두 off
 class ProFile extends ConsumerStatefulWidget {
   const ProFile({Key? key}) : super(key: key);
 
@@ -37,111 +35,113 @@ class _ProFileState extends ConsumerState<ProFile> {
 
   @override
   Widget build(BuildContext context) {
-    Colors.transparent; // 틴트 제외
     //프로필 수정 버튼 screenWidth,screenHeight 변수 선언
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = context.screenWidth;
+    double screenHeight = context.screenHeight;
 
-    return Container(
-      color: const Color(0x00000000),
-      child: Column(
-        children: [
-          Center(
-            child: Column(
-              children: [
-                const Height(1),
-                // 기본정보 항목 중 프로필사진, 닉네임 부분
-                Row(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                         Padding(
-                          padding: EdgeInsets.only(left: screenWidth * 0.03),
-                          child: const Icon(
-                            Icons.account_circle,
-                            size: 60,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const Width(15),
-
-
-                        Text(
-                          // nickNameFuture의 닉네임 값
-                          nickName ?? ' ',
-                          style: const TextStyle(
-                            fontSize: 21,
-                            color: Colors.black54,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Width(screenWidth * 0.3),
-                        Column(
-                          children: [
-                            Height(screenHeight * 0.01),
-                            Text(
-                              userName ?? '',
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black45, // 이름 색 변경
-                              ),
+    return Padding(
+      padding:  EdgeInsets.fromLTRB(0, screenHeight * 0.03 , 0, screenHeight * 0.01),
+      child: Container(
+        color: const Color(0x00000000),
+        child: Column(
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  const Height(1),
+                  // 기본정보 항목 중 프로필사진, 닉네임 부분
+                  Row(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                           Padding(
+                            padding: EdgeInsets.only(left: screenWidth * 0.03),
+                            child: const Icon(
+                              Icons.account_circle,
+                              size: 60,
+                              color: Colors.black,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                /*const SizedBox(height: 10),
-
-                //이메일란 원래 위치
-
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: GestureDetector(
-                    onTap: () {
-                      _showEditNicknameDialog(context, uid, nickName!, gender!);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: screenWidth * 0.05), // 좌우 여백 반응형으로 지정
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          surfaceTintColor: Colors.transparent,
-                          elevation: 5,
-                          primary: Colors.blue[100],
-                          // 버튼 배경색
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12), // 조금 둥글게
                           ),
-                          padding: EdgeInsets.symmetric(
-                            vertical: screenHeight * 0.01, // 위아래 여백 반응형으로 지정
-                            horizontal: screenWidth * 0.05, // 좌우 여백 반응형으로 지정
-                          ),
-                        ),
-                        onPressed: () {
-                          _showEditNicknameDialog(context, uid, nickName!,
-                              gender!); // 프로필 수정 버튼 클릭 시 _showEditNicknameDialog 함수 호출
-                        },
-                        child: const Center(
-                          child: Text(
-                            '닉네임 수정',
-                            style: TextStyle(
-                              fontSize: 17,
+                          const Width(15),
+
+
+                          Text(
+                            // nickNameFuture의 닉네임 값
+                            nickName ?? ' ',
+                            style: const TextStyle(
+                              fontSize: 21,
+                              color: Colors.black54,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                            ),
+                          ),
+                          Width(screenWidth * 0.3),
+                          Column(
+                            children: [
+                              Height(screenHeight * 0.01),
+                              Text(
+                                userName ?? '',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black45, // 이름 색 변경
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  /*const SizedBox(height: 10),
+
+                  //이메일란 원래 위치
+
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: GestureDetector(
+                      onTap: () {
+                        _showEditNicknameDialog(context, uid, nickName!, gender!);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: screenWidth * 0.05), // 좌우 여백 반응형으로 지정
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            surfaceTintColor: Colors.transparent,
+                            elevation: 5,
+                            primary: Colors.blue[100],
+                            // 버튼 배경색
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12), // 조금 둥글게
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              vertical: screenHeight * 0.01, // 위아래 여백 반응형으로 지정
+                              horizontal: screenWidth * 0.05, // 좌우 여백 반응형으로 지정
+                            ),
+                          ),
+                          onPressed: () {
+                            _showEditNicknameDialog(context, uid, nickName!,
+                                gender!); // 프로필 수정 버튼 클릭 시 _showEditNicknameDialog 함수 호출
+                          },
+                          child: const Center(
+                            child: Text(
+                              '닉네임 수정',
+                              style: TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ),*/
-              ],
+                  ),*/
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

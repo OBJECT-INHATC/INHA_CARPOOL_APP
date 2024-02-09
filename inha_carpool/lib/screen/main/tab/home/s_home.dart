@@ -14,7 +14,7 @@ import '../../../../common/util/carpool.dart';
 import '../../../../common/widget/empty_list.dart';
 import '../../../recruit/s_recruit.dart';
 import '../carpool/chat/s_chatroom.dart';
-import 'carpoolFilter.dart';
+import 'enum/carpoolFilter.dart';
 
 class Home extends ConsumerStatefulWidget {
   //내 정보

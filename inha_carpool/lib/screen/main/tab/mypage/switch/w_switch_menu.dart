@@ -4,12 +4,12 @@ import 'package:velocity_x/velocity_x.dart';
 import '../../../../../common/widget/w_empty_expanded.dart';
 import 'w_os_switch.dart';
 
-class Switchmenu extends StatelessWidget {
+class SwitchMenu extends StatelessWidget {
   final String title;
   final bool isOn;
   final ValueChanged<bool> onChanged;
 
-  const Switchmenu(this.title, this.isOn, {super.key, required this.onChanged});
+  const SwitchMenu(this.title, this.isOn, {super.key, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
