@@ -27,50 +27,40 @@ class _ProFileState extends ConsumerState<ProFile> {
     return Stack(
       children: [
         //프로필 이미지
-        Container(
-          decoration: BoxDecoration(
-            // Todo 테두리 원형이 이쁜가 ?
-              borderRadius: BorderRadius.circular(20),
-              gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [
-                  context.appColors.myPage2,
-                  context.appColors.myPage3,
-                  context.appColors.myPage1,
-                ],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
-                  offset: const Offset(0, 4),
-                  blurRadius: 4,
-                  spreadRadius: 0,
-                )
-              ]),
-          width: screenWidth,
-          height: screenHeight * 0.3,
-          child:  Center(
-            child: Opacity(
-              opacity: 0.3,
-              child: CustomPng(
-                fileDirectory: 'splash',
-                fileName: 'obj1152',
-                width: screenWidth * 0.3,
-                height: screenHeight * 0.15,
-              ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: BoxDecoration(
+              // Todo 테두리 원형이 이쁜가 ?
+                borderRadius: BorderRadius.circular(20),
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    context.appColors.myPage2,
+                    context.appColors.myPage3,
+                    context.appColors.myPage1,
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.25),
+                    offset: const Offset(0, 4),
+                    blurRadius: 4,
+                    spreadRadius: 0,
+                  )
+                ]),
+            width: screenWidth,
+            height: screenHeight * 0.3,
             ),
-            )
-          ),
+        ),
+
 
         //프로필 정보
-        const Row(
-          children: [
-            AuthInfoRow(),
-          ],
-        ),
-        //이용기록
-        const AuthRecordRow(),
+    //  const AuthInfoRow(),
+
+
+
       ],
 
 

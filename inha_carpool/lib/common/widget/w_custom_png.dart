@@ -12,15 +12,15 @@ class CustomPng extends StatelessWidget {
     required this.fileDirectory,
     required this.fileName,
     this.fit = BoxFit.contain,
-    this.width,
-    this.height,
+    required this.width,
+    required this.height,
     super.key});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width ?? 250,
-      height: height ?? 250,
+      width: width,
+      height: height,
       child: Image.asset("assets/image/$fileDirectory/$fileName.png", fit: fit,),
     );
   }
