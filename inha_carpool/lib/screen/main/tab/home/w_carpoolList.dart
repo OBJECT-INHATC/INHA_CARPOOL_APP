@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
+import '../../../../provider/auth/auth_provider.dart';
 import '../carpool/chat/s_chatroom.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
 
-class CarpoolListItem extends StatefulWidget {
+class CarpoolListItem extends ConsumerStatefulWidget {
   final AsyncSnapshot<List<DocumentSnapshot>> snapshot;
   final ScrollController scrollController;
   final int visibleItemCount;
-  final String nickName; // nickName 추가
-  final String uid; // uid 추가
-  final String gender;
 
   const CarpoolListItem({
     super.key,
     required this.snapshot,
     required this.scrollController,
     required this.visibleItemCount,
-    required this.nickName,
-    required this.uid,
-    required this.gender,
   });
 
   @override
-  State<CarpoolListItem> createState() => _CarpoolListItemState();
+  ConsumerState<CarpoolListItem> createState() => _CarpoolListItemState();
 }
 
 Color getColorForGender(String gender) {
@@ -51,7 +47,25 @@ String _truncateText(String text, int maxLength) {
 
 
 
-class _CarpoolListItemState extends State<CarpoolListItem> {
+class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
+
+  late String nickName = "";
+  late String uid = "";
+  late String gender = "";
+
+
+  Future<void> _loadUserData() async {
+    nickName = ref.read(authProvider).nickName!;
+    uid = ref.read(authProvider).uid!;
+    gender = ref.read(authProvider).gender!;
+  }
+
+  @override
+  void initState() {
+    _loadUserData();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +75,7 @@ class _CarpoolListItemState extends State<CarpoolListItem> {
 
     // 화면 높이의 75%를 ListView.builder의 높이로 사용
     double listViewHeight = screenHeight * 0.75;
-    // // 각 카드의 높이
-    double cardHeight = listViewHeight * 0.53;
 
-    bool isOnUri = true;
 
 
     return Container(
@@ -102,7 +113,7 @@ class _CarpoolListItemState extends State<CarpoolListItem> {
                   int maxMember = carpoolData['maxMember'];
 
                   String currentUser =
-                      '${widget.uid}_${widget.nickName}_${widget.gender}';
+                      '${uid}_${nickName}_${gender}';
                   if (carpoolData['members'].contains(currentUser)) {
                     // 이미 참여한 경우
                     if (carpoolData['admin'] == currentUser) {
@@ -113,9 +124,9 @@ class _CarpoolListItemState extends State<CarpoolListItem> {
                             builder: (context) => ChatroomPage(
                                   carId: carpoolData['carId'],
                                   groupName: '카풀 네임',
-                                  userName: widget.nickName,
-                                  uid: widget.uid,
-                                  gender: widget.gender,
+                                  userName: nickName,
+                                  uid: uid,
+                                  gender: gender,
                                 )),
                       );
                     } else {
@@ -125,9 +136,9 @@ class _CarpoolListItemState extends State<CarpoolListItem> {
                           builder: (context) => ChatroomPage(
                             carId: carpoolData['carId'],
                             groupName: '카풀 네임',
-                            userName: widget.nickName,
-                            uid: widget.uid,
-                            gender: widget.gender,
+                            userName: nickName,
+                            uid: uid,
+                            gender: gender,
                           ),
                         ),
                       );

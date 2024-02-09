@@ -45,7 +45,6 @@ class _HomeState extends ConsumerState<Home> {
 
   Stream<DateTime>? _timeStream;
 
-//Future.value([]); 는 비동기를 알려주는 것
   late Future<List<DocumentSnapshot>> carPoolList = Future.value([]);
 
   late String nickName = ""; // 기본값으로 초기화
@@ -318,6 +317,7 @@ class _HomeState extends ConsumerState<Home> {
                                       _searchKeywordController.text;
                                 },
                               );
+                              print("검색어: $_searchKeyword");
                             },
                           ),
                         ),
@@ -432,11 +432,6 @@ class _HomeState extends ConsumerState<Home> {
             // AsyncSnapshot을 CarpoolListWidget에 전달
             scrollController: _scrollController,
             visibleItemCount: _visibleItemCount,
-            nickName: nickName,
-            // 닉네임 전달
-            uid: uid,
-            // uid 전달
-            gender: gender, // 성별 전달
           );
         }
       },
