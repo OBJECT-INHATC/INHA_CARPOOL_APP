@@ -50,6 +50,10 @@ abstract class AbstractThemeColors {
 
   Color get logoColor => const Color.fromARGB(255, 70, 100, 192);
 
+  Color get myPage1 => const Color.fromARGB(255, 116, 145, 206);
+  Color get myPage2 => const Color.fromARGB(255, 121, 181, 222);
+  Color get myPage3 => const Color.fromARGB(255, 149, 197, 229);
+
   Color get mainList => const Color.fromARGB(255, 121, 181, 222);
 
 

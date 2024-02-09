@@ -4,9 +4,8 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/velocityx_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/item_page/s_feedback.dart';
-import 'package:inha_Carpool/screen/main/tab/mypage/w_profile.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/Profile/w_profile.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/item_page/w_recordList.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/switch/w_switch_menu.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_category.dart';
@@ -48,13 +47,13 @@ class _MyPageState extends ConsumerState<MyPage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = context.screenWidth;
-    final height = context.screenHeight;
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // 상단 프로필 항목
+            const Height(20),
             const ProFile(),
             const Category(title: '계정'),
             MypageListItem(
