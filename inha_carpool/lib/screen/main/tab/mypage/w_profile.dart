@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:inha_Carpool/common/common.dart';
 
-import '../../../../../provider/auth/auth_provider.dart';
+import '../../../../provider/auth/auth_provider.dart';
 
 class ProFile extends ConsumerStatefulWidget {
   const ProFile({Key? key}) : super(key: key);

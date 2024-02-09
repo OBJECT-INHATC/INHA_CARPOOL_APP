@@ -6,11 +6,12 @@ import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/velocityx_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/item_page/s_feedback.dart';
-import 'package:inha_Carpool/screen/main/tab/mypage/item_page/w_profile.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/w_profile.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/item_page/w_recordList.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/switch/w_switch_menu.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_category.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_list_item.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/w_version_copyRight.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 
 import '../../../../common/data/preference/prefs.dart';
@@ -96,12 +97,8 @@ class _MyPageState extends ConsumerState<MyPage> {
               },
               color: Colors.black,
             ),
-
-
-
             // 알림 항목
             const Category(title: '알림'),
-
             Obx(
               () => SwitchMenu('채팅 알림', Prefs.isPushOnRx.get(),
                   onChanged: (isOn) async {
@@ -110,7 +107,6 @@ class _MyPageState extends ConsumerState<MyPage> {
                 List<String> topicList = await apiUser.getAllCarIdsForUser(uid);
                 if (isOn) {
                   print('채팅 알림 on');
-
                   /// 서버 db 에서 카풀Id 다 가져와서 다 구독
                   for (String carId in topicList) {
                     try {
@@ -135,36 +131,6 @@ class _MyPageState extends ConsumerState<MyPage> {
                 }
               }),
             ),
-            // 광고부분 일단 주석처리
-            //Obx(
-            //    () => Switchmenu('광고 및 마케팅', Prefs.isAdPushOnRx.get(),
-            //  onChanged: (isOn) async {
-            //  Prefs.isAdPushOnRx.set(isOn);
-            //if (isOn) {
-            //print('광고 및 마케팅 알림 on');
-            //await FirebaseMessaging.instance.subscribeToTopic("AdNotification");
-            //} else {
-            // print('광고 및 마케팅 알림 off');
-            // await FirebaseMessaging.instance.unsubscribeFromTopic("AdNotification");
-            //}
-            //}),
-            //),
-            /*      ListTile(
-              leading: const Icon(
-                Icons.notifications_none_rounded,
-                color: Colors.grey,
-              ),
-              title: '테스트 버튼'.text.make(),
-              onTap: () {
-                // 알림 설정 페이지로 이동
-                final CarpoolRepository carpoolRepository = CarpoolRepository();
-
-                carpoolRepository.getCarPoolList2(MemberModel(
-                uid: uid, nickName:nickName, gender: gender));
-
-              },
-            ),*/
-
             Obx(
               () => SwitchMenu('학교 공지사항', Prefs.isSchoolPushOnRx.get(),
                   onChanged: (isOn) async {
@@ -180,10 +146,8 @@ class _MyPageState extends ConsumerState<MyPage> {
                 }
               }),
             ),
-
             // 기타 항목
             const Category(title: '기타'),
-
             MypageListItem(
               icon: Icons.help_outline_rounded,
               title: '건의/제안사항',
@@ -219,24 +183,9 @@ class _MyPageState extends ConsumerState<MyPage> {
               },
               color: Colors.grey,
             ),
-            const Line(),
-            const Height(10),
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                      height: 30,
-                      width: 100,
-                      padding: const EdgeInsets.only(left: 15),
-                      child: '  © INHAtc 2023 컴퓨터시스템과 Object ver 1.0.0'
-                          .text
-                          .size(15)
-                          .semiBold
-                          .makeWithDefaultFont()),
-                ),
-              ],
-            ),
-             Height(height * 0.1),
+
+            /// 하단 버전 정보
+            const VersionAndCopyRight(),
           ],
         ),
       ),

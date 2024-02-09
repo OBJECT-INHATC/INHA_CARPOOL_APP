@@ -22,7 +22,7 @@ class SwitchMenu extends StatelessWidget {
         Icon(iconData).pOnly(right: 15),
         title.text.size(17).make(),
         const EmptyExpanded(),
-        OsSwitch(value: isOn, onChanged: onChanged,),
+        OsSwitch(value: isOn, onChanged: onChanged, ),
 
       ],
     ).p20();
