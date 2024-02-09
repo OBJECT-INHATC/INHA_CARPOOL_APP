@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/provider/record/record_provider.dart';
 
 import '../../../../../common/widget/w_custom_png.dart';
 import '../../../../../provider/auth/auth_provider.dart';
@@ -20,6 +21,8 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
     final state = ref.watch(authProvider);
     final width = context.screenWidth;
 
+    final recordState = ref.watch(recordCountProvider);
+
     return Center(
       child: Padding(
         padding: EdgeInsets.only(top: width * 0.02),
@@ -38,7 +41,7 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // 앱 이용횟수
-                _buildCountColumn('카풀 이용', 5, width),
+                _buildCountColumn('카풀 이용', recordState, width),
                 Column(
                   children: [
                     // 이름

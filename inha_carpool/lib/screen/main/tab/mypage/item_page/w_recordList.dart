@@ -25,7 +25,7 @@ class _RecordListState extends ConsumerState<RecordList> {
 
   Future<List<HistoryRequestDTO>> _loadHistoryData() async {
     await _loadUserData();
-    final response = await apiService.selectHistoryCount(uid);
+    final response = await apiService.selectHistoryList(uid);
     if (response.statusCode == 200) {
       final List<dynamic> histories =
           jsonDecode(utf8.decode(response.body.runes.toList()));

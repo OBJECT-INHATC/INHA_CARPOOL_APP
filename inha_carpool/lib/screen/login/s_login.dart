@@ -10,6 +10,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
 import 'package:inha_Carpool/screen/register/s_agreement.dart';
+import 'package:inha_Carpool/service/api/Api_repot.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 
@@ -18,6 +19,7 @@ import '../../common/database/d_alarm_dao.dart';
 import '../../common/models/m_member.dart';
 import '../../provider/auth/auth_provider.dart';
 import '../../provider/notification/notification_provider.dart';
+import '../../provider/record/record_provider.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
 import '../main/tab/carpool/chat/s_chatroom.dart';
@@ -32,7 +34,6 @@ class LoginPage extends ConsumerStatefulWidget {
 
 class _LoginPageState extends ConsumerState<LoginPage> {
 
-  /// 상태관리로 사용자 정보 가져오기
 
 
   //이메일 temp
@@ -84,13 +85,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (!mounted) return;
 
       /// 상태관리에 로그인 정보 저장
-      setAuthStateProvider(MemberModel(
+      MemberModel memberModel = MemberModel(
         uid: await storage.read(key: 'uid'),
         nickName: await storage.read(key: 'nickName'),
         gender: await storage.read(key: 'gender'),
         email: await storage.read(key: 'email'),
         userName: await storage.read(key: 'userName'),
-      ));
+      );
+
+      /// 로그인 정보 상태관리 초기화
+      setAuthStateProvider(memberModel);
+
+      /// 이용내역 상태관리 초기화
+      setRecordCount(memberModel.uid!);
 
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MainScreen()));
@@ -99,6 +106,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       print("로그인 안됨 + 스플래시 제거");
       FlutterNativeSplash.remove();
     }
+  }
+
+  void setRecordCount(String uid) async {
+    final recordCount = await ApiService().selectHistoryCount(uid.toString());
+    ref.read(recordCountProvider.notifier).state = recordCount;
   }
 
   // 버튼 활성화 여부
@@ -202,6 +214,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         email: memberModel.email,
         userName: memberModel.userName,
       );
+
       print("===========상태관리 저장 완료==================");
       print("상태관리 로그인 성별 :  ${ref.read(authProvider).gender}");
       print("상태관리 로그인 닉네임 :  ${ref.read(authProvider).nickName}");
@@ -464,7 +477,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                           "----------------------------------");
                                       print("memberUser: $memberUser");
 
-                                      ///  로그인 정보 상태관리 업데이트 0207 이상훈
+                                      ///  0207 이상훈 로그인 정보 상태관리 초기화
                                       setAuthStateProvider(MemberModel(
                                         uid: uid,
                                         nickName: nickname,
@@ -472,6 +485,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         email: email,
                                         userName: userName,
                                       ));
+
+                                      /// 0207 이상훈 이용내역 상태관리 초기화
+                                      setRecordCount(uid);
 
                                       // Firestore에서 해당 사용자가 속한 모든 carId를 가져옵니다.
                                       FirebaseFirestore.instance

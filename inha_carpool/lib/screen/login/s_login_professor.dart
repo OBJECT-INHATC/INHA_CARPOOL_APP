@@ -18,6 +18,8 @@ import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
 import '../register/s_findregister.dart';
 
+/// todo : 교수님 로그인페이지도 확인하기
+
 class ProfessorLoginPage extends StatefulWidget {
   const ProfessorLoginPage({super.key});
 

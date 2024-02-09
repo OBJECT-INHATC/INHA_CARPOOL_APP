@@ -108,7 +108,7 @@ class ApiService {
     }
   }
 
-  /// 이용 내역 조회
+  /// 이용 내역 횟수만 조회
    selectHistoryCount(String uid) async {
     final String apiUrl = '$baseUrl/history/select'; // API 엔드포인트 URL
     final Uri uri = Uri.parse(apiUrl).replace(
@@ -122,8 +122,9 @@ class ApiService {
       },
     );
     if (response.statusCode == 200) {
-      return  response.body.runes.toList().length;
-      return response; // API 응답을 반환
+
+      return jsonDecode(utf8.decode(response.body.runes.toList())).length; // API 응답을 반환
+
     } else if (response.statusCode == 204) {
       // API 요청이 204 상태 코드(No Content)일 경우 처리할 코드
       return 0;    } else {
