@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
@@ -8,7 +7,6 @@ import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../provider/notification/notification_provider.dart';
 import '../service/sv_firestore.dart';
 
 /// 알림 목록 페이지
@@ -21,54 +19,30 @@ class NotificationList extends ConsumerStatefulWidget {
 }
 
 class _NotificationListState extends ConsumerState<NotificationList> {
-
-
-  final storage = const FlutterSecureStorage();
-
   /// 알림 리스트
   Future<List<AlarmMessage>>? notificationListFuture;
-
-  /// 사용자 닉네임
-  String? nickName;
-  String? uid;
-  String? gender;
 
   @override
   void initState() {
     /// 알림 리스트 불러오기 및 사용자 닉네임 불러오기
     gettingLocalAlarm();
-    gettingNickName();
 
     // 알림 값 변경
     setBackgroundAlarmState();
-
-
     super.initState();
   }
 
   Future<void> setBackgroundAlarmState() async {
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove("isCheckAlarm");
-
   }
 
   gettingLocalAlarm() async {
     notificationListFuture = AlarmDao().getAllAlarms();
   }
 
-  gettingNickName() async {
-    nickName = await storage.read(key: "nickName");
-    uid = await storage.read(key: "uid");
-    gender = await storage.read(key: "gender");
-  }
-
   @override
   Widget build(BuildContext context) {
-
-
-    print("ref.read(isCheckAlarm.notifier).state : ${ref.read(isCheckAlarm.notifier).state}");
-
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 45,
@@ -198,15 +172,6 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                           );
                           // 알림 리스트 스택 제거
                           Navigator.pop(context);
-                          // 이용기록 페이지로 이동
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => RecordList(
-                          //
-                          //     ),
-                          //   ),
-                          // );
                         }
                       },
                       child: Container(
