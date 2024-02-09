@@ -163,10 +163,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                                             MaterialPageRoute(
                                                 builder: (context) => ChatroomPage(
                                                       carId: carpool['carId'],
-                                                      groupName: '카풀네임',
-                                                      userName: nickName,
-                                                      uid: uid,
-                                                      gender: gender,
                                                     )),
                                           );
                                         }

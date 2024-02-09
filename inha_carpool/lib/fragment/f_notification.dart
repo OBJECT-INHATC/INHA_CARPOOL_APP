@@ -185,10 +185,6 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                               MaterialPageRoute(
                                 builder: (context) => ChatroomPage(
                                   carId: notificationList[i].carId!,
-                                  groupName: "그룹 이름",
-                                  userName: nickName!,
-                                  uid: uid!,
-                                  gender: gender!,
                                 ),
                               ),
                             );

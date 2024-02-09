@@ -115,10 +115,6 @@ class _HomeState extends ConsumerState<Home> {
         MaterialPageRoute(
           builder: (context) => ChatroomPage(
             carId: carpoolData['carId'],
-            groupName: '카풀네임',
-            userName: nickName,
-            uid: uid,
-            gender: gender,
           ),
         ),
       );

@@ -17,25 +17,18 @@ import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_location.dart';
 import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
+import '../../../../../provider/auth/auth_provider.dart';
 import '../../../../../provider/carpool/carpool_provider.dart';
 
 
 class ChatroomPage extends ConsumerStatefulWidget {
 
   final String carId;
-  final String groupName;
-  final String userName;
-  final String uid;
-  final String gender;
 
   /// 생성자
   const ChatroomPage({
     Key? key,
     required this.carId,
-    required this.groupName,
-    required this.userName,
-    required this.uid,
-    required this.gender,
   }) : super(key: key);
 
   @override
@@ -59,13 +52,10 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   /// 로컬 저장소 SS
   final storage = const FlutterSecureStorage();
 
-  User? user = FirebaseAuth.instance.currentUser;
 
   /// 관리자 이름, 토큰, 사용자 Auth 정보
   String admin = "";
   String token = "";
-
-  String? get uid => user?.uid; //uid가져오기
 
   int previousItemCount = 0;
   bool canSend = true;
@@ -97,14 +87,27 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   //도착지 위도경도
   LatLng endPointLnt = const LatLng(0, 0);
 
+  late String userName = '';
+  late String uid = '';
+  late String gender = '';
+
+  /// 유저 정보 받아오기
+  Future<void> _loadUserData() async {
+    userName = ref.read(authProvider).userName!;
+    uid = ref.read(authProvider).uid!;
+    gender = ref.read(authProvider).gender!;
+  }
+
+
+
   @override
   void initState() {
     super.initState();
     /// 로컬 채팅 메시지 , 채팅 메시지 스트림, 관리자 이름 호출 메서드
-    getChatandAdmin();
+    getChatAndAdmin();
 
-    /// 로컬 채팅 메시지, 채팅 메시지 스트림, 관리자 이름 호출
-    getCurrentUserandToken();
+    ///로그인 정보 불러오기
+    _loadUserData();
 
     /// 토큰, 사용자 Auth 정보 호출
     getCarpoolInfo();
@@ -152,7 +155,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   }
 
   /// 로컬 채팅 메시지 , 채팅 메시지 스트림, 관리자 이름 호출 메서드
-  getChatandAdmin() async {
+  getChatAndAdmin() async {
     await getLocalChat();
     print(localChats!.length);
 
@@ -206,11 +209,6 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
     return res.substring(start, end);
   }
 
-  /// 토큰, 사용자 Auth 정보 호출 메서드
-  getCurrentUserandToken() async {
-    user = FirebaseAuth.instance.currentUser;
-    token = (await storage.read(key: "token"))!;
-  }
 
   // 멤버 리스트, 출발 시간, 요약주소 가져오기
   getCarpoolInfo() async {
@@ -491,7 +489,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
           return AlertDialog(
             surfaceTintColor: Colors.transparent,
             title: const Text('카풀 나가기'),
-            content: admin == widget.userName
+            content: admin == userName
                 ? const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?')
                 : const Text('정말로 카풀을 나가시겠습니까?'),
             actions: [
@@ -623,7 +621,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   /// 나가기 처리를 수행하는 비동기 함수
   Future<void> _exitCarpoolFuture() async {
     ApiTopic apiTopic = ApiTopic();
-    bool isOpen = await apiTopic.deleteTopic(widget.uid, widget.carId);
+    bool isOpen = await apiTopic.deleteTopic(uid, widget.carId);
 
     if (isOpen) {
       print("스프링부트 서버 성공 ##########");
@@ -637,14 +635,14 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
         print("Ios 시뮬 에러~");
       }
 
-      if (admin != widget.userName) {
+      if (admin != userName) {
         // 방장이 아닐 때 exitCarpool 메소드 호출
         await FireStoreService().exitCarpool(
-            widget.carId, widget.userName, widget.uid, widget.gender);
+            widget.carId, userName, uid, gender);
       } else {
         // 방장일 때 exitCarpoolAsAdmin 메소드 호출
         await FireStoreService().exitCarpoolAsAdmin(
-            widget.carId, widget.userName, widget.uid, widget.gender);
+            widget.carId, userName, uid, gender);
       }
     } else {
       print("스프링부트 서버 실패 #############");
@@ -755,7 +753,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
                   MessageTile(
                     message: fireStoreChats[index].message,
                     sender: fireStoreChats[index].sender,
-                    messageType: widget.userName == fireStoreChats[index].sender
+                    messageType: userName == fireStoreChats[index].sender
                         ? MessageType.me
                         : (fireStoreChats[index].sender == 'service'
                             ? MessageType.service
@@ -778,7 +776,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
       /// 전달할 메시지 Map 생성
       Map<String, dynamic> chatMessageMap = {
         "message": messageController.text,
-        "sender": widget.userName,
+        "sender": userName,
         "time": DateTime.now().millisecondsSinceEpoch,
       };
 
@@ -880,7 +878,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
                               context: context,
                               builder: (context) => ComplainAlert(
                                   reportedUserNickName: userName,
-                                  myId: widget.userName,
+                                  myId: userName,
                                   carpoolId: widget.carId),
                             );
                           }

@@ -155,10 +155,6 @@ class MainScreenState extends ConsumerState<MainScreen>
             MaterialPageRoute(
               builder: (context) => ChatroomPage(
                 carId: carId,
-                groupName: "그룹 이름",
-                userName: nickName ?? "닉네임",
-                uid: uid ?? "uid",
-                gender: gender ?? "불분명",
               ),
             ),
           );

@@ -642,10 +642,6 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                                                     builder: (context) =>
                                                         ChatroomPage(
                                                           carId: carId,
-                                                          groupName: '카풀네임',
-                                                          userName: nickName,
-                                                          uid: uid,
-                                                          gender: gender,
                                                         )));
                                           } else {
                                             print("스프링부트 서버 실패 #############");

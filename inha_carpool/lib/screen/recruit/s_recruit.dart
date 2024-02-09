@@ -410,14 +410,9 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                             MaterialPageRoute(
                                 builder: (context) => ChatroomPage(
                                   carId: carId,
-                                  groupName: '카풀네임',
-                                  userName: nickName,
-                                  uid: uid,
-                                  gender: gender,
                                 )),
                           );
                         }
-
                         setState(() {
                           isButtonDisabled = false;
                           isShowingLoader = false;

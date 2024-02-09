@@ -123,10 +123,6 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                         MaterialPageRoute(
                             builder: (context) => ChatroomPage(
                                   carId: carpoolData['carId'],
-                                  groupName: '카풀 네임',
-                                  userName: nickName,
-                                  uid: uid,
-                                  gender: gender,
                                 )),
                       );
                     } else {
@@ -135,10 +131,6 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                         MaterialPageRoute(
                           builder: (context) => ChatroomPage(
                             carId: carpoolData['carId'],
-                            groupName: '카풀 네임',
-                            userName: nickName,
-                            uid: uid,
-                            gender: gender,
                           ),
                         ),
                       );

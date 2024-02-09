@@ -26,9 +26,7 @@ class ProfessorLoginPage extends StatefulWidget {
 }
 
 class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
-  late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
-  late String gender = "";
 
   //이메일 temp
   String emailTemp = "";
@@ -49,10 +47,6 @@ class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
   void _handleMessage(RemoteMessage message) async {
     // 닉네임 가져오기
     String? nickName = await storage.read(key: "nickName");
-    // uid 가져오기
-    String? uid = await storage.read(key: "uid");
-
-    String? gender = await storage.read(key: "gender");
 
     if ((message.data['id'] == 'status' || message.data['id'] == 'chat') &&
         nickName != null) {
@@ -62,10 +56,6 @@ class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
         MaterialPageRoute(
           builder: (context) => ChatroomPage(
             carId: message.data['groupId'],
-            userName: nickName!,
-            groupName: "카풀채팅",
-            uid: uid!,
-            gender: gender!,
           ),
         ),
       );
