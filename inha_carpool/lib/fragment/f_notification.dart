@@ -9,7 +9,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../service/sv_firestore.dart';
 
-/// 알림 목록 페이지 todo : 앱바 로고로 변경
 
 
 class NotificationList extends ConsumerStatefulWidget {

@@ -30,7 +30,6 @@ class FcmService {
       notiTopic = "/topics/${chatMessage.carId}";
     } else if ( type == NotificationType.status) {
       notiStatus = "status";
-      /// TODO : 카풀 내용 수신 토픽 이름 바뀌면 수정 해야함
       notiTopic = "/topics/${chatMessage.carId}_info";
     }
 

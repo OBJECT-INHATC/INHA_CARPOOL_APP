@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
@@ -8,6 +7,7 @@ import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/models/m_carpool.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
+import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_dateTime.dart';
@@ -33,6 +33,8 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
   Key key1 = UniqueKey();
   Key key2 = UniqueKey();
 
+  final appBarTitle = "모집하기";
+
   var _selectedDate = DateTime.now(); // 날짜 값 초기화
   var _selectedTime =
   DateTime.now().add(const Duration(minutes: 15)); // 시간 값 초기화 (현재시간 + 15분)
@@ -49,12 +51,10 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
   late final TextEditingController _endPointDetailController =
   TextEditingController();
 
-  final storage = const FlutterSecureStorage();
-  late String nickName = ""; // 기본값으로 초기화
-  late String uid = "";
-  late String gender = "";
+  late String nickName ; // 기본값으로 초기화
+  late String uid ;
+  late String gender;
 
-  final String myID = "";
 
   @override
   void initState() {
@@ -62,15 +62,12 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
     _loadUserData();
   }
 
-  // 로그인한 사용자의 정보를 불러옵니다.
-  Future<void> _loadUserData() async {
-    uid = await storage.read(key: "uid") ?? "";
-    nickName = await storage.read(key: "nickName") ?? "";
-    gender = await storage.read(key: "gender") ?? "";
 
-    setState(() {
-      // nickName, email, gender를 업데이트했으므로 화면을 갱신합니다.
-    });
+  /// 로그인 정보 받아오기
+  Future<void> _loadUserData() async {
+    nickName = ref.read(authProvider).nickName!;
+    uid = ref.read(authProvider).uid!;
+    gender = ref.read(authProvider).gender!;
   }
 
   String selectedLimit = '3인'; // 선택된 제한인원 초기값
@@ -122,7 +119,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
               width: context.width(0.001),
             ),
           ),
-          title: '모집하기'.text.make(),
+          title: appBarTitle.text.make(),
         ),
         body: Stack(
           children: [
@@ -238,7 +235,6 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                   ),
 
                   ///  제한인원 및 성별
-
                   Column(
                     children: [
                       GenderSelectorWidget(
@@ -292,7 +288,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
 
                   SizedBox(height: context.height(0.01)),
 
-                  /// 카풀 시작하기 -- 파베 기능 추가하기
+                  /// 카풀 시작하기
                   Container(
                     child: ElevatedButton(
                       style: ButtonStyle(

@@ -28,7 +28,6 @@ class _ProFileState extends ConsumerState<ProFile> {
           padding: const EdgeInsets.all(8.0),
           child: Container(
             decoration: BoxDecoration(
-              // Todo 테두리 원형이 이쁜가 ?
                 borderRadius: BorderRadius.circular(20),
                 gradient: LinearGradient(
                   begin: Alignment.centerLeft,
@@ -48,13 +47,12 @@ class _ProFileState extends ConsumerState<ProFile> {
                   )
                 ]),
             width: screenWidth,
-            height: screenHeight * 0.3,
+            child: const AuthInfoRow(),
             ),
         ),
 
 
         //프로필 정보
-      const AuthInfoRow(),
 
 
 
@@ -63,4 +61,6 @@ class _ProFileState extends ConsumerState<ProFile> {
 
     );
   }
+
+  _ProFileState();
 }

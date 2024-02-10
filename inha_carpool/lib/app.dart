@@ -7,16 +7,12 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
-import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/provider/notification/notification_provider.dart';
 import 'package:inha_Carpool/screen/login/s_login.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'common/models/m_member.dart';
 import 'common/theme/custom_theme_app.dart';
-
-/// 0829 한승완 - FCM 기본 연결 및 알림 설정
 
 class App extends ConsumerStatefulWidget {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -41,7 +37,7 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
     /// 알림 수신 시 호출되는 콜백 함수
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification? notification = message.notification;
-      var nowTime = DateTime.now().millisecondsSinceEpoch; // 알림 도착 시각
+      var nowTime = DateTime.now().millisecondsSinceEpoch;
 
       const secureStorage = FlutterSecureStorage();
       String? nickName = await secureStorage.read(key: 'nickName');
@@ -92,7 +88,7 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
     return CustomThemeApp(
       child: Builder(builder: (context) {
         return MaterialApp(
-          /// 0916 한승완 - 텍스트의 전체적인 크기를 고정
+          /// 텍스트의 전체적인 크기를 고정
           builder: (context, child) {
             final MediaQueryData data = MediaQuery.of(context);
             return MediaQuery(
@@ -173,7 +169,6 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
       default:
         // Handle any other states that might be added in the future
         break;
-      // TODO: Handle this case.
     }
     super.didChangeAppLifecycleState(state);
   }

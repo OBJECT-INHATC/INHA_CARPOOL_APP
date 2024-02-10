@@ -15,7 +15,6 @@ import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 
 import '../../common/data/preference/prefs.dart';
-import '../../common/database/d_alarm_dao.dart';
 import '../../common/models/m_member.dart';
 import '../../provider/auth/auth_provider.dart';
 import '../../provider/notification/notification_provider.dart';
@@ -34,8 +33,6 @@ class LoginPage extends ConsumerStatefulWidget {
 
 class _LoginPageState extends ConsumerState<LoginPage> {
 
-
-
   //이메일 temp
   String emailTemp = "";
 
@@ -53,6 +50,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   // FCM 푸시 알림 클릭 시 처리 메서드
   void _handleMessage(RemoteMessage message) async {
+
+
     ref.read(isCheckAlarm.notifier).state = true;
 
     // 닉네임 가져오기
@@ -169,8 +168,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       storage.write(key: 'token', value: token); // 생성된 토큰을 로컬에 저장합니다.
     }
 
-    // 사용자의 uid를 가져옵니다.
-    String? uid = await storage.read(key: 'uid');
   }
 
   @override
@@ -528,7 +525,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                             .subscribeToTopic(
                                                 "AppNotification");
 
-                                        /// todo: 토픽 저장 추후 광고성도 추가하기
                                         if (Prefs.isSchoolPushOnRx.get() ==
                                             true) {
                                           // 학교 공지사항 토픽 저장
