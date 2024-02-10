@@ -141,11 +141,37 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
     final double height = context.screenHeight;
+    final double width = context.screenWidth;
 
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
+        appBar: AppBar(
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 12), // Adjust the left padding
+            child: Image.asset(
+              'assets/image/splash/logo.png',
+            ),
+          ),
+          actions: [
+            IconButton(
+                onPressed: (){
+                  context.showSnackbar('검색 기능은 준비 중입니다.');
+                },
+                icon: const Icon(
+                    Icons.search
+                )
+            ),
+            IconButton(
+              onPressed: (){
 
+              },
+              icon: const Icon(
+                  Icons.notifications_none_sharp
+              ),
+            ),
+          ],
+        ),
         floatingActionButton: SizedBox(
           width: context.width(0.9),
           height: context.height(0.07),
@@ -259,10 +285,10 @@ class _HomeState extends ConsumerState<Home> {
         body: Container(
           decoration: const BoxDecoration(
               color: //Colors.grey[100],
-                  Colors.white),
+                  Colors.white
+          ),
           child: Column(
             children: [
-              const Height(5),
               NoticeBox(height * 0.25, "main"),
               Container(
                 color: Colors.white,
