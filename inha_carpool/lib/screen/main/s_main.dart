@@ -220,9 +220,8 @@ class MainScreenState extends ConsumerState<MainScreen>
                 children: [
                   IconButton(
                     onPressed: () async {
-                      ref
-                          .read(isCheckAlarm.notifier)
-                          .state = false;
+                      // 알림 new 표시 제거
+                      ref.read(isCheckAlarm.notifier).state = false;
                       Navigator.push(
                         context,
                         MaterialPageRoute(

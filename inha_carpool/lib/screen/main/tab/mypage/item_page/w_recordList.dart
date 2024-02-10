@@ -30,7 +30,7 @@ class _RecordListState extends ConsumerState<RecordList> {
       final List<dynamic> histories =
           jsonDecode(utf8.decode(response.body.runes.toList()));
 
-      /// 이용횟수 상태 업데이트 
+      /// 이용횟수 상태 업데이트
       ref.read(recordCountProvider.notifier).state = histories.length;
 
       List<HistoryRequestDTO> historyList =

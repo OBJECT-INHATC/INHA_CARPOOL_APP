@@ -20,10 +20,9 @@ class SwitchMenu extends StatelessWidget {
     return Row(
       children: [
         Icon(iconData).pOnly(right: 15),
-        title.text.size(17).make(),
-        const EmptyExpanded(),
-        OsSwitch(value: isOn, onChanged: onChanged, ),
-
+        title.text.size(15).make(),
+        const Spacer(),
+        OsSwitch(value: isOn, onChanged: onChanged),
       ],
     ).p20();
   }

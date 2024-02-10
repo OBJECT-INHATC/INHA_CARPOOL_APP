@@ -9,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../service/sv_firestore.dart';
 
-/// 알림 목록 페이지
+/// 알림 목록 페이지 todo : 앱바 로고로 변경
+
 
 class NotificationList extends ConsumerStatefulWidget {
   const NotificationList({Key? key}) : super(key: key);
@@ -26,7 +27,6 @@ class _NotificationListState extends ConsumerState<NotificationList> {
   void initState() {
     /// 알림 리스트 불러오기 및 사용자 닉네임 불러오기
     gettingLocalAlarm();
-
     // 알림 값 변경
     setBackgroundAlarmState();
     super.initState();
@@ -43,6 +43,9 @@ class _NotificationListState extends ConsumerState<NotificationList> {
 
   @override
   Widget build(BuildContext context) {
+
+    final width = context.screenWidth;
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 45,
@@ -58,15 +61,16 @@ class _NotificationListState extends ConsumerState<NotificationList> {
           fontSize: 20,
           fontWeight: FontWeight.normal,
         ),
-        title: const Text(
-          "인하카풀",
-          style: TextStyle(color: Colors.black),
+        title: Image.asset(
+          'assets/image/splash/banner.png',
+          height: width * 0.1,
+          fit: BoxFit.contain,
         ),
         actions: [
           TextButton(
             child: const Text(
               "전체 삭제",
-              style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold),
             ),
             onPressed: () async {
               await AlarmDao().deleteAll();
