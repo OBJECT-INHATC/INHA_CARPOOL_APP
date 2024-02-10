@@ -7,6 +7,7 @@ import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
+import 'package:inha_Carpool/screen/main/tab/home/s_search.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptySearchedCarpool.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
 
@@ -148,22 +149,40 @@ class _HomeState extends ConsumerState<Home> {
         resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
         appBar: AppBar(
           leading: Padding(
-            padding: const EdgeInsets.only(left: 12), // Adjust the left padding
+            padding: const EdgeInsets.only(left: 12),
             child: Image.asset(
               'assets/image/splash/logo.png',
             ),
           ),
           actions: [
+            PopupMenuButton<FilteringOption>(
+              onSelected: _handleFilterChange, // 드롭다운 메뉴 아이템 선택시 실행될 콜백 함수
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<FilteringOption>>[
+                const PopupMenuItem<FilteringOption>(
+                  value: FilteringOption.Time,
+                  child: Text('시간순'),
+                ),
+                const PopupMenuItem<FilteringOption>(
+                  value: FilteringOption.Distance,
+                  child: Text('거리순'),
+                ),
+              ],
+              child: const Icon(Icons.filter_list), // 드롭다운 버튼 아이콘
+            ),
+            const SizedBox(width: 15),
             IconButton(
                 onPressed: (){
-                  context.showSnackbar('검색 기능은 준비 중입니다.');
+                  Navigator.push( // 검색 화면으로 이동
+                    context,
+                    MaterialPageRoute(builder: (context) => SearchScreen()),
+                  );
                 },
                 icon: const Icon(
                     Icons.search
                 )
             ),
             IconButton(
-              onPressed: (){
+              onPressed: (){ // 알림 화면으로 이동
 
               },
               icon: const Icon(
@@ -422,7 +441,7 @@ class _HomeState extends ConsumerState<Home> {
           final filteredCarpools = snapshot.data!.where((carpool) {
             final carpoolData = carpool.data() as Map<String, dynamic>;
             final startPointName =
-                carpoolData['startPointName'].toString().toLowerCase();
+                carpoolData['startP검ointName'].toString().toLowerCase();
             final startDetailPointName =
                 carpoolData['startDetailPoint'].toString().toLowerCase();
             final endPointName =
