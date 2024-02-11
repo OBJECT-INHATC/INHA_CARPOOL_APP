@@ -91,7 +91,7 @@ class _naeverMapState extends State<NaeverMap> {
     midPoint = NLatLng(midLat, midLng);
 
     zoomLevel = calculateDistance(widget.startPoint, widget.endPoint);
-    // 뒤로가기 제한 해제
+
   }
 
   @override
@@ -108,6 +108,8 @@ class _naeverMapState extends State<NaeverMap> {
       position:
           NLatLng(widget.startPoint.latitude, widget.startPoint.longitude),
     );
+
+    /// todo : 마커 색 변경
 
     NMarker endMarker = NMarker(
       id: 'end',

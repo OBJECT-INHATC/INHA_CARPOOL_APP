@@ -42,7 +42,7 @@ String _truncateText(String text, int maxLength) {
   if (text.length <= maxLength) {
     return text;
   } else {
-    return '${text.substring(0, maxLength - 3)}...';
+    return '${text.substring(0, maxLength - 1)}...';
   }
 }
 
@@ -228,7 +228,7 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                                     .bold
                                     .make(),
                                 // 출발지 풀주소
-                                _truncateText(carpoolData['startPointName'], 32)
+                                _truncateText(carpoolData['startPointName'], 30)
                                     .text
                                     .color(Colors.grey[600])
                                     .size(13)
