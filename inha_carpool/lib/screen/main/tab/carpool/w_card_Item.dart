@@ -15,8 +15,6 @@ class CardItem extends StatelessWidget {
      required this.colorTemp,
 
   });
-
-
   final Color colorTemp;
   final double screenWidth;
   final String formattedStartTime;
@@ -24,10 +22,13 @@ class CardItem extends StatelessWidget {
   final String formattedForMap;
 
    String getImagePath(Color color) {
+     print("getColor : $color");
      if (color == Colors.red) {
        return 'assets/image/icon/redMap.png';
      } else if (color == Colors.grey) {
        return 'assets/image/icon/greyMap.png';
+     } else if (color == Colors.black) {
+       return 'assets/image/icon/blackMap.png';
      }
      return 'assets/image/icon/map.png'; // 기본 이미지
    }
@@ -36,10 +37,8 @@ class CardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment:
-      MainAxisAlignment.center,
-      children: [
-        // 왼쪽에 날짜 위젯 배치
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [ // 왼쪽에 날짜 위젯 배치
         Padding(
             padding: const EdgeInsets.only(
                 left: 15, top: 15),
@@ -60,7 +59,8 @@ class CardItem extends StatelessWidget {
                     .size(13)
                     .make(),
               ],
-            )),
+            )
+        ),
         const Spacer(),
 
         // 지도

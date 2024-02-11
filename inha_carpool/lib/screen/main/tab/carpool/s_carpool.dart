@@ -195,7 +195,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                                               /// 참여중인 카풀리스트의 카드 아이템 위젯 호출
                                               CardItem(
                                                   colorTemp: getColorBasedOnSuffix(
-                                                      formattedStartTime),
+                                                      startTime),
                                                   screenWidth: screenWidth,
                                                   formattedStartTime:
                                                       formattedStartTime,
@@ -343,9 +343,9 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   SizedBox carPoolFirstWidget(BuildContext context,
       int countCarpool, double screenWidth) {
     const redText = '10분전 퇴장 불가';
-    const blueText = '24시간 전';
-    const greyText = '24시간 이후';
-    const blackText = '종료된 카풀';
+    const blueText = '24시간 이내 출발';
+    const greyText = '24시간 이후 출발';
+    const blackText = '출발한 카풀';
 
     return SizedBox(
       height: 90,
@@ -463,7 +463,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     if (text.length <= maxLength) {
       return text;
     } else {
-      return '${text.substring(0, maxLength - 4)}...';
+      return '${text.substring(0, maxLength - 1)}...';
     }
   }
 
@@ -471,18 +471,42 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     return '${dateTime.month}월 ${dateTime.day}일 ${dateTime.hour}시 ${dateTime.minute}분';
   }
 
+  // 카풀이 종료되었는지 확인하는 메서드
   bool isCarpoolOver(DateTime startTime) {
     DateTime currentTime = DateTime.now();
     Duration difference = currentTime.difference(startTime);
     return difference.inHours >= 24;
   }
 
-  Color getColorBasedOnSuffix(String text) {
-    if (text.endsWith('가')) {
-      return context.appColors.logoColor; // '가'로 끝나면 초록색 반환
-    } else if (text.endsWith('요')) {
-      return Colors.red; // '요'로 끝나면 빨간색 반환
+
+  // 시간과 비례하여 map icon 색상 반환
+  Color getColorBasedOnSuffix(DateTime startTime) {
+    // 현재 시간 가져오기
+    DateTime now = DateTime.now();
+
+    // 현재 시간과 시작 시간의 차이 계산 (분 단위)
+    int differenceInMinutes = startTime.difference(now).inMinutes;
+
+    // 현재 시간이 시작 시간보다 이전인 경우 (출발한 카풀)
+    if (differenceInMinutes < 0) {
+      return Colors.black; // 검정색 반환
     }
-    return Colors.grey; // 다른 경우에는 회색 반환
+    // 현재 시간이 시작 시간보다 이후인 경우 (출발 예정 카풀)
+    else {
+      // 현재 시간과 시작 시간의 차이가 10분 이내인 경우
+      if (differenceInMinutes <= 10) {
+        return Colors.red; // 빨간색 반환
+      }
+      // 현재 시간과 시작 시간의 차이가 24시간 이내인 경우
+      else if (differenceInMinutes <= 1440) {
+        return Colors.blue; // 파란색 반환
+      }
+      // 현재 시간과 시작 시간의 차이가 24시간 이후인 경우
+      else {
+        return Colors.grey; // 회색 반환
+      }
+    }
   }
+
+
 }
