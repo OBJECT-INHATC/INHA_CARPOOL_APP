@@ -1,7 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:nav/nav.dart';
 
@@ -14,8 +13,8 @@ import '../../../../../provider/ParticipatingCrpool/carpool_provider.dart';
 import '../../../../../provider/auth/auth_provider.dart';
 import '../../../../../service/api/Api_topic.dart';
 import '../../../../../service/sv_firestore.dart';
-import '../../../s_main.dart';
-import '../../carpool/chat/s_chatroom.dart';
+import '../s_main.dart';
+import '../tab/carpool/chat/s_chatroom.dart';
 
 final enterProvider = StateProvider<bool>((ref) => false);
 

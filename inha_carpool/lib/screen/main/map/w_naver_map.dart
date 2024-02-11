@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:inha_Carpool/screen/main/map/w_location_button.dart';
 import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
-import 'package:inha_Carpool/screen/main/tab/home/map/w_location_button.dart';
 
 class NaeverMap extends StatefulWidget {
   const NaeverMap({
@@ -45,6 +45,7 @@ class _naeverMapState extends State<NaeverMap> {
         NaverMap(
           options: NaverMapViewOptions(
             indoorEnable: true,
+            locationButtonEnable: true,
             consumeSymbolTapEvents: false,
             initialCameraPosition: NCameraPosition(
               target: NLatLng(
@@ -69,7 +70,7 @@ class _naeverMapState extends State<NaeverMap> {
                   point: widget.startPoint,
                   controller: mapController,
                   right: 0.02,
-                  color: Colors.blue,
+                  color: Colors.green,
                 )
               : (widget.mapCategory == MapCategory.end)
                   ? LocationButton(
@@ -78,18 +79,23 @@ class _naeverMapState extends State<NaeverMap> {
                       right: 0.02,
                       color: Colors.blue,
                     )
-                  : LocationButton(
-                      point: widget.startPoint,
-                      controller: mapController,
-                      right: 0.1,
-                      color: Colors.green,
-                    ),
-          LocationButton(
-            point: widget.endPoint,
-            controller: mapController,
-            right: 0.02,
-            color: Colors.blue,
-          ),
+                  : Stack(
+                    children: [
+                      LocationButton(
+                          point: widget.startPoint,
+                          controller: mapController,
+                          right: 0.1,
+                          color: Colors.green,
+                        ),
+                      LocationButton(
+                        point: widget.endPoint,
+                        controller: mapController,
+                        right: 0.02,
+                        color: Colors.blue,
+                      ),
+                    ],
+                  ),
+
         ],
 
         // Positioned(child: PositionIcon(point: widget.startPoint, controller: mapController)),

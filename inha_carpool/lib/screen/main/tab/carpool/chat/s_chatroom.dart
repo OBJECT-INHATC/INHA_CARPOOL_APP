@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,7 +12,7 @@ import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_location.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_map_icon.dart';
 import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
 import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
@@ -21,9 +20,7 @@ import 'package:inha_Carpool/service/sv_firestore.dart';
 import '../../../../../provider/ParticipatingCrpool/carpool_provider.dart';
 import '../../../../../provider/auth/auth_provider.dart';
 
-
 class ChatroomPage extends ConsumerStatefulWidget {
-
   final String carId;
 
   /// 생성자
@@ -36,7 +33,7 @@ class ChatroomPage extends ConsumerStatefulWidget {
   ConsumerState<ChatroomPage> createState() => _ChatroomPageState();
 }
 
-class _ChatroomPageState extends  ConsumerState<ChatroomPage>
+class _ChatroomPageState extends ConsumerState<ChatroomPage>
     with WidgetsBindingObserver {
   /// 채팅 메시지 스트림
   Stream<QuerySnapshot>? chats;
@@ -52,7 +49,6 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
 
   /// 로컬 저장소 SS
   final storage = const FlutterSecureStorage();
-
 
   /// 관리자 이름, 토큰, 사용자 Auth 정보
   String admin = "";
@@ -101,11 +97,10 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
     userName = ref.read(authProvider).userName!;
   }
 
-
-
   @override
   void initState() {
     super.initState();
+
     /// 로컬 채팅 메시지 , 채팅 메시지 스트림, 관리자 이름 호출 메서드
     getChatAndAdmin();
 
@@ -129,7 +124,6 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
     super.dispose();
   }
 
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -148,15 +142,12 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
     print("userNickName : $nickName");
     print("admin : $admin");
     print("membersList : $membersList");
-print("userName : $userName");
+    print("userName : $userName");
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -269,18 +260,18 @@ print("userName : $userName");
                   child: Column(
                     children: [
                       ChatLocation(
-                          title: '출발지',
-                          location: startPoint,
-                          point: startPointLnt,
-                          mapCategory: MapCategory.start,
-                          isStart: 'true'),
+                        title: '출발지',
+                        location: startPoint,
+                        point: startPointLnt,
+                        mapCategory: MapCategory.start,
+                      ),
                       const Line(height: 1),
                       ChatLocation(
-                          title: '도착지',
-                          location: endPoint,
-                          point: endPointLnt,
-                          mapCategory: MapCategory.end,
-                          isStart: 'false'),
+                        title: '도착지',
+                        location: endPoint,
+                        point: endPointLnt,
+                        mapCategory: MapCategory.end,
+                      ),
                     ],
                   ),
                 ),
@@ -290,8 +281,8 @@ print("userName : $userName");
         ),
 
         //----------------------------------------------body
-          resizeToAvoidBottomInset: true,
-          body: Column(
+        resizeToAvoidBottomInset: true,
+        body: Column(
           children: [
             //출발 목적지
             const Height(3),
@@ -333,16 +324,17 @@ print("userName : $userName");
                                   // 스크롤을 최하단으로
                                   onTap: () {
                                     //0.4초 기다렸다가 스크롤을 최하단으로
-                                    Future.delayed(const Duration(milliseconds: 400),
-                                        () {
+                                    Future.delayed(
+                                        const Duration(milliseconds: 400), () {
                                       _scrollController.animateTo(
                                         _scrollController
                                             .position.maxScrollExtent,
-                                        duration: const Duration(milliseconds: 300),
+                                        duration:
+                                            const Duration(milliseconds: 300),
                                         curve: Curves.easeInOut,
                                       );
                                     });
-                                },
+                                  },
                                   cursorColor: Colors.white,
                                   controller: messageController,
                                   style: const TextStyle(
@@ -417,7 +409,7 @@ print("userName : $userName");
                 ? const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?')
                 : const Text('정말로 카풀을 나가시겠습니까?'),
             actions: [
-          TextButton(
+              TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -547,8 +539,7 @@ print("userName : $userName");
     ApiTopic apiTopic = ApiTopic();
     bool isOpen = await apiTopic.deleteTopic(uid, widget.carId);
 
-     removeProvider(widget.carId);
-
+    removeProvider(widget.carId);
 
     if (isOpen) {
       print("스프링부트 서버 성공 ##########");
@@ -564,12 +555,12 @@ print("userName : $userName");
 
       if (admin != nickName) {
         // 방장이 아닐 때 exitCarpool 메소드 호출
-        await FireStoreService().exitCarpool(
-            widget.carId, nickName, uid, gender);
+        await FireStoreService()
+            .exitCarpool(widget.carId, nickName, uid, gender);
       } else {
         // 방장일 때 exitCarpoolAsAdmin 메소드 호출
-        await FireStoreService().exitCarpoolAsAdmin(
-            widget.carId, nickName, uid, gender);
+        await FireStoreService()
+            .exitCarpoolAsAdmin(widget.carId, nickName, uid, gender);
       }
     } else {
       print("스프링부트 서버 실패 #############");
@@ -717,9 +708,7 @@ print("userName : $userName");
         curve: Curves.easeInOut,
       );
 
-
-
-    setState(() {
+      setState(() {
         /// 메시지 입력 컨트롤러 초기화
         messageController.clear();
         canSend = false;
@@ -891,7 +880,6 @@ print("userName : $userName");
     );
   }
 
-
   getLocalChat() async {
     await ChatDao().getChatbyCarIdSortedByTime(widget.carId).then((val) {
       setState(() {
@@ -917,7 +905,7 @@ print("userName : $userName");
     } else {
       FireStoreService()
           .getChatsAfterSpecTime(
-          widget.carId, DateTime.now().millisecondsSinceEpoch)
+              widget.carId, DateTime.now().millisecondsSinceEpoch)
           .then((val) {
         setState(() {
           chats = val;
@@ -950,7 +938,6 @@ print("userName : $userName");
     int end = res.indexOf("_");
     return res.substring(start, end);
   }
-
 
   // 멤버 리스트, 출발 시간, 요약주소 가져오기
   getCarpoolInfo() async {

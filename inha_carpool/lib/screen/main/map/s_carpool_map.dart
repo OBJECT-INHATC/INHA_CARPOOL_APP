@@ -4,11 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/screen/main/tab/home/map/w_enter_button.dart';
-import 'package:inha_Carpool/screen/main/tab/home/map/w_map_info.dart';
-import 'package:inha_Carpool/screen/main/tab/home/map/w_naver_map.dart';
+import 'package:inha_Carpool/screen/main/map/w_enter_button.dart';
+import 'package:inha_Carpool/screen/main/map/w_map_info.dart';
+import 'package:inha_Carpool/screen/main/map/w_naver_map.dart';
 
-import '../enum/mapType.dart';
+import '../tab/home/enum/mapType.dart';
+
 
 class CarpoolMap extends ConsumerStatefulWidget {
   final LatLng startPoint;
@@ -19,11 +20,9 @@ class CarpoolMap extends ConsumerStatefulWidget {
   final String? carId;
   final String? admin;
   final String? roomGender;
-  final bool? isPopUp;
+  final bool isMember;
   final MapCategory mapType;
 
-  // 출발지, 도착지, 전체지도 구분
-  final String? mapTypeTemp;
 
   const CarpoolMap({
     super.key,
@@ -32,12 +31,11 @@ class CarpoolMap extends ConsumerStatefulWidget {
     required this.startPointName,
     required this.endPoint,
     required this.endPointName,
+    required this.isMember,
     this.startTime,
     this.carId,
     this.admin,
     this.roomGender,
-    this.isPopUp,
-    this.mapTypeTemp,
   });
 
   @override
@@ -69,6 +67,7 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
   Widget build(BuildContext context) {
     MapCategory mapCategory = widget.mapType;
 
+    /// 새로고침을 위한 상태변수
     final enterState = ref.watch(enterProvider);
 
     return Scaffold(
@@ -129,23 +128,35 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                               size: 20,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () => setState(() {
-                              print("isJoining : $isJoining");
-                              isJoining = true;
-                              print("isJoining : $isJoining");
-                            }),
-                            child: EnterButton(
-                                carId: widget.carId!,
-                                roomGender: widget.roomGender!,
-                                startPointName: widget.startPointName,
-                                endPointName: widget.endPointName),
-                          ),
+                          !(widget.isMember) ?
+                          EnterButton(
+                              carId: widget.carId!,
+                              roomGender: widget.roomGender!,
+                              startPointName: widget.startPointName,
+                              endPointName: widget.endPointName) :
+                              const SizedBox(),
                         ],
 
                         /// todo : 카테고리가 All이 아닐때 처리 하기
                       )
-                    : Container(),
+                    : (mapCategory == MapCategory.start) ?
+                MapInfo(
+                  title: '출발 지점',
+                  content: widget.startPointName,
+                  icon: const Icon(
+                    Icons.location_on,
+                    color: Colors.green,
+                    size: 20,
+                  ),
+                ) :  MapInfo(
+                  title: '도착 지점',
+                  content: widget.endPointName,
+                  icon: const Icon(
+                    Icons.location_on,
+                    color: Colors.blue,
+                    size: 20,
+                  ),
+                ),
               ),
             ],
           ),

@@ -9,10 +9,8 @@ import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_floating_btn.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_timeInfo.dart';
-import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 
 import '../../../../common/widget/empty_list.dart';
-import '../../../../provider/ParticipatingCrpool/carpool_provider.dart';
 import 'cardItem/w_point_row.dart';
 import 'cardItem/w_time_map_row.dart';
 import 'cardItem/w_last_chat_row.dart';
