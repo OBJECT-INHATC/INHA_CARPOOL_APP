@@ -11,17 +11,19 @@ class VersionAndCopyRight extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final double height = context.screenHeight;
 
     return Column(
       children: [
         const Line(),
-        Center(
-          child: GlobalVersion.version
-              .text
-              .size(15)
-              .semiBold
-              .makeWithDefaultFont(),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: GlobalVersion.version
+                .text
+                .size(15)
+                .semiBold
+                .makeWithDefaultFont(),
+          ),
         ),
       ],
     );
