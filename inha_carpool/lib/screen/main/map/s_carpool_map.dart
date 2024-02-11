@@ -43,25 +43,6 @@ class CarpoolMap extends ConsumerStatefulWidget {
 }
 
 class _CarpoolMapState extends ConsumerState<CarpoolMap> {
-  LatLng? midPoint;
-
-  bool isJoining = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _moveCamera();
-  }
-
-  /// 중간 지점 계산 및 카메라 이동 -> todo : 지도 파일에 코드 넣기
-  _moveCamera() async {
-    final double midLat =
-        (widget.startPoint.latitude + widget.endPoint.latitude) / 2;
-    final double midLng =
-        (widget.startPoint.longitude + widget.endPoint.longitude) / 2;
-    midPoint = LatLng(midLat, midLng);
-    // 뒤로가기 제한 해제
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,8 +117,6 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                               endPointName: widget.endPointName) :
                               const SizedBox(),
                         ],
-
-                        /// todo : 카테고리가 All이 아닐때 처리 하기
                       )
                     : (mapCategory == MapCategory.start) ?
                 MapInfo(

@@ -18,7 +18,6 @@ import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 import '../../provider/ParticipatingCrpool/carpool_provider.dart';
 
 
-/// todo : 최적화 하기 0209
 
 /// 카풀 생성 페이지
 class RecruitPage extends ConsumerStatefulWidget {

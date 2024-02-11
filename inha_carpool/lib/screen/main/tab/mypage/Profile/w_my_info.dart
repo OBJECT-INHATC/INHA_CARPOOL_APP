@@ -42,7 +42,7 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              // 앱 이용횟수
+              /// : todo 앱 이용횟수 서버에서 꽃기
               _buildCountColumn('카풀 이용', recordState, width),
 
               Column(

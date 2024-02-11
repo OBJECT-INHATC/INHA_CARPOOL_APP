@@ -370,7 +370,6 @@ class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
                                             .subscribeToTopic(
                                                 "AppNotification");
 
-                                        /// todo: 토픽 저장 추후 광고성도 추가하기
                                         if (Prefs.isSchoolPushOnRx.get() ==
                                             true) {
                                           // 학교 공지사항 토픽 저장
