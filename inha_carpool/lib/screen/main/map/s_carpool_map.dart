@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -9,7 +8,6 @@ import 'package:inha_Carpool/screen/main/map/w_map_info.dart';
 import 'package:inha_Carpool/screen/main/map/w_naver_map.dart';
 
 import '../tab/home/enum/mapType.dart';
-
 
 class CarpoolMap extends ConsumerStatefulWidget {
   final LatLng startPoint;
@@ -22,7 +20,6 @@ class CarpoolMap extends ConsumerStatefulWidget {
   final String? roomGender;
   final bool isMember;
   final MapCategory mapType;
-
 
   const CarpoolMap({
     super.key,
@@ -43,10 +40,29 @@ class CarpoolMap extends ConsumerStatefulWidget {
 }
 
 class _CarpoolMapState extends ConsumerState<CarpoolMap> {
-
   @override
   Widget build(BuildContext context) {
     MapCategory mapCategory = widget.mapType;
+
+    MapInfo startInfo = MapInfo(
+      title: '출발 지점',
+      content: widget.startPointName,
+      icon: const Icon(
+        Icons.location_on,
+        color: Colors.green,
+        size: 20,
+      ),
+    );
+
+    MapInfo endInfo = MapInfo(
+      title: '도착 지점',
+      content: widget.endPointName,
+      icon: const Icon(
+        Icons.location_on,
+        color: Colors.blue,
+        size: 20,
+      ),
+    );
 
     /// 새로고침을 위한 상태변수
     final enterState = ref.watch(enterProvider);
@@ -82,65 +98,26 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                 child: (mapCategory == MapCategory.all)
                     ? Column(
                         children: [
-                          MapInfo(
-                            title: '출발 지점',
-                            content: widget.startPointName,
-                            icon: const Icon(
-                              Icons.location_on,
-                              color: Colors.green,
-                              size: 20,
-                            ),
-                          ),
-                          MapInfo(
-                            title: '도착 지점',
-                            content: widget.endPointName,
-                            icon: const Icon(
-                              Icons.location_on,
-                              color: Colors.blue,
-                              size: 20,
-                            ),
-                          ),
-                          MapInfo(
-                            title: '출발 시간',
-                            content: widget.startTime!,
-                            icon: const Icon(
-                              Icons.access_time,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                          ),
-                          !(widget.isMember) ?
-                          EnterButton(
-                              carId: widget.carId!,
-                              roomGender: widget.roomGender!,
-                              startPointName: widget.startPointName,
-                              endPointName: widget.endPointName) :
-                              const SizedBox(),
+                          startInfo,
+                          endInfo,
+                          startInfo,
+                          !(widget.isMember)
+                              ? EnterButton(
+                                  carId: widget.carId!,
+                                  roomGender: widget.roomGender!,
+                                  startPointName: widget.startPointName,
+                                  endPointName: widget.endPointName)
+                              : const SizedBox(),
                         ],
                       )
-                    : (mapCategory == MapCategory.start) ?
-                MapInfo(
-                  title: '출발 지점',
-                  content: widget.startPointName,
-                  icon: const Icon(
-                    Icons.location_on,
-                    color: Colors.green,
-                    size: 20,
-                  ),
-                ) :  MapInfo(
-                  title: '도착 지점',
-                  content: widget.endPointName,
-                  icon: const Icon(
-                    Icons.location_on,
-                    color: Colors.blue,
-                    size: 20,
-                  ),
-                ),
+                    : (mapCategory == MapCategory.start)
+                        ? startInfo
+                        : endInfo,
               ),
             ],
           ),
-    enterState
-    ? Container(
+          enterState
+              ? Container(
                   color: Colors.black.withOpacity(0.5),
                   child: Center(
                     child: Column(
