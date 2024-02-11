@@ -93,27 +93,34 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                 ),
               ),
               Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(10),
-                child: (mapCategory == MapCategory.all)
-                    ? Column(
-                        children: [
-                          startInfo,
-                          endInfo,
-                          startInfo,
-                          !(widget.isMember)
-                              ? EnterButton(
-                                  carId: widget.carId!,
-                                  roomGender: widget.roomGender!,
-                                  startPointName: widget.startPointName,
-                                  endPointName: widget.endPointName)
-                              : const SizedBox(),
-                        ],
-                      )
-                    : (mapCategory == MapCategory.start)
-                        ? startInfo
-                        : endInfo,
-              ),
+                  color: Colors.white,
+                  padding: const EdgeInsets.all(10),
+                  child: (mapCategory == MapCategory.all)
+                      ? Column(
+                          children: [
+                            startInfo,
+                            endInfo,
+                            MapInfo(
+                              title: '출발 시간',
+                              content: widget.startTime!,
+                              icon: const Icon(
+                                Icons.access_time,
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                            ),
+                            !(widget.isMember)
+                                ? EnterButton(
+                                    carId: widget.carId!,
+                                    roomGender: widget.roomGender!,
+                                    startPointName: widget.startPointName,
+                                    endPointName: widget.endPointName)
+                                : const SizedBox(),
+                          ],
+                        )
+                      : (mapCategory == MapCategory.start)
+                          ? startInfo
+                          : endInfo),
             ],
           ),
           enterState

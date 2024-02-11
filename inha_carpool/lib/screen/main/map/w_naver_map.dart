@@ -82,7 +82,6 @@ class _naeverMapState extends State<NaeverMap> {
     return degrees * (pi / 180);
   }
 
-  /// 중간 지점 계산 및 카메라 이동 -> todo : 지도 파일에 코드 넣기
   _moveCamera() {
     final double midLat =
         (widget.startPoint.latitude + widget.endPoint.latitude) / 2;
@@ -104,14 +103,20 @@ class _naeverMapState extends State<NaeverMap> {
   Widget build(BuildContext context) {
     // 네이버 마커 추가
     NMarker startMarker = NMarker(
+      icon: const NOverlayImage.fromAssetImage('assets/image/map/startMarker.png'),
+      size:  const Size(50,50),
       id: 'start',
       position:
           NLatLng(widget.startPoint.latitude, widget.startPoint.longitude),
     );
 
-    /// todo : 마커 색 변경
+    /// todo :  출발지 목적지 아이콘 색 변경  -> 파일을 교체해야해 뿌엥 (0212 이상훈)
+
+
 
     NMarker endMarker = NMarker(
+      icon: const NOverlayImage.fromAssetImage('assets/image/map/endMarker.png'),
+      size:  const Size(50,50),
       id: 'end',
       position: NLatLng(widget.endPoint.latitude, widget.endPoint.longitude),
     );
@@ -146,6 +151,7 @@ class _naeverMapState extends State<NaeverMap> {
                   controller: mapController,
                   right: 0.02,
                   color: Colors.green,
+            title: '출발지',
                 )
               : (widget.mapCategory == MapCategory.end)
                   ? LocationButton(
@@ -153,7 +159,8 @@ class _naeverMapState extends State<NaeverMap> {
                       controller: mapController,
                       right: 0.02,
                       color: Colors.blue,
-                    )
+            title: '도착지',
+          )
                   : Stack(
                       children: [
                         LocationButton(
@@ -161,12 +168,16 @@ class _naeverMapState extends State<NaeverMap> {
                           controller: mapController,
                           right: 0.1,
                           color: Colors.green,
+                          title: '출발지',
+
                         ),
                         LocationButton(
                           point: widget.endPoint,
                           controller: mapController,
                           right: 0.02,
                           color: Colors.blue,
+                          title: '도착지',
+
                         ),
                       ],
                     ),
