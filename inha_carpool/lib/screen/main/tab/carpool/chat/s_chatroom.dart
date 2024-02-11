@@ -14,6 +14,7 @@ import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_location.dart';
+import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
 import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
@@ -350,12 +351,14 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
                           title: '출발지',
                           location: startPoint,
                           point: startPointLnt,
+                          mapCategory: MapCategory.start,
                           isStart: 'true'),
                       const Line(height: 1),
                       ChatLocation(
                           title: '도착지',
                           location: endPoint,
                           point: endPointLnt,
+                          mapCategory: MapCategory.end,
                           isStart: 'false'),
                     ],
                   ),

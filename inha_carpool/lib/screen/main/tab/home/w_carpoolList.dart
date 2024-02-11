@@ -6,7 +6,8 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/main/tab/home/map/s_carpool_map.dart';
 import '../../../../provider/auth/auth_provider.dart';
-import '../carpool/chat/s_chatroom.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
+import '../carpool/chat/s_chatroom.dart';
+import 'enum/mapType.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
 
 class CarpoolListItem extends ConsumerStatefulWidget {
   final AsyncSnapshot<List<DocumentSnapshot>> snapshot;
@@ -140,7 +141,7 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                     if (nowMember < maxMember) {
                       Nav.push(
                         CarpoolMap(
-                          mapType: 'default',
+                          mapType: MapCategory.all,
                           isPopUp: false,
                           startPoint: LatLng(carpoolData['startPoint'].latitude,
                               carpoolData['startPoint'].longitude),

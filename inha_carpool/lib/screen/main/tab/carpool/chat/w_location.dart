@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
 import 'package:inha_Carpool/screen/main/tab/home/map/s_carpool_map.dart';
 
 /// 채팅방에서 출-목적지 지도 위젯
@@ -10,10 +11,12 @@ class ChatLocation extends StatelessWidget {
   final String location;
   final LatLng point;
   final String isStart;
+  final MapCategory mapCategory;
 
   const ChatLocation({
     Key? key,
     required this.title,
+    required this.mapCategory,
     required this.location,
     required this.point,
     required this.isStart,
@@ -64,7 +67,7 @@ class ChatLocation extends StatelessWidget {
                       Nav.globalContext,
                       MaterialPageRoute(
                           builder: (context) => CarpoolMap(
-                                mapType: isStart,
+                                mapType: mapCategory,
                                 isPopUp: true,
                                 startPoint: LatLng(
                                   point.latitude,

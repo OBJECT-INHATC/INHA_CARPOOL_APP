@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 
+import '../../home/enum/mapType.dart';
 import '../../home/map/s_carpool_map.dart';
 
 class TimeAndMapInfo extends StatelessWidget {
@@ -73,7 +74,7 @@ class TimeAndMapInfo extends StatelessWidget {
                     animation,
                     secondaryAnimation) =>
                     CarpoolMap(
-                      mapType: 'default',
+                      mapType: MapCategory.all,
                       isPopUp: true,
                       startPoint: LatLng(
                           carpoolData[
