@@ -19,7 +19,6 @@ class _ProFileState extends ConsumerState<ProFile> {
   Widget build(BuildContext context) {
     //프로필 수정 버튼 screenWidth,screenHeight 변수 선언
     double screenWidth = context.screenWidth;
-    double screenHeight = context.screenHeight;
 
     return Stack(
       children: [
@@ -30,13 +29,10 @@ class _ProFileState extends ConsumerState<ProFile> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 gradient: LinearGradient(
+                  transform: const GradientRotation(17.5),
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
-                  colors: [
-                    context.appColors.myPage2,
-                    context.appColors.myPage3,
-                    context.appColors.myPage1,
-                  ],
+                  colors: context.appColors.profileCardColors,
                 ),
                 boxShadow: [
                   BoxShadow(
