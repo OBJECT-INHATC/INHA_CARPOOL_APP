@@ -204,24 +204,23 @@ class FireStoreService {
   }
 
   // 카풀 나가기
-  exitCarpool(String carId, String userName, String uid, String gender) async {
+  exitCarpool(String carId, String nickName, String uid, String gender) async {
     DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
-    DocumentSnapshot carpoolSnapshot = await carpoolDocRef.get();
 
     /// 0902 김영재. 마지막 사람이 방을 나가면 status를 true로 변경
     await carpoolDocRef.update({
-      'members': FieldValue.arrayRemove(['${uid}_${userName}_$gender']),
+      'members': FieldValue.arrayRemove(['${uid}_${nickName}_$gender']),
       'nowMember': FieldValue.increment(-1),
     });
 
     // 탈퇴 메시지 전송
-    FireStoreService().sendExitMessage(carId, userName);
+    FireStoreService().sendExitMessage(carId, nickName);
 
   }
 
   // 방장의 카풀 나가기
   exitCarpoolAsAdmin(
-      String carId, String userName, String uid, String gender) async {
+      String carId, String nickName, String uid, String gender) async {
     DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
 
     DocumentSnapshot carpoolSnapshot = await carpoolDocRef.get();
@@ -233,11 +232,10 @@ class FireStoreService {
       await carpoolDocRef.delete();
     } else {
       await carpoolDocRef.update({
-        'members': FieldValue.arrayRemove(['${uid}_${userName}_$gender']),
+        'members': FieldValue.arrayRemove(['${uid}_${nickName}_$gender']),
         'nowMember': FieldValue.increment(-1),
       });
-      // members에서 해당 유저 삭제
-      // nowmember -1
+
 
       DocumentSnapshot carpoolSnapshot = await carpoolDocRef.get();
       List<dynamic> members = carpoolSnapshot['members'];
@@ -249,7 +247,7 @@ class FireStoreService {
       }
 
       // 탈퇴 메시지 전송
-      FireStoreService().sendExitMessage(carId, userName);
+      FireStoreService().sendExitMessage(carId, nickName);
 
 
     }

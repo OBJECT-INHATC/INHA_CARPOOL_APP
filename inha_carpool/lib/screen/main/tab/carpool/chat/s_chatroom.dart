@@ -88,15 +88,17 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   //도착지 위도경도
   LatLng endPointLnt = const LatLng(0, 0);
 
-  late String userName = '';
+  late String nickName = '';
   late String uid = '';
   late String gender = '';
+  late String userName = '';
 
   /// 유저 정보 받아오기
   Future<void> _loadUserData() async {
-    userName = ref.read(authProvider).userName!;
+    nickName = ref.read(authProvider).nickName!;
     uid = ref.read(authProvider).uid!;
     gender = ref.read(authProvider).gender!;
+    userName = ref.read(authProvider).userName!;
   }
 
 
@@ -147,90 +149,14 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   }
 
 
-  getLocalChat() async {
-    await ChatDao().getChatbyCarIdSortedByTime(widget.carId).then((val) {
-      setState(() {
-        localChats = val;
-      });
-    });
-  }
-
-  /// 로컬 채팅 메시지 , 채팅 메시지 스트림, 관리자 이름 호출 메서드
-  getChatAndAdmin() async {
-    await getLocalChat();
-
-    if (localChats != null && localChats!.isNotEmpty) {
-      final lastLocalChat = localChats?[localChats!.length - 1];
-
-      FireStoreService()
-          .getChatsAfterSpecTime(widget.carId, lastLocalChat!.time)
-          .then((val) {
-        setState(() {
-          chats = val;
-        });
-      });
-    } else {
-      FireStoreService()
-          .getChatsAfterSpecTime(
-              widget.carId, DateTime.now().millisecondsSinceEpoch)
-          .then((val) {
-        setState(() {
-          chats = val;
-        });
-      });
-    }
-
-    FireStoreService().getGroupAdmin(widget.carId).then((val) {
-      setState(() {
-        admin = getName(val);
-      });
-    });
-  }
-
-  // 카풀 컬렉션 이름 추출
-  String getName(String res) {
-    int start = res.indexOf("_") + 1;
-    int end = res.lastIndexOf("_");
-    return res.substring(start, end);
-  }
-
-  String getGender(String res) {
-    String gender = res.substring(res.lastIndexOf("_") + 1);
-    return gender;
-  }
-
-  // 1002,memberId
-  String getMemberId(String res) {
-    int start = 0;
-    int end = res.indexOf("_");
-    return res.substring(start, end);
-  }
-
-
-  // 멤버 리스트, 출발 시간, 요약주소 가져오기
-  getCarpoolInfo() async {
-    await FireStoreService().getCarDetails(widget.carId).then((val) {
-      setState(() {
-        membersList = val['members'];
-        startTime = DateTime.fromMillisecondsSinceEpoch(val['startTime']);
-        startPoint = val['startPointName'];
-        startPointDetail = val['startDetailPoint'];
-        endPoint = val['endPointName'];
-        endPointDetail = val['endDetailPoint'];
-        endPointLnt =
-            LatLng(val['endPoint'].latitude, val['endPoint'].longitude);
-        startPointLnt =
-            LatLng(val['startPoint'].latitude, val['startPoint'].longitude);
-        agreedTime = startTime.subtract(const Duration(minutes: 10));
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
 
-   // final carpoolProvider = ref.watch(carpoolNotifierProvider.notifier);
-
+    print("userNickName : $nickName");
+    print("admin : $admin");
+    print("membersList : $membersList");
+print("userName : $userName");
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -487,11 +413,11 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
           return AlertDialog(
             surfaceTintColor: Colors.transparent,
             title: const Text('카풀 나가기'),
-            content: admin == userName
+            content: admin == nickName
                 ? const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?')
                 : const Text('정말로 카풀을 나가시겠습니까?'),
             actions: [
-              TextButton(
+          TextButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -595,7 +521,6 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
                   content: Text('카풀 나가기에 실패했습니다.'),
                 );
               } else {
-                removeProvider(widget.carId);
                 // 나가기 처리가 완료된 경우
                 WidgetsBinding.instance.addPostFrameCallback(
                   (_) {
@@ -622,6 +547,9 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
     ApiTopic apiTopic = ApiTopic();
     bool isOpen = await apiTopic.deleteTopic(uid, widget.carId);
 
+     removeProvider(widget.carId);
+
+
     if (isOpen) {
       print("스프링부트 서버 성공 ##########");
       try {
@@ -634,14 +562,14 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
         print("Ios 시뮬 에러~");
       }
 
-      if (admin != userName) {
+      if (admin != nickName) {
         // 방장이 아닐 때 exitCarpool 메소드 호출
         await FireStoreService().exitCarpool(
-            widget.carId, userName, uid, gender);
+            widget.carId, nickName, uid, gender);
       } else {
         // 방장일 때 exitCarpoolAsAdmin 메소드 호출
         await FireStoreService().exitCarpoolAsAdmin(
-            widget.carId, userName, uid, gender);
+            widget.carId, nickName, uid, gender);
       }
     } else {
       print("스프링부트 서버 실패 #############");
@@ -752,7 +680,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
                   MessageTile(
                     message: fireStoreChats[index].message,
                     sender: fireStoreChats[index].sender,
-                    messageType: userName == fireStoreChats[index].sender
+                    messageType: nickName == fireStoreChats[index].sender
                         ? MessageType.me
                         : (fireStoreChats[index].sender == 'service'
                             ? MessageType.service
@@ -775,7 +703,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
       /// 전달할 메시지 Map 생성
       Map<String, dynamic> chatMessageMap = {
         "message": messageController.text,
-        "sender": userName,
+        "sender": nickName,
         "time": DateTime.now().millisecondsSinceEpoch,
       };
 
@@ -961,5 +889,85 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
         );
       },
     );
+  }
+
+
+  getLocalChat() async {
+    await ChatDao().getChatbyCarIdSortedByTime(widget.carId).then((val) {
+      setState(() {
+        localChats = val;
+      });
+    });
+  }
+
+  /// 로컬 채팅 메시지 , 채팅 메시지 스트림, 관리자 이름 호출 메서드
+  getChatAndAdmin() async {
+    await getLocalChat();
+
+    if (localChats != null && localChats!.isNotEmpty) {
+      final lastLocalChat = localChats?[localChats!.length - 1];
+
+      FireStoreService()
+          .getChatsAfterSpecTime(widget.carId, lastLocalChat!.time)
+          .then((val) {
+        setState(() {
+          chats = val;
+        });
+      });
+    } else {
+      FireStoreService()
+          .getChatsAfterSpecTime(
+          widget.carId, DateTime.now().millisecondsSinceEpoch)
+          .then((val) {
+        setState(() {
+          chats = val;
+        });
+      });
+    }
+
+    FireStoreService().getGroupAdmin(widget.carId).then((val) {
+      setState(() {
+        admin = getName(val);
+      });
+    });
+  }
+
+  // 카풀 컬렉션 이름 추출
+  String getName(String res) {
+    int start = res.indexOf("_") + 1;
+    int end = res.lastIndexOf("_");
+    return res.substring(start, end);
+  }
+
+  String getGender(String res) {
+    String gender = res.substring(res.lastIndexOf("_") + 1);
+    return gender;
+  }
+
+  // 1002,memberId
+  String getMemberId(String res) {
+    int start = 0;
+    int end = res.indexOf("_");
+    return res.substring(start, end);
+  }
+
+
+  // 멤버 리스트, 출발 시간, 요약주소 가져오기
+  getCarpoolInfo() async {
+    await FireStoreService().getCarDetails(widget.carId).then((val) {
+      setState(() {
+        membersList = val['members'];
+        startTime = DateTime.fromMillisecondsSinceEpoch(val['startTime']);
+        startPoint = val['startPointName'];
+        startPointDetail = val['startDetailPoint'];
+        endPoint = val['endPointName'];
+        endPointDetail = val['endDetailPoint'];
+        endPointLnt =
+            LatLng(val['endPoint'].latitude, val['endPoint'].longitude);
+        startPointLnt =
+            LatLng(val['startPoint'].latitude, val['startPoint'].longitude);
+        agreedTime = startTime.subtract(const Duration(minutes: 10));
+      });
+    });
   }
 }
