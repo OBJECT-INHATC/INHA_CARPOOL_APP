@@ -158,7 +158,6 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   /// 로컬 채팅 메시지 , 채팅 메시지 스트림, 관리자 이름 호출 메서드
   getChatAndAdmin() async {
     await getLocalChat();
-    print(localChats!.length);
 
     if (localChats != null && localChats!.isNotEmpty) {
       final lastLocalChat = localChats?[localChats!.length - 1];
@@ -196,10 +195,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   }
 
   String getGender(String res) {
-    print("Input string: $res");
-    print("Last index of _: ${res.lastIndexOf("_")}");
     String gender = res.substring(res.lastIndexOf("_") + 1);
-    print("Extracted gender: $gender");
     return gender;
   }
 
@@ -214,7 +210,6 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
   // 멤버 리스트, 출발 시간, 요약주소 가져오기
   getCarpoolInfo() async {
     await FireStoreService().getCarDetails(widget.carId).then((val) {
-      print("Fetched data: $val");
       setState(() {
         membersList = val['members'];
         startTime = DateTime.fromMillisecondsSinceEpoch(val['startTime']);
@@ -875,8 +870,6 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
                         onPressed: () {
                           viewProfile(context, uid, memberId);
                           if (uid != memberId) {
-                            print("uid: $uid");
-                            // UID와 MemberId가 다르면 ComplainAlert 다이얼로그 표시
                             Navigator.pop(context);
                             showDialog(
                               context: context,
@@ -932,7 +925,6 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
 //uid와 memberID비교
   void viewProfile(BuildContext context, String? uid, String memberId) {
     if (uid == memberId) {
-      print("마이페이지로 이동");
       Navigator.pop(context);
       Navigator.push(
         context,
