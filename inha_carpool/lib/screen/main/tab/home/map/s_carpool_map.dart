@@ -7,20 +7,17 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
+import 'package:inha_Carpool/screen/main/tab/home/map/w_enter_button.dart';
 import 'package:inha_Carpool/screen/main/tab/home/map/w_map_info.dart';
 import 'package:inha_Carpool/screen/main/tab/home/map/w_naver_map.dart';
 import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-import '../../../../../common/data/preference/prefs.dart';
-import '../../../../../common/models/m_carpool.dart';
-import '../../../../../common/util/carpool.dart';
-import '../../../../../common/util/addMember_Exception.dart';
-import '../../../../../dto/TopicDTO.dart';
 import '../../../../../provider/ParticipatingCrpool/carpool_provider.dart';
 import '../../../s_main.dart';
 import '../../carpool/chat/s_chatroom.dart';
 import '../enum/mapType.dart';
+import 'w_location_button.dart';
 
 class CarpoolMap extends ConsumerStatefulWidget {
   final LatLng startPoint;
@@ -57,12 +54,10 @@ class CarpoolMap extends ConsumerStatefulWidget {
 }
 
 class _CarpoolMapState extends ConsumerState<CarpoolMap> {
-  late NaverMapController mapController;
 
   LatLng? midPoint;
-
-  bool joinButtonEnabled = true;
   bool isJoining = false;
+
 
   @override
   void initState() {
@@ -82,17 +77,11 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
 
   @override
   Widget build(BuildContext context) {
-    final carpoolProvider = ref.watch(carpoolNotifierProvider.notifier);
-
-    final String nickName = ref.read(authProvider).nickName!;
-    final String uid = ref.read(authProvider).uid!;
-    final String gender = ref.read(authProvider).gender!;
-
     // 네이버 마커 추가
     NMarker startMarker = NMarker(
       id: 'start',
       position:
-          NLatLng(widget.startPoint.latitude, widget.startPoint.longitude),
+      NLatLng(widget.startPoint.latitude, widget.startPoint.longitude),
     );
 
     NMarker endMarker = NMarker(
@@ -118,187 +107,102 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
           fontSize: 17,
           fontWeight: FontWeight.bold,
         ),
-        title: ((widget.admin?.split("_").length ?? 0) > 1
-                ? '${widget.admin!.split("_")[1]}님의 카풀 정보'
-                : '위치정보')
+        title: ((widget.admin
+            ?.split("_")
+            .length ?? 0) > 1
+            ? '${widget.admin!.split("_")[1]}님의 카풀 정보'
+            : '위치정보')
             .text
             .black
             .make(),
+        toolbarHeight: 45,
       ),
       body: Stack(
         children: [
-          NaeverMap(
-            startPoint: widget.startPoint,
-            endPoint: widget.endPoint,
-          ),
-          Positioned(
-            bottom: context.height(0),
-            // 가운데 위치
-            child: Container(
-              height: mapCategory == MapCategory.all
-                  ? (widget.isPopUp!
-                      ? context.height(0.2)
-                      : context.height(0.27)) // 'all'일 때 isPop에 따라 높이 변경
-                  : context.height(0.1), // 'default'가 아닐 때 높이
-              width: context.width(1),
-              decoration: BoxDecoration(
-                //color: Colors.grey.shade100,
+          Column(
+            children: [
+              Expanded(
+                child: NaeverMap(
+                  startPoint: widget.startPoint,
+                  endPoint: widget.endPoint,
+                  mapCategory: mapCategory,
+                ),
+              ),
+              Container(
                 color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black54.withOpacity(0.3),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-                border: Border.all(
-                  color: Colors.white,
-                  width: 1,
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(10.0), // 내부 패딩 추가
-                child:
-                mapCategory == MapCategory.all
-                    ? Column(
-                        children: [
-                          MapInfo(
-                              title: '출발 지점',
-                              content: widget.startPointName,
-                              icon: const Icon(Icons.location_on,
-                                  color: Colors.blue, size: 20)),
-                          MapInfo(
-                              title: '도착 지점',
-                              content: widget.endPointName,
-                              icon: const Icon(Icons.location_on,
-                                  color: Colors.green, size: 20)),
-                          MapInfo(
-                              title: '출발 시간',
-                              content: widget.startTime!,
-                              icon: const Icon(Icons.access_time,
-                                  color: Colors.blue, size: 20)),
-                        ],
-                      )
-                    :    MapInfo(
-                    title: '출발 시간',
-                    content: widget.startTime!,
-                    icon: const Icon(Icons.access_time,
-                        color: Colors.blue, size: 20)),
+                padding: const EdgeInsets.all(10),
+                child: (mapCategory == MapCategory.all) ?
+                Column(
+                  children: [
+                    MapInfo(
+                      title: '출발 지점',
+                      content: widget.startPointName,
+                      icon: const Icon(
+                        Icons.location_on,
+                        color: Colors.green,
+                        size: 20,
+                      ),
+                    ),
+                    MapInfo(
+                      title: '도착 지점',
+                      content: widget.endPointName,
+                      icon: const Icon(
+                        Icons.location_on,
+                        color: Colors.blue,
+                        size: 20,
+                      ),
+                    ),
+                    MapInfo(
+                      title: '출발 시간',
+                      content: widget.startTime!,
+                      icon: const Icon(
+                        Icons.access_time,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                    ),
+                    EnterButton(carId: widget.carId!,
+                        roomGender: widget.roomGender!,
+                        startPointName: widget.startPointName,
+                        endPointName: widget.endPointName),
 
+
+                  ],
+                ) : Container(),
               ),
-            ),
+
+            ],
           ),
-          widget.mapType == 'false'
-              ? Container()
-              : Positioned(
-                  bottom: widget.mapType == 'default'
-                      ? (widget.isPopUp!
-                          ? context.height(0.22)
-                          : context
-                              .height(0.29)) // 'default'일 때 isPop에 따라 높이 변경
-                      : context.height(0.14), // 'default'가 아닐 때 높이
-                  right: widget.mapType == 'default' ? 65 : 15,
-                  child: FloatingActionButton(
-                    heroTag: 'definite',
-                    backgroundColor: Colors.blue,
-                    mini: true,
-                    onPressed: () {
-                      _moveCameraTo(NLatLng(widget.startPoint.latitude,
-                          widget.startPoint.longitude));
-                    },
-                    // 도착지점을 나타내는 아이콘
-                    child: const Icon(Icons.location_on_outlined,
-                        color: Colors.white),
-                  ),
-                ),
-          widget.mapType == 'true'
-              ? Container()
-              : Positioned(
-                  bottom: widget.mapType == 'default'
-                      ? (widget.isPopUp!
-                          ? context.height(0.22)
-                          : context
-                              .height(0.29)) // 'default'일 때 isPop에 따라 높이 변경
-                      : context.height(0.14), // 'default'가 아닐 때 높이
-                  right: 15,
-                  child: FloatingActionButton(
-                    heroTag: 'start',
-                    backgroundColor: Colors.lightGreenAccent.shade700,
-                    mini: true,
-                    onPressed: () {
-                      _moveCameraTo(NLatLng(
-                          widget.endPoint.latitude, widget.endPoint.longitude));
-                    },
-                    // 도착지점을 나타내는 아이콘
-                    child: const Icon(Icons.location_on_outlined,
-                        color: Colors.white),
-                  ),
-                ),
 
 
-
-
+          /// ----------------------------------------------
 
 
           isJoining
               ? Container(
-                  color: Colors.black.withOpacity(0.5),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SpinKitThreeBounce(
-                          color: Colors.white,
-                          size: 25.0,
-                        ),
-                        const SizedBox(height: 16),
-                        '🚕 카풀 참가 중'.text.size(20).white.make(),
-                      ],
-                    ),
+            color: Colors.black.withOpacity(0.5),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SpinKitThreeBounce(
+                    color: Colors.white,
+                    size: 25.0,
                   ),
-                )
+                  const SizedBox(height: 16),
+                  '🚕 카풀 참가 중'.text
+                      .size(20)
+                      .white
+                      .make(),
+                ],
+              ),
+            ),
+          )
               : Container(),
         ],
       ),
     );
   }
 
-  /// 카메라 이동 메서드
-  void _moveCameraTo(NLatLng target) {
-    mapController.updateCamera(NCameraUpdate.fromCameraPosition(
-      NCameraPosition(
-        target: target,
-        zoom: 15,
-      ),
-    ));
-  }
 
-  /// 에러 다이얼로그
-  void showErrorDialog(BuildContext context, String errorMessage) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          surfaceTintColor: Colors.transparent,
-          title: const Text('카풀참가 실패'),
-          content: Text(errorMessage),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacement(
-                  Nav.globalContext,
-                  MaterialPageRoute(
-                    builder: (context) => const MainScreen(),
-                  ),
-                );
-              },
-              child: const Text('확인'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 }

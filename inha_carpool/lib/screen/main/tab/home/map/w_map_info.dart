@@ -14,7 +14,8 @@ class MapInfo extends StatelessWidget {
     final screenWidth = context.screenWidth;
 
     return  Padding(
-      padding:  EdgeInsets.all(screenWidth * 0.01),
+      padding:  EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.03, vertical: screenWidth * 0.01),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
