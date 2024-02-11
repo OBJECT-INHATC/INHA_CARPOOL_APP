@@ -1,8 +1,6 @@
-import 'dart:ui' as ui;
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -10,17 +8,18 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
+import 'package:inha_Carpool/screen/main/tab/home/map/w_naver_map.dart';
 import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-import '../../../../common/data/preference/prefs.dart';
-import '../../../../common/models/m_carpool.dart';
-import '../../../../common/util/carpool.dart';
-import '../../../../common/util/addMember_Exception.dart';
-import '../../../../dto/TopicDTO.dart';
-import '../../../../provider/ParticipatingCrpool/carpool_provider.dart';
-import '../../s_main.dart';
-import '../carpool/chat/s_chatroom.dart';
+import '../../../../../common/data/preference/prefs.dart';
+import '../../../../../common/models/m_carpool.dart';
+import '../../../../../common/util/carpool.dart';
+import '../../../../../common/util/addMember_Exception.dart';
+import '../../../../../dto/TopicDTO.dart';
+import '../../../../../provider/ParticipatingCrpool/carpool_provider.dart';
+import '../../../s_main.dart';
+import '../../carpool/chat/s_chatroom.dart';
 
 class CarpoolMap extends ConsumerStatefulWidget {
   final LatLng startPoint;
@@ -32,7 +31,9 @@ class CarpoolMap extends ConsumerStatefulWidget {
   final String? admin;
   final String? roomGender;
   final bool? isPopUp;
-  final String? isStart;
+
+  // 출발지, 도착지, 전체지도 구분
+  final String? mapType;
 
   const CarpoolMap({
     super.key,
@@ -45,7 +46,7 @@ class CarpoolMap extends ConsumerStatefulWidget {
     this.admin,
     this.roomGender,
     this.isPopUp,
-    this.isStart,
+    this.mapType,
   });
 
   @override
@@ -99,7 +100,7 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
     );
     Map<String, NMarker> markers = {};
 
-    String isStart = widget.isStart ?? 'default';
+    String isStart = widget.mapType ?? 'default';
     if (isStart == 'true') {
       markers['start'] = startMarker;
     } else if (isStart == 'false') {
@@ -136,40 +137,15 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
       ),
       body: Stack(
         children: [
-          Padding(
-            padding: widget.isStart == 'default'
-                ? (widget.isPopUp!
-                    ? EdgeInsets.only(bottom: context.height(0.2))
-                    : EdgeInsets.only(bottom: context.height(0.27)))
-                : EdgeInsets.only(bottom: context.height(0.1)),
-            child: NaverMap(
-              options: NaverMapViewOptions(
-                indoorEnable: true,
-                locationButtonEnable: true,
-                consumeSymbolTapEvents: false,
-                initialCameraPosition: NCameraPosition(
-                  target: NLatLng(widget.startPoint.latitude,
-                      widget.startPoint.longitude),
-                  zoom: 15,
-                ),
-                logoClickEnable: false,
-              ),
-              onMapReady: (controller) async {
-                mapController = controller;
-                mapController.addOverlayAll(
-                  {startMarker, endMarker},
-                );
-
-              },
-            ),
-
-
+          NaeverMap(
+            startPoint: widget.startPoint,
+            endPoint: widget.endPoint,
           ),
           Positioned(
             bottom: context.height(0),
             // 가운데 위치
             child: Container(
-              height: widget.isStart == 'default'
+              height: widget.mapType == 'default'
                   ? (widget.isPopUp!
                       ? context.height(0.2)
                       : context.height(0.27)) // 'default'일 때 isPop에 따라 높이 변경
@@ -204,11 +180,11 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                         children: [
                           Column(
                             children: [
-                              widget.isStart == 'false'
+                              widget.mapType == 'false'
                                   ? Container()
                                   : Container(
                                       padding: const EdgeInsets.all(5),
-                                      child: widget.isStart == 'default'
+                                      child: widget.mapType == 'default'
                                           ? Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
@@ -309,11 +285,11 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                                               ],
                                             ),
                                     ),
-                              widget.isStart == 'true'
+                              widget.mapType == 'true'
                                   ? Container()
                                   : Container(
                                       padding: const EdgeInsets.all(5),
-                                      child: widget.isStart == 'default'
+                                      child: widget.mapType == 'default'
                                           ? Row(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
@@ -619,16 +595,16 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
               ),
             ),
           ),
-          widget.isStart == 'false'
+          widget.mapType == 'false'
               ? Container()
               : Positioned(
-                  bottom: widget.isStart == 'default'
+                  bottom: widget.mapType == 'default'
                       ? (widget.isPopUp!
                           ? context.height(0.22)
                           : context
                               .height(0.29)) // 'default'일 때 isPop에 따라 높이 변경
                       : context.height(0.14), // 'default'가 아닐 때 높이
-                  right: widget.isStart == 'default' ? 65 : 15,
+                  right: widget.mapType == 'default' ? 65 : 15,
                   child: FloatingActionButton(
                     heroTag: 'definite',
                     backgroundColor: Colors.blue,
@@ -642,10 +618,10 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                         color: Colors.white),
                   ),
                 ),
-          widget.isStart == 'true'
+          widget.mapType == 'true'
               ? Container()
               : Positioned(
-                  bottom: widget.isStart == 'default'
+                  bottom: widget.mapType == 'default'
                       ? (widget.isPopUp!
                           ? context.height(0.22)
                           : context

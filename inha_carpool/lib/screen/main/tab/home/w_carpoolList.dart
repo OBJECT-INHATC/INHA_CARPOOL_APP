@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/screen/main/tab/home/s_carpool_map.dart';
+import 'package:inha_Carpool/screen/main/tab/home/map/s_carpool_map.dart';
 import '../../../../provider/auth/auth_provider.dart';
 import '../carpool/chat/s_chatroom.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
 
@@ -140,7 +140,7 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                     if (nowMember < maxMember) {
                       Nav.push(
                         CarpoolMap(
-                          isStart: 'default',
+                          mapType: 'default',
                           isPopUp: false,
                           startPoint: LatLng(carpoolData['startPoint'].latitude,
                               carpoolData['startPoint'].longitude),
