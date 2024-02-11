@@ -7,6 +7,7 @@ import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/w_timeInfo.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 
 import '../../../../common/widget/empty_list.dart';
@@ -60,7 +61,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
         /// 공지사항 위젯 호출
         NoticeBox(cardHeight, "carpool"),
         /// 상단에 참여중인 카풀 수와 안내문구 위젯 호출
-        carPoolFirstWidget(context, carpoolCount.data.length, screenWidth),
+        const CarpoolTimeInfo(),
 
 
 
@@ -336,92 +337,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
             ),
           ),
         ),
-      ],
-    );
-  }
-
-  SizedBox carPoolFirstWidget(BuildContext context,
-      int countCarpool, double screenWidth) {
-    const redText = '10분전 퇴장 불가';
-    const blueText = '24시간 이내 출발';
-    const greyText = '24시간 이후 출발';
-    const blackText = '출발한 카풀';
-
-    return SizedBox(
-      height: 90,
-      child: Column(
-        children: [
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      '출발 예정 카풀'
-                          .text
-                          .size(20)
-                          .bold
-                          .color(context.appColors.text)
-                          .make(),
-                      Icon(
-                        Icons.local_taxi_rounded,
-                        color: context.appColors.logoColor,
-                        size: 23,
-                      ),
-                    ],
-                  ),
-                  '현재 참여 중인 카풀 $countCarpool개'
-                      .text
-                      .size(10)
-                      .semiBold
-                      .color(context.appColors.text)
-                      .make(),
-                  '위치 아이콘을 눌러주세요!'
-                      .text
-                      .size(10)
-                      .color(context.appColors.text)
-                      .make(),
-                ],
-              ),
-              Width(screenWidth * 0.03),
-              /// 우축 상단 색갈별 시간 안내 위젯
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  colorTimeNotice(redText, Colors.red),
-                  colorTimeNotice(blueText, Colors.blue),
-                  colorTimeNotice(greyText, Colors.grey),
-                  colorTimeNotice(blackText, Colors.black),
-                ],
-              )
-            ],
-          ),
-          Line(
-            height: 1,
-            margin: const EdgeInsets.all(5),
-            color: context.appColors.logoColor,
-          ),
-
-        ],
-      ),
-    );
-  }
-
-  Widget colorTimeNotice(String text, Color color) {
-    return Row(
-      children: [
-        Icon(
-          Icons.circle,
-          color: color,
-          size: 10,
-        ),
-        const Width(5),
-        text.text.size(10).color(context.appColors.text).make(),
       ],
     );
   }
