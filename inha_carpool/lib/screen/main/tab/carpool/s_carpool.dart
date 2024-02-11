@@ -342,10 +342,10 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
 
   SizedBox carPoolFirstWidget(BuildContext context,
       int countCarpool, double screenWidth) {
-    const redText = '1시간 전';
+    const redText = '10분전 퇴장 불가';
     const blueText = '24시간 전';
     const greyText = '24시간 이후';
-    const blackText = '10분전 퇴장 불가';
+    const blackText = '종료된 카풀';
 
     return SizedBox(
       height: 90,

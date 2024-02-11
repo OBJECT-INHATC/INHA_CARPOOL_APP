@@ -130,9 +130,6 @@ lib/generated_plugin_registrant.dart
 .AppleDouble
 .LSOverride
 
-# Icon must end with two \r
-Icon
-
 
 # Thumbnails
 ._*
