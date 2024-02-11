@@ -6,14 +6,16 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/util/carpool.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/w_floating_btn.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_timeInfo.dart';
 import 'package:inha_Carpool/screen/recruit/s_recruit.dart';
 
 import '../../../../common/widget/empty_list.dart';
 import '../../../../provider/ParticipatingCrpool/carpool_provider.dart';
-import 'w_card_Item.dart';
-import 'w_last_chat.dart';
+import 'cardItem/w_point_row.dart';
+import 'cardItem/w_time_map_row.dart';
+import 'cardItem/w_last_chat_row.dart';
 
 /// 참여중인 카풀 리스트
 class CarpoolList extends ConsumerStatefulWidget {
@@ -24,20 +26,13 @@ class CarpoolList extends ConsumerStatefulWidget {
 }
 
 class _CarpoolListState extends ConsumerState<CarpoolList> {
-  late String nickName = ref.read(authProvider).nickName!;
-  late String uid = ref.read(authProvider).uid!;
-  late String gender = ref.read(authProvider).gender!;
-
-
   /// 카풀 조회 메서드
   Future<List<DocumentSnapshot>> _loadCarpools() async {
-    String myID = uid;
-    String myNickName = nickName;
-    String myGender = gender;
-
     List<DocumentSnapshot> carpools =
         await FirebaseCarpool.getCarpoolsRemainingForDay(
-            myID, myNickName, myGender);
+            ref.read(authProvider).uid!,
+            ref.read(authProvider).nickName!,
+            ref.read(authProvider).gender!);
     return carpools;
   }
 
@@ -53,17 +48,13 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     // 각 카드의 높이
     double cardHeight = listViewHeight * 0.3; //1101
 
-    // uri 확인
-    bool isOnUri = true;
-
     return Column(
       children: [
         /// 공지사항 위젯 호출
         NoticeBox(cardHeight, "carpool"),
+
         /// 상단에 참여중인 카풀 수와 안내문구 위젯 호출
         const CarpoolTimeInfo(),
-
-
 
         Expanded(
           child: Container(
@@ -90,245 +81,126 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                     /// 참가하고 있는 카풀이 없는 경우
                     return const SafeArea(
                       child: EmptyCarpoolList(
-                        message: '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!',
+                        floatingMessage: '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!',
                       ),
                     );
                   }
+
                   /// 참가하고 있는 카풀이 있는 경우
                   else {
                     List<DocumentSnapshot> myCarpools = snapshot.data!;
 
-                    return SafeArea(
-                      child: Scaffold(
-                        floatingActionButton: FloatingActionButton(
-                          heroTag: "recruit_from_myCarpool",
-                          elevation: 10,
-                          backgroundColor: Colors.white,
-                          shape: ContinuousRectangleBorder(
-                            borderRadius: BorderRadius.circular(40),
-                            //side: const BorderSide(color: Colors.white, width: 1),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              Nav.globalContext,
-                              MaterialPageRoute(
-                                  builder: (context) => const RecruitPage()),
-                            );
-                          },
-                          child: '+'
-                              .text
-                              .size(50)
-                              .color(context.appColors.logoColor,)
-                              .make(),
-                        ),
-                        body: Column(
-                          children: [
+                    return Scaffold(
+                      floatingActionButton:
+                          const RecruitFloatingBtn(floatingMessage: '카풀 등록하기'),
+                      body: Column(
+                        children: [
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: myCarpools.length,
+                              itemBuilder: (context, i) {
+                                DocumentSnapshot carpool = myCarpools[i];
+                                Map<String, dynamic> carpoolData = myCarpools[i]
+                                    .data() as Map<String, dynamic>;
 
-                            Expanded(
-                              child: ListView.builder(
-                                itemCount:
-                                    myCarpools.isNotEmpty ? myCarpools.length : 0,
-                                itemBuilder: (context, i) {
+                                DateTime startTime =
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        carpool['startTime']);
+                                // 지도를 위한 변수
+                                String formattedForMap =
+                                    _getFormattedDateForMap(startTime);
+                                // 채팅방을 위한 변수
+                                String formattedStartTime =
+                                    _getFormattedDateString(startTime);
+                                return InkWell(
+                                  highlightColor: Colors.blue.withOpacity(0.2),
+                                  splashColor: context.appColors.logoColor
+                                      .withOpacity(0.2),
+                                  onTap: () {
+                                    if (isCarpoolOver(startTime)) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content:
+                                                  Text('해당 방은 이미 종료된 카풀방입니다!')))
+                                          .closed
+                                          .then((value) {
+                                        _loadCarpools();
+                                        setState(() {});
+                                      });
+                                    } else {
+                                      Navigator.push(
+                                        Nav.globalContext,
+                                        MaterialPageRoute(
+                                            builder: (context) => ChatroomPage(
+                                                  carId: carpool['carId'],
+                                                )),
+                                      );
+                                    }
+                                  },
 
-                                    DocumentSnapshot carpool = myCarpools[i];
-                                    Map<String, dynamic> carpoolData =
-                                        carpool.data() as Map<String, dynamic>;
+                                  /*-----------------------------------------------Card---------------------------------------------------------------*/
+                                  child: Card(
+                                    color: Colors.white,
+                                    surfaceTintColor: Colors.white,
+                                    elevation: 3,
+                                    // 그림자의 깊이를 조절하는 elevation 값
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 15),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
 
-                                    DateTime startTime =
-                                        DateTime.fromMillisecondsSinceEpoch(
-                                            carpool['startTime']);
-                                    // 지도를 위한 변수
-                                    String formattedForMap =
-                                        _getFormattedDateForMap(startTime);
-                                    // 채팅방을 위한 변수
-                                    String formattedStartTime =
-                                        _getFormattedDateString(startTime);
-                                    return InkWell(
-                                      highlightColor: Colors.blue.withOpacity(0.2),
-                                      splashColor: context.appColors.logoColor
-                                          .withOpacity(0.2),
-                                      onTap: () {
-                                        if (isCarpoolOver(startTime)) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(const SnackBar(
-                                                  content:
-                                                      Text('해당 방은 이미 종료된 카풀방입니다!')))
-                                              .closed
-                                              .then((value) {
-                                            _loadCarpools();
-                                            setState(() {});
-                                          });
-                                        } else {
-                                          Navigator.push(
-                                            Nav.globalContext,
-                                            MaterialPageRoute(
-                                                builder: (context) => ChatroomPage(
-                                                      carId: carpool['carId'],
-                                                    )),
-                                          );
-                                        }
-                                      },
-
-                                      /*-----------------------------------------------Card---------------------------------------------------------------*/
-                                      child: Card(
-                                        color: Colors.white,
-                                        surfaceTintColor: Colors.transparent,
-                                        elevation: 3,
-                                        // 그림자의 깊이를 조절하는 elevation 값
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 8, horizontal: 15),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(12.0),
-                                        ),
-
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(12.0),
-                                            border: Border.all(
-                                              color: context.appColors.logoColor
-                                                  .withOpacity(0.67),
-                                              width: 1,
-                                            ),
-                                          ),
-                                          padding: const EdgeInsets.only(bottom: 15),
-                                          child: Column(
-                                            children: [
-                                              /// 참여중인 카풀리스트의 카드 아이템 위젯 호출
-                                              CardItem(
-                                                  colorTemp: getColorBasedOnSuffix(
-                                                      startTime),
-                                                  screenWidth: screenWidth,
-                                                  formattedStartTime:
-                                                      formattedStartTime,
-                                                  carpoolData: carpoolData,
-                                                  formattedForMap: formattedForMap),
-                                              //출발지와 row의간격
-                                              Height(screenHeight * 0.01),
-                                              //2번째 줄 출발지
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(
-                                                    horizontal: 15),
-                                                child: Row(
-                                                  children: [
-                                                    Icon(Icons.circle_outlined,
-                                                        color: context.appColors.logoColor,
-                                                        size: 12),
-                                                    // 아이콘과 주소들 사이 간격
-                                                    Width(screenWidth * 0.03),
-
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment.start,
-                                                      children: [
-                                                        // 출발지 요약주소
-                                                        Text(
-                                                          "${carpoolData['startDetailPoint']}",
-                                                          style: const TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 13,
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        // 출발지 풀주소
-                                                        Text(
-                                                          shortenText(
-                                                              carpoolData[
-                                                                  'startPointName'],
-                                                              15),
-                                                          style: const TextStyle(
-                                                            color: Colors.black54,
-                                                            fontSize: 11,
-                                                            fontWeight: FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-
-                                              const Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                    horizontal: 12),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.arrow_downward_rounded,
-                                                      size: 18,
-                                                      color: Colors.indigo,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(
-                                                    horizontal: 15),
-                                                child: Row(
-                                                  children: [
-                                                    Icon(Icons.circle,
-                                                        color: context
-                                                            .appColors.logoColor,
-                                                        size: 12),
-                                                    // 아이콘과 주소들 사이 간격
-                                                    Width(screenWidth * 0.03),
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment.start,
-                                                      children: [
-                                                        // 출발지 요약주소
-                                                        Text(
-                                                          "${carpoolData['endDetailPoint']}",
-                                                          style: const TextStyle(
-                                                            color: Colors.black,
-                                                            fontSize: 13,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                        // 출발지 풀주소
-                                                        Text(
-                                                          shortenText(
-                                                              carpoolData[
-                                                                  'endPointName'],
-                                                              15),
-                                                          style: const TextStyle(
-                                                            color: Colors.black54,
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              // 박스와 간격
-                                              Height(screenHeight * 0.01),
-
-                                              Padding(
-                                                padding: const EdgeInsets.symmetric(
-                                                    horizontal: 15),
-                                                child: Divider(
-                                                    height: 20,
-                                                    color:
-                                                        context.appColors.logoColor),
-                                              ),
-                                              //--------- 하단 라스트 메시지 위젯 호출
-                                              chatLastMSG(carpool: carpool),
-                                            ],
-                                          ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        border: Border.all(
+                                          color: context.appColors.logoColor
+                                              .withOpacity(0.67),
+                                          width: 1,
                                         ),
                                       ),
-                                    );
-                                },
-                              ),
+                                      padding:
+                                          const EdgeInsets.only(bottom: 15),
+
+                                      /// 참여중인 카풀리스트의 카드 아이템 위젯 호출
+                                      child: Column(
+                                        children: [
+                                          // 캘린터 아이콘과 시간 정보
+                                          TimeAndMapInfo(
+                                              colorTemp: getMapColor(
+                                                  startTime),
+                                              screenWidth: screenWidth,
+                                              formattedStartTime:
+                                                  formattedStartTime,
+                                              carpoolData: carpoolData,
+                                              formattedForMap: formattedForMap),
+
+                                          // 출발지 정보
+                                          PointInfo(
+                                            pointName: carpoolData[
+                                            'startPointName'],
+                                            detailPoint: carpoolData['startDetailPoint'],
+                                          icon: const Icon(Icons.circle_outlined), isStart: true,),
+
+                                          // /도착지 정보
+                                          PointInfo(
+                                              pointName: carpoolData[
+                                              'endPointName'],
+                                              detailPoint: carpoolData['endDetailPoint'],
+                                              icon: const Icon(Icons.circle), isStart: false,),
+
+                                          /// 마지막 채팅 메시지 정보
+                                          ChatLastInfo(carpool: carpool),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     );
                   }
@@ -374,13 +246,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   }
 
 
-  String shortenText(String text, int maxLength) {
-    if (text.length <= maxLength) {
-      return text;
-    } else {
-      return '${text.substring(0, maxLength - 1)}...';
-    }
-  }
 
   String _getFormattedDateForMap(DateTime dateTime) {
     return '${dateTime.month}월 ${dateTime.day}일 ${dateTime.hour}시 ${dateTime.minute}분';
@@ -393,9 +258,8 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     return difference.inHours >= 24;
   }
 
-
   // 시간과 비례하여 map icon 색상 반환
-  Color getColorBasedOnSuffix(DateTime startTime) {
+  Color getMapColor(DateTime startTime) {
     // 현재 시간 가져오기
     DateTime now = DateTime.now();
 
@@ -422,6 +286,4 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
       }
     }
   }
-
-
 }

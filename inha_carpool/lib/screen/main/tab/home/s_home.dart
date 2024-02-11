@@ -387,7 +387,7 @@ class _HomeState extends ConsumerState<Home> {
             snapshot.data!.isEmpty) {
           // 카풀 에러 or 비었을 시
           return const EmptyCarpoolList(
-            message: '카풀을 등록하여\n택시 비용을 줄여 보세요!',
+            floatingMessage: '카풀을 등록하여\n택시 비용을 줄여 보세요!',
           );
         } else {
           // 카풀 리스트가 있을 경우 리스트 뷰 빌드 위젯 호출

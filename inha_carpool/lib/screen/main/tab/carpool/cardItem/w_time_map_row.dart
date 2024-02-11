@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 
-import '../home/s_carpool_map.dart';
+import '../../home/s_carpool_map.dart';
 
-/// 참여중인 카풀리스트의 카드 아이템 위젯
-class CardItem extends StatelessWidget {
-   const CardItem({
+class TimeAndMapInfo extends StatelessWidget {
+   const TimeAndMapInfo({
     super.key,
     required this.screenWidth,
     required this.formattedStartTime,
@@ -22,7 +21,6 @@ class CardItem extends StatelessWidget {
   final String formattedForMap;
 
    String getImagePath(Color color) {
-     print("getColor : $color");
      if (color == Colors.red) {
        return 'assets/image/icon/redMap.png';
      } else if (color == Colors.grey) {
