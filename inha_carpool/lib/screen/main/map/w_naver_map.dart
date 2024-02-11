@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/main/map/w_location_button.dart';
 import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
 
@@ -130,7 +129,8 @@ class _naeverMapState extends State<NaeverMap> {
             consumeSymbolTapEvents: false,
             initialCameraPosition: NCameraPosition(
               target: midPoint,
-              zoom: zoomLevel,
+              /// 출발지, 목적지를 각 각 조회시 15로 설정 그 외는 직선거리를 기준으로 설정
+              zoom: widget.mapCategory == MapCategory.all ? zoomLevel : 15,
             ),
           ),
           onMapReady: (controller) async {
@@ -138,6 +138,11 @@ class _naeverMapState extends State<NaeverMap> {
             setState(() {
               isMapReady = true;
             });
+            widget.mapCategory == MapCategory.start
+                ? mapController.addOverlay(startMarker)
+                : widget.mapCategory == MapCategory.end
+                    ? mapController.addOverlay(endMarker)
+                    :
             mapController.addOverlayAll(
               {startMarker, endMarker},
             );

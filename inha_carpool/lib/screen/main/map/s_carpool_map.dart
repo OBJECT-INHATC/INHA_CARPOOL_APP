@@ -9,6 +9,9 @@ import 'package:inha_Carpool/screen/main/map/w_naver_map.dart';
 
 import '../tab/home/enum/mapType.dart';
 
+/// todo : 입장 버튼 없을 때 하단 바 크기 조절
+
+
 class CarpoolMap extends ConsumerStatefulWidget {
   final LatLng startPoint;
   final String startPointName;
