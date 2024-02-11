@@ -7,7 +7,6 @@ import '../../home/s_carpool_map.dart';
 class TimeAndMapInfo extends StatelessWidget {
    const TimeAndMapInfo({
     super.key,
-    required this.screenWidth,
     required this.formattedStartTime,
     required this.carpoolData,
     required this.formattedForMap,
@@ -15,7 +14,6 @@ class TimeAndMapInfo extends StatelessWidget {
 
   });
   final Color colorTemp;
-  final double screenWidth;
   final String formattedStartTime;
   final Map<String, dynamic> carpoolData;
   final String formattedForMap;
@@ -34,6 +32,9 @@ class TimeAndMapInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+     final screenWidth = context.screenWidth;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [ // 왼쪽에 날짜 위젯 배치

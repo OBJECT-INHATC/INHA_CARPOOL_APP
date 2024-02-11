@@ -42,7 +42,7 @@ class ChatLastInfo extends StatelessWidget {
                       'Error: ${snapshot.error}');
                 } else if (!snapshot.hasData ||
                     snapshot.data == null) {
-                  return  const Text(
+                  return  Text(
                     emptyChat,
                     style: TextStyle(
                         color: Colors.grey),
