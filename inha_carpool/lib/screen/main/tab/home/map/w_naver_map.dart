@@ -45,7 +45,6 @@ class _naeverMapState extends State<NaeverMap> {
         NaverMap(
           options: NaverMapViewOptions(
             indoorEnable: true,
-            locationButtonEnable: true,
             consumeSymbolTapEvents: false,
             initialCameraPosition: NCameraPosition(
               target: NLatLng(

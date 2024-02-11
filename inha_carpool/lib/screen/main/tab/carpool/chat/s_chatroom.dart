@@ -506,6 +506,7 @@ class _ChatroomPageState extends  ConsumerState<ChatroomPage>
                 onPressed: () async {
                   Navigator.pop(context);
                   // 나가기 메소드
+                  /// todo : 상태관리 오류로 지금 안나가짐!!
                   _exitCarpool(context);
                 },
                 child: const Text('나가기'),
