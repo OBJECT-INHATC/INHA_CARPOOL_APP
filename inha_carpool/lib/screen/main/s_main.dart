@@ -54,7 +54,7 @@ class MainScreenState extends ConsumerState<MainScreen>
   GlobalKey<NavigatorState> get _currentTabNavigationKey =>
       navigatorKeys[_currentIndex];
 
-  bool get extendBody => true;
+  bool get extendBody => false;
 
   static double get bottomNavigationBarBorderRadius => 30.0;
 

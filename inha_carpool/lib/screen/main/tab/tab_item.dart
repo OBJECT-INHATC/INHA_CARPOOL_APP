@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
-import 'package:inha_Carpool/screen/main/tab/mypage/f_mypage.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/s_mypage.dart';
 
 import 'carpool/s_carpool.dart';
 import 'home/s_home.dart';

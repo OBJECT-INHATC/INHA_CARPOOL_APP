@@ -23,7 +23,6 @@ class VersionAndCopyRight extends StatelessWidget {
               .semiBold
               .makeWithDefaultFont(),
         ),
-        Height(height * 0.1),
       ],
     );
   }

@@ -14,8 +14,6 @@ class AuthInfoRow extends ConsumerStatefulWidget {
 }
 
 class _AuthInfoState extends ConsumerState<AuthInfoRow> {
-
-
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(authProvider);
@@ -24,48 +22,47 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
 
     final recordState = ref.watch(recordCountProvider);
 
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: width * 0.01, horizontal: width * 0.01),
-        child: Column(
-          children: [
-            // 인하대 & 인하공전
-            CustomPng(
-              fileDirectory: 'splash',
-              fileName: 'school_logo',
-              height: width * 0.13,
-              width: width * 0.7,
-            ),
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: width * 0.01, horizontal: width * 0.01),
+      child: Column(
+        children: [
+          // 인하대 & 인하공전
+          CustomPng(
+            fileDirectory: 'splash',
+            fileName: 'school_logo',
+            height: width * 0.13,
+            width: width * 0.7,
+          ),
+          Icon(Icons.account_circle, size: width * 0.15, color: Colors.white),
+          Height(height * 0.02),
+
+          // 카풀이용, 이름, 경고 누적 row
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // 앱 이용횟수
+              _buildCountColumn('카풀 이용', recordState, width),
+
+              Column(
+                children: [
+                  // 이름
+                  state.userName!.text.size(width * 0.05).bold.make(),
+                  // 닉네임
+                  "# ${state.nickName!}".text.sky900.size(width * 0.04).make(),
+                ],
+              ),
 
 
-            // 카풀이용, 이름, 경고 누적 row
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                // 앱 이용횟수
-                _buildCountColumn('카풀 이용', recordState, width),
+              // todo : 경고 횟수 받아와서 때리기 (지금은 0 고정)
+              _buildCountColumn('경고 누적', 0, width),
+            ],
+          ),
 
-                // 사람 이미지 아이콘
-                Icon(Icons.account_circle, size: width * 0.14, color: Colors.white),
-
-                // todo : 경고 횟수 받아와서 때리기 (지금은 0 고정)
-                _buildCountColumn('경고 누적', 0, width),
-              ],
-            ),
-            Height(height * 0.01),
-            state.userName!.text.size(width * 0.05).bold.make(),
-
-            // 닉네임
-            "# ${state.nickName!}"
-                .text
-                .sky900
-                .size(width * 0.035)
-                .make(),
-
-            // 이메일
-           // state.email!.text.size(width * 0.02).make(),
-          ],
-        ),
+          // 이메일
+          // state.email!.text.size(width * 0.02).make(),
+        ],
       ),
     );
   }
@@ -74,9 +71,8 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
     return Column(
       children: [
         //사이즈 35의 글자
-        Height(width * 0.1),
-        text.text.size(width * 0.045).semiBold.make(),
-        '$num 회'.text.size(width * 0.04).sky900.make(),
+        text.text.size(width * 0.040).semiBold.make(),
+        '$num 회'.text.size(width * 0.037).sky900.make(),
       ],
     );
   }
