@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/service/api/Api_topic.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
@@ -19,7 +20,6 @@ import '../../../../common/util/carpool.dart';
 import '../../../../common/util/addMember_Exception.dart';
 import '../../../../dto/TopicDTO.dart';
 import '../../../../provider/ParticipatingCrpool/carpool_provider.dart';
-import '../../../../provider/auth/auth_provider.dart';
 import '../../s_main.dart';
 import '../carpool/chat/s_chatroom.dart';
 
@@ -54,15 +54,7 @@ class CarpoolMap extends ConsumerStatefulWidget {
 }
 
 class _CarpoolMapState extends ConsumerState<CarpoolMap> {
-
   late NaverMapController mapController;
-  List<dynamic> list = [];
-  bool firstStep = false;
-  late double distanceInMeters;
-
-  late String nickName = ""; // 기본값으로 초기화
-  late String uid = "";
-  late String gender = "";
 
   LatLng? midPoint;
 
@@ -73,8 +65,8 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
   void initState() {
     super.initState();
     _moveCamera();
-    _loadUserData();
   }
+
 
   /// 중간 지점 계산 및 카메라 이동
   _moveCamera() async {
@@ -83,20 +75,17 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
     final double midLng =
         (widget.startPoint.longitude + widget.endPoint.longitude) / 2;
     midPoint = LatLng(midLat, midLng);
-  }
-
-
-
-  Future<void> _loadUserData() async {
-    nickName = ref.read(authProvider.notifier).state.nickName ?? "";
-    uid = ref.read(authProvider.notifier).state.uid ?? "";
-    gender = ref.read(authProvider.notifier).state.gender ?? "";
+    // 뒤로가기 제한 해제
   }
 
   @override
   Widget build(BuildContext context) {
 
     final carpoolProvider = ref.watch(carpoolNotifierProvider.notifier);
+
+    final String nickName = ref.read(authProvider).nickName!;
+    final String uid = ref.read(authProvider).uid!;
+    final String gender = ref.read(authProvider).gender!;
 
     // 네이버 마커 추가
     NMarker startMarker = NMarker(
@@ -171,8 +160,11 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                 mapController.addOverlayAll(
                   {startMarker, endMarker},
                 );
+
               },
             ),
+
+
           ),
           Positioned(
             bottom: context.height(0),
@@ -735,17 +727,5 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
         );
       },
     );
-  }
-
-
-  /// 이미지 크기 조정 메서드- 0915 한승완
-  Future<Uint8List?> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
-        ?.buffer
-        .asUint8List();
   }
 }
