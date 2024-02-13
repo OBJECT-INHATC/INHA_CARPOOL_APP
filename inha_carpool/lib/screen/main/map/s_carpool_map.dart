@@ -125,7 +125,7 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                         )
                       : (mapCategory == MapCategory.start)
                           ? startInfo
-                          : endInfo).pOnly(bottom: height * 0.02),
+                          : endInfo).pOnly(bottom: height * 0.03),
             ],
           ),
           enterState

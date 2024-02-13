@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/main/map/w_icon_button.dart';
 import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
 
@@ -100,10 +101,13 @@ class _naeverMapState extends State<NaeverMap> {
 
   @override
   Widget build(BuildContext context) {
+
+    final height = context.screenHeight;
+
     // 네이버 마커 추가
     NMarker startMarker = NMarker(
       icon: const NOverlayImage.fromAssetImage('assets/image/map/startMarker.png'),
-      size:  const Size(50,50),
+      size:   Size(height * 0.08, height * 0.06),
       id: 'start',
       position:
           NLatLng(widget.startPoint.latitude, widget.startPoint.longitude),
@@ -115,7 +119,7 @@ class _naeverMapState extends State<NaeverMap> {
 
     NMarker endMarker = NMarker(
       icon: const NOverlayImage.fromAssetImage('assets/image/map/endMarker.png'),
-      size:  const Size(50,50),
+      size:   Size(height * 0.08, height * 0.06),
       id: 'end',
       position: NLatLng(widget.endPoint.latitude, widget.endPoint.longitude),
     );
