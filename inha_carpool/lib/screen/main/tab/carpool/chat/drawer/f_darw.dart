@@ -45,10 +45,12 @@ class ChatDrawer extends ConsumerStatefulWidget {
 class _ChatDrawerState extends ConsumerState<ChatDrawer> {
 
   late final String uid;
+  late final String nickName;
 
   @override
   void initState() {
     uid = ref.read(authProvider).uid ?? "";
+    nickName = ref.read(authProvider).nickName ?? "";
     // TODO: implement initState
     super.initState();
   }
@@ -85,22 +87,46 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    /*
+                    1. 인원수 1명인지 확인
+                      ok "나 혼자네? 그냥 나가기"
+                      no
+                        2. 시간 확인 (10분전)
+                          ok "10분 전이야 아무도 못나가"
+                          no
+                            3. 방장인지 체크
+                                ok "다음 방장은 너다 하고 나가기"
+                                no "그냥 나가기"
+                     */
                     IconButton(
                       onPressed: () async {
-                        /// 혼자면 그냥 나가라
+                        ///   1. 인원수 1명인지 확인
                         if (widget.membersList.length == 1) {
-                          _deleteCarpoolBtn(context);
+                          /// "나 혼자네? 그냥 나가기"
+                          _deleteAdmin(context, true);
                         } else {
+                          ///  2. 시간 확인 (10분전)
                           final timeDifference = widget.agreedTime
                               .difference(DateTime.now())
                               .inMinutes;
                           if (timeDifference > 10) {
-                            /// 출발 시간과 현재 시간 사이의 차이가 10분 이상인 경우 나가기 작업 수행
-                          //  _exitIconBtn(context);
+                           /// 3. 방장인지 체크
+                            if(widget.admin == nickName){
+                              ///  ok "다음 방장은 너다 하고 나가기"
+                              _deleteAdmin(context, false);
+                            } else {
+                              /// 그냥 나가기
+
+                            }
                           } else {
-                            /// 10분 미만은 못 나감
+                           /// ok "10분 전이야 아무도 못나가"
 
                           }
+
+
+
+
+
                         }
                       },
                       icon:  Icon(
@@ -190,6 +216,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     int end = res.indexOf("_");
     return res.substring(start, end);
   }
+
+
 
 
 
@@ -324,7 +352,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     }
   }
 
-  void _deleteCarpoolBtn(BuildContext context) {
+  // 방장이고 혼자 -> isAdmin = true
+  void _deleteAdmin(BuildContext context, bool isAlone) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -342,7 +371,12 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
               TextButton(
                 onPressed: () async {
                   Navigator.pop(context);
-                  _exitCarpool(context);
+                  if(isAlone == true){
+                    // 나가기 메소드
+                    _exitCarpoolLoding(context);
+                  }else{
+                    _exitCarpoolLoding(context);
+                  }
                 },
                 child: const Text('나가기'),
               ),
@@ -352,8 +386,10 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
       );
     }
 
+
+
   // 나가기 처리 메소드
-  void _exitCarpool(BuildContext context) async {
+  void _exitCarpoolLoding(BuildContext context) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -420,13 +456,10 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     );
   }
 
-  void removeProvider(String carId) {
-    ref.read(carpoolNotifierProvider.notifier).removeCarpool(carId);
-  }
 
-  /// 나가기 처리를 수행하는 비동기 함수
+
+  /// 나가기 처리를 수행하는 비동기 함수 (공통)
   Future<void> _exitCarpoolFuture() async {
-
     //서버에서 토픽 삭제
     bool isOpen = await ApiTopic().deleteTopic(uid, widget.carId);
 
@@ -448,7 +481,12 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     }
   }
 
-  /// 에러 다이얼로그
+  // 카풀 삭제 처리 상태관리 (공통)
+  void removeProvider(String carId) {
+    ref.read(carpoolNotifierProvider.notifier).removeCarpool(carId);
+  }
+
+  /// 에러 다이얼로그 (공통)
   void showErrorDialog(BuildContext context, String errorMessage) {
     showDialog(
       context: context,
