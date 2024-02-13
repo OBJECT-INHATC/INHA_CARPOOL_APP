@@ -67,7 +67,7 @@ class LocationHandler {
 
   static void showLocationPermissionSnackBar(BuildContext context) {
     SnackBar snackBar = SnackBar(
-      content: Text("위치 권한이 필요한 서비스입니다."),
+      content: const Text("위치 권한이 필요한 서비스입니다."),
       action: SnackBarAction(
         label: "설정으로 이동",
         onPressed: () {

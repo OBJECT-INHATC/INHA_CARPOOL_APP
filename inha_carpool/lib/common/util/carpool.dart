@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -13,20 +12,14 @@ import '../data/preference/prefs.dart';
 import 'addMember_Exception.dart';
 
 class FirebaseCarpool {
-  static FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  static final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
   static ApiTopic apiTopic = ApiTopic();
 
-  static const storage = FlutterSecureStorage();
-  late String nickName = ""; // 기본값으로 초기화
-  late String uid = "";
-  late String gender = "";
-
   // 광고 가져오기
-  static Future<DocumentSnapshot?> getAdminData(String type) async {
+  static Future<DocumentSnapshot?> getNoticeData(String type) async {
     try {
       DocumentSnapshot documentSnapshot =
           await FirebaseFirestore.instance.collection('admin').doc(type).get();
-
       if (documentSnapshot.exists) {
         return documentSnapshot;
       } else {
@@ -65,14 +58,11 @@ class FirebaseCarpool {
     int dateAsInt = combinedDateTime.millisecondsSinceEpoch;
     String tempCarId = "";
 
-    try {
-      CollectionReference users = _firestore.collection('carpool');
+      CollectionReference users = _fireStore.collection('carpool');
       GeoPoint geoStart = GeoPoint(startPoint.latitude, startPoint.longitude);
       GeoPoint geoEnd = GeoPoint(endPoint.latitude, endPoint.longitude);
 
       List<String> members = ['${memberID}_${memberName}_$memberGender'];
-
-      print(selectedLimit.replaceAll(RegExp(r'[^\d]'), ''));
 
       DocumentReference carpoolDocRef = await users.add({
         'admin': '${memberID}_${memberName}_$memberGender',
@@ -102,72 +92,72 @@ class FirebaseCarpool {
         'time': DateTime.now().millisecondsSinceEpoch,
       });
 
+      // 구독
+    await subScribeTopic(tempCarId);
+    // 구독정보 서버에 저장
+    bool isOpen = await saveTopicToServer(memberID, tempCarId);
 
-      /// 0918 해당 카풀 알림 토픽 추가
-      if (Prefs.isPushOnRx.get() == true) {
-        await FirebaseMessaging.instance.subscribeToTopic(tempCarId);
-        print("토픽 추가");
-
-        /// 카풀 정보 토픽 추가
-        await FirebaseMessaging.instance
-            .subscribeToTopic("${carpoolDocRef.id}_info");
-      }
-    } catch (e) {
-      print('Error adding data to Firestore: $e');
-    }
-
-    TopicRequstDTO topicRequstDTO =
-        TopicRequstDTO(uid: memberID, carId: tempCarId);
-    bool isOpen = await apiTopic.saveTopoic(topicRequstDTO);
     if (isOpen) {
-      print("스프링부트 서버 성공 #############");
-
-      /// 0903 한승완 추가 : 참가 메시지 전송
+      print("서버 성공 #######");
+      // 참가 메세지 전송
       await FireStoreService().sendCreateMessage(tempCarId, memberName);
 
       return tempCarId;
     } else {
-      print("스프링부트 서버 실패 #############");
-
-      /// 토픽 및 카풀 삭제
-      if (Prefs.isPushOnRx.get() == true) {
-        print("서버 이상으로 토픽 삭제");
-        await FirebaseMessaging.instance.unsubscribeFromTopic(tempCarId);
-        await FirebaseMessaging.instance
-            .unsubscribeFromTopic("${tempCarId}_info");
-      }
-
-      await _firestore.collection('carpool').doc(tempCarId).delete();
+      print("서버 실패 #######");
+      // 토픽 삭제
+      await unSubScribeTopic(tempCarId);
+      // 파이어스토어 카풀 삭제
+      await deleteCarpoolToFireStore(tempCarId);
 
       return "";
     }
   }
 
-  ///0907 새 채팅 카운트 업데이트
+
+  /// 토픽 구독 메서드 (채팅과 카풀 알림을 구분해서 추가함)
+  static Future<void> subScribeTopic(String carId) async {
+    try {
+         print("토픽 추가");
+
+      /// 해당 카풀 알림 토픽 추가
+      if (Prefs.isPushOnRx.get() == true) {
+        await FirebaseMessaging.instance.subscribeToTopic(carId);
+
+        /// 카풀 정보 토픽 추가
+        await FirebaseMessaging.instance
+            .subscribeToTopic("${carId}_info");
+      }
+    } catch (e) {
+      print('Error adding data to Firestore: $e');
+    }
+  }
+
+  /// 새 채팅 카운트 업데이트
   static Future<void> updateNewChatCount(
       String carpoolId, int newChatCount) async {
     try {
-      await _firestore.collection('carpools').doc(carpoolId).update({
+      await _fireStore.collection('carpools').doc(carpoolId).update({
         'newchat': newChatCount,
       });
     } catch (e) {
       print(e);
-      throw e;
+      rethrow;
     }
   }
 
-  /// 카풀에 멤버 추가
+  /// 카풀에 새로운 멤버 추가
   static Future<void> addMemberToCarpool(
       String carpoolID,
       String memberID,
       String memberName,
       String memberGender,
       String roomGender) async {
-    CollectionReference carpoolCollection = _firestore.collection('carpool');
+    CollectionReference carpoolCollection = _fireStore.collection('carpool');
     DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
 
     try {
-      await _firestore.runTransaction((transaction) async {
+      await _fireStore.runTransaction((transaction) async {
         DocumentSnapshot carpoolSnapshot = await transaction.get(carpoolDocRef);
 
         if (!carpoolSnapshot.exists) {
@@ -190,24 +180,24 @@ class FirebaseCarpool {
           throw MaxCapacityException('최대 인원을 초과했습니다.\n다른 카풀을 이용해주세요.');
         }
       });
-      print('카풀에 유저가 추가되었습니다 -> ${memberID}_${memberName}');
+      print('카풀에 유저가 추가되었습니다 -> ${memberID}_$memberName');
     } catch (e) {
       // 예외를 다시 던져서 메소드를 호출한 곳에 전달
       // throw e;
       if (e is DeletedRoomException) {
         // 카풀 정보가 없는 경우 예외 처리
         print('카풀 정보가 없는 경우 처리: ${e.message}');
-        throw e;
+        rethrow;
         // 예외 처리 코드 추가
       } else if (e is MaxCapacityException) {
         // 최대 인원 초과 예외 처리
         print('최대 인원 초과: ${e.message}');
-        throw e;
+        rethrow;
         // 예외 처리 코드 추가
       } else {
         // 기타 예외 처리
         print('기타 예외: $e');
-        throw e;
+        rethrow;
         // 예외 처리 코드 추가
       }
     }
@@ -249,54 +239,36 @@ class FirebaseCarpool {
     return sortedCarpools;
   }
 
-  // /// 시간순 조회 30일 후 테스트용 (3일 뒤 춟발예정만 보임)
-  // static Future<List<DocumentSnapshot>> timeByFunction(
-  //   int limit,
-  //   DocumentSnapshot? startAfter,
-  // ) async {
-  //   CollectionReference carpoolCollection =
-  //       FirebaseFirestore.instance.collection('carpool');
-  //
-  //   // 현재 시간
-  //   DateTime now = DateTime.now();
-  //
-  //   // 현재 시간으로부터 30일 후의 시간
-  //   DateTime threeDaysLater = now.add(const Duration(days: 3));
-  //
-  //   Query query = carpoolCollection
-  //       .where('startTime',
-  //           isGreaterThan: threeDaysLater.millisecondsSinceEpoch)
-  //       .orderBy('startTime')
-  //       .limit(limit);
-  //
-  //   if (startAfter != null) {
-  //     query = query.startAfterDocument(startAfter);
-  //   }
-  //
-  //   QuerySnapshot querySnapshot = await query.get();
-  //
-  //   List<DocumentSnapshot> sortedCarpools = [];
-  //   print("추가된 카풀 수(시간순): ${querySnapshot.docs.length}");
-  //
-  //   // 현재 시간 가져옴
-  //   DateTime currentTime = DateTime.now();
-  //
-  //   for (var doc in querySnapshot.docs) {
-  //     DateTime startTime =
-  //         DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
-  //
-  //     // 현재 시간보다 미래의 시간인 경우만 추가
-  //     if (startTime.isAfter(currentTime)) {
-  //       sortedCarpools.add(doc);
-  //     }
-  //   }
-  //   return sortedCarpools;
-  // }
+
+  /// 토픽 구독 해제
+  static Future<void> unSubScribeTopic(String tempCarId) async {
+    /// 토픽 및 카풀 삭제
+    if (Prefs.isPushOnRx.get() == true) {
+      print("서버 이상으로 토픽 삭제");
+      await FirebaseMessaging.instance.unsubscribeFromTopic(tempCarId);
+      await FirebaseMessaging.instance
+          .unsubscribeFromTopic("${tempCarId}_info");
+    }
+
+  }
+
+  /// 카풀 삭제
+  static Future<void> deleteCarpoolToFireStore(String carId) async {
+    await _fireStore.collection('carpool').doc(carId).delete();
+  }
+
+  /// 토픽 스프링 서버에 저장
+  static Future<bool> saveTopicToServer(String memberID, String tempCarId) async {
+    TopicRequstDTO topicRequstDTO =
+    TopicRequstDTO(uid: memberID, carId: tempCarId);
+    bool isOpen = await apiTopic.saveTopoic(topicRequstDTO);
+    return isOpen;
+  }
 
   /// 거리순 정렬
   static Future<List<DocumentSnapshot>> nearByCarpool(
       double myLat, double myLon) async {
-    QuerySnapshot querySnapshot = await _firestore
+    QuerySnapshot querySnapshot = await _fireStore
         .collection('carpool')
         .where('startTime',
             isGreaterThan: DateTime.now().millisecondsSinceEpoch)
@@ -361,7 +333,7 @@ class FirebaseCarpool {
   /// 내가 참여한 카풀 - 메인 플로팅 버튼에 사용
   static Future<List<DocumentSnapshot>> getCarpoolsWithMember(
       String memberID, String memberName, String memberGender) async {
-    QuerySnapshot querySnapshot = await _firestore
+    QuerySnapshot querySnapshot = await _fireStore
         .collection('carpool')
         .where('members',
             arrayContains: '${memberID}_${memberName}_$memberGender')
@@ -392,10 +364,10 @@ class FirebaseCarpool {
     return sortedCarpools;
   }
 
-  /// 내가 참여한 카풀 - 내가참가한 카풀리스트에 사용
+  /// 내가 참여한 카풀 - 내가 참가한 카풀 리스트에 사용
   static Future<List<DocumentSnapshot>> getCarpoolsRemainingForDay(
       String memberID, String memberName, String memberGender) async {
-    QuerySnapshot querySnapshot = await _firestore
+    QuerySnapshot querySnapshot = await _fireStore
         .collection('carpool')
         .where('members',
             arrayContains: '${memberID}_${memberName}_$memberGender')

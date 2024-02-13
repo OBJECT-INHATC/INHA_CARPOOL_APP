@@ -4,7 +4,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/provider/ParticipatingCrpool/carpool_provider.dart';
 
 class CarpoolTimeInfo extends ConsumerWidget {
-  final redText = '10분전 퇴장 불가';
+  final redText = '10분 전 퇴장 불가';
   final blueText = '24시간 이내 출발';
   final greyText = '24시간 이후 출발';
   final blackText = '출발한 카풀';

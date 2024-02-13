@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../provider/notice/notice_provider.dart';
 
+/// * 외부 URL와 연결된 공지사항 위젯 (추후 광고나 학교 공지로 이동 -> 파이어베이스 admin 컬렉션에 저장) 0207 이상훈
 class NoticeBox extends ConsumerStatefulWidget {
   const NoticeBox(this.cardHeight, this.noticeType, {super.key});
   final double cardHeight;
