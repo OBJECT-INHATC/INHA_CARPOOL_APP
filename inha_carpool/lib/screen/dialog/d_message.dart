@@ -58,6 +58,7 @@ class _MessageDialogState extends DialogState<MessageDialog> {
                             child: Text(
                               widget.message!,
                               style: TextStyle(
+                                fontWeight: FontWeight.bold,
                                   fontSize: widget.fontSize,
                                   height: 1.8,
                                   color: context.appColors.text),

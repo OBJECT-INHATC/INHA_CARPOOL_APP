@@ -34,13 +34,16 @@ class LogoutConfirmationDialog extends StatelessWidget {
           // Title
           Text(email, style: TextStyle(fontSize: width * 0.04, fontWeight: FontWeight.bold)),
            Text('위 계정에서 로그아웃하시겠습니까?', style: TextStyle(fontSize: width * 0.035)),
+
         ],
       ),
       actions: <Widget>[
+        Line(color: context.appColors.divider),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextButton(
+            TextButton( 
               onPressed: () async{
                 await FirebaseMessaging.instance.deleteToken();
                 AuthService().signOut().then(

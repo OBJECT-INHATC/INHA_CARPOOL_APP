@@ -152,7 +152,7 @@ class _MyPageState extends ConsumerState<MyPage> {
                 final manager = DefaultCacheManager();
                 await manager.emptyCache();
                 if (mounted) {
-                  MessageDialog('캐시 삭제 완료').show();
+                  MessageDialog('캐시 삭제 완료', textAlign: TextAlign.center,).show();
                 }
               },
               color: Colors.grey,
