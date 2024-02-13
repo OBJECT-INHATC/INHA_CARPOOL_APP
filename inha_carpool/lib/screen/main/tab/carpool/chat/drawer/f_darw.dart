@@ -116,7 +116,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                             }
                           } else {
                             /// ok "10분 전이야 아무도 못나가"
-                            showDialog(context, "지금은 퇴장할 수 없습니다.", "카풀 퇴장 불가");
+                            showOpenDialog(context, "지금은 퇴장할 수 없습니다.", "카풀 퇴장 불가");
                           }
                         }
                       },
@@ -482,7 +482,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     } else {
       print("스프링부트 서버 실패 #############");
       if (!mounted) return;
-      showDialog(context, "현재 서버가 불안정합니다.\n잠시 후 다시 시도해주세요.", "카풀 삭제 실패");
+      showOpenDialog(context, "현재 서버가 불안정합니다.\n잠시 후 다시 시도해주세요.", "카풀 삭제 실패");
     }
   }
 
@@ -492,7 +492,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   }
 
   /// 에러 다이얼로그 (공통)
-  void showDialog(BuildContext context, String content, String title) {
+  void showOpenDialog(BuildContext context, String content, String title) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
