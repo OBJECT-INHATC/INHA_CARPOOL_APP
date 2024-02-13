@@ -149,7 +149,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                     _showProfileModal(
                       context,
                       memberId,
-                      '$memberName 님',
+                      memberName,
                       uid,
                       memberGender,
                     );
@@ -275,6 +275,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                           viewProfile(context, memberUid);
                           if (myUid != memberUid) {
                             Navigator.pop(context);
+
+                            print("ElevatedButton ============? $selectedUserNickName");
                             showDialog(
                               context: context,
                               builder: (context) => ComplainAlert(

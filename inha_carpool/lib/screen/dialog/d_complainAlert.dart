@@ -42,7 +42,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
     print("nickName: ${widget.reportedNickName}"); // "nickName: 홍길동 님"
     print("myId: ${widget.myId}"); // "myId: 1234"
     print("carpoolId: ${widget.carpoolId}"); // "carpoolId: 1234"
-
+    
 
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
@@ -78,9 +78,9 @@ class _ComplainAlertState extends State<ComplainAlert> {
                           color: Colors.grey,
                         ),
                         Text(
-                          widget.reportedNickName
-                              .replaceFirst(' ', '')
-                              .toString(),
+                          widget.reportedNickName,
+                           //   .replaceFirst(' ', '')
+                           //   .toString(),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -138,7 +138,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
                   final reportRequestDTO = ReportRequstDTO(
                     content: _controller.text,
                     carpoolId: widget.carpoolId,
-                    reportedUser: widget.reportedNickName.replaceAll(' 님', ''),
+                    reportedUser: widget.reportedNickName,
                     reporter: widget.myId,
                     reportType: getCheckedItems().toString(),
                     reportDate: DateTime.now().toString(),

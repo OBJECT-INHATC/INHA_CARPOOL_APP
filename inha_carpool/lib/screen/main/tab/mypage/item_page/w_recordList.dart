@@ -275,7 +275,7 @@ class _RecordListState extends ConsumerState<RecordList> {
               builder: (context) => ComplainAlert(
                 reportedNickName: member.split('_')[1], // 피신고자 닉네임
                 myId: nickName, // 신고자 닉네임 (나)
-                carpoolId: carpoolId, // 신고 카풀 아이디
+                carpoolId: carpoolId,
               ),
             );
           },

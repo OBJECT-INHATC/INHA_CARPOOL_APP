@@ -66,7 +66,7 @@ class _ComplainCompleteState extends State<ComplainComplete> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('OK'),
+            child: const Center(child: Text('OK')),
           ),
         ),
       ],
