@@ -5,6 +5,7 @@ import 'package:inha_Carpool/provider/record/record_provider.dart';
 
 import '../../../../../common/widget/w_custom_png.dart';
 import '../../../../../provider/auth/auth_provider.dart';
+import '../../../../../provider/yellow/yellow_provider.dart';
 
 class AuthInfoRow extends ConsumerStatefulWidget {
   const AuthInfoRow({super.key});
@@ -21,6 +22,10 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
     final height = context.screenHeight;
 
     final recordState = ref.watch(recordCountProvider);
+
+    final yellowState = ref.read(yellowCountProvider);
+
+
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -56,7 +61,7 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
 
 
               // todo : 경고 횟수 받아와서 때리기 (지금은 0 고정)
-              _buildCountColumn('경고 누적', 0, width),
+              _buildCountColumn('경고 누적', yellowState, width),
             ],
           ),
 

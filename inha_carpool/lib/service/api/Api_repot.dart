@@ -153,4 +153,31 @@ class ApiService {
     return response; // API 응답을 반환
   }
 
+  Future<int> selectYellowCount(String uid) async {
+    final String apiUrl = '$baseUrl/user/count/yellow'; // API 엔드포인트 URL
+
+    final Uri uri = Uri.parse(apiUrl).replace(
+      // 쿼리 스트링 추가
+      queryParameters: {'uid': uid},
+    );
+
+    final response = await http.get(
+      uri,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print('경고횟수 조회 : ${jsonDecode(response.body) }');
+      return jsonDecode(response.body);
+    } else {
+      // API 호출이 실패하면 오류를 출력하고 0을 반환합니다.
+      print('Failed to select yellow count: ${response.statusCode}');
+
+      return 0;
+    }
+  }
+
+
 }

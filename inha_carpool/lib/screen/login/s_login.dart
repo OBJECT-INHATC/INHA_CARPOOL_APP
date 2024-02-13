@@ -9,6 +9,7 @@ import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
+import 'package:inha_Carpool/provider/yellow/yellow_provider.dart';
 import 'package:inha_Carpool/screen/register/s_agreement.dart';
 import 'package:inha_Carpool/service/api/Api_repot.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
@@ -92,11 +93,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         userName: await storage.read(key: 'userName'),
       );
 
+
+
       /// 로그인 정보 상태관리 초기화
       setAuthStateProvider(memberModel);
 
       /// 이용내역 상태관리 초기화
       setRecordCount(memberModel.uid!);
+
+      setYellowCardCount(memberModel.uid!);
 
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MainScreen()));
@@ -112,6 +117,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final recordCount = await ApiService().selectHistoryCount(uid.toString());
     print("참여중인 카풀 수 : $recordCount");
     ref.read(recordCountProvider.notifier).state = recordCount;
+  }
+
+  /// 경고 횟수 초기화
+  void setYellowCardCount(String uid) async {
+    final yellowCardCount = await ApiService().selectYellowCount(uid.toString());
+    ref.read(yellowCountProvider.notifier).state = yellowCardCount;
   }
 
   // 버튼 활성화 여부
@@ -487,6 +498,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
                                       /// 0207 이상훈 이용내역 상태관리 초기화
                                       setRecordCount(uid);
+
+                                      setYellowCardCount(uid);
 
                                       // Firestore에서 해당 사용자가 속한 모든 carId를 가져옵니다.
                                       FirebaseFirestore.instance
