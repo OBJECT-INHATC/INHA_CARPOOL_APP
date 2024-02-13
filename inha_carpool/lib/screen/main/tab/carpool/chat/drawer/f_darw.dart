@@ -209,7 +209,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   }
 
   void _showProfileModal(BuildContext context, String memberUid,
-      String nickName, String myUid, String memberGender) {
+      String selectedUserNickName, String myUid, String memberGender) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -260,7 +260,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(nickName,
+                      Text(selectedUserNickName,
                           style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w600)),
                       Text(
@@ -278,8 +278,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                             showDialog(
                               context: context,
                               builder: (context) => ComplainAlert(
-                                  reportedNickName: nickName,
-                                  myId: nickName,
+                                  reportedNickName: selectedUserNickName,
+                                  myId: uid,
                                   carpoolId: widget.carId),
                             );
                           }

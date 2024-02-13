@@ -6,19 +6,23 @@ import '../../service/api/Api_repot.dart';
 import 'd_complain_complete.dart';
 
 class ComplainAlert extends StatefulWidget {
-     const ComplainAlert({super.key, required this.reportedNickName, required this.myId, required this.carpoolId});
+
+  const ComplainAlert(
+      {super.key,
+      required this.reportedNickName,
+      required this.myId,
+      required this.carpoolId});
 
   final String reportedNickName; // 닉네임
   final String myId;
   final String carpoolId; // 카풀 ID 따라보내기
+
 
   @override
   State<ComplainAlert> createState() => _ComplainAlertState();
 }
 
 class _ComplainAlertState extends State<ComplainAlert> {
-
-
   final apiService = ApiService();
   final _controller = TextEditingController();
   final List<Map<String, dynamic>> _checkBoxItems = [
@@ -34,6 +38,12 @@ class _ComplainAlertState extends State<ComplainAlert> {
 
   @override
   Widget build(BuildContext context) {
+
+    print("nickName: ${widget.reportedNickName}"); // "nickName: 홍길동 님"
+    print("myId: ${widget.myId}"); // "myId: 1234"
+    print("carpoolId: ${widget.carpoolId}"); // "carpoolId: 1234"
+
+
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
@@ -68,7 +78,9 @@ class _ComplainAlertState extends State<ComplainAlert> {
                           color: Colors.grey,
                         ),
                         Text(
-                          widget.reportedNickName.replaceFirst(' ', '').toString(),
+                          widget.reportedNickName
+                              .replaceFirst(' ', '')
+                              .toString(),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
@@ -121,9 +133,9 @@ class _ComplainAlertState extends State<ComplainAlert> {
           children: [
             TextButton(
               onPressed: () async {
-
-                if(_controller.text.isNotEmpty && getCheckedItems().isNotEmpty){
-                  final reportRequstDTO = ReportRequstDTO(
+                if (_controller.text.isNotEmpty &&
+                    getCheckedItems().isNotEmpty) {
+                  final reportRequestDTO = ReportRequstDTO(
                     content: _controller.text,
                     carpoolId: widget.carpoolId,
                     reportedUser: widget.reportedNickName.replaceAll(' 님', ''),
@@ -131,12 +143,12 @@ class _ComplainAlertState extends State<ComplainAlert> {
                     reportType: getCheckedItems().toString(),
                     reportDate: DateTime.now().toString(),
                   );
-                  
+
                   // API 호출
-                  bool isOpen = await apiService.saveReport(reportRequstDTO);
-                  if(isOpen) {
+                  bool isOpen = await apiService.saveReport(reportRequestDTO);
+                  if (isOpen) {
                     print("스프링부트 서버 성공 #############");
-                    if(!mounted) return;
+                    if (!mounted) return;
                     Navigator.pop(context);
                     showDialog(
                       context: context,
@@ -144,17 +156,21 @@ class _ComplainAlertState extends State<ComplainAlert> {
                         isReport: false,
                       ),
                     );
-                  }else{
+                  } else {
                     print("스프링부트 서버 실패 #############");
-                    if(!mounted) return;
-                    showDialog(context: context, builder: (BuildContext context) => const ComplainShow(
-                        cautionText: "서버가 불안정합니다.\n잠시 후 다시 시도해주세요."));
+                    if (!mounted) return;
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => const ComplainShow(
+                            cautionText: "서버가 불안정합니다.\n잠시 후 다시 시도해주세요."));
                   }
-                }else{
-                    showDialog(context: context, builder: (BuildContext context) => const ComplainShow(
-                      cautionText: "체크박스와 신고내용을 모두 입력 해주세요",));
+                } else {
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) => const ComplainShow(
+                            cautionText: "체크박스와 신고내용을 모두 입력 해주세요",
+                          ));
                 }
-
               },
               child: const Text('신고하기', style: TextStyle(color: Colors.red)),
             ),
@@ -181,8 +197,10 @@ class _ComplainAlertState extends State<ComplainAlert> {
 
       // 두 번째 열의 항목이 있는지 확인
       final bool hasSecondItem = rowIndex + 1 < itemCount;
-      final bool isChecked2 = hasSecondItem ? _checkBoxItems[rowIndex + 1]['value'] : false;
-      final String label2 = hasSecondItem ? _checkBoxItems[rowIndex + 1]['label'] : '';
+      final bool isChecked2 =
+          hasSecondItem ? _checkBoxItems[rowIndex + 1]['value'] : false;
+      final String label2 =
+          hasSecondItem ? _checkBoxItems[rowIndex + 1]['label'] : '';
 
       return Row(
         children: [
@@ -225,8 +243,7 @@ class _ComplainAlertState extends State<ComplainAlert> {
             ),
         ],
       );
-    }
-    );
+    });
   }
 
   // 체크된 리스트 확인
@@ -241,5 +258,4 @@ class _ComplainAlertState extends State<ComplainAlert> {
 
     return checkedItems;
   }
-
 }
