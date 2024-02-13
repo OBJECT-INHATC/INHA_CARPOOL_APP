@@ -14,6 +14,13 @@ extension SnackbarContextExtension on BuildContext {
     );
   }
 
+  void showSnackbarimpossibleExitCarpool(BuildContext context) {
+    _showSnackBarWithContext(
+      context,
+      _SnackbarFactory.createSnackBar(context, '카풀 시작 10분 전이므로 불가능합니다.'),
+    );
+  }
+
 
   ///Scaffold안에 Snackbar를 보여줍니다.
   void showSnackbar(String message, {Widget? extraButton}) {

@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
@@ -20,6 +21,7 @@ import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../../provider/auth/auth_provider.dart';
 import '../../../../../provider/current_carpool/carpool_provider.dart';
+import 'drawer/f_darw.dart';
 
 class ChatroomPage extends ConsumerStatefulWidget {
   final String carId;
@@ -91,7 +93,7 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
   late String userName = '';
 
   /// 유저 정보 받아오기
-  Future<void> _loadUserData() async {
+    _loadUserData() async {
     nickName = ref.read(authProvider).nickName!;
     uid = ref.read(authProvider).uid!;
     gender = ref.read(authProvider).gender!;
@@ -145,10 +147,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
 
   @override
   Widget build(BuildContext context) {
-    print("userNickName : $nickName");
-    print("admin : $admin");
-    print("membersList : $membersList");
-    print("userName : $userName");
 
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -168,117 +166,17 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
         ),
 
         //----------------------------------------------drawer 대화상대
-        endDrawer: Drawer(
-          surfaceTintColor: Colors.transparent,
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(40),
-          ),
-          child: Column(
-            children: [
-              //-------------------------------대화상대 상단
-              Container(
-                height: AppBar().preferredSize.height * 2.2,
-                width: double.infinity,
-                color: context.appColors.logoColor,
-                child: Column(
-                  children: [
-                    SizedBox(height: screenWidth * 0.17),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        const Text(
-                          '대화 상대',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () async {
-                            _exitIconBtn(context);
-                          },
-                          icon: const Icon(
-                            Icons.exit_to_app,
-                            color: Colors.white,
-                            size: 25,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              //---------------------------------대화상대 목록
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.all(8.0),
-                  itemCount: membersList.length >= 4 ? 4 : membersList.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (BuildContext context, int index) {
-                    String memberName = getName(membersList[index]);
-                    String memberGender = getGender(membersList[index]);
-                    String memberId = getMemberId(membersList[index]);
-
-                    return ListTile(
-                      onTap: () {
-                        _showProfileModal(
-                          context,
-                          memberId,
-                          '$memberName 님',
-                          memberGender,
-                        );
-                      },
-                      leading: Icon(
-                        Icons.account_circle,
-                        size: 35,
-                        color: admin == memberName ? Colors.blue : Colors.black,
-                      ),
-                      title: Row(
-                        children: [
-                          memberName.text
-                              .size(16)
-                              .color(admin == memberName
-                                  ? Colors.blue
-                                  : Colors.black)
-                              .make(),
-                        ],
-                      ),
-                      trailing: const Icon(Icons.navigate_next_rounded),
-                    );
-                  },
-                ),
-              ),
-              const Line(height: 1),
-              // 경계라인을 위젯으로 만들어서 사용
-              const Line(height: 1),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(bottom: screenHeight * 0.01),
-                  child: Column(
-                    children: [
-                      ChatLocation(
-                        title: '출발지',
-                        location: startPoint,
-                        point: startPointLnt,
-                        mapCategory: MapCategory.start,
-                      ),
-                      const Line(height: 1),
-                      ChatLocation(
-                        title: '도착지',
-                        location: endPoint,
-                        point: endPointLnt,
-                        mapCategory: MapCategory.end,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
+        endDrawer: ChatDrawer(
+          membersList: membersList,
+          agreedTime: agreedTime,
+          admin: admin,
+          nickName: nickName,
+          carId: widget.carId,
+          startPoint: startPoint,
+          endPoint: endPoint,
+          startPointLnt: startPointLnt,
+          endPointLnt: endPointLnt,
+          uid: uid,
         ),
 
         //----------------------------------------------body
@@ -429,6 +327,7 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
         },
       );
     } else {
+      // 10분 미만이라도 혼자라면 가능
       if (membersList.length < 2) {
         showDialog(
           context: context,
@@ -459,7 +358,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
         // // agreedTime과 현재 시간 사이의 차이가 10분 이상인 경우 경고 메시지 또는 아무 작업도 수행하지 않음
       } else {
         // 나가기 불가
-        _exitImpossible(context);
       }
     }
   }
@@ -569,27 +467,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
     }
   }
 
-  /// 나가기 불가 메소드
-  void _exitImpossible(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          surfaceTintColor: Colors.transparent,
-          title: const Text('카풀 나가기 불가'),
-          content: const Text('카풀 시작 10분 전이므로 불가능합니다.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('확인'),
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   //--------------------------
 
@@ -721,136 +598,8 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
     }
   }
 
-  void _showProfileModal(BuildContext context, String memberId, String userName,
-      String memberGender) {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          // 크기 지정
-          height: context.height(0.35),
-          width: double.infinity,
 
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                margin: const EdgeInsets.all(10.0),
-                alignment: Alignment.center,
-                child: const Text(
-                  '프로필 조회',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const Divider(
-                height: 1,
-                color: Colors.grey,
-              ),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8.0),
-                    margin: const EdgeInsets.fromLTRB(20, 5, 0, 0),
-                    alignment: Alignment.centerLeft,
-                    child: const Icon(
-                      Icons.person_search,
-                      size: 120,
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(userName,
-                          style: const TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w600)),
-                      Text(
-                        memberGender,
-                        style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          viewProfile(context, uid, memberId);
-                          if (uid != memberId) {
-                            Navigator.pop(context);
-                            showDialog(
-                              context: context,
-                              builder: (context) => ComplainAlert(
-                                  reportedUserNickName: userName,
-                                  myId: userName,
-                                  carpoolId: widget.carId),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          surfaceTintColor: Colors.transparent,
-                          backgroundColor:
-                              const Color.fromARGB(255, 255, 167, 2),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                                (uid == memberId)
-                                    ? Icons.double_arrow_rounded
-                                    : Icons.warning_rounded,
-                                color: (uid == memberId)
-                                    ? Colors.white
-                                    : Colors.white),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              (uid == memberId) ? "프로필로 이동" : "신고하기",
-                              style: TextStyle(
-                                  color: (uid == memberId)
-                                      ? Colors.white
-                                      : Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
 
-//uid와 memberID비교
-  void viewProfile(BuildContext context, String? uid, String memberId) {
-    if (uid == memberId) {
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const MainScreen(temp: 'MyPage'),
-        ),
-      );
-    }
-  }
 
   /// 에러 다이얼로그
   void showErrorDialog(BuildContext context, String errorMessage) {

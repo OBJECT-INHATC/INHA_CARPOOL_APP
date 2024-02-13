@@ -43,7 +43,7 @@ class LogoutConfirmationDialog extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextButton( 
+            TextButton(
               onPressed: () async{
                 await FirebaseMessaging.instance.deleteToken();
                 AuthService().signOut().then(

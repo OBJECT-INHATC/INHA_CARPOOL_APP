@@ -19,7 +19,7 @@ import '../../../../provider/auth/auth_provider.dart';
 import '../../../dialog/d_message.dart';
 import 'alarm_switch/w_switch_menu.dart';
 import 'item_page/d_changepassword.dart';
-import 'item_page/f_logout_confirmation.dart';
+import 'item_page/d_logout_confirmation.dart';
 import 'item_page/f_secession.dart';
 
 class MyPage extends ConsumerStatefulWidget {

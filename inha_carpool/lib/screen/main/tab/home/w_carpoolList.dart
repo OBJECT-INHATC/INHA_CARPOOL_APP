@@ -157,7 +157,7 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                         ),
                       );
                     } else {
-                      context.showSnackbarMaxmember(context);
+                      context.showSnackbarimpossibleExitCarpool(context);
                     }
                   }
                 },
