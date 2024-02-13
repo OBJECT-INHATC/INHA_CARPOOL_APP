@@ -341,31 +341,26 @@ class _HomeState extends ConsumerState<Home> {
               const Height(5),
               Line(height: 2, color: context.appColors.divider),
               Expanded(
-                child: RefreshIndicator(
-                  color: context.appColors.logoColor,
-                  onRefresh: _refreshCarpoolList,
-                  // 카풀 리스트 불러오기
-                  child: Stack(
-                    children: [
-                      _buildCarpoolList(), // 카풀 리스트 빌드
-                      if (_isLoading) // 인디케이터를 표시하는 조건
-                        const Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom: 12,
-                          child: Center(
-                            child: SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 3,
-                                color: Colors.black,
-                              ),
+                child: Stack(
+                  children: [
+                    _buildCarpoolList(), // 카풀 리스트 빌드
+                    if (_isLoading) // 인디케이터를 표시하는 조건
+                      const Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 12,
+                        child: Center(
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              color: Colors.black,
                             ),
                           ),
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
               ),
             ],
@@ -377,60 +372,64 @@ class _HomeState extends ConsumerState<Home> {
 
   // 카풀 리스트 불러오기
   Widget _buildCarpoolList() {
-    return FutureBuilder<List<DocumentSnapshot>>(
-      future: carPoolList,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError ||
-            !snapshot.hasData ||
-            snapshot.data!.isEmpty) {
-          // 카풀 에러 or 비었을 시
-          return const EmptyCarpoolList(
-            floatingMessage: '카풀을 등록하여\n택시 비용을 줄여 보세요!',
-          );
-        } else {
-          // 카풀 리스트가 있을 경우 리스트 뷰 빌드 위젯 호출
+    return RefreshIndicator(
+      color: context.appColors.logoColor,
+      onRefresh: _refreshCarpoolList,
+      child: FutureBuilder<List<DocumentSnapshot>>(
+        future: carPoolList,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError ||
+              !snapshot.hasData ||
+              snapshot.data!.isEmpty) {
+            // 카풀 에러 or 비었을 시
+            return const EmptyCarpoolList(
+              floatingMessage: '카풀을 등록하여\n택시 비용을 줄여 보세요!',
+            );
+          } else {
+            // 카풀 리스트가 있을 경우 리스트 뷰 빌드 위젯 호출
 
-          // 검색어와 일치하는 항목만 필터링
-          final filteredCarpools = snapshot.data!.where((carpool) {
-            final carpoolData = carpool.data() as Map<String, dynamic>;
-            final startPointName =
-                carpoolData['startPointName'].toString().toLowerCase();
-            final startDetailPointName =
-                carpoolData['startDetailPoint'].toString().toLowerCase();
-            final endPointName =
-                carpoolData['endPointName'].toString().toLowerCase();
-            final endDetailPointName =
-                carpoolData['endDetailPoint'].toString().toLowerCase();
-            final keyword = _searchKeyword.toLowerCase();
+            // 검색어와 일치하는 항목만 필터링
+            final filteredCarpools = snapshot.data!.where((carpool) {
+              final carpoolData = carpool.data() as Map<String, dynamic>;
+              final startPointName =
+                  carpoolData['startPointName'].toString().toLowerCase();
+              final startDetailPointName =
+                  carpoolData['startDetailPoint'].toString().toLowerCase();
+              final endPointName =
+                  carpoolData['endPointName'].toString().toLowerCase();
+              final endDetailPointName =
+                  carpoolData['endDetailPoint'].toString().toLowerCase();
+              final keyword = _searchKeyword.toLowerCase();
 
-            return startPointName.contains(keyword) ||
-                startDetailPointName.contains(keyword) ||
-                endPointName.contains(keyword) ||
-                endDetailPointName.contains(keyword) ||
-                endPointName.contains(keyword);
-          }).toList();
+              return startPointName.contains(keyword) ||
+                  startDetailPointName.contains(keyword) ||
+                  endPointName.contains(keyword) ||
+                  endDetailPointName.contains(keyword) ||
+                  endPointName.contains(keyword);
+            }).toList();
 
-          final itemCount = _visibleItemCount <= filteredCarpools.length
-              ? _visibleItemCount
-              : filteredCarpools.length;
+            final itemCount = _visibleItemCount <= filteredCarpools.length
+                ? _visibleItemCount
+                : filteredCarpools.length;
 
-          if (filteredCarpools.isEmpty) {
-            return const EmptySearched(); // 검색 결과가 없을 경우 빈 상태 표시
+            if (filteredCarpools.isEmpty) {
+              return const EmptySearched(); // 검색 결과가 없을 경우 빈 상태 표시
+            }
+
+            return CarpoolListItem(
+              snapshot: AsyncSnapshot<List<DocumentSnapshot>>.withData(
+                ConnectionState.done,
+                filteredCarpools.sublist(0, itemCount),
+              ),
+              // AsyncSnapshot을 CarpoolListWidget에 전달
+              scrollController: _scrollController,
+              visibleItemCount: _visibleItemCount,
+            );
           }
-
-          return CarpoolListItem(
-            snapshot: AsyncSnapshot<List<DocumentSnapshot>>.withData(
-              ConnectionState.done,
-              filteredCarpools.sublist(0, itemCount),
-            ),
-            // AsyncSnapshot을 CarpoolListWidget에 전달
-            scrollController: _scrollController,
-            visibleItemCount: _visibleItemCount,
-          );
-        }
-      },
+        },
+      ),
     );
   }
 

@@ -11,23 +11,29 @@ class EmptyCarpoolList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          floatingMessage
-              .text
-              .size(20)
-              .bold
-              .color(context.appColors.text)
-              .align(TextAlign.center)
-              .make(),
-          const SizedBox(
-            height: 20,
-          ),
-          RecruitFloatingBtn(floatingMessage: floatingMessage),
-        ],
-      ),
+
+    final height = context.screenHeight;
+
+
+    return ListView(
+      children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+
+            Height(height * 0.2),
+            floatingMessage
+                .text
+                .size(20)
+                .bold
+                .color(context.appColors.text)
+                .align(TextAlign.center)
+                .make(),
+            Height(height * 0.025),
+            RecruitFloatingBtn(floatingMessage: floatingMessage),
+          ],
+        ),
+      ],
     );
   }
 }

@@ -172,8 +172,7 @@ class ApiService {
       print('경고횟수 조회 : ${jsonDecode(response.body) }');
       return jsonDecode(response.body);
     } else {
-      // API 호출이 실패하면 오류를 출력하고 0을 반환합니다.
-      print('Failed to select yellow count: ${response.statusCode}');
+      print('경고 조회 실패 - 상태코드 : ${response.statusCode}');
 
       return 0;
     }
