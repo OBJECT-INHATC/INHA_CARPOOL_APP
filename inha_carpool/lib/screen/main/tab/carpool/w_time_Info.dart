@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/provider/ParticipatingCrpool/carpool_provider.dart';
+
+import '../../../../provider/current_carpool/carpool_provider.dart';
 
 class CarpoolTimeInfo extends ConsumerWidget {
   final redText = '10분 전 퇴장 불가';

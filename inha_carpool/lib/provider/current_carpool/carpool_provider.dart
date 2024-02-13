@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inha_Carpool/provider/ParticipatingCrpool/repository/carpool_repository.dart';
-import 'package:inha_Carpool/provider/ParticipatingCrpool/state/carpool_state.dart';
+import 'package:inha_Carpool/provider/current_carpool/repository/carpool_repository.dart';
+import 'package:inha_Carpool/provider/current_carpool/state/carpool_state.dart';
 
 import '../../common/models/m_carpool.dart';
 import '../../common/models/m_member.dart';

@@ -110,4 +110,27 @@ class FcmService {
       print('Error adding data to Firestore: $e');
     }
   }
+
+  /// 채팅 알림만 구독
+  Future<void> subScribeOnlyOne(String topic) async {
+    print("==토픽 추가 진행== $topic");
+    try {
+      await FirebaseMessaging.instance.subscribeToTopic(topic);
+      print("구독 성공! $topic ");
+    } catch (e) {
+      print('Error adding data to Firestore: $e');
+    }
+  }
+
+  /// 채팅 알림만 구독 해제
+  Future<void> unSubScribeOnlyIOne(String topic) async {
+    print("==토픽 해제 진행== $topic");
+    try {
+      await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+      print("토픽 해제 성공! $topic");
+
+    } catch (e) {
+      print('Error adding data to Firestore: $e');
+    }
+  }
 }

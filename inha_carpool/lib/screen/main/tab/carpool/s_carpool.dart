@@ -8,7 +8,7 @@ import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_floating_btn.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/w_timeInfo.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/w_time_Info.dart';
 
 import '../../../../common/widget/empty_list.dart';
 import 'cardItem/w_point_row.dart';

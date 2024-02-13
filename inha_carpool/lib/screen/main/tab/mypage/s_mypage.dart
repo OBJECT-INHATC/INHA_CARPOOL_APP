@@ -7,16 +7,17 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/item_page/s_feedback.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/Profile/w_profile.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/item_page/w_recordList.dart';
-import 'package:inha_Carpool/screen/main/tab/mypage/switch/w_switch_menu.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_category.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_list_item.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_version_copyRight.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
+import 'package:inha_Carpool/service/sv_fcm.dart';
 
 import '../../../../common/data/preference/prefs.dart';
 import '../../../../fragment/opensource/s_opensource.dart';
 import '../../../../provider/auth/auth_provider.dart';
 import '../../../dialog/d_message.dart';
+import 'alarm_switch/w_switch_menu.dart';
 import 'item_page/d_changepassword.dart';
 import 'item_page/f_logout_confirmation.dart';
 import 'item_page/f_secession.dart';
@@ -52,8 +53,8 @@ class _MyPageState extends ConsumerState<MyPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // 상단 프로필 항목
             const Height(20),
+            // 상단 프로필 항목
             const ProFile(),
             const Category(title: '계정'),
             MypageListItem(
@@ -102,46 +103,29 @@ class _MyPageState extends ConsumerState<MyPage> {
               () => SwitchMenu('채팅 알림', Prefs.isPushOnRx.get(),
                   onChanged: (isOn) async {
                 Prefs.isPushOnRx.set(isOn);
-                ApiUser apiUser = ApiUser();
-                List<String> topicList = await apiUser.getAllCarIdsForUser(uid);
-                if (isOn) {
-                  print('채팅 알림 on');
-                  /// 서버 db 에서 카풀Id 다 가져와서 다 구독
-                  for (String carId in topicList) {
-                    try {
-                      await FirebaseMessaging.instance.subscribeToTopic(carId);
-                    } catch (e) {
-                      print("ios 시뮬 에러");
-                    }
-                    print('채팅 구독 완료: $carId');
-                  }
-                } else {
-                  /// 서버 db 에서 카풀Id 다 가져와서 다 구독 해제
-                  print('채팅 알림 off');
-                  for (String carId in topicList) {
-                    try {
-                      await FirebaseMessaging.instance
-                          .unsubscribeFromTopic(carId);
-                    } catch (e) {
-                      print("ios 시뮬 에러");
-                    }
-                    print('채팅 구독 취소: $carId');
+
+                // 서버에서 토픽을 가져옴
+                List<String> topicList = await ApiUser().getAllCarIdsForUser(uid);
+
+                // 가져온 토픽을 알림 허용 유무에 따라 구독하거나 해제
+                for(String carId in topicList) {
+                  if(isOn) {
+                    FcmService().subScribeOnlyOne(carId);
+                  } else {
+                    FcmService().unSubScribeOnlyIOne(carId);
                   }
                 }
+
               }),
             ),
             Obx(
               () => SwitchMenu('학교 공지사항', Prefs.isSchoolPushOnRx.get(),
                   onChanged: (isOn) async {
                 Prefs.isSchoolPushOnRx.set(isOn);
-                if (isOn) {
-                  print('학교 공지사항 알림 on');
-                  await FirebaseMessaging.instance
-                      .subscribeToTopic("SchoolNotification");
+                if(isOn) {
+                  FcmService().subScribeOnlyOne("SchoolNotification");
                 } else {
-                  print('학교 공지사항 알림 off');
-                  await FirebaseMessaging.instance
-                      .unsubscribeFromTopic("SchoolNotification");
+                  FcmService().unSubScribeOnlyIOne("SchoolNotification");
                 }
               }),
             ),

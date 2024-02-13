@@ -22,6 +22,7 @@ class _ProFileState extends ConsumerState<ProFile> {
 
     return Stack(
       children: [
+
         //프로필 이미지
         Padding(
           padding: const EdgeInsets.all(8.0),
