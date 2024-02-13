@@ -7,6 +7,8 @@ class EmptyCarpoolList extends StatelessWidget {
   const EmptyCarpoolList({super.key, required this.floatingMessage});
   final String floatingMessage;
 
+  /// todo : 새로고침 기능 추가하기
+
   @override
   Widget build(BuildContext context) {
     return Center(
