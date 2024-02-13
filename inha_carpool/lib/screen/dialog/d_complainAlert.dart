@@ -144,6 +144,15 @@ class _ComplainAlertState extends State<ComplainAlert> {
                     reportDate: DateTime.now().toString(),
                   );
 
+                  print("reportRequestDTO.reportType: ${reportRequestDTO.reportType}");
+                  print("reportRequestDTO.reportedUser: ${reportRequestDTO.reportedUser}");
+                  print("reportRequestDTO.reporter: ${reportRequestDTO.reporter}");
+                  print("reportRequestDTO.carpoolId: ${reportRequestDTO.carpoolId}");
+                  print("reportRequestDTO.content: ${reportRequestDTO.content}");
+                  print("reportRequestDTO.reportDate: ${reportRequestDTO.reportDate}");
+
+
+
                   // API 호출
                   bool isOpen = await apiService.saveReport(reportRequestDTO);
                   if (isOpen) {
