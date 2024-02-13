@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/extension/velocityx_extension.dart';
 
 import '../../../common/common.dart';

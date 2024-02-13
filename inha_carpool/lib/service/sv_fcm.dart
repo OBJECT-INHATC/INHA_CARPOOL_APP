@@ -3,6 +3,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/models/m_chat.dart';
+import 'package:inha_Carpool/service/api/Api_topic.dart';
+
+import '../common/data/preference/prefs.dart';
+import '../dto/TopicDTO.dart';
 
 enum NotificationType { chat, status }
 
@@ -66,6 +70,44 @@ class FcmService {
           }));
     } catch (e) {
       print('error $e');
+    }
+  }
+
+  /// 토픽 구독 해제
+   Future<void> unSubScribeTopic(String tempCarId) async {
+    /// 토픽 및 카풀 삭제
+    if (Prefs.isPushOnRx.get() == true) {
+      print("서버 이상으로 토픽 삭제");
+      await FirebaseMessaging.instance.unsubscribeFromTopic(tempCarId);
+      await FirebaseMessaging.instance
+          .unsubscribeFromTopic("${tempCarId}_info");
+    }
+
+  }
+
+  /// 토픽 스프링 서버에 저장
+   Future<bool> saveTopicToServer(String memberID, String tempCarId) async {
+    TopicRequstDTO topicRequstDTO =
+    TopicRequstDTO(uid: memberID, carId: tempCarId);
+
+    return await ApiTopic().saveTopoic(topicRequstDTO);
+  }
+
+  /// 토픽 구독 메서드 (채팅과 카풀 알림을 구분해서 추가함)
+   Future<void> subScribeTopic(String carId) async {
+    try {
+      print("토픽 추가");
+
+      /// 해당 카풀 알림 토픽 추가
+      if (Prefs.isPushOnRx.get() == true) {
+        await FirebaseMessaging.instance.subscribeToTopic(carId);
+
+        /// 카풀 정보 토픽 추가
+        await FirebaseMessaging.instance
+            .subscribeToTopic("${carId}_info");
+      }
+    } catch (e) {
+      print('Error adding data to Firestore: $e');
     }
   }
 }

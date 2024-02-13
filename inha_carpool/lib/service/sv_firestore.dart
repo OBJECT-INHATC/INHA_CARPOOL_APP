@@ -24,7 +24,6 @@ class FireStoreService {
 
   final User? user = FirebaseAuth.instance.currentUser;
 
-  /// 0824 서은율
   /// 사용자 정보 저장
   Future savingUserData(String userName, String nickName, String email,
       String fcmToken, String gender) async {
@@ -39,7 +38,6 @@ class FireStoreService {
     });
   }
 
-  /// 0824 서은율
   /// 이메일로 사용자 정보 가져오기
   Future gettingUserData(String email) async {
     QuerySnapshot snapshot =
@@ -177,7 +175,7 @@ class FireStoreService {
         type: NotificationType.status);
 
     //5초 후
-    await Future.delayed(const Duration(seconds: 5));
+    await Future.delayed(const Duration(seconds: 3));
     // 로컬 DB 삭제
     ChatDao().deleteByCarId(carId);
   }

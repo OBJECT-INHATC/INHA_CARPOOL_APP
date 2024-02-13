@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
-import 'package:intl/intl.dart';
+
+import '../common.dart';
 
 enum MessageType {
   me,

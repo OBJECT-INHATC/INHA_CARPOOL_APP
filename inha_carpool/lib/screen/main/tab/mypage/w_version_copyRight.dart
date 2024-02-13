@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/velocityx_extension.dart';
-import 'package:inha_Carpool/global_version.dart';
+import 'package:inha_Carpool/common/global_version.dart';
 
 
 class VersionAndCopyRight extends StatelessWidget {

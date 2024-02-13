@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/models/m_carpool.dart';
-import 'package:inha_Carpool/common/util/carpool.dart';
+import 'package:inha_Carpool/service/sv_carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
@@ -362,7 +362,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
 
                         /// 조건 충족 시 파이어베이스에 카풀 정보 저장
                         String carId =
-                        await FirebaseCarpool.addDataToFirestore(
+                        await CarpoolService.addDataToFirestore(
                           selectedDate: _selectedDate,
                           selectedTime: _selectedTime,
                           startPoint: startPoint,

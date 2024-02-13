@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
 
-import 'package:inha_Carpool/common/util/carpool.dart';
+import 'package:inha_Carpool/service/sv_carpool.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_floating_btn.dart';
@@ -27,7 +27,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   /// 카풀 조회 메서드
   Future<List<DocumentSnapshot>> _loadCarpools() async {
     List<DocumentSnapshot> carpools =
-        await FirebaseCarpool.getCarpoolsRemainingForDay(
+        await CarpoolService.getCarpoolsRemainingForDay(
             ref.read(authProvider).uid!,
             ref.read(authProvider).nickName!,
             ref.read(authProvider).gender!);

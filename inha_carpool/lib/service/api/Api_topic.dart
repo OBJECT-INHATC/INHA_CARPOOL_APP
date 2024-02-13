@@ -7,6 +7,7 @@ import '../../common/constants.dart';
 /// 0918 이상훈 - 서버 db에 Topic 정보 관련 api -> bool 타입 반환
 class ApiTopic {
 
+  /// 서버에 Topic 정보 저장
   Future<bool> saveTopoic(TopicRequstDTO topicRequstDTO) async {
     String apiUrl = '$baseUrl/topic/save';
     final String requestBody = jsonEncode(topicRequstDTO);

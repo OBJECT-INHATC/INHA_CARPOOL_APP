@@ -7,7 +7,7 @@ import 'package:nav/nav.dart';
 import '../../../../../common/data/preference/prefs.dart';
 import '../../../../../common/models/m_carpool.dart';
 import '../../../../../common/util/addMember_Exception.dart';
-import '../../../../../common/util/carpool.dart';
+import '../../../service/sv_carpool.dart';
 import '../../../../../dto/TopicDTO.dart';
 import '../../../../../provider/ParticipatingCrpool/carpool_provider.dart';
 import '../../../../../provider/auth/auth_provider.dart';
@@ -64,7 +64,7 @@ class _MapButtonState extends ConsumerState<EnterButton> {
 
             try {
               /// 1. 카풀 참가 파이어베이스 저장
-              await FirebaseCarpool.addMemberToCarpool(
+              await CarpoolService.addMemberToCarpool(
                   carId, uid, nickName, gender, selectedRoomGender);
               /// 2. 알림을 위한 토픽 추가
               await subscribeTopic(carId);

@@ -5,15 +5,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/dto/TopicDTO.dart';
+import 'package:inha_Carpool/service/sv_fcm.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-import '../../service/api/Api_topic.dart';
-import '../data/preference/prefs.dart';
-import 'addMember_Exception.dart';
+import 'api/Api_topic.dart';
+import '../common/data/preference/prefs.dart';
+import '../common/util/addMember_Exception.dart';
 
-class FirebaseCarpool {
+class CarpoolService {
   static final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-  static ApiTopic apiTopic = ApiTopic();
 
   // 광고 가져오기
   static Future<DocumentSnapshot?> getNoticeData(String type) async {
@@ -93,9 +93,10 @@ class FirebaseCarpool {
       });
 
       // 구독
-    await subScribeTopic(tempCarId);
+    await FcmService().subScribeTopic(tempCarId);
+
     // 구독정보 서버에 저장
-    bool isOpen = await saveTopicToServer(memberID, tempCarId);
+    bool isOpen = await FcmService().saveTopicToServer(memberID, tempCarId);
 
     if (isOpen) {
       print("서버 성공 #######");
@@ -106,7 +107,7 @@ class FirebaseCarpool {
     } else {
       print("서버 실패 #######");
       // 토픽 삭제
-      await unSubScribeTopic(tempCarId);
+      await FcmService().unSubScribeTopic(tempCarId);
       // 파이어스토어 카풀 삭제
       await deleteCarpoolToFireStore(tempCarId);
 
@@ -115,23 +116,7 @@ class FirebaseCarpool {
   }
 
 
-  /// 토픽 구독 메서드 (채팅과 카풀 알림을 구분해서 추가함)
-  static Future<void> subScribeTopic(String carId) async {
-    try {
-         print("토픽 추가");
 
-      /// 해당 카풀 알림 토픽 추가
-      if (Prefs.isPushOnRx.get() == true) {
-        await FirebaseMessaging.instance.subscribeToTopic(carId);
-
-        /// 카풀 정보 토픽 추가
-        await FirebaseMessaging.instance
-            .subscribeToTopic("${carId}_info");
-      }
-    } catch (e) {
-      print('Error adding data to Firestore: $e');
-    }
-  }
 
   /// 새 채팅 카운트 업데이트
   static Future<void> updateNewChatCount(
@@ -240,30 +225,16 @@ class FirebaseCarpool {
   }
 
 
-  /// 토픽 구독 해제
-  static Future<void> unSubScribeTopic(String tempCarId) async {
-    /// 토픽 및 카풀 삭제
-    if (Prefs.isPushOnRx.get() == true) {
-      print("서버 이상으로 토픽 삭제");
-      await FirebaseMessaging.instance.unsubscribeFromTopic(tempCarId);
-      await FirebaseMessaging.instance
-          .unsubscribeFromTopic("${tempCarId}_info");
-    }
 
-  }
+
+
 
   /// 카풀 삭제
   static Future<void> deleteCarpoolToFireStore(String carId) async {
     await _fireStore.collection('carpool').doc(carId).delete();
   }
 
-  /// 토픽 스프링 서버에 저장
-  static Future<bool> saveTopicToServer(String memberID, String tempCarId) async {
-    TopicRequstDTO topicRequstDTO =
-    TopicRequstDTO(uid: memberID, carId: tempCarId);
-    bool isOpen = await apiTopic.saveTopoic(topicRequstDTO);
-    return isOpen;
-  }
+
 
   /// 거리순 정렬
   static Future<List<DocumentSnapshot>> nearByCarpool(

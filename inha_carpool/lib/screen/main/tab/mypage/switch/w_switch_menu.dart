@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:velocity_x/velocity_x.dart';
 
-import '../../../../../common/widget/w_empty_expanded.dart';
 import 'w_os_switch.dart';
 
 class SwitchMenu extends StatelessWidget {
