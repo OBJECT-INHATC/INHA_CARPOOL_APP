@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:inha_Carpool/screen/main/map/w_location_button.dart';
+import 'package:inha_Carpool/screen/main/map/w_icon_button.dart';
 import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
 
 /// 초기 zoom 값은 직선거리를 기준으로 계산하여 설정함 변수 -> zoomLevel (0212 이상훈)
@@ -151,7 +151,7 @@ class _naeverMapState extends State<NaeverMap> {
 
         if (isMapReady) ...[
           (widget.mapCategory == MapCategory.start)
-              ? LocationButton(
+              ? IconLocationButton(
                   point: widget.startPoint,
                   controller: mapController,
                   right: 0.02,
@@ -159,7 +159,7 @@ class _naeverMapState extends State<NaeverMap> {
             title: '출발지',
                 )
               : (widget.mapCategory == MapCategory.end)
-                  ? LocationButton(
+                  ? IconLocationButton(
                       point: widget.endPoint,
                       controller: mapController,
                       right: 0.02,
@@ -168,7 +168,7 @@ class _naeverMapState extends State<NaeverMap> {
           )
                   : Stack(
                       children: [
-                        LocationButton(
+                        IconLocationButton(
                           point: widget.startPoint,
                           controller: mapController,
                           right: 0.1,
@@ -176,7 +176,7 @@ class _naeverMapState extends State<NaeverMap> {
                           title: '출발지',
 
                         ),
-                        LocationButton(
+                        IconLocationButton(
                           point: widget.endPoint,
                           controller: mapController,
                           right: 0.02,

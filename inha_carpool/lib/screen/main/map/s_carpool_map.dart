@@ -47,6 +47,8 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
   Widget build(BuildContext context) {
     MapCategory mapCategory = widget.mapType;
 
+    final height = context.screenHeight;
+
     MapInfo startInfo = MapInfo(
       title: '출발 지점',
       content: widget.startPointName,
@@ -123,7 +125,7 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                         )
                       : (mapCategory == MapCategory.start)
                           ? startInfo
-                          : endInfo),
+                          : endInfo).pOnly(bottom: height * 0.02),
             ],
           ),
           enterState

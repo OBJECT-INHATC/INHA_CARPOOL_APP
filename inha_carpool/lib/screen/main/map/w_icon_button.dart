@@ -3,8 +3,8 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 
-class LocationButton extends StatelessWidget {
-  const LocationButton({super.key, required this.point, required this.controller, required this.right, required this.color, required this.title});
+class IconLocationButton extends StatelessWidget {
+  const IconLocationButton({super.key, required this.point, required this.controller, required this.right, required this.color, required this.title});
 
   final NaverMapController controller;
   final double right;
