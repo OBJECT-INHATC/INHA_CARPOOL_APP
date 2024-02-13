@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 
 import '../../../../../../common/data/preference/prefs.dart';
@@ -18,16 +19,17 @@ import '../w_map_icon.dart';
 import 'location_align.dart';
 
 class ChatDrawer extends ConsumerStatefulWidget {
-  const ChatDrawer(
-      {super.key,
-      required this.membersList,
-      required this.agreedTime,
-      required this.admin,
-      required this.carId,
-      required this.startPoint,
-      required this.endPoint,
-      required this.startPointLnt,
-      required this.endPointLnt, });
+  const ChatDrawer({
+    super.key,
+    required this.membersList,
+    required this.agreedTime,
+    required this.admin,
+    required this.carId,
+    required this.startPoint,
+    required this.endPoint,
+    required this.startPointLnt,
+    required this.endPointLnt,
+  });
 
   final List membersList;
   final DateTime agreedTime;
@@ -43,7 +45,6 @@ class ChatDrawer extends ConsumerStatefulWidget {
 }
 
 class _ChatDrawerState extends ConsumerState<ChatDrawer> {
-
   late final String uid;
   late final String nickName;
   late final String gender;
@@ -81,7 +82,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                     Text(
+                    Text(
                       '카풀 멤버',
                       style: TextStyle(
                         color: Colors.white,
@@ -112,8 +113,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                               .difference(DateTime.now())
                               .inMinutes;
                           if (timeDifference > 10) {
-                           /// 3. 방장인지 체크
-                            if(widget.admin == nickName){
+                            /// 3. 방장인지 체크
+                            if (widget.admin == nickName) {
                               ///  ok "다음 방장은 너다 하고 나가기"
                               _exitCarpool(context, true, false);
                             } else {
@@ -121,13 +122,12 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                               _exitCarpool(context, false, false);
                             }
                           } else {
-                           /// ok "10분 전이야 아무도 못나가"
-                          print("10분 전이야 아무도 못나가");
+                            /// ok "10분 전이야 아무도 못나가"
+                            showErrorDialog(context, "출발 10분 전입니다. 퇴장하실 수 없습니다.", "카풀 퇴장 불가");
                           }
-
                         }
                       },
-                      icon:  Icon(
+                      icon: Icon(
                         Icons.exit_to_app,
                         color: Colors.white,
                         size: screenWidth * 0.07,
@@ -157,16 +157,15 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                       context,
                       memberId,
                       '$memberName 님',
-                       uid,
+                      uid,
                       memberGender,
                     );
                   },
                   leading: Icon(
                     Icons.account_circle,
                     size: 35,
-                    color: widget.admin == memberName
-                        ? Colors.blue
-                        : Colors.black,
+                    color:
+                        widget.admin == memberName ? Colors.blue : Colors.black,
                   ),
                   title: Row(
                     children: [
@@ -185,6 +184,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
           ),
           // 경계라인을 위젯으로 만들어서 사용
           const Line(height: 2),
+
           /// 최 하단 출발지 - 목적지 위젯
           LocationAlign(
             startPoint: widget.startPoint,
@@ -215,12 +215,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     return res.substring(start, end);
   }
 
-
-
-
-
-  void _showProfileModal(BuildContext context, String memberUid, String nickName, String myUid,
-      String memberGender) {
+  void _showProfileModal(BuildContext context, String memberUid,
+      String nickName, String myUid, String memberGender) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -298,7 +294,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                         style: ElevatedButton.styleFrom(
                           surfaceTintColor: Colors.transparent,
                           backgroundColor:
-                          const Color.fromARGB(255, 255, 167, 2),
+                              const Color.fromARGB(255, 255, 167, 2),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)),
                         ),
@@ -351,40 +347,53 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   }
 
   // 방장이고 혼자 -> isAdmin = true
-  void _exitCarpool(BuildContext context,bool isAdmin, bool isAlone) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            surfaceTintColor: Colors.transparent,
-            title: const Text('카풀 나가기'),
-            content: isAdmin
-                ? const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?')
-                : const Text('정말로 카풀을 나가시겠습니까?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('취소'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-                  _exitCarpoolLoding(context, isAlone, isAdmin);
-                },
-                child: const Text('나가기'),
-              ),
+  void _exitCarpool(BuildContext context, bool isAdmin, bool isAlone) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          surfaceTintColor: Colors.transparent,
+          title: const Text('카풀 나가기', textAlign: TextAlign.center,),
+          titleTextStyle: const TextStyle(
+            fontSize: 20,
+            color: Colors.black,
+          ),
+          content: isAdmin
+              ? const Text('현재 카풀의 방장 입니다. 정말 나가시겠습니까?', textAlign: TextAlign.center,)
+              : const Text('정말로 카풀을 나가시겠습니까?', textAlign: TextAlign.center,),
+          actions: [
+          Column(
+            children: [
+              const Line(height: 2),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    _exitCarpoolLoding(context, isAlone, isAdmin);
+                  },
+                  child: const Text('나가기'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('취소'),
+                ),
+              ],),
             ],
-          );
-        },
-      );
-    }
+          )
 
-
+          ],
+        );
+      },
+    );
+  }
 
   // 나가기 처리 메소드
-  void _exitCarpoolLoding(BuildContext contextm, bool isAlone, bool isAdmin) async {
+  void _exitCarpoolLoding(
+      BuildContext contextm, bool isAlone, bool isAdmin) async {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -432,7 +441,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
               } else {
                 // 나가기 처리가 완료된 경우
                 WidgetsBinding.instance.addPostFrameCallback(
-                      (_) {
+                  (_) {
                     Navigator.pop(context);
                     Navigator.pushReplacement(
                       context,
@@ -451,8 +460,6 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     );
   }
 
-
-
   /// 나가기 처리를 수행하는 비동기 함수 (공통)
   Future<void> _exitCarpoolFuture(bool isAlone, bool isAdmin) async {
     //서버에서 토픽 삭제
@@ -464,24 +471,25 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
       // 참여중인 카풀 상태 삭제
       removeProvider(widget.carId);
 
-     await FcmService().unSubScribeTopic(widget.carId);
+      await FcmService().unSubScribeTopic(widget.carId);
 
-      if(isAlone){
+      if (isAlone) {
         FireStoreService().deleteCarpool(widget.carId);
-      }else{
-        if(isAdmin) {
+      } else {
+        if (isAdmin) {
           print("혼자가 아니고 방장일 때 퇴장 ");
-          await FireStoreService().exitCarpoolAsAdmin(widget.carId, nickName, uid, gender);
+          await FireStoreService()
+              .exitCarpoolAsAdmin(widget.carId, nickName, uid, gender);
         } else {
           print("혼자가 아니고 방장도 아닐 때 퇴장 ");
-          await FireStoreService().exitCarpool(widget.carId, nickName, uid, gender);
+          await FireStoreService()
+              .exitCarpool(widget.carId, nickName, uid, gender);
         }
       }
-
     } else {
       print("스프링부트 서버 실패 #############");
       if (!mounted) return;
-      showErrorDialog(context, "현재 서버가 불안정합니다.\n잠시 후 다시 시도해주세요.");
+      showErrorDialog(context, "현재 서버가 불안정합니다.\n잠시 후 다시 시도해주세요.", "카풀 삭제 실패");
     }
   }
 
@@ -491,32 +499,59 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   }
 
   /// 에러 다이얼로그 (공통)
-  void showErrorDialog(BuildContext context, String errorMessage) {
+  void showErrorDialog(BuildContext context, String content, String title) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           surfaceTintColor: Colors.transparent,
-          title: const Text('카풀 삭제 실패'),
-          content: Text(errorMessage),
+          title:  Column(
+            children: [
+              Text(title, textAlign: TextAlign.center,),
+
+            ],
+          ),
+          titleTextStyle: const TextStyle(
+            fontSize: 20,
+            color: Colors.black,
+          ),
+          content: Text(content),
           actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pushReplacement(
-                  Nav.globalContext,
-                  MaterialPageRoute(
-                    builder: (context) => const MainScreen(),
+            Column(
+              children: [
+                const Line(height: 2),
+                TextButton(
+                  onPressed: () {
+                    if(title == "카풀 삭제 실패"){
+                      Navigator.pop(context);
+                      Navigator.pushReplacement(
+                        Nav.globalContext,
+                        MaterialPageRoute(
+                          builder: (context) => const MainScreen(),
+                        ),
+                      );
+                    }else{
+                      Navigator.pop(context);
+                    }
+                  },
+                  child:  const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // bold
+                      Text(
+                        '확인',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
-              child: const Text('확인'),
+                ),
+              ],
             ),
           ],
         );
       },
     );
   }
-
-  }
-
+}
