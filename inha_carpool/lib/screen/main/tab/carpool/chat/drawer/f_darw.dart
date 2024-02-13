@@ -1,13 +1,21 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/service/sv_fcm.dart';
 
+import '../../../../../../common/data/preference/prefs.dart';
 import '../../../../../../provider/auth/auth_provider.dart';
+import '../../../../../../provider/current_carpool/carpool_provider.dart';
+import '../../../../../../service/api/Api_topic.dart';
+import '../../../../../../service/sv_firestore.dart';
 import '../../../../../dialog/d_complainAlert.dart';
 import '../../../../s_main.dart';
 import '../../../home/enum/mapType.dart';
 import '../w_map_icon.dart';
+import 'location_align.dart';
 
 class ChatDrawer extends ConsumerStatefulWidget {
   const ChatDrawer(
@@ -35,13 +43,20 @@ class ChatDrawer extends ConsumerStatefulWidget {
 }
 
 class _ChatDrawerState extends ConsumerState<ChatDrawer> {
+
+  late final String uid;
+
+  @override
+  void initState() {
+    uid = ref.read(authProvider).uid ?? "";
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = context.width(1);
     final screenHeight = context.height(1);
-
-    final authState = ref.watch(authProvider);
-
 
     return Drawer(
       surfaceTintColor: Colors.transparent,
@@ -74,7 +89,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                       onPressed: () async {
                         /// 혼자면 그냥 나가라
                         if (widget.membersList.length == 1) {
-                        //  _exitIconBtn(context);
+                          _deleteCarpoolBtn(context);
                         } else {
                           final timeDifference = widget.agreedTime
                               .difference(DateTime.now())
@@ -118,7 +133,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                       context,
                       memberId,
                       '$memberName 님',
-                      authState.uid!,
+                       uid,
                       memberGender,
                     );
                   },
@@ -146,28 +161,12 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
           ),
           // 경계라인을 위젯으로 만들어서 사용
           const Line(height: 2),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: screenHeight * 0.01),
-              child: Column(
-                children: [
-                  ChatLocation(
-                    title: '출발지',
-                    location: widget.startPoint,
-                    point: widget.startPointLnt,
-                    mapCategory: MapCategory.start,
-                  ),
-                  const Line(height: 1),
-                  ChatLocation(
-                    title: '도착지',
-                    location: widget.endPoint,
-                    point: widget.endPointLnt,
-                    mapCategory: MapCategory.end,
-                  ),
-                ],
-              ),
-            ),
+          /// 최 하단 출발지 - 목적지 위젯
+          LocationAlign(
+            startPoint: widget.startPoint,
+            endPoint: widget.endPoint,
+            startPointLnt: widget.startPointLnt,
+            endPointLnt: widget.endPointLnt,
           ),
         ],
       ),
@@ -258,7 +257,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          viewProfile(context, myUid, memberUid);
+                          viewProfile(context, memberUid);
                           if (myUid != memberUid) {
                             Navigator.pop(context);
                             showDialog(
@@ -313,7 +312,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   }
 
   //uid와 memberID비교
-  void viewProfile(BuildContext context, String? uid, String memberId) {
+  void viewProfile(BuildContext context, String memberId) {
     if (uid == memberId) {
       Navigator.pop(context);
       Navigator.push(
@@ -324,4 +323,158 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
       );
     }
   }
-}
+
+  void _deleteCarpoolBtn(BuildContext context) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            surfaceTintColor: Colors.transparent,
+            title: const Text('카풀 나가기'),
+            content: const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('취소'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  _exitCarpool(context);
+                },
+                child: const Text('나가기'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+  // 나가기 처리 메소드
+  void _exitCarpool(BuildContext context) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return FutureBuilder(
+          // 나가기 처리를 수행하는 비동기 함수
+          future: _exitCarpoolFuture(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return AlertDialog(
+                backgroundColor: Colors.black.withOpacity(0.5),
+                surfaceTintColor: Colors.transparent,
+                title: const Text(''),
+                content: Container(
+                  height: 80,
+                  alignment: Alignment.center,
+                  child: const Center(
+                    child: Column(
+                      children: [
+                        Center(
+                          child: SpinKitThreeBounce(
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        ),
+                        Text(
+                          "나가는 중",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              if (snapshot.error != null) {
+                // 에러가 발생한 경우
+                return const AlertDialog(
+                  title: Text('카풀 나가기'),
+                  content: Text('카풀 나가기에 실패했습니다.'),
+                );
+              } else {
+                // 나가기 처리가 완료된 경우
+                WidgetsBinding.instance.addPostFrameCallback(
+                      (_) {
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MainScreen(),
+                      ),
+                    );
+                  },
+                );
+                return Container(); // 빈 컨테이너를 반환
+              }
+            }
+          },
+        );
+      },
+    );
+  }
+
+  void removeProvider(String carId) {
+    ref.read(carpoolNotifierProvider.notifier).removeCarpool(carId);
+  }
+
+  /// 나가기 처리를 수행하는 비동기 함수
+  Future<void> _exitCarpoolFuture() async {
+
+    //서버에서 토픽 삭제
+    bool isOpen = await ApiTopic().deleteTopic(uid, widget.carId);
+
+    if (isOpen) {
+      print("스프링부트 서버 성공 ##########");
+
+      // 참여중인 카풀 상태 삭제
+      removeProvider(widget.carId);
+
+      // FCM 토픽 구독해제
+      FcmService().unSubScribeTopic(widget.carId);
+
+      FireStoreService().deleteCarpool(widget.carId);
+
+    } else {
+      print("스프링부트 서버 실패 #############");
+      if (!mounted) return;
+      showErrorDialog(context, "현재 서버가 불안정합니다.\n잠시 후 다시 시도해주세요.");
+    }
+  }
+
+  /// 에러 다이얼로그
+  void showErrorDialog(BuildContext context, String errorMessage) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          surfaceTintColor: Colors.transparent,
+          title: const Text('카풀 삭제 실패'),
+          content: Text(errorMessage),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  Nav.globalContext,
+                  MaterialPageRoute(
+                    builder: (context) => const MainScreen(),
+                  ),
+                );
+              },
+              child: const Text('확인'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  }
+

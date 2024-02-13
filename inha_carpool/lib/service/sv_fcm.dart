@@ -74,13 +74,13 @@ class FcmService {
   }
 
   /// 토픽 구독 해제
-   Future<void> unSubScribeTopic(String tempCarId) async {
+   Future<void> unSubScribeTopic(String carId) async {
     /// 토픽 및 카풀 삭제
     if (Prefs.isPushOnRx.get() == true) {
-      print("서버 이상으로 토픽 삭제");
-      await FirebaseMessaging.instance.unsubscribeFromTopic(tempCarId);
+      print("서버 토픽 삭제");
+      await FirebaseMessaging.instance.unsubscribeFromTopic(carId);
       await FirebaseMessaging.instance
-          .unsubscribeFromTopic("${tempCarId}_info");
+          .unsubscribeFromTopic("${carId}_info");
     }
 
   }

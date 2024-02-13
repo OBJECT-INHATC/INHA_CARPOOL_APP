@@ -216,6 +216,11 @@ class FireStoreService {
 
   }
 
+  deleteCarpool(String carId) async {
+    DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
+    await carpoolDocRef.delete();
+  }
+
   // 방장의 카풀 나가기
   exitCarpoolAsAdmin(
       String carId, String nickName, String uid, String gender) async {
