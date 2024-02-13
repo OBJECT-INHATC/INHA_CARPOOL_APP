@@ -162,7 +162,6 @@ flutter:
     - assets/image/flag/
     - assets/image/map/
     - assets/image/darkmode/
-    - assets/translations/
     - assets/
     - assets/image/splash/
     - assets/config/.env

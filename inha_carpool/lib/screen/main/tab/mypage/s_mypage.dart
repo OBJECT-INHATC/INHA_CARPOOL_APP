@@ -33,11 +33,13 @@ class _MyPageState extends ConsumerState<MyPage> {
   late String uid;
   late String nickName;
   late String gender;
+  late String email;
 
   Future<void> _loadAuthData() async {
     nickName = ref.read(authProvider).nickName!;
     uid = ref.read(authProvider).uid!;
     gender = ref.read(authProvider).gender!;
+    email = ref.read(authProvider).email!;
   }
 
   @override
@@ -81,9 +83,7 @@ class _MyPageState extends ConsumerState<MyPage> {
               onTap: () {
                 showDialog(
                   context: context,
-                  builder: (context) => LogoutConfirmationDialog(
-                    onConfirm: () {},
-                  ),
+                  builder: (context) => LogoutConfirmationDialog(email: email,),
                 );
               },
               color: Colors.red,
