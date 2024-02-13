@@ -273,7 +273,7 @@ class _RecordListState extends ConsumerState<RecordList> {
             showDialog(
               context: context,
               builder: (context) => ComplainAlert(
-                reportedUserNickName: member.split('_')[1], // 피신고자 닉네임
+                reportedNickName: member.split('_')[1], // 피신고자 닉네임
                 myId: nickName, // 신고자 닉네임 (나)
                 carpoolId: carpoolId, // 신고 카풀 아이디
               ),

@@ -1,46 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 
+import '../../../../../../provider/auth/auth_provider.dart';
 import '../../../../../dialog/d_complainAlert.dart';
 import '../../../../s_main.dart';
 import '../../../home/enum/mapType.dart';
 import '../w_map_icon.dart';
 
-class ChatDrawer extends StatefulWidget {
+class ChatDrawer extends ConsumerStatefulWidget {
   const ChatDrawer(
       {super.key,
       required this.membersList,
       required this.agreedTime,
       required this.admin,
-      required this.nickName,
       required this.carId,
       required this.startPoint,
       required this.endPoint,
       required this.startPointLnt,
-      required this.endPointLnt, required this.uid});
+      required this.endPointLnt, });
 
   final List membersList;
   final DateTime agreedTime;
   final String admin;
-  final String uid;
-  final String nickName;
   final String carId;
   final String startPoint;
   final String endPoint;
-
   final LatLng startPointLnt;
   final LatLng endPointLnt;
 
   @override
-  State<ChatDrawer> createState() => _ChatDrawerState();
+  ConsumerState<ChatDrawer> createState() => _ChatDrawerState();
 }
 
-class _ChatDrawerState extends State<ChatDrawer> {
+class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = context.width(1);
     final screenHeight = context.height(1);
+
+    final authState = ref.watch(authProvider);
+
 
     return Drawer(
       surfaceTintColor: Colors.transparent,
@@ -52,20 +53,20 @@ class _ChatDrawerState extends State<ChatDrawer> {
         children: [
           //-------------------------------대화상대 상단
           Container(
-            height: AppBar().preferredSize.height * 2.2,
+            height: screenHeight * 0.15,
             width: double.infinity,
             color: context.appColors.logoColor,
             child: Column(
               children: [
-                SizedBox(height: screenWidth * 0.17),
+                Height(screenWidth * 0.17),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    const Text(
-                      '대화 상대',
+                     Text(
+                      '카풀 멤버',
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: screenWidth * 0.05,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -87,10 +88,10 @@ class _ChatDrawerState extends State<ChatDrawer> {
                           }
                         }
                       },
-                      icon: const Icon(
+                      icon:  Icon(
                         Icons.exit_to_app,
                         color: Colors.white,
-                        size: 25,
+                        size: screenWidth * 0.07,
                       ),
                     ),
                   ],
@@ -105,7 +106,6 @@ class _ChatDrawerState extends State<ChatDrawer> {
               itemCount: widget.membersList.length >= 4
                   ? 4
                   : widget.membersList.length,
-              shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (BuildContext context, int index) {
                 String memberName = getName(widget.membersList[index]);
@@ -118,6 +118,7 @@ class _ChatDrawerState extends State<ChatDrawer> {
                       context,
                       memberId,
                       '$memberName 님',
+                      authState.uid!,
                       memberGender,
                     );
                   },
@@ -143,9 +144,8 @@ class _ChatDrawerState extends State<ChatDrawer> {
               },
             ),
           ),
-          const Line(height: 1),
           // 경계라인을 위젯으로 만들어서 사용
-          const Line(height: 1),
+          const Line(height: 2),
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
@@ -194,7 +194,7 @@ class _ChatDrawerState extends State<ChatDrawer> {
 
 
 
-  void _showProfileModal(BuildContext context, String memberId, String userName,
+  void _showProfileModal(BuildContext context, String memberUid, String nickName, String myUid,
       String memberGender) {
     showModalBottomSheet(
       context: context,
@@ -246,7 +246,7 @@ class _ChatDrawerState extends State<ChatDrawer> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(userName,
+                      Text(nickName,
                           style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.w600)),
                       Text(
@@ -258,14 +258,14 @@ class _ChatDrawerState extends State<ChatDrawer> {
                       ),
                       ElevatedButton(
                         onPressed: () {
-                          viewProfile(context, widget.uid, memberId);
-                          if (widget.uid != memberId) {
+                          viewProfile(context, myUid, memberUid);
+                          if (myUid != memberUid) {
                             Navigator.pop(context);
                             showDialog(
                               context: context,
                               builder: (context) => ComplainAlert(
-                                  reportedUserNickName: userName,
-                                  myId: userName,
+                                  reportedNickName: nickName,
+                                  myId: nickName,
                                   carpoolId: widget.carId),
                             );
                           }
@@ -281,19 +281,19 @@ class _ChatDrawerState extends State<ChatDrawer> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
-                                (widget.uid == memberId)
+                                (myUid == memberUid)
                                     ? Icons.double_arrow_rounded
                                     : Icons.warning_rounded,
-                                color: (widget.uid == memberId)
+                                color: (myUid == memberUid)
                                     ? Colors.white
                                     : Colors.white),
                             const SizedBox(
                               width: 8,
                             ),
                             Text(
-                              (widget.uid == memberId) ? "프로필로 이동" : "신고하기",
+                              (myUid == memberUid) ? "프로필로 이동" : "신고하기",
                               style: TextStyle(
-                                  color: (widget.uid == memberId)
+                                  color: (myUid == memberUid)
                                       ? Colors.white
                                       : Colors.white,
                                   fontWeight: FontWeight.bold),

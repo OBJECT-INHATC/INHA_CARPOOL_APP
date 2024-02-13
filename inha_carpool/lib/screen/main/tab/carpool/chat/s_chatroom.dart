@@ -170,13 +170,11 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
           membersList: membersList,
           agreedTime: agreedTime,
           admin: admin,
-          nickName: nickName,
           carId: widget.carId,
           startPoint: startPoint,
           endPoint: endPoint,
           startPointLnt: startPointLnt,
           endPointLnt: endPointLnt,
-          uid: uid,
         ),
 
         //----------------------------------------------body
