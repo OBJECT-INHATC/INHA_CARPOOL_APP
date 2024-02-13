@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/service/sv_fcm.dart';
 import 'package:nav/nav.dart';
 
 import '../../../../../common/data/preference/prefs.dart';
@@ -67,11 +68,10 @@ class _MapButtonState extends ConsumerState<EnterButton> {
               await CarpoolService().addMemberToCarpool(
                   carId, uid, nickName, gender, selectedRoomGender);
               /// 2. 알림을 위한 토픽 추가
-              await subscribeTopic(carId);
+              FcmService().subScribeTopic(carId);
 
               /// 3. 카풀 참가 서버 저장
-              ApiTopic apiTopic = ApiTopic();
-              bool isOpen = await apiTopic.saveTopoic(TopicRequstDTO(uid: uid, carId: carId));
+              bool isOpen = await ApiTopic().saveTopoic(TopicRequstDTO(uid: uid, carId: carId));
 
               /// 서버 저장 성공시
               if (isOpen) {
@@ -158,20 +158,7 @@ class _MapButtonState extends ConsumerState<EnterButton> {
     );
   }
 
-  Future<void> subscribeTopic(String carId) async {
-               try {
-      if (Prefs.isPushOnRx.get() == true) {
-        /// 채팅 토픽
-        await FirebaseMessaging.instance.subscribeToTopic(carId);
 
-        /// 카풀 정보 토픽 - 서버 저장 X
-        await FirebaseMessaging.instance
-            .subscribeToTopic("${carId}_info");
-      }
-    } catch (e) {
-      print("토픽 추가 실패가 아닌 버전 이슈~");
-    }
-  }
 
   /// 에러 다이얼로그
   void showErrorDialog(BuildContext context, String errorMessage) {

@@ -46,11 +46,13 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
 
   late final String uid;
   late final String nickName;
+  late final String gender;
 
   @override
   void initState() {
     uid = ref.read(authProvider).uid ?? "";
     nickName = ref.read(authProvider).nickName ?? "";
+    gender = ref.read(authProvider).gender ?? "";
     // TODO: implement initState
     super.initState();
   }
@@ -103,7 +105,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                         ///   1. 인원수 1명인지 확인
                         if (widget.membersList.length == 1) {
                           /// "나 혼자네? 그냥 나가기"
-                          _deleteAdmin(context, true);
+                          _exitCarpool(context, true, true);
                         } else {
                           ///  2. 시간 확인 (10분전)
                           final timeDifference = widget.agreedTime
@@ -113,19 +115,15 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                            /// 3. 방장인지 체크
                             if(widget.admin == nickName){
                               ///  ok "다음 방장은 너다 하고 나가기"
-                              _deleteAdmin(context, false);
+                              _exitCarpool(context, true, false);
                             } else {
                               /// 그냥 나가기
-
+                              _exitCarpool(context, false, false);
                             }
                           } else {
                            /// ok "10분 전이야 아무도 못나가"
-
+                          print("10분 전이야 아무도 못나가");
                           }
-
-
-
-
 
                         }
                       },
@@ -353,14 +351,16 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   }
 
   // 방장이고 혼자 -> isAdmin = true
-  void _deleteAdmin(BuildContext context, bool isAlone) {
+  void _exitCarpool(BuildContext context,bool isAdmin, bool isAlone) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             surfaceTintColor: Colors.transparent,
             title: const Text('카풀 나가기'),
-            content: const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?'),
+            content: isAdmin
+                ? const Text('현재 카풀의 방장 입니다. \n 정말 나가시겠습니까?')
+                : const Text('정말로 카풀을 나가시겠습니까?'),
             actions: [
               TextButton(
                 onPressed: () {
@@ -371,12 +371,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
               TextButton(
                 onPressed: () async {
                   Navigator.pop(context);
-                  if(isAlone == true){
-                    // 나가기 메소드
-                    _exitCarpoolLoding(context);
-                  }else{
-                    _exitCarpoolLoding(context);
-                  }
+                  _exitCarpoolLoding(context, isAlone, isAdmin);
                 },
                 child: const Text('나가기'),
               ),
@@ -389,14 +384,14 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
 
 
   // 나가기 처리 메소드
-  void _exitCarpoolLoding(BuildContext context) async {
+  void _exitCarpoolLoding(BuildContext contextm, bool isAlone, bool isAdmin) async {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return FutureBuilder(
           // 나가기 처리를 수행하는 비동기 함수
-          future: _exitCarpoolFuture(),
+          future: _exitCarpoolFuture(isAlone, isAdmin),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return AlertDialog(
@@ -459,7 +454,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
 
 
   /// 나가기 처리를 수행하는 비동기 함수 (공통)
-  Future<void> _exitCarpoolFuture() async {
+  Future<void> _exitCarpoolFuture(bool isAlone, bool isAdmin) async {
     //서버에서 토픽 삭제
     bool isOpen = await ApiTopic().deleteTopic(uid, widget.carId);
 
@@ -469,10 +464,19 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
       // 참여중인 카풀 상태 삭제
       removeProvider(widget.carId);
 
-      // FCM 토픽 구독해제
-      FcmService().unSubScribeTopic(widget.carId);
+     await FcmService().unSubScribeTopic(widget.carId);
 
-      FireStoreService().deleteCarpool(widget.carId);
+      if(isAlone){
+        FireStoreService().deleteCarpool(widget.carId);
+      }else{
+        if(isAdmin) {
+          print("혼자가 아니고 방장일 때 퇴장 ");
+          await FireStoreService().exitCarpoolAsAdmin(widget.carId, nickName, uid, gender);
+        } else {
+          print("혼자가 아니고 방장도 아닐 때 퇴장 ");
+          await FireStoreService().exitCarpool(widget.carId, nickName, uid, gender);
+        }
+      }
 
     } else {
       print("스프링부트 서버 실패 #############");

@@ -7,7 +7,6 @@ import '../common/models/m_chat.dart';
 
 /// DatabaseService class - Firebase Firestore Database 관련 함수들을 모아놓은 클래스
 class FireStoreService {
-
   /// uid - 현재 사용자의 uid
   final String? uid;
 
@@ -87,8 +86,6 @@ class FireStoreService {
       "recentMessageSender": chatMessageData['sender'],
       "recentMessageTime": chatMessageData['time'].toString(),
       'unreadCount': FieldValue.increment(1),
-
-      ///0909 서은율 읽지않은 메시지 카운트
     });
 
     await carpoolDocRef.collection("messages").add(chatMessageData);
@@ -138,8 +135,14 @@ class FireStoreService {
         .doc(carId)
         .collection("messages")
         .add(chatMessageMap);
+    await carpoolCollection.doc(carId).update(
+      {'recentMessage': chatMessageMap['message'],
+        'recentMessageSender': chatMessageMap['sender'],
+        'recentMessageTime': chatMessageMap['time']},
+    );
+
     FcmService().sendMessage(
-        title:  "$userName님이 참가했습니다.",
+        title: "$userName님이 참가했습니다.",
         body: "즐거운 카풀 되세요!",
         chatMessage: chatMessage,
         type: NotificationType.status);
@@ -174,6 +177,14 @@ class FireStoreService {
         chatMessage: chatMessage,
         type: NotificationType.status);
 
+    await carpoolCollection.doc(carId).update(
+      {'recentMessage': chatMessageMap['message'],
+        'recentMessageSender': chatMessageMap['sender'],
+        'recentMessageTime': chatMessageMap['time']},
+    );
+
+
+
     //5초 후
     await Future.delayed(const Duration(seconds: 3));
     // 로컬 DB 삭제
@@ -205,6 +216,7 @@ class FireStoreService {
   exitCarpool(String carId, String nickName, String uid, String gender) async {
     DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
 
+    print("${uid}_${nickName}_$gender");
     /// 0902 김영재. 마지막 사람이 방을 나가면 status를 true로 변경
     await carpoolDocRef.update({
       'members': FieldValue.arrayRemove(['${uid}_${nickName}_$gender']),
@@ -213,7 +225,6 @@ class FireStoreService {
 
     // 탈퇴 메시지 전송
     FireStoreService().sendExitMessage(carId, nickName);
-
   }
 
   deleteCarpool(String carId) async {
@@ -239,7 +250,6 @@ class FireStoreService {
         'nowMember': FieldValue.increment(-1),
       });
 
-
       DocumentSnapshot carpoolSnapshot = await carpoolDocRef.get();
       List<dynamic> members = carpoolSnapshot['members'];
       if (members.isNotEmpty) {
@@ -251,8 +261,6 @@ class FireStoreService {
 
       // 탈퇴 메시지 전송
       FireStoreService().sendExitMessage(carId, nickName);
-
-
     }
   }
 
@@ -308,15 +316,13 @@ class FireStoreService {
 
     // 로컬 DB에서 해당 카풀 정보 삭제
     ChatDao().deleteByCarId(carId);
-
-
   }
 
   Future<int> getCarpoolStartTime(String carId) async {
-    if(carId == '' || carId == null) return 0;
+    if (carId == '' || carId == null) return 0;
     DocumentSnapshot carpool =
         await FirebaseFirestore.instance.collection('carpool').doc(carId).get();
-    if(carpool == null) return 0;
+    if (carpool == null) return 0;
     int startTime = carpool.get('startTime');
     return startTime;
   }

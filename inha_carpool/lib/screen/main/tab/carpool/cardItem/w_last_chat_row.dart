@@ -44,7 +44,7 @@ class ChatLastInfo extends StatelessWidget {
                     snapshot.data == null) {
                   return  Text(
                     emptyChat,
-                    style: TextStyle(
+                    style: const TextStyle(
                         color: Colors.grey),
                   );
                 }
