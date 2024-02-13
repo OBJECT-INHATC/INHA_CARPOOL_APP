@@ -1,21 +1,16 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 
-import '../../../../../../common/data/preference/prefs.dart';
 import '../../../../../../provider/auth/auth_provider.dart';
 import '../../../../../../provider/current_carpool/carpool_provider.dart';
 import '../../../../../../service/api/Api_topic.dart';
 import '../../../../../../service/sv_firestore.dart';
 import '../../../../../dialog/d_complainAlert.dart';
 import '../../../../s_main.dart';
-import '../../../home/enum/mapType.dart';
-import '../w_map_icon.dart';
 import 'location_align.dart';
 
 class ChatDrawer extends ConsumerStatefulWidget {
@@ -73,12 +68,10 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
         children: [
           //-------------------------------대화상대 상단
           Container(
-            height: screenHeight * 0.15,
-            width: double.infinity,
             color: context.appColors.logoColor,
             child: Column(
               children: [
-                Height(screenWidth * 0.17),
+                Height(screenWidth * 0.1),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
