@@ -2,11 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inha_Carpool/common/database/d_alarm_dao.dart';
 import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:inha_Carpool/firebase_options.dart';
@@ -103,25 +101,15 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  //네이버지도 초기화
-  // await NaverMapSdk.instance.initialize(clientId: dotenv.env['NAVER_MAP_CLIENT_ID']!);
 
   // 백그라운드 메시지 수신 호출 콜백 함수
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(
-    EasyLocalization(
-        supportedLocales: const [Locale('en'), Locale('ko')],
-        //지원하지 않는 언어인 경우 한국어로 설정
-        fallbackLocale: const Locale('ko'),
-        //번역 파일들이 위치하는 경로를 설정
-        path: 'assets/translations',
-        //언어 코드만 사용하여 번역 파일 설 ex)en_US 대신 en만 사용
-        useOnlyLangCode: true,
-        child: const ProviderScope(child: App())),
-    /// 상태관리로 관리할 리스트
-    /// 1. 사용자 정보 -> 스토리지에서 그만 처 들고오자!
+    const ProviderScope(child: App()),
+    /// 상태관리로 관리할 리스트 todo  :
+    /// 1. 사용자 정보 -> 스토리지에서 그만 처 들고오자! -> 수시로 바꾸는중  0213
     /// 2. 자신이 카풀에 참가하고있는지 ! -> 로그인시 한 번만 쳐 묻자
-    /// 3. 알림 받았는지 유무 -> 상태관리 안하니까 재빌드 해야만 알림 표시 뜸
+    /// 3. 알림 받았는지 유무 -> 상태관리 안하니까 재빌드 해야만 알림 표시 뜸 -> 그냥 클릭했을 땐 어떻게 초기화 할 것인가 ? 0213
   );
 }

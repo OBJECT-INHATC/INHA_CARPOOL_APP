@@ -80,7 +80,7 @@ class _MessageDialogState extends DialogState<MessageDialog> {
                           height: 50,
                           alignment: Alignment.center,
                           child: Text(
-                            widget.buttonText ?? 'close'.tr(),
+                            widget.buttonText ?? 'close',
                             style: TextStyle(
                               color: context.appColors.confirmText,
                               fontSize: 16,

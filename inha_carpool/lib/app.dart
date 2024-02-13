@@ -51,7 +51,7 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
             Prefs.chatRoomCarIdRx.get() == message.data['groupId']) {
 
           // 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
-          AlarmInsert(notification, nowTime, message);
+          alarmInsert(notification, nowTime, message);
 
           // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
           deleteTopic(message);
@@ -75,7 +75,7 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
         );
 
         /// 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
-        AlarmInsert(notification, nowTime, message);
+        alarmInsert(notification, nowTime, message);
 
         // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
         deleteTopic(message);
@@ -98,11 +98,6 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
           },
           //네비게이터 관리
           navigatorKey: App.navigatorKey,
-          //언어 영역
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          //언어 영역 끝
           title: 'Image Finder',
           theme: context.themeType.themeData,
           home: const LoginPage(),
@@ -111,6 +106,7 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
     );
   }
 
+  /// todo : topic 제거 메소드 불러오기 중복방지
   void deleteTopic(RemoteMessage message) async {
     if (message.data['id'] == 'carpoolDone') {
       // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제
@@ -120,7 +116,7 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
   }
 
   /// 로컬 알림 저장 - 알림이 수신되면 로컬 알림에 저장
-  void AlarmInsert(
+  void alarmInsert(
       RemoteNotification notification, int nowTime, RemoteMessage message) {
     AlarmDao().insert(AlarmMessage(
       aid: "${notification.title}${notification.body}${nowTime.toString()}",

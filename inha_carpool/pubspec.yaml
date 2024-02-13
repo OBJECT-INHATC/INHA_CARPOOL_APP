@@ -65,7 +65,6 @@ dependencies:
   provider: ^6.0.1
 
   #ui - resource
-  eva_icons_flutter: ^3.1.0
   google_fonts: ^4.0.4
   flutter_cache_manager: ^3.3.0
 
