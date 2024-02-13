@@ -1,38 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/dto/TopicDTO.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-import 'api/Api_topic.dart';
-import '../common/data/preference/prefs.dart';
 import '../common/util/addMember_Exception.dart';
 
 class CarpoolService {
-  static final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
-
-  // 광고 가져오기
-  static Future<DocumentSnapshot?> getNoticeData(String type) async {
-    try {
-      DocumentSnapshot documentSnapshot =
-          await FirebaseFirestore.instance.collection('admin').doc(type).get();
-      if (documentSnapshot.exists) {
-        return documentSnapshot;
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print("Error fetching admin data: $e");
-      return null;
-    }
-  }
+   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
   /// 카풀 저장
-  static Future<String> addDataToFirestore({
+   Future<String> addDataToFireStore({
     required DateTime selectedDate,
     required DateTime selectedTime,
     required LatLng startPoint,
@@ -115,24 +95,14 @@ class CarpoolService {
     }
   }
 
-
-
-
-  /// 새 채팅 카운트 업데이트
-  static Future<void> updateNewChatCount(
-      String carpoolId, int newChatCount) async {
-    try {
-      await _fireStore.collection('carpools').doc(carpoolId).update({
-        'newchat': newChatCount,
-      });
-    } catch (e) {
-      print(e);
-      rethrow;
-    }
+  /// 카풀 삭제
+   Future<void> deleteCarpoolToFireStore(String carId) async {
+    await _fireStore.collection('carpool').doc(carId).delete();
   }
 
+
   /// 카풀에 새로운 멤버 추가
-  static Future<void> addMemberToCarpool(
+   Future<void> addMemberToCarpool(
       String carpoolID,
       String memberID,
       String memberName,
@@ -189,7 +159,7 @@ class CarpoolService {
   }
 
   /// 시간순으로 조회, 정렬
-  static Future<List<DocumentSnapshot>> timeByFunction(
+   Future<List<DocumentSnapshot>> timeByFunction(
       int limit, DocumentSnapshot? startAfter) async {
     CollectionReference carpoolCollection =
         FirebaseFirestore.instance.collection('carpool');
@@ -225,19 +195,8 @@ class CarpoolService {
   }
 
 
-
-
-
-
-  /// 카풀 삭제
-  static Future<void> deleteCarpoolToFireStore(String carId) async {
-    await _fireStore.collection('carpool').doc(carId).delete();
-  }
-
-
-
   /// 거리순 정렬
-  static Future<List<DocumentSnapshot>> nearByCarpool(
+   Future<List<DocumentSnapshot>> nearByCarpool(
       double myLat, double myLon) async {
     QuerySnapshot querySnapshot = await _fireStore
         .collection('carpool')
@@ -284,7 +243,7 @@ class CarpoolService {
     }).toList();
   }
 
-  /// 거리 계산
+  // 거리 계산
   static double calculateDistance(
     double myLat,
     double myLon,
@@ -302,7 +261,7 @@ class CarpoolService {
   }
 
   /// 내가 참여한 카풀 - 메인 플로팅 버튼에 사용
-  static Future<List<DocumentSnapshot>> getCarpoolsWithMember(
+   Future<List<DocumentSnapshot>> getCarpoolsWithMember(
       String memberID, String memberName, String memberGender) async {
     QuerySnapshot querySnapshot = await _fireStore
         .collection('carpool')
@@ -311,7 +270,6 @@ class CarpoolService {
         .get();
 
     List<DocumentSnapshot> sortedCarpools = [];
-
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
 
@@ -324,7 +282,6 @@ class CarpoolService {
         sortedCarpools.add(doc);
       }
     }
-
     sortedCarpools.sort((a, b) {
       DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
       DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b['startTime']);
@@ -336,7 +293,7 @@ class CarpoolService {
   }
 
   /// 내가 참여한 카풀 - 내가 참가한 카풀 리스트에 사용
-  static Future<List<DocumentSnapshot>> getCarpoolsRemainingForDay(
+   Future<List<DocumentSnapshot>> getCarpoolsRemainingForDay(
       String memberID, String memberName, String memberGender) async {
     QuerySnapshot querySnapshot = await _fireStore
         .collection('carpool')

@@ -170,7 +170,7 @@ class _LocationInputState extends State<LocationInput> {
 
     parseAddressData(responseJson);
 
-    // 첫 번째 결과를 사용하여 _address 변수에 상세 주소 설정
+    /// 첫 번째 결과를 사용하여 _address 변수에 상세 주소 설정
     if (addressList.isNotEmpty) {
       String address = '${addressList[0]['area1']} ${addressList[0]['area2']}';
 
@@ -203,11 +203,6 @@ class _LocationInputState extends State<LocationInput> {
         _address = '위치를 확인해주세요.';
       });
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   @override
@@ -264,12 +259,6 @@ class _LocationInputState extends State<LocationInput> {
                       top: 0,
                       bottom: 0,
                       child: IconButton(
-                        // onPressed: () async {
-                        //   setState(() {
-                        //     // getAddressFromQuery(_searchController.text);
-                        //     // selectNearLocation(_searchController.text);
-                        //   });
-                        // },
                         onPressed: () async {
                           setState(() {
                             selectNearLocation(_searchController.text)

@@ -64,7 +64,7 @@ class _MapButtonState extends ConsumerState<EnterButton> {
 
             try {
               /// 1. 카풀 참가 파이어베이스 저장
-              await CarpoolService.addMemberToCarpool(
+              await CarpoolService().addMemberToCarpool(
                   carId, uid, nickName, gender, selectedRoomGender);
               /// 2. 알림을 위한 토픽 추가
               await subscribeTopic(carId);

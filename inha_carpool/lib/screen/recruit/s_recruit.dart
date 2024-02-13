@@ -362,7 +362,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
 
                         /// 조건 충족 시 파이어베이스에 카풀 정보 저장
                         String carId =
-                        await CarpoolService.addDataToFirestore(
+                        await CarpoolService().addDataToFireStore(
                           selectedDate: _selectedDate,
                           selectedTime: _selectedTime,
                           startPoint: startPoint,
@@ -415,7 +415,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                           isShowingLoader = false;
                         });
                       },
-                      child: '카풀시작'.text.size(20).white.make(),
+                      child: '카풀 시작'.text.size(20).white.make(),
                     ).p(50),
                   ),
                 ],

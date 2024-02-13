@@ -67,7 +67,7 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     initMyPoint(); // 내 위치 받아오기
-    carPoolList = CarpoolService.timeByFunction(limit, null); // 초기에 시간순 정렬
+    carPoolList = CarpoolService().timeByFunction(limit, null); // 초기에 시간순 정렬
     _loadUserData(); // 유저 정보 불러오기
     _refreshCarpoolList(); // 새로고침
     _scrollController.addListener(_scrollListener); // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
@@ -94,7 +94,7 @@ class _HomeState extends ConsumerState<Home> {
     String myGender = gender;
 
     List<DocumentSnapshot> carpools =
-        await CarpoolService.getCarpoolsWithMember(myID, myNickName, myGender);
+        await CarpoolService().getCarpoolsWithMember(myID, myNickName, myGender);
 
     if (carpools.isNotEmpty) {
       return carpools[0];
@@ -450,7 +450,7 @@ class _HomeState extends ConsumerState<Home> {
   /// 새로고침 로직
   Future<void> _refreshCarpoolList() async {
     if (selectedFilter == FilteringOption.Time) {
-      carPoolList = CarpoolService.timeByFunction(limit, null);
+      carPoolList = CarpoolService().timeByFunction(limit, null);
     } else {
       carPoolList = _nearByFunction();
     }
@@ -472,7 +472,7 @@ class _HomeState extends ConsumerState<Home> {
     setState(() {
       selectedFilter = newValue ?? FilteringOption.Time;
       carPoolList = (selectedFilter == FilteringOption.Time)
-          ? CarpoolService.timeByFunction(limit, null)
+          ? CarpoolService().timeByFunction(limit, null)
           : _nearByFunction();
     });
   }
@@ -480,7 +480,7 @@ class _HomeState extends ConsumerState<Home> {
   /// 거리순 정렬
   Future<List<DocumentSnapshot>> _nearByFunction() async {
     await initMyPoint();
-    List<DocumentSnapshot> carpools = await CarpoolService.nearByCarpool(
+    List<DocumentSnapshot> carpools = await CarpoolService().nearByCarpool(
         myPoint.latitude, myPoint.longitude);
     return carpools;
   }
@@ -500,7 +500,7 @@ class _HomeState extends ConsumerState<Home> {
             if (list.isNotEmpty) {
               // 시간순일 때
               if (selectedFilter == FilteringOption.Time) {
-                CarpoolService.timeByFunction(10, list.last)
+                CarpoolService().timeByFunction(10, list.last)
                     .then((newCarpools) {
                   if (newCarpools.isEmpty) {
                     // 추가적으로 로드할 카풀이 없을 때
