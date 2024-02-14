@@ -231,49 +231,52 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(15),
-              topRight: Radius.circular(15),
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
           ),
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.all(10.0),
-                margin: const EdgeInsets.all(10.0),
-                alignment: Alignment.center,
-                child:  Text(
+              Padding(
+                padding:  EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                child: Text(
                   '프로필 조회',
                   style: TextStyle(
-                    fontSize: screenHeight * 0.018,
+                    fontSize: screenHeight * 0.02,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               const Line(height: 1, color: Colors.grey,),
+              Height(screenHeight * 0.03),
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(8.0),
-                    margin: const EdgeInsets.fromLTRB(20, 5, 0, 0),
-                    alignment: Alignment.centerLeft,
-                    child: const Icon(
-                      Icons.person_search,
-                      size: 120,
-                    ),
+                   Icon(
+                    Icons.person_search,
+                    size: screenHeight * 0.15,
                   ),
-                  const Width(10),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(selectedUserNickName,
-                          style: const TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.w600)),
-                      Text(
-                        memberGender,
-                        style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey),
+                      Height(screenHeight * 0.03),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(selectedUserNickName,
+                              style:  TextStyle(
+                                  fontSize: screenHeight * 0.025, fontWeight: FontWeight.w600)),
+                          Width(screenHeight * 0.01),
+                          Text(
+                            memberGender,
+                            style:  TextStyle(
+                                fontSize: screenHeight * 0.02,
+                                color: Colors.grey),
+                          ),
+                        ],
                       ),
+
                       ElevatedButton(
                         onPressed: () {
                           viewProfile(context, memberUid);
@@ -294,12 +297,11 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                         style: ElevatedButton.styleFrom(
                           surfaceTintColor: Colors.transparent,
                           backgroundColor:
-                              const Color.fromARGB(255, 255, 167, 2),
+                          const Color.fromARGB(255, 255, 167, 2),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)),
                         ),
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                                 (myUid == memberUid)
@@ -322,6 +324,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                           ],
                         ),
                       ),
+
                     ],
                   ),
                 ],
