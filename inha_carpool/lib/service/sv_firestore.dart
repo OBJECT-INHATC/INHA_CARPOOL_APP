@@ -264,7 +264,6 @@ class FireStoreService {
     }
   }
 
-  ///0907 서은율, 마지막 체팅 가져오기
   Stream<DocumentSnapshot?> getLatestMessageStream(String carId) {
     return carpoolCollection
         .doc(carId)

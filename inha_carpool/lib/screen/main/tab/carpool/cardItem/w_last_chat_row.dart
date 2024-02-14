@@ -22,50 +22,38 @@ class ChatLastInfo extends StatelessWidget {
     return Column(
       children: [
         Divider(
-            height: 20,
-            color: context
-                .appColors.logoColor).pSymmetric(h: 15),
+          height: 20,
+          color: context.appColors.logoColor,
+        ).pSymmetric(h: 15),
         Row(
           children: [
             Width(screenWidth * 0.045),
-
             StreamBuilder<DocumentSnapshot?>(
-              stream: FireStoreService()
-                  .getLatestMessageStream(
-                  carpool['carId']),
+              stream: FireStoreService().getLatestMessageStream(carpool['carId']),
               builder: (context, snapshot) {
-                if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
                 } else if (snapshot.hasError) {
-                  return Text(
-                      'Error: ${snapshot.error}');
-                } else if (!snapshot.hasData ||
-                    snapshot.data == null) {
-                  return  Text(
-                    emptyChat,
-                    style: const TextStyle(
-                        color: Colors.grey),
-                  );
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  DocumentSnapshot? lastMessage = snapshot.data;
+                  if (lastMessage == null) {
+                    return Text(
+                      emptyChat,
+                      style: const TextStyle(color: Colors.grey),
+                    );
+                  } else {
+                    String content = lastMessage['message'];
+                    String sender = lastMessage['sender'];
+                    if (content.length > 16) {
+                      content = '${content.substring(0, 16)}...';
+                    }
+                    return Text(
+                      '$sender : $content',
+                      style: const TextStyle(fontSize: 13, color: Colors.grey),
+                    );
+                  }
                 }
-                DocumentSnapshot lastMessage =
-                snapshot.data!;
-                String content =
-                lastMessage['message'];
-                String sender =
-                lastMessage['sender'];
-
-                // 글자가 16글자 이상인 경우, 17글자부터는 '...'로 대체
-                if (content.length > 16) {
-                  content =
-                  '${content.substring(0, 16)}...';
-                }
-                return Text(
-                  '$sender : $content',
-                  style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey),
-                );
               },
             ),
           ],

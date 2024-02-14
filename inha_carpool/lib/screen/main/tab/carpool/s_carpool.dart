@@ -32,7 +32,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     MemberModel memberModel = ref.read(authProvider);
     ref.read(carpoolNotifierProvider.notifier).getCarpool(memberModel);
 
-
     List<DocumentSnapshot> carpools =
         await CarpoolService().getCarpoolsRemainingForDay(
             memberModel.uid!,
@@ -40,9 +39,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
             memberModel.gender!);
 
     return carpools;
-
-
-
   }
 
   @override
