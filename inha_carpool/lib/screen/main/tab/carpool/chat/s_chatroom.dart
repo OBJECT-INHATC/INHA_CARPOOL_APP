@@ -1,19 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
-import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
-import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
-import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_splash_Img_opacity.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
@@ -243,7 +238,7 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
                                   decoration: const InputDecoration(
                                     hintText: "메시지 보내기...",
                                     hintStyle: TextStyle(
-                                        color: Colors.black54, fontSize: 13),
+                                        color: Colors.black38, fontSize: 13),
                                     border: InputBorder.none,
                                   ),
                                 ),
