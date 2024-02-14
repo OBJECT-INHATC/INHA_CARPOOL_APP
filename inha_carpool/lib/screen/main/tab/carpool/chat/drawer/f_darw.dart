@@ -71,7 +71,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
             color: context.appColors.logoColor,
             child: Column(
               children: [
-                Height(screenWidth * 0.1),
+                Height(AppBar().preferredSize.height * 1.35),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
