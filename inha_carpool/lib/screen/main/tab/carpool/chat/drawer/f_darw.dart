@@ -11,6 +11,7 @@ import '../../../../../../service/api/Api_topic.dart';
 import '../../../../../../service/sv_firestore.dart';
 import '../../../../../dialog/d_complainAlert.dart';
 import '../../../../s_main.dart';
+import 'chat_notice.dart';
 import 'location_align.dart';
 
 class ChatDrawer extends ConsumerStatefulWidget {
@@ -175,7 +176,10 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
               },
             ),
           ),
-          // 경계라인을 위젯으로 만들어서 사용
+
+          /// 카풀 이용 공지사항
+          const ChatNoice(),
+
           const Line(height: 2),
 
           /// 최 하단 출발지 - 목적지 위젯

@@ -22,7 +22,6 @@ import 'package:inha_Carpool/service/sv_firestore.dart';
 import '../../../../../provider/auth/auth_provider.dart';
 import 'drawer/f_darw.dart';
 
-
 /// todo : 채팅 화면 백그라운드에 투명도 넣어서 로고 넣기
 /// todo : 상태관리로 해당 채팅방만 알림 끄기
 class ChatroomPage extends ConsumerStatefulWidget {
@@ -95,7 +94,7 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
   late String userName = '';
 
   /// 유저 정보 받아오기
-    _loadUserData() async {
+  _loadUserData() async {
     nickName = ref.read(authProvider).nickName!;
     uid = ref.read(authProvider).uid!;
     gender = ref.read(authProvider).gender!;
@@ -149,7 +148,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
 
   @override
   Widget build(BuildContext context) {
-
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -188,6 +186,24 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
             Expanded(
               child: Stack(
                 children: <Widget>[
+                  Positioned.directional(
+                    textDirection: Directionality.of(context),
+                    top: screenHeight * 0.15, // 위쪽 여백 설정
+                    start: 0, // 시작점에서의 여백 없음
+                    end: 0, // 끝점에서의 여백 없음
+                    height: screenHeight * 0.45,
+                    child: Opacity(
+                      opacity: 0.3, // 투명도 설정
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage('assets/image/splash/splash.png'),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   // 채팅 메시지
                   chatMessages(),
                   Column(
@@ -278,6 +294,8 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
                       ),
                     ],
                   ),
+
+                  // 백그라운드 배경 이미지 (투명도 30)
                 ],
               ),
             ),
@@ -286,7 +304,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
       ),
     );
   }
-
 
   /// 채팅 메시지 스트림
   chatMessages() {
@@ -416,7 +433,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
     }
   }
 
-
   getLocalChat() async {
     await ChatDao().getChatbyCarIdSortedByTime(widget.carId).then((val) {
       setState(() {
@@ -463,8 +479,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
     int end = res.lastIndexOf("_");
     return res.substring(start, end);
   }
-
-
 
   // 멤버 리스트, 출발 시간, 요약주소 가져오기
   getCarpoolInfo() async {
