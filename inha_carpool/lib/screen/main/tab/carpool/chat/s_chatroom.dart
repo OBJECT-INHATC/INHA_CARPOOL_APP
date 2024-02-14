@@ -14,6 +14,7 @@ import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/chat/splash_Img_opacity.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_map_icon.dart';
 import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
 import 'package:inha_Carpool/service/api/Api_topic.dart';
@@ -186,26 +187,13 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
             Expanded(
               child: Stack(
                 children: <Widget>[
-                  Positioned.directional(
-                    textDirection: Directionality.of(context),
-                    top: screenHeight * 0.15, // 위쪽 여백 설정
-                    start: 0, // 시작점에서의 여백 없음
-                    end: 0, // 끝점에서의 여백 없음
-                    height: screenHeight * 0.45,
-                    child: Opacity(
-                      opacity: 0.3, // 투명도 설정
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage('assets/image/splash/splash.png'),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  // 채팅 메시지
+                  /// 인하카풀 로고 배경 이미지
+                  const SplashOpacity(),
+
+                  /// 채팅 메시지
                   chatMessages(),
+
+                  /// 최하단 메세지 보내기 컨테이너
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
