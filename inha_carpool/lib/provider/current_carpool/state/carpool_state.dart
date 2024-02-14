@@ -12,4 +12,6 @@ class CarPoolStateModel {
   CarPoolStateModel copyWith({List<CarpoolModel>? data}) {
     return CarPoolStateModel(data: data ?? this.data);
   }
+
+
 }

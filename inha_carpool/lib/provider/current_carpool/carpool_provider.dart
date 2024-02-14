@@ -35,6 +35,8 @@ class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
     }
   }
 
+
+
   // 생성하거나 참여한 카풀리스트를 상태관리에 추가
   Future addCarpool(CarpoolModel carpoolModel) async {
     try {
