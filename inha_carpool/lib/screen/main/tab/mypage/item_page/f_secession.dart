@@ -5,6 +5,8 @@ import 'package:inha_Carpool/common/extension/context_extension.dart';
 import '../../../../dialog/d_delete_auth.dart';
 
 class SecessionPage extends StatefulWidget {
+  const SecessionPage({super.key});
+
   @override
   State<SecessionPage> createState() => _SecessionPageState();
 }

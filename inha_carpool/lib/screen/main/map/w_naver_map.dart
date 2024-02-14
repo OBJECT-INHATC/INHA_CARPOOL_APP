@@ -113,7 +113,6 @@ class _naeverMapState extends State<NaeverMap> {
           NLatLng(widget.startPoint.latitude, widget.startPoint.longitude),
     );
 
-    /// todo :  출발지 목적지 아이콘 색 변경  -> 파일을 교체해야해 뿌엥 (0212 이상훈)
 
 
 

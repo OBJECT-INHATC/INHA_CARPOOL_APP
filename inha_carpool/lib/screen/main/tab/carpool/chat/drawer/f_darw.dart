@@ -11,8 +11,8 @@ import '../../../../../../service/api/Api_topic.dart';
 import '../../../../../../service/sv_firestore.dart';
 import '../../../../../dialog/d_complainAlert.dart';
 import '../../../../s_main.dart';
-import 'chat_notice.dart';
-import 'location_align.dart';
+import 'w_chat_notice.dart';
+import 'w_location_align.dart';
 
 class ChatDrawer extends ConsumerStatefulWidget {
   const ChatDrawer({
@@ -50,7 +50,6 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     uid = ref.read(authProvider).uid ?? "";
     nickName = ref.read(authProvider).nickName ?? "";
     gender = ref.read(authProvider).gender ?? "";
-    // TODO: implement initState
     super.initState();
   }
 
@@ -153,6 +152,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                       memberName,
                       uid,
                       memberGender,
+                      screenHeight,
                     );
                   },
                   leading: Icon(
@@ -169,6 +169,11 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                               ? Colors.blue
                               : Colors.black)
                           .make(),
+                      const Spacer() ,
+                      (widget.admin == memberName) ?
+                       Icon(Icons.star, color: context.appColors.logoColor, size: screenHeight * 0.027,)
+                          : Container(),
+
                     ],
                   ),
                   trailing: const Icon(Icons.navigate_next_rounded),
@@ -189,6 +194,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
             startPointLnt: widget.startPointLnt,
             endPointLnt: widget.endPointLnt,
           ),
+          const Height(10),
         ],
       ),
     );
@@ -213,7 +219,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   }
 
   void _showProfileModal(BuildContext context, String memberUid,
-      String selectedUserNickName, String myUid, String memberGender) {
+      String selectedUserNickName, String myUid, String memberGender, double screenHeight) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -235,18 +241,15 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                 padding: const EdgeInsets.all(10.0),
                 margin: const EdgeInsets.all(10.0),
                 alignment: Alignment.center,
-                child: const Text(
+                child:  Text(
                   '프로필 조회',
                   style: TextStyle(
-                    fontSize: 15,
+                    fontSize: screenHeight * 0.018,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-              const Divider(
-                height: 1,
-                color: Colors.grey,
-              ),
+              const Line(height: 1, color: Colors.grey,),
               Row(
                 children: [
                   Container(
@@ -258,11 +261,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                       size: 120,
                     ),
                   ),
-                  const SizedBox(
-                    width: 10,
-                  ),
+                  const Width(10),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(selectedUserNickName,
                           style: const TextStyle(

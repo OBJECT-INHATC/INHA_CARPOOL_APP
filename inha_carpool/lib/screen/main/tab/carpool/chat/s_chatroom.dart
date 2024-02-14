@@ -14,16 +14,12 @@ import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/chat/splash_Img_opacity.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_map_icon.dart';
-import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
-import 'package:inha_Carpool/service/api/Api_topic.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_splash_Img_opacity.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../../provider/auth/auth_provider.dart';
 import 'drawer/f_darw.dart';
 
-/// todo : 채팅 화면 백그라운드에 투명도 넣어서 로고 넣기
 /// todo : 상태관리로 해당 채팅방만 알림 끄기
 class ChatroomPage extends ConsumerStatefulWidget {
   final String carId;
