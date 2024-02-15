@@ -156,7 +156,6 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             } else {
                               if (!mounted) return;
                               context.showSnackbarText(context, '비밀번호 변경에 실패했습니다.',bgColor: Colors.red );
-
                             }
                           }
                           setState(() {

@@ -6,6 +6,7 @@ import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 import 'package:inha_Carpool/service/api/Api_repot.dart';
 
+import '../../../../../common/widget/empty_list.dart';
 import '../../../../../provider/auth/auth_provider.dart';
 import '../../../../../provider/record/record_provider.dart';
 
@@ -98,14 +99,12 @@ class _RecordListState extends ConsumerState<RecordList> {
                 );
               } else if (snapshot.hasError) {
                 return const Center(
-                  child: Text('이용내역을 불러오는 데 실패했습니다'),
+                  child: Text('이용내역을 불러오는 데 실패했습니다. 나중에 다시 시도해주세요.'),
                 );
               } else {
                 List<HistoryRequestDTO>? historyList = snapshot.data;
                 if (historyList == null || historyList.isEmpty) {
-                  return Center(
-                    child: '이용 내역이 없습니다'.text.size(20).bold.make(),
-                  );
+                  return const EmptyCarpoolList(floatingMessage: '아직 이용내역이 없습니다.\n\n카풀을 등록하여\n택시 비용을 줄여 보세요!',);
                 }
                 return ListView.builder(
                   itemCount: historyList?.length ?? 0,
