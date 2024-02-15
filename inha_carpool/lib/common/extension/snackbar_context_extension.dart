@@ -14,12 +14,13 @@ extension SnackbarContextExtension on BuildContext {
     );
   }
 
-  void showSnackbarimpossibleExitCarpool(BuildContext context) {
+  void showSnackbarText(BuildContext context, String message, {Color? bgColor}) {
     _showSnackBarWithContext(
       context,
-      _SnackbarFactory.createSnackBar(context, '카풀 시작 10분 전이므로 불가능합니다.'),
+      _SnackbarFactory.createSnackBar(context, message, bgColor: bgColor),
     );
   }
+
 
 
   ///Scaffold안에 Snackbar를 보여줍니다.

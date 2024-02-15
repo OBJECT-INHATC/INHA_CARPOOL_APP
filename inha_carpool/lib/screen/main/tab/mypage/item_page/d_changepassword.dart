@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
 import '../../../../login/s_login.dart';
 
@@ -125,9 +126,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
                           if (isValid == 'Invalid') {
                             if (!mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('현재 비밀번호가 틀립니다.')),
-                            );
+                            context.showSnackbarText(context, '현재 비밀번호가 틀립니다.', bgColor: Colors.red );
                           } else {
                             String result = await AuthService().passwordUpdate(
                                 oldPassword: oldPassword,
@@ -135,10 +134,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             // 동일한 비밀번호로 변경할 경우 스낵바 처리
                             if (result == 'Same Password') {
                               if (!mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('현재 비밀번호와 동일합니다.')),
-                              );
+                              context.showSnackbarText(context, '현재 비밀번호와 동일합니다.',bgColor: Colors.red );
                               // 다시 로딩 제거하고 종료
                               setState(() {
                                 isLoading = false;
@@ -147,9 +143,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             }
                             if (result == 'Success') {
                               if (!mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('성공적으로 변경되었습니다.')),
-                              );
+                              context.showSnackbarText(context, '성공적으로 변경되었습니다.');
 
                               AuthService().signOut().then((value) {
                                 Navigator.pushAndRemoveUntil(
@@ -161,10 +155,8 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                               });
                             } else {
                               if (!mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text('비밀번호 변경에 실패했습니다.')),
-                              );
+                              context.showSnackbarText(context, '비밀번호 변경에 실패했습니다.',bgColor: Colors.red );
+
                             }
                           }
                           setState(() {

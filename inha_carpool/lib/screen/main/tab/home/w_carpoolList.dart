@@ -157,7 +157,7 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                         ),
                       );
                     } else {
-                      context.showSnackbarimpossibleExitCarpool(context);
+                      context.showSnackbarText(context, '카풀 시작 10분 전이므로 불가능합니다.', bgColor: Colors.red );
                     }
                   }
                 },
