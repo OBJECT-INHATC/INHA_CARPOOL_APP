@@ -101,7 +101,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       /// 이용내역 상태관리 초기화
       setRecordCount(memberModel.uid!);
 
-      setYellowCardCount(memberModel.uid!);
+      setYellowCardCount(memberModel.nickName!);
 
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MainScreen()));
@@ -120,8 +120,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   /// 경고 횟수 초기화
-  void setYellowCardCount(String uid) async {
-    final yellowCardCount = await ApiService().selectYellowCount(uid.toString());
+  void setYellowCardCount(String nickName) async {
+    final yellowCardCount = await ApiService().selectYellowCount(nickName);
     ref.read(yellowCountProvider.notifier).state = yellowCardCount;
   }
 
@@ -502,7 +502,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       /// 0207 이상훈 이용내역 상태관리 초기화
                                       setRecordCount(uid);
 
-                                      setYellowCardCount(uid);
+                                      setYellowCardCount(nickname);
 
                                       // Firestore에서 해당 사용자가 속한 모든 carId를 가져옵니다.
                                       FirebaseFirestore.instance

@@ -289,7 +289,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                               context: context,
                               builder: (context) => ComplainAlert(
                                   reportedNickName: selectedUserNickName,
-                                  myId: uid,
+                                  myId: nickName,
                                   carpoolId: widget.carId),
                             );
                           }

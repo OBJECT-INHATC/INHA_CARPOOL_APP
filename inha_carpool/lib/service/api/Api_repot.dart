@@ -153,12 +153,13 @@ class ApiService {
     return response; // API 응답을 반환
   }
 
-  Future<int> selectYellowCount(String uid) async {
-    final String apiUrl = '$baseUrl/user/count/yellow'; // API 엔드포인트 URL
+  Future<int> selectYellowCount(String nickName) async {
+
+    final String apiUrl = '$baseUrl/user/count/reported'; // API 엔드포인트 URL
 
     final Uri uri = Uri.parse(apiUrl).replace(
       // 쿼리 스트링 추가
-      queryParameters: {'uid': uid},
+      queryParameters: {'nickname': nickName},
     );
 
     final response = await http.get(
