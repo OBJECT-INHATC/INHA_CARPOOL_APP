@@ -70,13 +70,22 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                       const SizedBox(height: 10),
                       '새 비밀번호'.text.size(15).make(),
                       TextFormField(
-                        decoration: const InputDecoration(
+                        decoration:  InputDecoration(
                           hintText: '새로운 비밀번호 입력',
+                          suffix: Text(
+                            '6글자 이상',
+                            style: TextStyle(
+                                color: (newPassword.length < 6)
+                                    ? Colors.red
+                                    : Colors.green),
+                          ),
                         ),
                         obscureText: true,
                         onChanged: (text) {
                           // 텍스트 필드 값 변경 시 실행할 코드 작성
-                          newPassword = text;
+                          setState(() {
+                            newPassword = text;
+                          });
                         },
                       ),
                       const SizedBox(height: 10),

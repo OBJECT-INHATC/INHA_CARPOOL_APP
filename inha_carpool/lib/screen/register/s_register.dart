@@ -499,7 +499,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                               onChanged: (text) {
                                 password = text;
-
                                 if (password == checkPassword) {
                                   setState(() {
                                     passwordCheck = "비밀번호가 일치합니다!";
