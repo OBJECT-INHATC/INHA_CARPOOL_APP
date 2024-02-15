@@ -182,8 +182,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
             ),
           ),
 
-          /// 카풀 이용 공지사항
-          //const ChatNoice(),
+          const ChatNotice(),
+
 
           const Line(height: 2),
 
