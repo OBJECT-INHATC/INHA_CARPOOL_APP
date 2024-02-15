@@ -278,7 +278,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               screenHeight * 0.007, screenWidth * 0.1, 0),
                           // 학교 선택 토글 버튼
                           child: isProfessor
-                              ? '교수님ver'
+                              ? '교직원'
                                   .text
                                   .bold
                                   .color(Colors.grey[500])
@@ -336,6 +336,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               color: Colors.grey[200], // 연한 회색 배경색
                             ),
                             child: TextFormField(
+                              keyboardType: isProfessor
+                                  ? TextInputType.emailAddress
+                                  : TextInputType.number,
                               decoration: InputDecoration(
                                 contentPadding: const EdgeInsets.symmetric(
                                     vertical: 15, horizontal: 10),
