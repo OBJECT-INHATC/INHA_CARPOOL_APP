@@ -12,18 +12,21 @@ class ChatNoice extends StatelessWidget {
       children: [
         const Line(height: 2),
         Padding(
-          padding: EdgeInsets.all(screenHeight * 0.02),
+          padding: EdgeInsets.all(screenHeight * 0.01),
           child: Text(
             '카풀 이용 공지사항',
             style: TextStyle(
-              fontSize: screenHeight * 0.04,
+              fontSize: screenHeight * 0.035,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
         //내용
         Padding(
-          padding: EdgeInsets.all(screenHeight * 0.035),
+          padding: EdgeInsets.symmetric(
+            horizontal: screenHeight * 0.03,
+            vertical: screenHeight * 0.02,
+          ),
           child: Text(
             '1. 상대방을 모욕하거나 비방하는 내용은 삼가해 주세요.'
             '\n\n'
@@ -33,7 +36,7 @@ class ChatNoice extends StatelessWidget {
             '\n\n'
             '4. 카풀에서 발생하는 모든 문제는 사용자간의 책임입니다. 카풀 이용 시 주의해주세요.',
             style: TextStyle(
-              fontSize: screenHeight * 0.035,
+              fontSize: screenHeight * 0.033,
             ),
           ),
         ),
