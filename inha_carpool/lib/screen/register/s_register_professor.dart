@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/register/s_register.dart';
 import 'package:inha_Carpool/screen/register/verified/s_verifiedregister.dart';
-import '../../../service/sv_auth.dart';
+import '../../service/sv_auth.dart';
 
 /// 교직원 회원 가입 페이지
 class ProfessorRegisterPage extends StatefulWidget {

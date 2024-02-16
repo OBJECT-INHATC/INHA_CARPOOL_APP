@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/register/agreement/s_agreementDetail.dart';
 
-import '../t_detailContent.dart';
+import 't_detailContent.dart';
 
 class AgreeMentRow extends StatelessWidget {
   const AgreeMentRow({super.key, required this.agreeTitle});
