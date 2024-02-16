@@ -110,6 +110,9 @@ class _RegisterPageState extends State<RegisterPage> {
     const int namemaxLength = 5; //이름최대길이
     const int nicknamemaxLength = 7; //닉넴최대길이
 
+    final width = context.screenWidth;
+    final height = context.screenHeight;
+
     return isLoading
         ? const Center(
             child: CircularProgressIndicator(),
@@ -192,93 +195,84 @@ class _RegisterPageState extends State<RegisterPage> {
                             Container(
                                 padding:
                                     const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                                child: Stack(
-                                  alignment: Alignment.centerRight,
-                                  children: [
-                                    // Container 위젯 안에 있는 TextFormField 부분
-                                    Container(
-                                      // 학번 입력 필드
-                                      height: inputFieldHeight, // 높이 변수 적용
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey[300]!, // 연한 회색 테두리
-                                        ),
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.grey[100], // 연한 회색 배경색
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                            child: TextFormField(
-                                              inputFormatters: [
-                                                //영어+숫자만 가능
-                                                FilteringTextInputFormatter(
-                                                    RegExp(r"^[a-zA-Z0-9]+$"),
-                                                    allow: true)
-                                              ],
-                                              decoration: const InputDecoration(
-                                                labelText: null,
-                                                // labelText를 null로 설정하고 힌트 텍스트 숨김
-                                                hintText: '학번',
-                                                border: InputBorder.none,
-                                                prefixIcon: Icon(
-                                                  Icons.school,
-                                                  color: Colors.grey,
-                                                ),
+                                child: Container(
+                                  // 학번 입력 필드
+                                  height: inputFieldHeight, // 높이 변수 적용
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey[300]!, // 연한 회색 테두리
+                                    ),
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.grey[100], // 연한 회색 배경색
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: TextFormField(
+                                          inputFormatters: [
+                                            //영어+숫자만 가능
+                                            FilteringTextInputFormatter(
+                                                RegExp(r"^[a-zA-Z0-9]+$"),
+                                                allow: true)
+                                          ],
+                                          decoration:  InputDecoration(
+
+                                            suffixIcon: FlutterToggleTab(
+                                              width: width * 0.075,
+                                              borderRadius: 20,
+                                              selectedTextStyle:  TextStyle(
+                                                color: Colors.white,
+                                                fontSize: width * 0.033,
+                                                fontWeight: FontWeight.w700,
                                               ),
-                                              onChanged: (text) {
+                                              unSelectedTextStyle:  TextStyle(
+                                                color: Colors.white,
+                                                fontSize: width * 0.026,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              labels: const ["인하공전", "인하대"],
+                                              selectedLabelIndex: (index) {
                                                 setState(() {
-                                                  email = text + academy;
+                                                  if (index == 0) {
+                                                    academy = "@itc.ac.kr";
+                                                  } else {
+                                                    academy = "@inha.edu";
+                                                  }
+                                                  selectedIndex = index;
                                                 });
                                               },
-                                              validator: (val) {
-                                                if (val!.isNotEmpty) {
-                                                  return null;
-                                                } else {
-                                                  return "학번이 비어있습니다.";
-                                                }
-                                              },
+                                              selectedBackgroundColors:
+                                              selectedBackgroundColors,
+                                              unSelectedBackgroundColors:
+                                              unSelectedBackgroundColors,
+                                              isScroll: false,
+                                              selectedIndex: selectedIndex,
+                                            ),
+                                            labelText: null,
+                                            // labelText를 null로 설정하고 힌트 텍스트 숨김
+                                            hintText: '학번',
+                                            border: InputBorder.none,
+                                            prefixIcon: const Icon(
+                                              Icons.school,
+                                              color: Colors.grey,
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    Positioned(
-                                      right: 4,
-                                      child: FlutterToggleTab(
-                                        width: 30,
-                                        borderRadius: 10,
-                                        height: 38,
-                                        selectedTextStyle: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                        unSelectedTextStyle: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                        labels: const ["인하공전", "인하대"],
-                                        selectedLabelIndex: (index) {
-                                          setState(() {
-                                            if (index == 0) {
-                                              academy = "@itc.ac.kr";
+                                          onChanged: (text) {
+                                            setState(() {
+                                              email = text + academy;
+                                            });
+                                          },
+                                          validator: (val) {
+                                            if (val!.isNotEmpty) {
+                                              return null;
                                             } else {
-                                              academy = "@inha.edu";
+                                              return "학번이 비어있습니다.";
                                             }
-                                            selectedIndex = index;
-                                          });
-                                        },
-                                        selectedBackgroundColors:
-                                            selectedBackgroundColors,
-                                        unSelectedBackgroundColors:
-                                            unSelectedBackgroundColors,
-                                        isScroll: false,
-                                        selectedIndex: selectedIndex,
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 )),
                           ],
                         ),
