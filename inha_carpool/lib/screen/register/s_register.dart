@@ -2,8 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/screen/register/reigister_col_widget/w_professor_btn.dart';
+import 'package:inha_Carpool/screen/register/reigister_col_widget/w_register_notice.dart';
+import 'package:inha_Carpool/screen/register/s_newregister.dart';
 import 'package:inha_Carpool/screen/register/verified/s_verifiedregister.dart';
-import 'package:inha_Carpool/screen/register/w_register_notice_col.dart';
 import '../../service/sv_auth.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 
@@ -143,43 +145,24 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
                       Row(
                         children: [
+                          ElevatedButton(
+                              onPressed: () => Nav.push(NewResigister()),
+                              child: Text("ff")),
                           const Spacer(),
-                          TextButton(
+                          ChangeProfessorButton(
+                            isProfessorText: isProfessorText,
+                            isProfessor: isProfessor,
                             onPressed: () {
                               setState(() {
                                 isProfessor = !isProfessor;
-                                print("isProfessor: $isProfessor");
-
                                 if (isProfessor) {
-                                  /// 교직원인 경우
                                   isProfessorText = "학생 회원가입";
                                 } else {
-                                  /// 학생인 경우
                                   isProfessorText = "교수 회원가입";
                                 }
                               });
                             },
-                            child: Row(
-                              children: [
-                                Text(
-                                  isProfessorText,
-                                  style: TextStyle(
-                                    decoration: TextDecoration.underline,
-                                    fontSize: width * 0.035,
-                                    color: Colors.grey[600],
-                                    fontWeight: FontWeight.bold,
-                                    decorationColor: Colors.grey[600],
-                                  ),
-                                  textAlign: TextAlign.end,
-                                ),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: width * 0.037,
-                                  color: Colors.grey[600],
-                                ),
-                              ],
-                            ),
-                          ).pOnly(right: width * 0.1),
+                          ),
                         ],
                       ),
 
@@ -191,99 +174,98 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: NickNameNotice(),
                           ),
                           Container(
-                              padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                              child: Container(
-                                // 학번 입력 필드
-                                height: inputFieldHeight, // 높이 변수 적용
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey[300]!, // 연한 회색 테두리
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.grey[100], // 연한 회색 배경색
+                            padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                            child: Container(
+                              // 학번 입력 필드
+                              height: inputFieldHeight, // 높이 변수 적용
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey[300]!, // 연한 회색 테두리
                                 ),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: TextFormField(
-                                        keyboardType: isProfessor
-                                            ? TextInputType.emailAddress
-                                            : TextInputType.number,
-                                        decoration: InputDecoration(
-                                          suffixIcon: isProfessor
-                                              ? null
-                                              : FlutterToggleTab(
-                                                  width: width * 0.075,
-                                                  borderRadius: 20,
-                                                  selectedTextStyle: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: width * 0.033,
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                  unSelectedTextStyle:
-                                                      TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: width * 0.026,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                  labels: const ["인하공전", "인하대"],
-                                                  selectedLabelIndex: (index) {
-                                                    if (!isProfessor) {
-                                                      setState(() {
-                                                        if (index == 0) {
-                                                          academy =
-                                                              "@itc.ac.kr";
-                                                        } else {
-                                                          academy = "@inha.edu";
-                                                        }
-                                                      });
-                                                    }
-                                                  },
-                                                  selectedBackgroundColors:
-                                                      selectedBackgroundColors,
-                                                  unSelectedBackgroundColors:
-                                                      unSelectedBackgroundColors,
-                                                  isScroll: false,
-                                                  selectedIndex: selectedIndex,
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.grey[100], // 연한 회색 배경색
+                              ),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextFormField(
+                                      keyboardType: isProfessor
+                                          ? TextInputType.emailAddress
+                                          : TextInputType.number,
+                                      decoration: InputDecoration(
+                                        suffixIcon: isProfessor
+                                            ? null
+                                            : FlutterToggleTab(
+                                                width: width * 0.075,
+                                                borderRadius: 20,
+                                                selectedTextStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: width * 0.033,
+                                                  fontWeight: FontWeight.w700,
                                                 ),
+                                                unSelectedTextStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: width * 0.026,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                labels: const ["인하공전", "인하대"],
+                                                selectedLabelIndex: (index) {
+                                                  if (!isProfessor) {
+                                                    setState(() {
+                                                      if (index == 0) {
+                                                        academy = "@itc.ac.kr";
+                                                      } else {
+                                                        academy = "@inha.edu";
+                                                      }
+                                                    });
+                                                  }
+                                                },
+                                                selectedBackgroundColors:
+                                                    selectedBackgroundColors,
+                                                unSelectedBackgroundColors:
+                                                    unSelectedBackgroundColors,
+                                                isScroll: false,
+                                                selectedIndex: selectedIndex,
+                                              ),
 
-                                          labelText: null,
-                                          // labelText를 null로 설정하고 힌트 텍스트 숨김
-                                          hintText:
-                                              isProfessor ? '교직원 학교 이메일' : '학번',
-                                          border: InputBorder.none,
-                                          prefixIcon: const Icon(
-                                            Icons.school,
-                                            color: Colors.grey,
-                                          ),
+                                        labelText: null,
+                                        // labelText를 null로 설정하고 힌트 텍스트 숨김
+                                        hintText:
+                                            isProfessor ? '교직원 학교 이메일' : '학번',
+                                        border: InputBorder.none,
+                                        prefixIcon: const Icon(
+                                          Icons.school,
+                                          color: Colors.grey,
                                         ),
-                                        onChanged: (text) {
-                                          setState(() {
-                                            if (isProfessor) {
-                                              email = text;
-                                            } else {
-                                              email = text + academy;
-                                            }
-                                          });
-                                        },
-                                        validator: (val) {
-                                          if (val!.isNotEmpty) {
-                                            return null;
-                                          } else {
-                                            return "학번이 비어있습니다.";
-                                          }
-                                        },
                                       ),
+                                      onChanged: (text) {
+                                        setState(() {
+                                          if (isProfessor) {
+                                            email = text;
+                                          } else {
+                                            email = text + academy;
+                                          }
+                                        });
+                                      },
+                                      validator: (val) {
+                                        if (val!.isNotEmpty) {
+                                          return null;
+                                        } else {
+                                          return "학번이 비어있습니다.";
+                                        }
+                                      },
                                     ),
-                                  ],
-                                ),
-                              )),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 15), // 15 아래로 이동
 
                       /// 이름 입력 필드
-                      Container(
+                  /*    Container(
                         padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                         child: Container(
                           // 이름 입력 필드
@@ -334,8 +316,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             },
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 15), // 15 아래로 이동
+                      ),*/
 
                       /// 닉네임
                       Container(
