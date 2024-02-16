@@ -61,18 +61,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   TextEditingController nickNameController = TextEditingController();
 
-  // 토글 배경색 업데이트 메서드
-  void updateBackgroundColors() {
-    // 선택된 토글의 배경색을 변경
-    selectedBackgroundColors = selectedIndex == 0
-        ? [const Color.fromARGB(255, 70, 100, 192)]
-        : [const Color.fromARGB(255, 70, 100, 192)];
 
-    // 선택되지 않은 토글의 배경색을 변경
-    unSelectedBackgroundColors = selectedIndex == 0
-        ? [Colors.black54, Colors.black]
-        : [Colors.black54, Colors.black];
-  }
 
   bool containsProfanity(String nickname, List<String> profanityList) {
     for (String profanity in profanityList) {
@@ -118,8 +107,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    final int namemaxLength = 5; //이름최대길이
-    final int nicknamemaxLength = 7; //닉넴최대길이
+    const int namemaxLength = 5; //이름최대길이
+    const int nicknamemaxLength = 7; //닉넴최대길이
 
     return isLoading
         ? const Center(
@@ -177,12 +166,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  '학생이 아닙니다',
+                                  '학생이 아니신가요?',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[600],
                                     fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
                                     decorationColor: Colors.grey[600],
                                   ),
                                 ),
@@ -278,10 +266,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                               academy = "@itc.ac.kr";
                                             } else {
                                               academy = "@inha.edu";
-                                              // academy = "@inhatc.ac.kr"; //교수님들 메일
                                             }
                                             selectedIndex = index;
-                                            updateBackgroundColors();
                                           });
                                         },
                                         selectedBackgroundColors:
@@ -297,6 +283,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           ],
                         ),
                         const SizedBox(height: 15), // 15 아래로 이동
+
+                        /// 이름 입력 필드
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: Stack(
