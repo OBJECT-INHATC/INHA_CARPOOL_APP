@@ -10,7 +10,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
 import 'package:inha_Carpool/provider/yellow/yellow_provider.dart';
-import 'package:inha_Carpool/screen/register/s_agreement.dart';
+import 'package:inha_Carpool/screen/register/agreement/s_agreement.dart';
 import 'package:inha_Carpool/service/api/Api_repot.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_auth.dart';
