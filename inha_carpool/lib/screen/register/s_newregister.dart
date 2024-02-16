@@ -18,19 +18,16 @@ class _NewResigisterState extends State<NewResigister> {
   final TextEditingController _studentIdController = TextEditingController();
   final TextEditingController _nickNameController = TextEditingController();
 
-
   String isProfessorText = "교직원_회원가입";
   bool isProfessor = false;
 
   String email = "";
-  String academy= "itc.ac.kr";
+  String academy = "itc.ac.kr";
 
   //textController
 
   @override
   Widget build(BuildContext context) {
-
-
     const int nameMaxLength = 5; //이름최대길이
     const int nicknameMaxLength = 7; //닉넴최대길이
     const int passwordMaxLength = 16;
@@ -76,58 +73,78 @@ class _NewResigisterState extends State<NewResigister> {
               ],
             ),
 
-        Column(
-          children: [
+            Column(
+              children: [
+                /// 회원가입 안내
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: NickNameNotice(),
+                ),
 
-            /// 회원가입 안내
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 40),
-              child: NickNameNotice(),
-            ),
+                /// 학번 및 이메일 입력 필드
+                StudentIdInputField(
+                  isProfessor: isProfessor,
+                  // onChaned 는 빼도 될듯 추후 확인
+                  onChanged: (text) {
+                    setState(() {
+                      email = text; // 예시로 "@itc.ac.kr"을 사용하도록 설정되어 있음
+                    });
+                    if (isProfessor) {
+                      print("$isProfessor 일 때 studentInput email: $email");
+                    } else {
+                      print(
+                          "$isProfessor 일 때 studentInput email: $email$academy");
+                    }
+                  },
+                  academyChanged: (value) {
+                    setState(() {
+                      academy = value;
+                    });
+                    print(
+                        "$isProfessor 일 때 academyChanged email: $email$academy");
+                  },
+                  width: width,
+                  controller: _studentIdController,
+                ),
 
-            /// 학번 및 이메일 입력 필드
-            StudentIdInputField(
-              isProfessor: isProfessor,
-              onChanged: (text) {
-                setState(() {
-                  email = text; // 예시로 "@itc.ac.kr"을 사용하도록 설정되어 있음
-                });
-                if(isProfessor){
-                  print("$isProfessor 일 때 studentInput email: $email");
-                }else{
-                  print("$isProfessor 일 때 studentInput email: $email$academy");
-                }
-              },
-              academyChanged: (value){
-                setState(() {
-                  academy =  value;
-                });
-                print("$isProfessor 일 때 academyChanged email: $email$academy");
-              },
-              width: width,
-              controller: _studentIdController,
-            ),
+                /// 이름 입력 필드
+                CustomInputField(
+                  controller: _nameController,
+                  maxLength: nameMaxLength, // 상수로 정의된 최대 길이 사용
+                  width: width,
+                  fieldType: '이름',
+                ),
 
-
-            /// 이름 입력 필드
-            CustomInputField(
-              controller: _nameController,
-              maxLength: nameMaxLength, // 상수로 정의된 최대 길이 사용
-              width: width,
-              fieldType: '이름',
-            ),
-
-
-
-
-
-
-          ],
-        )
-
-
+                CustomInputField(
+                  controller: _nickNameController,
+                  maxLength: nameMaxLength, // 상수로 정의된 최대 길이 사용
+                  width: width,
+                  fieldType: '닉네임',
+                ),
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+                ElevatedButton(
+                  onPressed: () {
+                    print("학번: ${_studentIdController.text}");
+                    print("이름: ${_nameController.text+academy}");
+                    print("닉네임: ${_nickNameController.text}");
+                  },
+                  child: const Text("값 체크"),
+                ),
+              ],
+            )
           ],
         ),
       ),

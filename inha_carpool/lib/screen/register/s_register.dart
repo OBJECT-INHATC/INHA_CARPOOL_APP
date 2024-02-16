@@ -317,6 +317,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                       ),*/
+                      const SizedBox(height: 15), // 15 아래로 이동
 
                       /// 닉네임
                       Container(
