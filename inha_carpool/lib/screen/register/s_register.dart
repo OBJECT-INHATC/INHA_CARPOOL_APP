@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/screen/register/s_register_professor.dart';
 import 'package:inha_Carpool/screen/register/verified/s_verifiedregister.dart';
 import 'package:inha_Carpool/screen/register/w_register_notice_col.dart';
 import '../../service/sv_auth.dart';
@@ -144,13 +143,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
                       Row(
                         children: [
-                          ElevatedButton(
-                              onPressed: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ProfessorRegisterPage())),
-                              child: const Text("교직원_회원가입")),
                           const Spacer(),
                           TextButton(
                             onPressed: () {
