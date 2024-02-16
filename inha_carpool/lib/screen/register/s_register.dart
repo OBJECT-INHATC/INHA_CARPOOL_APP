@@ -107,8 +107,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    const int namemaxLength = 5; //이름최대길이
-    const int nicknamemaxLength = 7; //닉넴최대길이
+    const int nameMaxLength = 5; //이름최대길이
+    const int nicknameMaxLength = 7; //닉넴최대길이
+    const int passwordMaxLength = 16;
+    //닉넴최대길이
 
     final width = context.screenWidth;
     final height = context.screenHeight;
@@ -297,22 +299,21 @@ class _RegisterPageState extends State<RegisterPage> {
                                     RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣㆍᆢ]"),
                                     allow: true)
                               ],
-
                               decoration:  InputDecoration(
-                              suffix: Text("${username.length}/$namemaxLength",style: const TextStyle(
+                              suffix: Text("${username.length}/$nameMaxLength",style:  TextStyle(
                                 color: Colors.grey,
-                                fontSize: 12,
-                              ),).pOnly(right: 2),
+                                fontSize: width * 0.033,
+                              ),).pOnly(right: width * 0.03),
                                 labelText: null,
-                                hintText: '이름',
                                 counterText: "",
+                                hintText: '이름',
                                 border: InputBorder.none,
                                 prefixIcon: const Icon(
                                   Icons.person,
                                   color: Colors.grey,
                                 ),
                               ),
-                              maxLength: namemaxLength,
+                              maxLength: nameMaxLength,
                               validator: (val) {
                                 if (val!.isNotEmpty) {
                                   return null;
@@ -367,7 +368,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  maxLength: nicknamemaxLength,
+                                  maxLength: nicknameMaxLength,
                                   validator: (val) {
                                     if (val!.isNotEmpty) {
                                       return null;
@@ -452,11 +453,21 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             child: TextFormField(
                               obscureText: true,
-                              decoration: const InputDecoration(
+                              maxLength: passwordMaxLength,
+                              decoration:  InputDecoration(
+                                counterText: "",
+                                suffix: Text(
+                                  "${password.length}/$passwordMaxLength",
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ),
                                 labelText: null,
                                 hintText: '비밀번호',
+
                                 border: InputBorder.none,
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.lock,
                                   color: Colors.grey,
                                 ),
