@@ -287,67 +287,57 @@ class _RegisterPageState extends State<RegisterPage> {
                         /// 이름 입력 필드
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                          child: Stack(
-                            alignment: Alignment.centerRight,
-                            children: [
-                              Container(
-                                // 이름 입력 필드
-                                height: inputFieldHeight, // 높이 변수 적용
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey[300]!, // 연한 회색 테두리
-                                  ),
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.grey[100], // 연한 회색 배경색
-                                ),
-                                child: TextFormField(
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter(
-                                        RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣㆍᆢ]"),
-                                        allow: true)
-                                  ],
-                                  decoration: const InputDecoration(
-                                    labelText: null,
-                                    hintText: '이름',
-                                    counterText: "",
-                                    border: InputBorder.none,
-                                    prefixIcon: Icon(
-                                      Icons.person,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  maxLength: namemaxLength,
-                                  validator: (val) {
-                                    if (val!.isNotEmpty) {
-                                      return null;
-                                    } else {
-                                      return "이름이 비어있습니다.";
-                                    }
-                                  },
-                                  onChanged: (text) {
-                                    //이름 카운트
-                                    setState(() {
-                                      username = text;
-                                    });
-                                  },
-                                ),
+                          child: Container(
+                            // 이름 입력 필드
+                            height: inputFieldHeight, // 높이 변수 적용
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey[300]!, // 연한 회색 테두리
                               ),
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey[100], // 연한 회색 배경색
+                            ),
+                            child: TextFormField(
+                              inputFormatters: [
+                                FilteringTextInputFormatter(
+                                    RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣㆍᆢ]"),
+                                    allow: true)
+                              ],
 
-                              //이름수 카운트
-                              Positioned(
-                                right: 5,
-                                child: Text(
-                                  "${username.length}/$namemaxLength",
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                  ),
+                              decoration:  InputDecoration(
+                              suffix: Text("${username.length}/$namemaxLength",style: const TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),).pOnly(right: 2),
+                                labelText: null,
+                                hintText: '이름',
+                                counterText: "",
+                                border: InputBorder.none,
+                                prefixIcon: const Icon(
+                                  Icons.person,
+                                  color: Colors.grey,
                                 ),
                               ),
-                            ],
+                              maxLength: namemaxLength,
+                              validator: (val) {
+                                if (val!.isNotEmpty) {
+                                  return null;
+                                } else {
+                                  return "이름이 비어있습니다.";
+                                }
+                              },
+                              onChanged: (text) {
+                                //이름 카운트
+                                setState(() {
+                                  username = text;
+                                });
+                              },
+                            ),
                           ),
                         ),
                         const SizedBox(height: 15), // 15 아래로 이동
+
+                        /// 닉네임
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: Stack(
@@ -371,7 +361,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                         RegExp(r"[a-zA-Z0-9ㄱ-ㅎ가-힣ㄲ-ㅣㆍᆢ]"),
                                         allow: true)
                                   ],
-                                  decoration: const InputDecoration(
+                                  decoration:  InputDecoration(
+
+
                                     labelText: null,
                                     hintText: '닉네임',
                                     counterText: "",
@@ -400,17 +392,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
 
                               //닉넴 수 카운트
-                              Positioned(
-                                right: 80,
-                                child: Text(
-                                  "${nickname.length}/$nicknamemaxLength",
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-
                               Positioned(
                                 right: 5, // 버튼을 오른쪽에 배치
                                 child: ElevatedButton(
@@ -461,6 +442,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
                         const SizedBox(height: 15),
+
+                        /// 비밀번호
                         Container(
                           padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
                           child: Container(
@@ -486,7 +469,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                               onChanged: (text) {
                                 password = text;
-                                if (password == checkPassword) {
+                                if (password == checkPassword && password != "") {
                                   setState(() {
                                     passwordCheck = "비밀번호가 일치합니다!";
                                   });
