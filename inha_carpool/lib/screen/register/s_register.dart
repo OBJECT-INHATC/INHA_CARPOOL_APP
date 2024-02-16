@@ -546,14 +546,17 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
 
                       /// 이름 입력 필드
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-                        child: Center(
-                          child: Text(
-                            checkText,
-                            style: (checkText == "비밀번호가 일치합니다!")
-                                ? const TextStyle(color: Colors.green)
-                                : const TextStyle(color: Colors.red),
+                      Visibility(
+                        visible: password.isNotEmpty,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                          child: Center(
+                            child: Text(
+                              checkText,
+                              style: (checkText == "비밀번호가 일치합니다!")
+                                  ? const TextStyle(color: Colors.green)
+                                  : const TextStyle(color: Colors.red),
+                            ),
                           ),
                         ),
                       ),
