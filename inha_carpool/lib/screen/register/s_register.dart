@@ -47,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   var genders;
 
-  String passwordCheck = "";
+  String checkText = "";
 
   var selectedIndex = 0;
 
@@ -462,10 +462,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                     color: Colors.grey,
                                     fontSize: 12,
                                   ),
-                                ),
+                                ).pOnly(right: width * 0.03),
                                 labelText: null,
                                 hintText: '비밀번호',
-
                                 border: InputBorder.none,
                                 prefixIcon: const Icon(
                                   Icons.lock,
@@ -473,16 +472,24 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               onChanged: (text) {
+                                print("password: $text");
+                                print("password 길이 : ${text.length}");
                                 password = text;
-                                if (password == checkPassword && password != "") {
+
+                                if(text.length < 6) {
                                   setState(() {
-                                    passwordCheck = "비밀번호가 일치합니다!";
+                                    checkText = "비밀번호는 6자리 이상이어야 합니다.";
                                   });
-                                } else {
+                                }else if (password == checkPassword){
                                   setState(() {
-                                    passwordCheck = "비밀번호가 일치하지 않습니다.";
+                                    checkText = "비밀번호가 일치합니다!";
+                                  });
+                                }else{
+                                  setState(() {
+                                    checkText = "비밀번호가 일치하지 않습니다.";
                                   });
                                 }
+
                               },
                             ),
                           ),
@@ -501,6 +508,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               color: Colors.grey[100], // 연한 회색 배경색
                             ),
                             child: TextFormField(
+                              maxLength: passwordMaxLength,
                               obscureText: true,
                               decoration: InputDecoration(
                                 labelText: null,
@@ -510,22 +518,24 @@ class _RegisterPageState extends State<RegisterPage> {
                                   Icons.lock,
                                   color: Colors.grey,
                                 ),
+                                counterText: "",
                                 suffix: Text(
-                                  passwordCheck,
-                                  style: (passwordCheck == "비밀번호가 일치하지 않습니다.")
-                                      ? const TextStyle(color: Colors.red)
-                                      : const TextStyle(color: Colors.green),
-                                ),
+                                  "${checkPassword.length}/$passwordMaxLength",
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                  ),
+                                ).pOnly(right: width * 0.03),
                               ),
                               onChanged: (text) {
                                 checkPassword = text;
-                                if (password == checkPassword) {
+                              if (password == checkPassword){
                                   setState(() {
-                                    passwordCheck = "비밀번호가 일치합니다!";
+                                    checkText = "비밀번호가 일치합니다!";
                                   });
-                                } else {
+                                }else{
                                   setState(() {
-                                    passwordCheck = "비밀번호가 일치하지 않습니다.";
+                                    checkText = "비밀번호가 일치하지 않습니다.";
                                   });
                                 }
                               },
@@ -535,6 +545,19 @@ class _RegisterPageState extends State<RegisterPage> {
                         const SizedBox(
                           height: 15,
                         ),
+                        /// 이름 입력 필드
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+                          child: Center(
+                            child: Text(checkText,
+                              style: (checkText == "비밀번호가 일치합니다!")
+                                  ? const TextStyle(color: Colors.green)
+                                  : const TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 15), // 15 아래로 이동
                         Container(
                           padding: const EdgeInsets.symmetric(
                               vertical: 5, horizontal: 20),
@@ -590,35 +613,41 @@ class _RegisterPageState extends State<RegisterPage> {
                                 // 중복된 닉네임이 있는 경우, 회원가입 막기
                                 showSnackbar(
                                     context, Colors.red, '닉네임 중복체크 해주세요.');
-                              } else if (passwordCheck != "비밀번호가 일치합니다!" ||
+                              } else if (checkText != "비밀번호가 일치합니다!" ||
                                   username == "" ||
                                   email == "" ||
                                   password == "" ||
-                                  gender == "") {
+                                  gender == "" || gender == null) {
                                 showSnackbar(context, Colors.red,
                                     "정보가 올바르지 않습니다. 다시 확인해주세요.");
                               } else {
-                                AuthService()
-                                    .registerUserWithEmailandPassword(
-                                        username,
-                                        nickname,
-                                        email,
-                                        password,
-                                        "dummy",
-                                        gender!)
-                                    .then((value) async {
-                                  if (value == true) {
-                                    await FirebaseAuth.instance.currentUser!
-                                        .sendEmailVerification();
-                                    if (!mounted) return;
-                                    Nav.push(const VerifiedRegisterPage());
-                                  } else {
-                                    showSnackbar(context, Colors.red, value);
-                                    setState(() {
-                                      isLoading = false;
-                                    });
-                                  }
-                                });
+                                if(password.length <6){
+                                  showSnackbar(context, Colors.red,
+                                      "비밀번호는 6자리 이상이어야 합니다.");
+                                }else{
+                                  AuthService()
+                                      .registerUserWithEmailandPassword(
+                                      username,
+                                      nickname,
+                                      email,
+                                      password,
+                                      "dummy",
+                                      gender!)
+                                      .then((value) async {
+                                    if (value == true) {
+                                      await FirebaseAuth.instance.currentUser!
+                                          .sendEmailVerification();
+                                      if (!mounted) return;
+                                      Nav.push(const VerifiedRegisterPage());
+                                    } else {
+                                      showSnackbar(context, Colors.red, value);
+                                      setState(() {
+                                        isLoading = false;
+                                      });
+                                    }
+                                  });
+                                }
+
                               }
                             },
                             child: const Text(
