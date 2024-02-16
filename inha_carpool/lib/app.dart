@@ -28,7 +28,6 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
   @override
   GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
 
-  //상태관리 옵저버 실행 + 디바이스 토큰 저장
   @override
   void initState() {
     super.initState();
@@ -106,7 +105,6 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
     );
   }
 
-  /// todo : topic 제거 메소드 불러오기 중복방지
   void deleteTopic(RemoteMessage message) async {
     if (message.data['id'] == 'carpoolDone') {
       // 카풀 완료 알람일 시 FCM에서 해당 carId의 토픽 구독 취소, 로컬 DB에서 해당 카풀 정보 삭제

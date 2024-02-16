@@ -3,6 +3,9 @@ import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/screen/register/s_agreementDetail.dart';
 import 'package:inha_Carpool/screen/register/s_register.dart';
 import 'package:inha_Carpool/screen/register/t_detailContent.dart';
+import 'package:inha_Carpool/screen/register/w_register/w_agreement_row.dart';
+
+import '../../common/constants.dart';
 
 /// 약관 동의 페이지
 class Agreement extends StatefulWidget {
@@ -34,14 +37,6 @@ class _AgreementState extends State<Agreement> {
 
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Colors.grey),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          iconSize: 30,
-        ),
         title: const Text(
           '회원가입',
           style: TextStyle(
@@ -60,12 +55,10 @@ class _AgreementState extends State<Agreement> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
+              const Image(
+                image: AssetImage('$basePath/splash/logo.png'),
                 width: 100,
                 height: 70,
-                child: Image(
-                  image: AssetImage('assets/image/splash/logo.png'),
-                ),
               ),
               const SizedBox(height: 10),
               const Padding(
@@ -102,48 +95,45 @@ class _AgreementState extends State<Agreement> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          '전체 동의',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        '전체 동의',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      // Transform.scale로 체크박스 크기 조절
+                      Transform.scale(
+                        scale: 1.2,
+                        child: Checkbox(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          value: isAllAgreed,
+                          onChanged: (value) {
+                            setState(() {
+                              isAllAgreed = value!;
+                              for (var item in _agreementList) {
+                                item['value'] = isAllAgreed;
+                              }
+                            });
+                          },
+                          checkColor: const Color.fromARGB(255, 70, 100, 192),
+                          // 클릭 시 체크표시 색상
+                          activeColor: Colors.white,
+                          // 클릭 시 체크박스 색상
+                          // 테두리
+                          side: const BorderSide(
+                            width: 1,
+                            color: Colors.grey,
                           ),
                         ),
-                        // Transform.scale로 체크박스 크기 조절
-                        Transform.scale(
-                          scale: 1.2,
-                          child: Checkbox(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                            value: isAllAgreed,
-                            onChanged: (value) {
-                              setState(() {
-                                isAllAgreed = value!;
-                                for (var item in _agreementList) {
-                                  item['value'] = isAllAgreed;
-                                }
-                              });
-                            },
-                            checkColor: const Color.fromARGB(255, 70, 100, 192),
-                            // 클릭 시 체크표시 색상
-                            activeColor: Colors.white,
-                            // 클릭 시 체크박스 색상
-                            // 테두리
-                            side: const BorderSide(
-                              width: 1,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -155,40 +145,13 @@ class _AgreementState extends State<Agreement> {
                       padding: const EdgeInsets.only(left: 10, right: 5),
                       child: Column(
                         children: [
+                          // 약관 1,2,3 위젯화 하기
                           // 약관1
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      _agreementList[0]['label'],
-                                      style: TextStyle(
-                                        fontSize: width > 380 ? 16 : 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    const Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => AgreementDetailPage(
-                                        title: _agreementList[0]['label'],
-                                        detail: DetailContent.serviceAgreement,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                              AgreeMentRow(
+                                  agreeTitle: _agreementList[0]['label']),
                               Transform.scale(
                                 scale: 1.2,
                                 child: Checkbox(
@@ -196,13 +159,10 @@ class _AgreementState extends State<Agreement> {
                                     borderRadius: BorderRadius.circular(15),
                                   ),
                                   value: isChecked1,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _agreementList[0]['value'] =
-                                          value; // 체크박스의 상태를 변경합니다.
-                                      isAllAgreed = !_agreementList.any(
-                                          (agreement) => !agreement['value']);
-                                    });
+                                  onChanged: (
+                                    value,
+                                  ) {
+                                    setCheckBoxValue(value, 0);
                                   },
                                   checkColor: Colors.white,
                                   // 클릭 시 체크표시 색상
@@ -216,36 +176,8 @@ class _AgreementState extends State<Agreement> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      _agreementList[1]['label'],
-                                      style: TextStyle(
-                                        fontSize: width > 380 ? 16 : 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    const Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => AgreementDetailPage(
-                                        title: _agreementList[1]['label'],
-                                        detail: DetailContent.privacyAgreement,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                              AgreeMentRow(
+                                  agreeTitle: _agreementList[1]['label']),
                               Transform.scale(
                                 scale: 1.2,
                                 child: Checkbox(
@@ -254,12 +186,7 @@ class _AgreementState extends State<Agreement> {
                                   ),
                                   value: isChecked2,
                                   onChanged: (value) {
-                                    setState(() {
-                                      _agreementList[1]['value'] =
-                                          value; // 체크박스의 상태를 변경합니다.
-                                      isAllAgreed = !_agreementList.any(
-                                          (agreement) => !agreement['value']);
-                                    });
+                                    setCheckBoxValue(value, 1);
                                   },
                                   checkColor: Colors.white,
                                   activeColor:
@@ -272,36 +199,8 @@ class _AgreementState extends State<Agreement> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              GestureDetector(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      _agreementList[2]['label'],
-                                      style: TextStyle(
-                                        fontSize: width > 380 ? 16 : 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    const SizedBox(width: 10),
-                                    const Icon(
-                                      Icons.arrow_forward_ios,
-                                      size: 15,
-                                      color: Colors.grey,
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => AgreementDetailPage(
-                                        title: _agreementList[2]['label'],
-                                        detail: DetailContent.locationAgreement,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                              AgreeMentRow(
+                                  agreeTitle: _agreementList[2]['label']),
                               Transform.scale(
                                 scale: 1.2,
                                 child: Checkbox(
@@ -310,12 +209,7 @@ class _AgreementState extends State<Agreement> {
                                   ),
                                   value: isChecked3,
                                   onChanged: (value) {
-                                    setState(() {
-                                      _agreementList[2]['value'] =
-                                          value; // 체크박스의 상태를 변경합니다.
-                                      isAllAgreed = !_agreementList.any(
-                                          (agreement) => !agreement['value']);
-                                    });
+                                    setCheckBoxValue(value, 2);
                                   },
                                   checkColor: Colors.white,
                                   activeColor:
@@ -338,7 +232,6 @@ class _AgreementState extends State<Agreement> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        print("object");
                         if (isAllAgreed) {
                           Navigator.of(context).push(
                             PageRouteBuilder(
@@ -391,6 +284,46 @@ class _AgreementState extends State<Agreement> {
           ),
         ),
       ),
+    );
+  }
+
+  void setCheckBoxValue(bool? value, int index) {
+    setState(() {
+      _agreementList[index]['value'] = value; // 체크박스의 상태를 변경합니다.
+      isAllAgreed = !_agreementList.any((agreement) => !agreement['value']);
+    });
+  }
+}
+
+class agreementRow extends StatelessWidget {
+  const agreementRow({
+    super.key,
+    required List<Map<String, dynamic>> agreementList,
+    required this.width,
+  }) : _agreementList = agreementList;
+
+  final List<Map<String, dynamic>> _agreementList;
+  final double width;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          _agreementList[2]['label'],
+          style: TextStyle(
+            fontSize: width > 380 ? 16 : 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(width: 10),
+        const Icon(
+          Icons.arrow_forward_ios,
+          size: 15,
+          color: Colors.grey,
+        ),
+      ],
     );
   }
 }

@@ -51,8 +51,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   // FCM 푸시 알림 클릭 시 처리 메서드
   void _handleMessage(RemoteMessage message) async {
-
-
     ref.read(isCheckAlarm.notifier).state = true;
 
     // 닉네임 가져오기
@@ -74,8 +72,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       context.showErrorSnackbar("알림을 불러오는데 실패했습니다.");
     }
   }
-
-
 
   // 로그인 여부 확인 메서드
   void checkLogin() async {
@@ -171,7 +167,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final formKey = GlobalKey<FormState>();
   final storage = const FlutterSecureStorage();
 
-  // 장치의 FCM 토큰을 가져와 로컬에 저장하는 함수
+/*  // 장치의 FCM 토큰을 가져와 로컬에 저장하는 함수
   void getMyDeviceToken() async {
     String? token = await storage.read(key: 'token');
 
@@ -181,13 +177,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       storage.write(key: 'token', value: token); // 생성된 토큰을 로컬에 저장합니다.
     }
 
-  }
+  }*/
 
   @override
   void initState() {
     // 로그인 여부 확인
     checkLogin();
-    getMyDeviceToken();
+    // 현재는 개인 fcmToken을 사용하지 않음으로 주석처리
+   // getMyDeviceToken();
     super.initState();
   }
 
@@ -319,7 +316,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   selectedIndex: selectedIndex,
                                 ),
                         ),
-                        // 학번 입력 필드
+                        /// 학번 입력 필드
                         Container(
                           padding: isProfessor
                               ? EdgeInsets.fromLTRB(screenWidth * 0.1,
@@ -372,7 +369,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                           ),
                         ),
-                        // 비밀번호 입력 필드
+
+                        /// 비밀번호 입력 필드
                         Container(
                           padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
                               screenHeight * 0.01, screenWidth * 0.1, 0),
@@ -410,6 +408,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                           ),
                         ),
+
+
+                        /// 로그인 버튼
                         Container(
                           padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
                               screenHeight * 0.02, screenWidth * 0.1, 0),
@@ -596,6 +597,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                           ),
                         ),
+
+                        /// 회원가입 버튼
                         Container(
                           padding: EdgeInsets.fromLTRB(screenWidth * 0.1,
                               screenHeight * 0.02, screenWidth * 0.1, 0),
@@ -635,6 +638,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   },
                                 ),
                               );
+
+
                             },
                             child: const Center(
                               child: Text(
@@ -648,7 +653,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                           ),
                         ),
-                        // 비밀번호찾기
+
+                        /// 비밀번호 찾기 | 학생/교직원 구분
                         Expanded(
                           child: Align(
                             alignment: Alignment.bottomCenter,
@@ -705,31 +711,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   TextButton(
                                     onPressed: () {
                                       toggleProfessorLogin();
-                                      // Navigator.of(context).pushReplacement(
-                                      //   PageRouteBuilder(
-                                      //     pageBuilder: (context, animation,
-                                      //             secondaryAnimation) =>
-                                      //         const ProfessorLoginPage(),
-                                      //     transitionsBuilder: (context,
-                                      //         animation,
-                                      //         secondaryAnimation,
-                                      //         child) {
-                                      //       const begin = Offset(1.0, 0.0);
-                                      //       const end = Offset.zero;
-                                      //       const curve = Curves.easeInOut;
-                                      //       var tween = Tween(
-                                      //               begin: begin, end: end)
-                                      //           .chain(
-                                      //               CurveTween(curve: curve));
-                                      //       var offsetAnimation =
-                                      //           animation.drive(tween);
-                                      //       return SlideTransition(
-                                      //         position: offsetAnimation,
-                                      //         child: child,
-                                      //       );
-                                      //     },
-                                      //   ),
-                                      // );
                                     },
                                     child: isProfessor
                                         ? const Text(

@@ -177,14 +177,13 @@ class _RegisterPageState extends State<RegisterPage> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  '교수님 회원가입',
+                                  '학생이 아닙니다',
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.grey[600],
                                     fontWeight: FontWeight.bold,
                                     decoration: TextDecoration.underline,
                                     decorationColor: Colors.grey[600],
-
                                   ),
                                 ),
                                 const Icon(Icons.arrow_forward_ios,

@@ -13,7 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'common/data/preference/app_preferences.dart';
-
+/// todo : 알림을 클릭했을 때 알림 new는 잘 들어오나 알림을 받은 후 그냥 앱을 실행하면 new의 상태과 불명확함 해결 필요 0216 이상훈
 
 /// 백그라운드 메시지 수신 호출 콜백 함수
 @pragma('vm:entry-point')
@@ -35,10 +35,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       time: nowTime,
     ));
 
-
-/*    const storage = FlutterSecureStorage();
-    storage.write(key: 'isCheckAlarm', value: 'true');
-    print(" ======== 백그라운드 ${storage.read(key: 'isCheckAlarm')} ========}");*/
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isCheckAlarm', true);
@@ -82,6 +78,7 @@ void initializeNotification() async {
 
 
 
+
 void main() async {
   //상태 변화와 렌더링을 관리하는 바인딩 초기화 => 추 후 백그라운드 및 포어그라운드 상태관리에 따라 기능 리팩토링
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -107,9 +104,8 @@ void main() async {
 
   runApp(
     const ProviderScope(child: App()),
-    /// 상태관리로 관리할 리스트 todo  :
-    /// 1. 사용자 정보 -> 스토리지에서 그만 처 들고오자! -> 수시로 바꾸는중  0213
-    /// 2. 자신이 카풀에 참가하고있는지 ! -> 로그인시 한 번만 쳐 묻자
+    /// 1. 사용자 정보 -> 스토리지에서 그만 처 들고오자! -> 수시로 바꾸는중  => 수시로 보일 때 리팩토링 중
+    /// 2. 자신이 카풀에 참가하고있는지 ! -> 로그인시 한 번만 쳐 묻자 => 체크완
     /// 3. 알림 받았는지 유무 -> 상태관리 안하니까 재빌드 해야만 알림 표시 뜸 -> 그냥 클릭했을 땐 어떻게 초기화 할 것인가 ? 0213
   );
 }
