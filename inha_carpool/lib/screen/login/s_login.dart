@@ -111,7 +111,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   /// 참여중인 카풀 수 조회
   void setRecordCount(String uid) async {
     final recordCount = await ApiService().selectHistoryCount(uid.toString());
-    print("참여중인 카풀 수 : $recordCount");
+    print("참가했더 카풀 이용내역 수 : $recordCount");
     ref.read(recordCountProvider.notifier).state = recordCount;
   }
 
