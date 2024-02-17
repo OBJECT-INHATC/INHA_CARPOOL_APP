@@ -45,6 +45,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   late final String nickName;
   late final String gender;
 
+
+
   @override
   void initState() {
     uid = ref.read(authProvider).uid ?? "";
@@ -55,6 +57,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
 
   @override
   Widget build(BuildContext context) {
+
     final screenWidth = context.width(1);
     final screenHeight = context.height(1);
 

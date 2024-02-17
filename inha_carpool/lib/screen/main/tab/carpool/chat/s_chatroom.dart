@@ -13,7 +13,7 @@ import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_splash_Img_opacity.d
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../../provider/auth/auth_provider.dart';
-import 'drawer/f_darw.dart';
+import 'drawer/f_drawer.dart';
 
 /// todo : 상태관리로 해당 채팅방만 알림 끄기
 class ChatroomPage extends ConsumerStatefulWidget {
@@ -147,7 +147,10 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
 
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus();
+        final FocusScopeNode currentscope = FocusScope.of(context);
+        if (!currentscope.hasPrimaryFocus && currentscope.hasFocus) {
+          FocusManager.instance.primaryFocus?.unfocus();
+        }
       },
       child: Scaffold(
         appBar: AppBar(
@@ -219,7 +222,7 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
                                   onTap: () {
                                     //0.4초 기다렸다가 스크롤을 최하단으로
                                     Future.delayed(
-                                        const Duration(milliseconds: 400), () {
+                                        const Duration(milliseconds: 300), () {
                                       _scrollController.animateTo(
                                         _scrollController
                                             .position.maxScrollExtent,
