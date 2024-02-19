@@ -29,9 +29,9 @@ class CarpoolRepository {
 
     // 스냅샷을 돌면서 조건에 맞는 카풀을 리스트에 추가
     for (var doc in snapshot.docs) {
+      /// todo : carModel 가져올 떄 data에 isAlarm 추가해주기
       CarpoolModel carModel = CarpoolModel.fromJson(doc.data());
 
-      carModel.isChatAlarmOn = _ref.read(isCheckAlarm);
 
       // 가져온 데이터의 출발시간을 DateTime으로 변환
       DateTime startTime =

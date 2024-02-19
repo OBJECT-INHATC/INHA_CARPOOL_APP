@@ -42,7 +42,7 @@ class CarpoolService {
       GeoPoint geoStart = GeoPoint(startPoint.latitude, startPoint.longitude);
       GeoPoint geoEnd = GeoPoint(endPoint.latitude, endPoint.longitude);
 
-      List<String> members = ['${memberID}_${memberName}_$memberGender'];
+      List<String> members = ['${memberID}_${memberName}_${memberGender}_1'];
 
       DocumentReference carpoolDocRef = await users.add({
         'admin': '${memberID}_${memberName}_$memberGender',

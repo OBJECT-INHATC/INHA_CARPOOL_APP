@@ -9,7 +9,7 @@ class CarpoolModel {
   final String? endPointName;
   final String? startPointName;
   final String? startDetailPoint;
-  late bool? isChatAlarmOn;
+  final bool? isChatAlarmOn;
 
   // 출발 시간
   final int? startTime;

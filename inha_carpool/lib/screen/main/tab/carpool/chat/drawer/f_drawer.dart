@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 
+import '../../../../../../common/models/m_carpool.dart';
 import '../../../../../../provider/auth/auth_provider.dart';
 import '../../../../../../provider/current_carpool/carpool_provider.dart';
 import '../../../../../../service/api/Api_topic.dart';
@@ -58,12 +59,10 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     final screenWidth = context.width(1);
     final screenHeight = context.height(1);
 
-    bool isChatAlarm = ref
-        .watch(carpoolNotifierProvider)
-        .data
-        .where((element) => element.carId == widget.carId)
-        .first
-        .isChatAlarmOn!;
+    final carpoolData = ref.watch(carpoolNotifierProvider).data;
+    final matchingCarpool = carpoolData.firstWhere((element) => element.carId == widget.carId, orElse: () => CarpoolModel());
+    bool isChatAlarm = matchingCarpool?.isChatAlarmOn ?? false;
+
 
     return Drawer(
       surfaceTintColor: Colors.transparent,
@@ -166,6 +165,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                         size: screenWidth * 0.07,
                       ),
                     ),
+                    Width(screenWidth * 0.05),
                     //채팅 알림 설정
                   ],
                 ),
