@@ -395,6 +395,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                         } else {
                           context.showSnackbar("카풀 생성 성공! 채팅방으로 이동합니다");
                           carpoolProvider.addCarpool(CarpoolModel(
+                            isChatAlarmOn: true,
                             carId: carId,
                             endDetailPoint: endDetailPoint,
                             endPointName: endPointName,

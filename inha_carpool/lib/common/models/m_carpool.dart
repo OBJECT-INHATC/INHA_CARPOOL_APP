@@ -55,8 +55,9 @@ class CarpoolModel {
       startPointName: json['startPointName'] as String,
       startDetailPoint: json['startDetailPoint'] as String,
       startTime: json['startTime'] as int,
-      recentMessageSender: json['recentMessageSender'] as String ?? '',
-      recentMessage: json['recentMessage'] as String ?? '',
+      recentMessageSender: json['recentMessageSender'] as String,
+      recentMessage: json['recentMessage'] as String,
+      isChatAlarmOn: json['isChatAlarmOn'] as bool,
     );
   }
 
@@ -77,9 +78,5 @@ class CarpoolModel {
       isChatAlarmOn: alarm ?? isChatAlarmOn,
     );
   }
-
-
-
-
 
 }

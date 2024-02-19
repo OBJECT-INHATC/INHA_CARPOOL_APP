@@ -78,6 +78,7 @@ class _MapButtonState extends ConsumerState<EnterButton> {
                 /// 참가 상태관리 저장
                 carpoolProvider.addCarpool(CarpoolModel(
                     /// 디테일 주소 수정 필요 0207
+                    isChatAlarmOn: true,
                     carId: carId,
                     endDetailPoint: widget.endPointName,
                     endPointName: widget.endPointName,

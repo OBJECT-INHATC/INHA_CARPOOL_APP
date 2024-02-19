@@ -42,7 +42,8 @@ class CarpoolService {
       GeoPoint geoStart = GeoPoint(startPoint.latitude, startPoint.longitude);
       GeoPoint geoEnd = GeoPoint(endPoint.latitude, endPoint.longitude);
 
-      List<String> members = ['${memberID}_${memberName}_${memberGender}_1'];
+      // true -> 채팅방 알림 설정
+      List<String> members = ['${memberID}_${memberName}_$memberGender'];
 
       DocumentReference carpoolDocRef = await users.add({
         'admin': '${memberID}_${memberName}_$memberGender',
@@ -71,6 +72,10 @@ class CarpoolService {
         'sender': 'service',
         'time': DateTime.now().millisecondsSinceEpoch,
       });
+
+    await carpoolDocRef.collection("isChatAlarm").doc(memberID).set({
+      'isChatAlarmOn': true,
+    });
 
       // 구독
     await FcmService().subScribeTopic(tempCarId);
@@ -118,6 +123,11 @@ class CarpoolService {
           // 카풀 정보가 없는 경우 처리
           throw DeletedRoomException('삭제된 카풀입니다.\n다른 카풀을 참여해주세요.');
         }
+
+        await carpoolDocRef.collection("isChatAlarm").doc(memberID).set({
+          'isChatAlarmOn': true,
+        });
+
 
         int nowMember = carpoolSnapshot['nowMember'];
         int maxMember = carpoolSnapshot['maxMember'];

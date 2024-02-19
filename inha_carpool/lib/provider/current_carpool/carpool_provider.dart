@@ -55,17 +55,7 @@ class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
     }
   }
 
-  //  carid로 알람 유무 확인
-  bool checkAlarm(String carId) {
-    try {
-      return state.data
-          .firstWhere((element) => element.carId == carId)
-          .isChatAlarmOn!;
-    } catch (e) {
-      print("CarpoolProvider [checkAlarm] 에러: $e");
-      return false;
-    }
-  }
+
 
   void setAlarm(String carId, bool bool) {
     try {

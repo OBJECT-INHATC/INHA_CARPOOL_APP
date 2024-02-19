@@ -31,6 +31,7 @@ class CarpoolRepository {
     for (var doc in snapshot.docs) {
       /// todo : carModel 가져올 떄 data에 isAlarm 추가해주기
       CarpoolModel carModel = CarpoolModel.fromJson(doc.data());
+      print("carModel : ${carModel.isChatAlarmOn}");
 
 
       // 가져온 데이터의 출발시간을 DateTime으로 변환
