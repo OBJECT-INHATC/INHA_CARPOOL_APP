@@ -16,6 +16,7 @@ import 'package:inha_Carpool/service/sv_fcm.dart';
 import '../../../../common/data/preference/prefs.dart';
 import '../../../../fragment/opensource/s_opensource.dart';
 import '../../../../provider/auth/auth_provider.dart';
+import '../../../../provider/current_carpool/carpool_provider.dart';
 import '../../../dialog/d_message.dart';
 import 'alarm_switch/w_switch_menu.dart';
 import 'item_page/d_changepassword.dart';
@@ -110,9 +111,12 @@ class _MyPageState extends ConsumerState<MyPage> {
                 // 가져온 토픽을 알림 허용 유무에 따라 구독하거나 해제
                 for(String carId in topicList) {
                   if(isOn) {
-                    FcmService().subScribeOnlyOne(carId);
+                    bool isCheckAlarm = await ref.read(carpoolNotifierProvider.notifier).getAlarm(carId);
+                  if (isCheckAlarm){
+                    FcmService().subScribeTopic(carId);
+                  }
                   } else {
-                    FcmService().unSubScribeOnlyIOne(carId);
+                    FcmService().unSubScribeTopic(carId);
                   }
                 }
 

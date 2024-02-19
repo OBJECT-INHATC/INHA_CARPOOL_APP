@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 
 import '../../../../../../common/models/m_carpool.dart';
 import '../../../../../../provider/auth/auth_provider.dart';
 import '../../../../../../provider/current_carpool/carpool_provider.dart';
+import '../../../../../../provider/notification/notification_provider.dart';
 import '../../../../../../service/api/Api_topic.dart';
 import '../../../../../../service/sv_firestore.dart';
 import '../../../../../dialog/d_complainAlert.dart';
@@ -61,11 +63,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
 
     final carpoolData = ref.watch(carpoolNotifierProvider).data;
     final matchingCarpool = carpoolData.firstWhere((element) => element.carId == widget.carId, orElse: () => CarpoolModel());
-    bool isChatAlarm = matchingCarpool?.isChatAlarmOn ?? false;
-
-    print("matchingCarpool?.isChatAlarmOn : ${matchingCarpool?.isChatAlarmOn}");
-    print("isChatAlarm : $isChatAlarm");
-
+    bool isChatAlarm = matchingCarpool.isChatAlarmOn ?? false;
 
     return Drawer(
       surfaceTintColor: Colors.transparent,
@@ -111,7 +109,12 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                             onPressed: () {
                               /// 알림 상태 변경
                               print("채팅 알림 켜기");
+                             if(ref.read(isCheckAlarm)){
                                setAlarmState(true);
+                             }else{
+                               /// todo : 스낵바 말고 다이얼로그로 변경
+                               context.showSnackbar("앱내 알림 설정이 꺼져있습니다. 내 정보 페이지에서 채팅 알림을 켜주세요.");
+                             }
                             },
                             icon:  Icon(
                               Icons.notifications_off,

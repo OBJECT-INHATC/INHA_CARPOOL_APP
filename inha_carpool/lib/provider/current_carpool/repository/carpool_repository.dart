@@ -40,12 +40,10 @@ class CarpoolRepository {
           .get();
 
       bool isChatAlarm = (isCheckAlarm.data() as Map<String, dynamic>)?['isChatAlarmOn'] ?? true;
-      print("파베에서 가져온 isChatAlarm : $isChatAlarm");
 
       carModel.isChatAlarmOn = isChatAlarm;
 
 
-    print("carModel : ${carModel.isChatAlarmOn}");
 
     // 가져온 데이터의 출발시간을 DateTime으로 변환
     DateTime startTime =
@@ -77,11 +75,12 @@ class CarpoolRepository {
         'isChatAlarmOn': isChatAlarmOn,
       });
 
-      print("파베에 저장완료 isChatAlarm : $isChatAlarmOn");
     } catch (e) {
       print("CarpoolRepository [updateIsChatAlarm] 에러: $e");
     }
   }
+
+
 
 
 }
