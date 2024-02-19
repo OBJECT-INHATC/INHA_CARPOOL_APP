@@ -36,6 +36,15 @@ class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
     }
   }
 
+  Future updateAlarm(String carId, bool isAlarm) async {
+    try {
+      await repository.updateIsChatAlarm(carId, _ref.read(authProvider).uid!, isAlarm);
+    } catch (e) {
+      print("CarpoolProvider [updateAlarm] 에러: $e");
+    }
+  }
+
+
   // 생성하거나 참여한 카풀리스트를 상태관리에 추가
   Future addCarpool(CarpoolModel carpoolModel) async {
     try {
@@ -57,7 +66,7 @@ class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
 
 
 
-  void setAlarm(String carId, bool bool) {
+  void setAlarm(String carId, bool bool) async {
     try {
       final updatedData = state.data.map((e) {
         if (e.carId == carId) {
@@ -71,6 +80,8 @@ class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
       state = state.copyWith(data: updatedData);
 
       print("state: ${state.data.map((e) => e.isChatAlarmOn).toList()}");
+
+      await updateAlarm(carId, bool);
     } catch (e) {
       print("CarpoolProvider [setAlarm] 에러: $e");
     }

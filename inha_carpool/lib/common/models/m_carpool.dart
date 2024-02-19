@@ -9,7 +9,7 @@ class CarpoolModel {
   final String? endPointName;
   final String? startPointName;
   final String? startDetailPoint;
-  final bool? isChatAlarmOn;
+  late  bool? isChatAlarmOn;
 
   // 출발 시간
   final int? startTime;
@@ -31,20 +31,7 @@ class CarpoolModel {
       this.recentMessage,
      });
 
-  //toMap
-  Map<String, dynamic> toMap() {
-    return {
-      'endDetailPoint': endDetailPoint,
-      'startDetailPoint': startDetailPoint,
-      'carId': carId,
-      'endPointName': endPointName,
-      'startPointName': startPointName,
-      'startTime': startTime,
-      'recentMessageSender': recentMessageSender,
-      'recentMessage': recentMessage,
-      'isChatAlarmOn': isChatAlarmOn,
-    };
-  }
+
 
   // fromJson
   factory CarpoolModel.fromJson(Map<String, dynamic> json) {
@@ -57,7 +44,7 @@ class CarpoolModel {
       startTime: json['startTime'] as int,
       recentMessageSender: json['recentMessageSender'] as String,
       recentMessage: json['recentMessage'] as String,
-      isChatAlarmOn: json['isChatAlarmOn'] as bool,
+      isChatAlarmOn: json['isChatAlarmOn'] == null ? true : json['isChatAlarmOn'] as bool,
     );
   }
 

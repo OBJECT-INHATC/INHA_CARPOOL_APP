@@ -44,6 +44,15 @@ class FireStoreService {
     return snapshot.exists;
   }*/
 
+  //isCHatAlarmOn을 파베에서 삭제
+  Future<void> deleteIsChatAlarm(String carId, String uid) async {
+    await carpoolCollection
+        .doc(carId)
+        .collection("isChatAlarm")
+        .doc(uid)
+        .delete();
+  }
+
   /// 이메일로 사용자 정보 가져오기
   Future gettingUserData(String email) async {
     QuerySnapshot snapshot =

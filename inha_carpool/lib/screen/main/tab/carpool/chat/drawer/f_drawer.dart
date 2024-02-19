@@ -63,6 +63,9 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     final matchingCarpool = carpoolData.firstWhere((element) => element.carId == widget.carId, orElse: () => CarpoolModel());
     bool isChatAlarm = matchingCarpool?.isChatAlarmOn ?? false;
 
+    print("matchingCarpool?.isChatAlarmOn : ${matchingCarpool?.isChatAlarmOn}");
+    print("isChatAlarm : $isChatAlarm");
+
 
     return Drawer(
       surfaceTintColor: Colors.transparent,
@@ -91,6 +94,32 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                     ),
                     const Spacer(),
 
+                    isChatAlarm
+                        ? IconButton(
+                            onPressed: () {
+                              /// 알림 상태 변경
+                              print("채팅 알림 끄기");
+                              setAlarmState(false);
+                            },
+                            icon:  Icon(
+                              Icons.notifications_active,
+                              color: Colors.white,
+                              size: screenWidth * 0.07,
+                            ),
+                          )
+                        : IconButton(
+                            onPressed: () {
+                              /// 알림 상태 변경
+                              print("채팅 알림 켜기");
+                               setAlarmState(true);
+                            },
+                            icon:  Icon(
+                              Icons.notifications_off,
+                              color: Colors.white,
+                              size: screenWidth * 0.07,
+                            ),
+                          ),
+
                     /*
                     1. 인원수 1명인지 확인
                       ok "나 혼자네? 그냥 나가기"
@@ -102,35 +131,6 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                                 ok "다음 방장은 너다 하고 나가기"
                                 no "그냥 나가기"
                      */
-                    isChatAlarm
-                        ? IconButton(
-                            onPressed: () {
-                              print("채팅 알림 끄기");
-                              ref
-                                  .read(carpoolNotifierProvider.notifier)
-                                  .setAlarm(widget.carId, false);
-                              FcmService().unSubScribeOnlyIOne(widget.carId);
-                            },
-                            icon:  Icon(
-                              Icons.notifications_active,
-                              color: Colors.white,
-                              size: screenWidth * 0.07,
-                            ),
-                          )
-                        : IconButton(
-                            onPressed: () {
-                              print("채팅 알림 켜기");
-                              ref
-                                  .read(carpoolNotifierProvider.notifier)
-                                  .setAlarm(widget.carId, true);
-                              FcmService().subScribeOnlyOne(widget.carId);
-                            },
-                            icon:  Icon(
-                              Icons.notifications_off,
-                              color: Colors.white,
-                              size: screenWidth * 0.07,
-                            ),
-                          ),
                     IconButton(
                       onPressed: () async {
                         ///   1. 인원수 1명인지 확인
@@ -386,6 +386,14 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     );
   }
 
+  void setAlarmState(bool isAlarm) {
+    ref.read(carpoolNotifierProvider.notifier).setAlarm(widget.carId, isAlarm);
+
+    (isAlarm)
+        ? FcmService().subScribeOnlyOne(widget.carId)
+        : FcmService().unSubScribeOnlyIOne(widget.carId);
+  }
+
   //uid와 memberID비교
   void viewProfile(BuildContext context, String memberId) {
     if (uid == memberId) {
@@ -526,6 +534,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   Future<void> _exitCarpoolFuture(bool isAlone, bool isAdmin) async {
     //서버에서 토픽 삭제
     bool isOpen = await ApiTopic().deleteTopic(uid, widget.carId);
+
+    await FireStoreService().deleteIsChatAlarm(widget.carId, uid);
 
     if (isOpen) {
       print("스프링부트 서버 성공 ##########");

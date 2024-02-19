@@ -31,31 +31,57 @@ class CarpoolRepository {
     for (var doc in snapshot.docs) {
       /// todo : carModel 가져올 떄 data에 isAlarm 추가해주기
       CarpoolModel carModel = CarpoolModel.fromJson(doc.data());
-      print("carModel : ${carModel.isChatAlarmOn}");
+
+      DocumentSnapshot isCheckAlarm =
+      await _fireStore.collection("carpool")
+          .doc(carModel.carId)
+          .collection("isChatAlarm")
+          .doc(memberModel.uid)
+          .get();
+
+      bool isChatAlarm = (isCheckAlarm.data() as Map<String, dynamic>)?['isChatAlarmOn'] ?? true;
+      print("파베에서 가져온 isChatAlarm : $isChatAlarm");
+
+      carModel.isChatAlarmOn = isChatAlarm;
 
 
-      // 가져온 데이터의 출발시간을 DateTime으로 변환
-      DateTime startTime =
-      DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+    print("carModel : ${carModel.isChatAlarmOn}");
 
-      // 하루가 지나기 전까지의 카풀만 리스트에 추가하기 위한 비교 작업
-      if (startTime.isAfter(currentTime.subtract(const Duration(days: 1)))) {
-        carpoolList.add(carModel);
-      }
+    // 가져온 데이터의 출발시간을 DateTime으로 변환
+    DateTime startTime =
+    DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+
+    // 하루가 지나기 전까지의 카풀만 리스트에 추가하기 위한 비교 작업
+    if (startTime.isAfter(currentTime.subtract(const Duration(days: 1)))) {
+    carpoolList.add(carModel);
+    }
     }
 
     carpoolList.sort((a, b) {
-      DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a.startTime!.toInt());
-      DateTime startTimeB = DateTime.fromMillisecondsSinceEpoch(b.startTime!.toInt());
+    DateTime startTimeA =
+    DateTime.fromMillisecondsSinceEpoch(a.startTime!.toInt());
+    DateTime startTimeB =
+    DateTime.fromMillisecondsSinceEpoch(b.startTime!.toInt());
 
-      return startTimeA.compareTo(startTimeB);
+    return startTimeA.compareTo(startTimeB);
     });
 
-    return carpoolList;
-
+    return
+    carpoolList;
   }
 
+  // carId와 isChatAlarmOn을 업데이트
+  Future<void> updateIsChatAlarm(String carId, String uid, bool isChatAlarmOn) async {
+    try {
+      await _fireStore.collection('carpool').doc(carId).collection('isChatAlarm').doc(uid).set({
+        'isChatAlarmOn': isChatAlarmOn,
+      });
 
+      print("파베에 저장완료 isChatAlarm : $isChatAlarmOn");
+    } catch (e) {
+      print("CarpoolRepository [updateIsChatAlarm] 에러: $e");
+    }
+  }
 
 
 }
