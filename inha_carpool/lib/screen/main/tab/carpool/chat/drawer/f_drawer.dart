@@ -45,8 +45,6 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   late final String nickName;
   late final String gender;
 
-
-
   @override
   void initState() {
     uid = ref.read(authProvider).uid ?? "";
@@ -57,9 +55,15 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
 
   @override
   Widget build(BuildContext context) {
-
     final screenWidth = context.width(1);
     final screenHeight = context.height(1);
+
+    bool isChatAlarm = ref
+        .watch(carpoolNotifierProvider)
+        .data
+        .where((element) => element.carId == widget.carId)
+        .first
+        .isChatAlarmOn!;
 
     return Drawer(
       surfaceTintColor: Colors.transparent,
@@ -76,8 +80,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
               children: [
                 Height(AppBar().preferredSize.height * 1.35),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    Width(screenWidth * 0.05),
                     Text(
                       '카풀 멤버',
                       style: TextStyle(
@@ -86,6 +90,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    const Spacer(),
+
                     /*
                     1. 인원수 1명인지 확인
                       ok "나 혼자네? 그냥 나가기"
@@ -97,6 +103,35 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                                 ok "다음 방장은 너다 하고 나가기"
                                 no "그냥 나가기"
                      */
+                    isChatAlarm
+                        ? IconButton(
+                            onPressed: () {
+                              print("채팅 알림 끄기");
+                              ref
+                                  .read(carpoolNotifierProvider.notifier)
+                                  .setAlarm(widget.carId, false);
+                              FcmService().unSubScribeOnlyIOne(widget.carId);
+                            },
+                            icon: const Icon(
+                              Icons.notifications_active,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          )
+                        : IconButton(
+                            onPressed: () {
+                              print("채팅 알림 켜기");
+                              ref
+                                  .read(carpoolNotifierProvider.notifier)
+                                  .setAlarm(widget.carId, true);
+                              FcmService().subScribeOnlyOne(widget.carId);
+                            },
+                            icon: const Icon(
+                              Icons.notifications_off,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
                     IconButton(
                       onPressed: () async {
                         ///   1. 인원수 1명인지 확인
@@ -120,7 +155,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                             }
                           } else {
                             /// ok "10분 전이야 아무도 못나가"
-                            showOpenDialog(context, "지금은 퇴장할 수 없습니다.", "카풀 퇴장 불가");
+                            showOpenDialog(
+                                context, "지금은 퇴장할 수 없습니다.", "카풀 퇴장 불가");
                           }
                         }
                       },
@@ -130,6 +166,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                         size: screenWidth * 0.07,
                       ),
                     ),
+                    //채팅 알림 설정
                   ],
                 ),
               ],
@@ -162,8 +199,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                   leading: Icon(
                     Icons.account_circle,
                     size: 35,
-                    color:
-                        nickName == memberName ? Colors.blue : Colors.black,
+                    color: nickName == memberName ? Colors.blue : Colors.black,
                   ),
                   title: Row(
                     children: [
@@ -173,11 +209,14 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                               ? Colors.blue
                               : Colors.black)
                           .make(),
-                      const Spacer() ,
-                      (widget.admin == memberName) ?
-                       Icon(Icons.star, color: context.appColors.logoColor, size: screenHeight * 0.027,)
+                      const Spacer(),
+                      (widget.admin == memberName)
+                          ? Icon(
+                              Icons.star,
+                              color: context.appColors.logoColor,
+                              size: screenHeight * 0.027,
+                            )
                           : Container(),
-
                     ],
                   ),
                   trailing: const Icon(Icons.navigate_next_rounded),
@@ -187,7 +226,6 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
           ),
 
           const ChatNotice(),
-
 
           const Line(height: 2),
 
@@ -222,8 +260,13 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     return res.substring(start, end);
   }
 
-  void _showProfileModal(BuildContext context, String memberUid,
-      String selectedUserNickName, String myUid, String memberGender, double screenHeight) {
+  void _showProfileModal(
+      BuildContext context,
+      String memberUid,
+      String selectedUserNickName,
+      String myUid,
+      String memberGender,
+      double screenHeight) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -242,7 +285,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
           child: Column(
             children: [
               Padding(
-                padding:  EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
                 child: Text(
                   '프로필 조회',
                   style: TextStyle(
@@ -251,13 +294,16 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                   ),
                 ),
               ),
-              const Line(height: 1, color: Colors.grey,),
+              const Line(
+                height: 1,
+                color: Colors.grey,
+              ),
               Height(screenHeight * 0.03),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                   Icon(
+                  Icon(
                     Icons.person_search,
                     size: screenHeight * 0.15,
                   ),
@@ -269,18 +315,18 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(selectedUserNickName,
-                              style:  TextStyle(
-                                  fontSize: screenHeight * 0.025, fontWeight: FontWeight.w600)),
+                              style: TextStyle(
+                                  fontSize: screenHeight * 0.025,
+                                  fontWeight: FontWeight.w600)),
                           Width(screenHeight * 0.01),
                           Text(
                             memberGender,
-                            style:  TextStyle(
+                            style: TextStyle(
                                 fontSize: screenHeight * 0.02,
                                 color: Colors.grey),
                           ),
                         ],
                       ),
-
                       ElevatedButton(
                         onPressed: () {
                           viewProfile(context, memberUid);
@@ -288,7 +334,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                             Navigator.pop(context);
 
                             /// 유저 신고하기 api 확인
-                            print("ElevatedButton ============? $selectedUserNickName");
+                            print(
+                                "ElevatedButton ============? $selectedUserNickName");
                             showDialog(
                               context: context,
                               builder: (context) => ComplainAlert(
@@ -301,7 +348,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                         style: ElevatedButton.styleFrom(
                           surfaceTintColor: Colors.transparent,
                           backgroundColor:
-                          const Color.fromARGB(255, 255, 167, 2),
+                              const Color.fromARGB(255, 255, 167, 2),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)),
                         ),
@@ -328,7 +375,6 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                           ],
                         ),
                       ),
-
                     ],
                   ),
                 ],
@@ -360,38 +406,47 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
       builder: (BuildContext context) {
         return AlertDialog(
           surfaceTintColor: Colors.transparent,
-          title: const Text('카풀 나가기', textAlign: TextAlign.center,),
+          title: const Text(
+            '카풀 나가기',
+            textAlign: TextAlign.center,
+          ),
           titleTextStyle: const TextStyle(
             fontSize: 20,
             color: Colors.black,
           ),
           content: isAdmin
-              ? const Text('현재 카풀의 방장 입니다. 정말 나가시겠습니까?', textAlign: TextAlign.center,)
-              : const Text('정말로 카풀을 나가시겠습니까?', textAlign: TextAlign.center,),
+              ? const Text(
+                  '현재 카풀의 방장 입니다. 정말 나가시겠습니까?',
+                  textAlign: TextAlign.center,
+                )
+              : const Text(
+                  '정말로 카풀을 나가시겠습니까?',
+                  textAlign: TextAlign.center,
+                ),
           actions: [
-          Column(
-            children: [
-              const Line(height: 2),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                TextButton(
-                  onPressed: () async {
-                    Navigator.pop(context);
-                    _exitCarpoolLoding(context, isAlone, isAdmin);
-                  },
-                  child: const Text('나가기'),
+            Column(
+              children: [
+                const Line(height: 2),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.pop(context);
+                        _exitCarpoolLoding(context, isAlone, isAdmin);
+                      },
+                      child: const Text('나가기'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('취소'),
+                    ),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('취소'),
-                ),
-              ],),
-            ],
-          )
-
+              ],
+            )
           ],
         );
       },
@@ -512,10 +567,12 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
       builder: (BuildContext context) {
         return AlertDialog(
           surfaceTintColor: Colors.transparent,
-          title:  Column(
+          title: Column(
             children: [
-              Text(title, textAlign: TextAlign.center,),
-
+              Text(
+                title,
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
           titleTextStyle: const TextStyle(
@@ -529,7 +586,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                 const Line(height: 2),
                 TextButton(
                   onPressed: () {
-                    if(title == "카풀 삭제 실패"){
+                    if (title == "카풀 삭제 실패") {
                       Navigator.pop(context);
                       Navigator.pushReplacement(
                         Nav.globalContext,
@@ -537,11 +594,11 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                           builder: (context) => const MainScreen(),
                         ),
                       );
-                    }else{
+                    } else {
                       Navigator.pop(context);
                     }
                   },
-                  child:  const Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // bold

@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 /// 참여중인 카풀 정보를 담는 모델
 class CarpoolModel {
   // 카풀 정보
@@ -7,6 +9,7 @@ class CarpoolModel {
   final String? endPointName;
   final String? startPointName;
   final String? startDetailPoint;
+  late bool? isChatAlarmOn;
 
   // 출발 시간
   final int? startTime;
@@ -20,26 +23,13 @@ class CarpoolModel {
       {this.endDetailPoint,
       this.endPointName,
       this.carId,
+      this.isChatAlarmOn,
       this.startPointName,
       this.startDetailPoint,
       this.startTime,
       this.recentMessageSender,
       this.recentMessage,
      });
-
-  // fromMap
-  static CarpoolModel fromMap(Map<String, dynamic> map) {
-    return CarpoolModel(
-      endDetailPoint: map['endDetailPoint'] as String,
-      carId: map['carId'] as String,
-      startDetailPoint: map['startDetailPoint'] as String,
-      startPointName: map['startPointName'] as String,
-      endPointName: map['endPointName'] as String,
-      startTime: map['startTime'] as int,
-      recentMessageSender: map['recentMessageSender'] as String,
-      recentMessage: map['recentMessage'] as String,
-    );
-  }
 
   //toMap
   Map<String, dynamic> toMap() {
@@ -52,6 +42,7 @@ class CarpoolModel {
       'startTime': startTime,
       'recentMessageSender': recentMessageSender,
       'recentMessage': recentMessage,
+      'isChatAlarmOn': isChatAlarmOn,
     };
   }
 
@@ -68,6 +59,26 @@ class CarpoolModel {
       recentMessage: json['recentMessage'] as String ?? '',
     );
   }
+
+  
+
+
+  CarpoolModel copyWith({bool? alarm}) {
+    print('copyWith alarm: $alarm');
+    return CarpoolModel(
+      endDetailPoint: endDetailPoint,
+      carId: carId,
+      startDetailPoint: startDetailPoint,
+      startPointName: startPointName,
+      endPointName: endPointName,
+      startTime: startTime,
+      recentMessageSender: recentMessageSender,
+      recentMessage: recentMessage,
+      isChatAlarmOn: alarm ?? isChatAlarmOn,
+    );
+  }
+
+
 
 
 

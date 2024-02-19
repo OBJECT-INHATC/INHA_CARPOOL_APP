@@ -10,9 +10,9 @@ import '../auth/auth_provider.dart';
 
 final carpoolNotifierProvider =
     StateNotifierProvider<CarpoolStateNotifier, CarPoolStateModel>(
-  (ref) => CarpoolStateNotifier(ref, repository: ref.read(carpoolRepositoryProvider)),
+  (ref) => CarpoolStateNotifier(ref,
+      repository: ref.read(carpoolRepositoryProvider)),
 );
-
 
 class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
   final Ref _ref;
@@ -28,13 +28,13 @@ class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
   // 내가 참여중인 카풀리스트 상태관리로 가져오기
   Future getCarpool(MemberModel memberModel) async {
     try {
-      List<CarpoolModel> carpoolList = await repository.getCarPoolList(memberModel);
+      List<CarpoolModel> carpoolList =
+          await repository.getCarPoolList(memberModel);
       state = state.copyWith(data: carpoolList);
     } catch (e) {
       print("CarpoolProvider [getCarpool] 에러: $e");
     }
   }
-
 
   // 생성하거나 참여한 카풀리스트를 상태관리에 추가
   Future addCarpool(CarpoolModel carpoolModel) async {
@@ -48,9 +48,41 @@ class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
   // 방에서 나간 카풀을 상태관리에서 제거
   Future removeCarpool(String carId) async {
     try {
-      state = state.copyWith(data: state.data.where((element) => element.carId != carId).toList());
+      state = state.copyWith(
+          data: state.data.where((element) => element.carId != carId).toList());
     } catch (e) {
       print("CarpoolProvider [removeCarpool] 에러: $e");
+    }
+  }
+
+  //  carid로 알람 유무 확인
+  bool checkAlarm(String carId) {
+    try {
+      return state.data
+          .firstWhere((element) => element.carId == carId)
+          .isChatAlarmOn!;
+    } catch (e) {
+      print("CarpoolProvider [checkAlarm] 에러: $e");
+      return false;
+    }
+  }
+
+  void setAlarm(String carId, bool bool) {
+    try {
+      final updatedData = state.data.map((e) {
+        if (e.carId == carId) {
+          print('CarId: ${e.carId}, Alarm: ${e.isChatAlarmOn}');
+          return e.copyWith(alarm: bool);
+        } else {
+          return e;
+        }
+      }).toList();
+
+      state = state.copyWith(data: updatedData);
+
+      print("state: ${state.data.map((e) => e.isChatAlarmOn).toList()}");
+    } catch (e) {
+      print("CarpoolProvider [setAlarm] 에러: $e");
     }
   }
 }

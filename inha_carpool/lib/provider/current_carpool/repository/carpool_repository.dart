@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/models/m_carpool.dart';
 import 'package:inha_Carpool/common/models/m_member.dart';
-import 'package:inha_Carpool/provider/auth/auth_provider.dart';
+import 'package:inha_Carpool/provider/notification/notification_provider.dart';
 
 final carpoolRepositoryProvider = Provider((ref) => CarpoolRepository(ref));
 
@@ -31,6 +31,8 @@ class CarpoolRepository {
     for (var doc in snapshot.docs) {
       CarpoolModel carModel = CarpoolModel.fromJson(doc.data());
 
+      carModel.isChatAlarmOn = _ref.read(isCheckAlarm);
+
       // 가져온 데이터의 출발시간을 DateTime으로 변환
       DateTime startTime =
       DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
@@ -51,6 +53,8 @@ class CarpoolRepository {
     return carpoolList;
 
   }
+
+
 
 
 }

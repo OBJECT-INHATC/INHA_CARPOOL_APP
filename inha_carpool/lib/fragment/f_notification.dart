@@ -180,6 +180,10 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                           );
                           // 알림 리스트 스택 제거
                           Navigator.pop(context);
+                        }else{
+                          if(!mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('이미 끝난 카풀입니다.')));
                         }
                       },
                       child: Container(
