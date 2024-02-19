@@ -111,10 +111,10 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                                   .setAlarm(widget.carId, false);
                               FcmService().unSubScribeOnlyIOne(widget.carId);
                             },
-                            icon: const Icon(
+                            icon:  Icon(
                               Icons.notifications_active,
                               color: Colors.white,
-                              size: 30,
+                              size: screenWidth * 0.07,
                             ),
                           )
                         : IconButton(
@@ -125,10 +125,10 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                                   .setAlarm(widget.carId, true);
                               FcmService().subScribeOnlyOne(widget.carId);
                             },
-                            icon: const Icon(
+                            icon:  Icon(
                               Icons.notifications_off,
                               color: Colors.white,
-                              size: 30,
+                              size: screenWidth * 0.07,
                             ),
                           ),
                     IconButton(
@@ -198,7 +198,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                   },
                   leading: Icon(
                     Icons.account_circle,
-                    size: 35,
+                    size: screenWidth * 0.1,
                     color: nickName == memberName ? Colors.blue : Colors.black,
                   ),
                   title: Row(
@@ -214,7 +214,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                           ? Icon(
                               Icons.star,
                               color: context.appColors.logoColor,
-                              size: screenHeight * 0.027,
+                              size: screenHeight * 0.0275,
                             )
                           : Container(),
                     ],
