@@ -60,9 +60,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
   // 출발 시간
   DateTime startTime = DateTime.now();
 
-  // 확정 시간
-  DateTime agreedTime = DateTime.now();
-
   // 출발지
   String startPoint = "";
 
@@ -166,7 +163,7 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
         //----------------------------------------------drawer 대화상대
         endDrawer: ChatDrawer(
           membersList: membersList,
-          agreedTime: agreedTime,
+          startTime: startTime,
           admin: admin,
           carId: widget.carId,
           startPoint: startPoint,
@@ -480,7 +477,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
             LatLng(val['endPoint'].latitude, val['endPoint'].longitude);
         startPointLnt =
             LatLng(val['startPoint'].latitude, val['startPoint'].longitude);
-        agreedTime = startTime.subtract(const Duration(minutes: 10));
       });
     });
   }

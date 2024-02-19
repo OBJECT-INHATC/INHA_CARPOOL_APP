@@ -18,7 +18,7 @@ class ChatDrawer extends ConsumerStatefulWidget {
   const ChatDrawer({
     super.key,
     required this.membersList,
-    required this.agreedTime,
+    required this.startTime,
     required this.admin,
     required this.carId,
     required this.startPoint,
@@ -28,7 +28,7 @@ class ChatDrawer extends ConsumerStatefulWidget {
   });
 
   final List membersList;
-  final DateTime agreedTime;
+  final DateTime startTime;
   final String admin;
   final String carId;
   final String startPoint;
@@ -105,9 +105,10 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                           _exitCarpool(context, true, true);
                         } else {
                           ///  2. 시간 확인 (10분전)
-                          final timeDifference = widget.agreedTime
+                          final timeDifference = widget.startTime
                               .difference(DateTime.now())
                               .inMinutes;
+
                           if (timeDifference > 10) {
                             /// 3. 방장인지 체크
                             if (widget.admin == nickName) {
