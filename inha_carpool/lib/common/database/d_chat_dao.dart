@@ -59,6 +59,31 @@ class ChatDao {
 
   }
 
+  Future<void> getCheckMSG(String carId) async {
+    final finder = Finder(filter: Filter.equals('carId', carId));
+
+    final recordSnapshots = await _chatFolder.find(await _db, finder: finder);
+
+    print(recordSnapshots.length);
+
+    int i =1;
+
+    for (var snapshot in recordSnapshots) {
+      final chatMessage = ChatMessage.fromMap(snapshot.value, carId);
+      chatMessage.id = snapshot.key;
+
+      // 각 ChatMessage의 필드를 프린트합니다.
+      // 각 항목의 인덱스를 프린트합니다 (0부터 시작)
+      print("R--------------${i}번째---------------ㄱ");
+      print('Message: ${chatMessage.message}');
+      i++;
+
+    }
+  }
+
+
+
+
   /// 그룹 아이디 - 채팅 메시지 리스트 반환
   Future<List<ChatMessage>> getChatByCarId(String carId) async {
     final finder = Finder(filter: Filter.equals('carId', carId));

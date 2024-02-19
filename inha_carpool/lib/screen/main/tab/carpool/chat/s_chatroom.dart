@@ -322,7 +322,7 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
 
           /// 로컬 디비에 없는 메시지만 저장
           if (fireStoreChats.isNotEmpty && localChats != null && localChats!.isNotEmpty) {
-            print("fireStoreChats : ${fireStoreChats[previousItemCount - 1].time}");
+            ChatDao().saveChatMessages(fireStoreChats);
           }
 
           fireStoreChats.sort((a, b) => a.time.compareTo(b.time));
@@ -441,7 +441,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
         });
       });
     } else {
-
       FireStoreService()
           .getChatsAfterSpecTime(
               widget.carId)

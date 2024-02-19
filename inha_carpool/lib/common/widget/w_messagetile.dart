@@ -49,7 +49,7 @@ class MessageTile extends StatelessWidget {
 
       case MessageType.service:
         alignment = Alignment.center;
-        bubbleColor = Colors.grey[200]!;
+        bubbleColor = Colors.transparent;
         verticalPadding = 5.0;
         break;
     }
