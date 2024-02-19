@@ -23,7 +23,7 @@ import '../../provider/record/record_provider.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
 import '../main/tab/carpool/chat/s_chatroom.dart';
-import '../register/s_findregister.dart';
+import '../register/s_findrer_password.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -670,7 +670,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         PageRouteBuilder(
                                           pageBuilder: (context, animation,
                                                   secondaryAnimation) =>
-                                              const FindRegisterPage(),
+                                              const FindPasswordPage(),
                                           transitionsBuilder: (context,
                                               animation,
                                               secondaryAnimation,

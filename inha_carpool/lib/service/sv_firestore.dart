@@ -37,6 +37,13 @@ class FireStoreService {
     });
   }
 
+/*  /// 파이어베이스에서 해당 데이터가 있는지 확인하는 함수
+  Future<bool> isDataExist(String carId, String adminId) async {
+    final snapshot =
+        await carpoolCollection.doc(carId).collection("messages").where();
+    return snapshot.exists;
+  }*/
+
   /// 이메일로 사용자 정보 가져오기
   Future gettingUserData(String email) async {
     QuerySnapshot snapshot =
@@ -52,12 +59,24 @@ class FireStoreService {
   }
 
   /// 특정 시점 이후의 채팅 메시지 스트림 가져오기
-  getChatsAfterSpecTime(String carId, int time) async {
+  getChatsFirstTime(String carId, int time) async {
     return carpoolCollection
         .doc(carId)
         .collection("messages")
         .orderBy("time")
         .startAfter([time]).snapshots();
+  }
+
+  getChatsAfterSpecTime(String carId) async {
+    return carpoolCollection
+        .doc(carId)
+        .collection("messages")
+        .snapshots();
+  }
+
+  /// 특정 시점 이후의 채팅 메시지 스트림 가져오기
+  getFirstChat(String carId) async {
+    return carpoolCollection.doc(carId).collection("messages").snapshots();
   }
 
   /// 채팅 메시지 스트림 가져오기
@@ -136,9 +155,11 @@ class FireStoreService {
         .collection("messages")
         .add(chatMessageMap);
     await carpoolCollection.doc(carId).update(
-      {'recentMessage': chatMessageMap['message'],
+      {
+        'recentMessage': chatMessageMap['message'],
         'recentMessageSender': chatMessageMap['sender'],
-        'recentMessageTime': chatMessageMap['time']},
+        'recentMessageTime': chatMessageMap['time']
+      },
     );
 
     FcmService().sendMessage(
@@ -178,12 +199,12 @@ class FireStoreService {
         type: NotificationType.status);
 
     await carpoolCollection.doc(carId).update(
-      {'recentMessage': chatMessageMap['message'],
+      {
+        'recentMessage': chatMessageMap['message'],
         'recentMessageSender': chatMessageMap['sender'],
-        'recentMessageTime': chatMessageMap['time']},
+        'recentMessageTime': chatMessageMap['time']
+      },
     );
-
-
 
     //5초 후
     await Future.delayed(const Duration(seconds: 3));
@@ -217,6 +238,7 @@ class FireStoreService {
     DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
 
     print("${uid}_${nickName}_$gender");
+
     /// 0902 김영재. 마지막 사람이 방을 나가면 status를 true로 변경
     await carpoolDocRef.update({
       'members': FieldValue.arrayRemove(['${uid}_${nickName}_$gender']),

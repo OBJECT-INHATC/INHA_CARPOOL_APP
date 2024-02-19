@@ -3,14 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 /// 비밀번호 찾기 페이지
 
-class FindRegisterPage extends StatefulWidget {
-  const FindRegisterPage({super.key});
+class FindPasswordPage extends StatefulWidget {
+  const FindPasswordPage({super.key});
 
   @override
-  State<FindRegisterPage> createState() => _FindRegisterPageState();
+  State<FindPasswordPage> createState() => _FindPasswordPageState();
 }
 
-class _FindRegisterPageState extends State<FindRegisterPage> {
+class _FindPasswordPageState extends State<FindPasswordPage> {
 
   String email = "";
   final auth = FirebaseAuth.instance;

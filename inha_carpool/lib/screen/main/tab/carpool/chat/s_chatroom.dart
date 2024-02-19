@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
@@ -112,6 +113,8 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
     Prefs.chatRoomOnRx.set(false); // 페이지가 활성화되면 true로 설정
     Prefs.chatRoomCarIdRx.set(widget.carId);
   }
+
+
 
   @override
   void dispose() {
@@ -318,8 +321,8 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
           }
 
           /// 로컬 디비에 없는 메시지만 저장
-          if (fireStoreChats.isNotEmpty) {
-            ChatDao().saveChatMessages(fireStoreChats);
+          if (fireStoreChats.isNotEmpty && localChats != null && localChats!.isNotEmpty) {
+            print("fireStoreChats : ${fireStoreChats[previousItemCount - 1].time}");
           }
 
           fireStoreChats.sort((a, b) => a.time.compareTo(b.time));
@@ -431,21 +434,23 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
       final lastLocalChat = localChats?[localChats!.length - 1];
 
       FireStoreService()
-          .getChatsAfterSpecTime(widget.carId, lastLocalChat!.time)
+          .getChatsFirstTime(widget.carId, lastLocalChat!.time)
           .then((val) {
         setState(() {
           chats = val;
         });
       });
     } else {
+
       FireStoreService()
           .getChatsAfterSpecTime(
-              widget.carId, DateTime.now().millisecondsSinceEpoch)
+              widget.carId)
           .then((val) {
         setState(() {
           chats = val;
         });
       });
+
     }
 
     FireStoreService().getGroupAdmin(widget.carId).then((val) {

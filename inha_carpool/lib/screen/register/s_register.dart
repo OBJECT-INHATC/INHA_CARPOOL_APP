@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/register/reigister_col_widget/w_professor_btn.dart';
 import 'package:inha_Carpool/screen/register/reigister_col_widget/w_register_notice.dart';
-import 'package:inha_Carpool/screen/register/s_newregister.dart';
+import 'package:inha_Carpool/screen/register/s_new_register.dart';
 import 'package:inha_Carpool/screen/register/verified/s_verifiedregister.dart';
 import '../../service/sv_auth.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';

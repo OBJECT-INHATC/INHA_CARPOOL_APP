@@ -16,7 +16,7 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
-import '../register/s_findregister.dart';
+import '../register/s_findrer_password.dart';
 
 /// todo : 교수님 로그인페이지도 확인하기
 
@@ -491,7 +491,7 @@ class _ProfessorLoginPageState extends State<ProfessorLoginPage> {
                                         PageRouteBuilder(
                                           pageBuilder: (context, animation,
                                                   secondaryAnimation) =>
-                                              const FindRegisterPage(),
+                                              const FindPasswordPage(),
                                           transitionsBuilder: (context,
                                               animation,
                                               secondaryAnimation,
