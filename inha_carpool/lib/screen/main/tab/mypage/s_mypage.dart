@@ -17,6 +17,7 @@ import '../../../../common/data/preference/prefs.dart';
 import '../../../../fragment/opensource/s_opensource.dart';
 import '../../../../provider/auth/auth_provider.dart';
 import '../../../../provider/current_carpool/carpool_provider.dart';
+import '../../../../provider/notification/notification_provider.dart';
 import '../../../dialog/d_message.dart';
 import 'alarm_switch/w_switch_menu.dart';
 import 'item_page/d_changepassword.dart';
@@ -104,6 +105,7 @@ class _MyPageState extends ConsumerState<MyPage> {
               () => SwitchMenu('채팅 알림', Prefs.isPushOnRx.get(),
                   onChanged: (isOn) async {
                 Prefs.isPushOnRx.set(isOn);
+                ref.read(isCheckAlarm.notifier).state = isOn;
 
                 // 서버에서 토픽을 가져옴
                 List<String> topicList = await ApiUser().getAllCarIdsForUser(uid);

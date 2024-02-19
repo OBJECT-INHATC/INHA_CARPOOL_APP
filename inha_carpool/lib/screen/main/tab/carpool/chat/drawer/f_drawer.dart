@@ -109,7 +109,9 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                             onPressed: () {
                               /// 알림 상태 변경
                               print("채팅 알림 켜기");
-                             if(ref.read(isCheckAlarm)){
+                              /// todo : 만약 구독하는 토픽이 서버에 없으면 저장하기
+                              print(ref.watch(isCheckAlarm) ? "알림 켜져있음" : "알림 꺼져있음");
+                             if(ref.watch(isCheckAlarm)){
                                setAlarmState(true);
                              }else{
                                /// todo : 스낵바 말고 다이얼로그로 변경
