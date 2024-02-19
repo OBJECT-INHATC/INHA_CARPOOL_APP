@@ -162,13 +162,13 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                     Icons.account_circle,
                     size: 35,
                     color:
-                        widget.admin == memberName ? Colors.blue : Colors.black,
+                        nickName == memberName ? Colors.blue : Colors.black,
                   ),
                   title: Row(
                     children: [
                       memberName.text
                           .size(16)
-                          .color(widget.admin == memberName
+                          .color(nickName == memberName
                               ? Colors.blue
                               : Colors.black)
                           .make(),
