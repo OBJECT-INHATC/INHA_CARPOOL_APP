@@ -49,7 +49,7 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+          padding: EdgeInsets.fromLTRB(40, width * 0.027, 40, width * 0.027),
           child: Container(
             height: 50,
             decoration: BoxDecoration(
@@ -89,7 +89,7 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
         ),
 
         Padding(
-          padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+          padding: EdgeInsets.fromLTRB(40, width * 0.027, 40, width * 0.027),
           child: Container(
             // 비밀번호 확인 입력 필드
             height: 50, // 높이 변수 적용
@@ -130,31 +130,34 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
         ),
 
         /// 이름 입력 필드
-        Visibility(
-          visible: widget.passController.text.isNotEmpty ||
-              widget.passCheckController.text.isNotEmpty,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
-            child: Center(
-              child: (widget.passController.text ==
-                          widget.passCheckController.text &&
-                      widget.passController.text.length >= 6)
-                  ? Text(
-                      '비밀번호가 일치합니다!',
-                      style: TextStyle(
-                          color: Colors.green, fontSize: width * 0.037),
-                    )
-                  : (widget.passController.text.length < 6)
-                      ? Text(
-                          '비밀번호의 길이는 6~16글자여야 합니다.',
-                          style: TextStyle(
-                              color: Colors.red, fontSize: width * 0.037),
-                        )
-                      : Text(
-                          '비밀번호가 일치하지 않습니다.',
-                          style: TextStyle(
-                              color: Colors.red, fontSize: width * 0.037),
-                        ),
+        Padding(
+          padding: EdgeInsets.fromLTRB(40, width * 0.023, 40, width * 0.023),
+          child: Visibility(
+            visible: widget.passController.text.isNotEmpty ||
+                widget.passCheckController.text.isNotEmpty,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+              child: Center(
+                child: (widget.passController.text ==
+                            widget.passCheckController.text &&
+                        widget.passController.text.length >= 6)
+                    ? Text(
+                        '비밀번호가 일치합니다!',
+                        style: TextStyle(
+                            color: Colors.green, fontSize: width * 0.037),
+                      )
+                    : (widget.passController.text.length < 6)
+                        ? Text(
+                            '비밀번호의 길이는 6~16글자여야 합니다.',
+                            style: TextStyle(
+                                color: Colors.red, fontSize: width * 0.037),
+                          )
+                        : Text(
+                            '비밀번호가 일치하지 않습니다.',
+                            style: TextStyle(
+                                color: Colors.red, fontSize: width * 0.037),
+                          ),
+              ),
             ),
           ),
         ),

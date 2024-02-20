@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/screen/register/s_register.dart';
 import 'package:inha_Carpool/screen/register/agreement/w_agreement_row.dart';
 
 import '../../../common/constants.dart';
+import '../s_register.dart';
 
 /// 약관 동의 페이지
 class Agreement extends StatefulWidget {
@@ -237,7 +237,7 @@ class _AgreementState extends State<Agreement> {
                               // child: 화면이 전환되는 동안 표시할 위젯 의미함
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      const RegisterPage(),
+                                      const Resigister(),
                               transitionsBuilder: (context, animation,
                                   secondaryAnimation, child) {
                                 const begin = Offset(1.0,
