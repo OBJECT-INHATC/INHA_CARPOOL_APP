@@ -55,6 +55,7 @@ class _NewResigisterState extends State<NewResigister> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Height(width * 0.05),
             /// 학생과 교직원 선택 버튼
             Row(
               children: [
@@ -80,7 +81,7 @@ class _NewResigisterState extends State<NewResigister> {
                 ),
               ],
             ),
-
+            Height(width * 0.1),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
