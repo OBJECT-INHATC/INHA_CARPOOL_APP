@@ -78,7 +78,8 @@ class _CustomInputFieldState extends State<CustomInputField> {
               ),
               maxLength: widget.maxLength,
               onChanged: (text) {
-                widget.onNicknameChecked!(false);
+                (widget.fieldType == "닉네임") ?  widget.onNicknameChecked!(false) : null;
+
                 setState(() {
                   nickNameCheck = false;
                   widget.controller.text = text;
