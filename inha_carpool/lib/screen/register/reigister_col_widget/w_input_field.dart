@@ -8,7 +8,6 @@ import '../../../service/sv_auth.dart';
 /// 닉네임과 이름 위젯
 class CustomInputField extends StatefulWidget {
   final TextEditingController controller;
-  final int maxLength;
   final double width;
   final String fieldType;
   final Icon icon;
@@ -17,7 +16,6 @@ class CustomInputField extends StatefulWidget {
   const CustomInputField({
     super.key,
     required this.controller,
-    required this.maxLength,
     required this.width,
     required this.fieldType,
     required this.icon,
@@ -62,7 +60,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 suffix: widget.fieldType == "닉네임"
                     ? null
                     : Text(
-                        "${widget.controller.text.length}/${widget.maxLength}",
+                        "${widget.controller.text.length}/5",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: widget.width * 0.033,
@@ -76,7 +74,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                   color: Colors.grey,
                 ),
               ),
-              maxLength: widget.maxLength,
+              maxLength: 5,
               onChanged: (text) {
                 (widget.fieldType == "닉네임") ?  widget.onNicknameChecked!(false) : null;
 

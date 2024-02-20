@@ -42,10 +42,6 @@ class _ResigisterState extends State<Resigister> {
 
   @override
   Widget build(BuildContext context) {
-    const int nameMaxLength = 5; //이름최대길이
-    const int nicknameMaxLength = 7; //닉넴최대길이
-    const int passwordMaxLength = 16;
-
     final width = context.screenWidth;
 
     return Scaffold(
@@ -130,7 +126,6 @@ class _ResigisterState extends State<Resigister> {
                 /// 이름 입력 필드
                 CustomInputField(
                   controller: _nameController,
-                  maxLength: nameMaxLength,
                   // 상수로 정의된 최대 길이 사용
                   width: width,
                   fieldType: '이름',
@@ -140,7 +135,6 @@ class _ResigisterState extends State<Resigister> {
                 /// 닉네임 확인 변수 리턴해주기
                 CustomInputField(
                   controller: _nickNameController,
-                  maxLength: nicknameMaxLength,
                   width: width,
                   fieldType: '닉네임',
                   icon: const Icon(Icons.perm_identity_rounded),
