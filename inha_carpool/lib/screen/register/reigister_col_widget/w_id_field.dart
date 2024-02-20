@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:inha_Carpool/common/common.dart';
 
+/// 학번과 학교 토글 위젯
 class StudentIdInputField extends StatefulWidget {
   final bool isProfessor;
   final Function(String) onChanged;
@@ -32,8 +34,11 @@ class _StudentIdInputFieldState extends State<StudentIdInputField> {
 
   @override
   Widget build(BuildContext context) {
+
+    final width = context.screenWidth;
+
     return Container(
-      padding: const EdgeInsets.fromLTRB(40, 10, 40, 0),
+      padding:  EdgeInsets.fromLTRB(40, width * 0.027, 40, width * 0.027),
       child: Container(
         decoration: BoxDecoration(
           border: Border.all(

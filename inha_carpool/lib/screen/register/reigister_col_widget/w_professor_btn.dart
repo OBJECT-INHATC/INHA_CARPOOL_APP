@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
 
+/// 학생, 교직원 버튼
 class ChangeProfessorButton extends StatelessWidget {
   final String isProfessorText;
   final bool isProfessor;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// 닉네임 입력시 유의사항을 알려주는 위젯
 class NickNameNotice extends StatelessWidget {
   const NickNameNotice({super.key});
 

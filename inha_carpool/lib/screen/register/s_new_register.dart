@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/register/reigister_col_widget/w_id_field.dart';
 import 'package:inha_Carpool/screen/register/reigister_col_widget/w_input_field.dart';
+import 'package:inha_Carpool/screen/register/reigister_col_widget/w_password_field.dart';
 import 'package:inha_Carpool/screen/register/reigister_col_widget/w_professor_btn.dart';
 import 'package:inha_Carpool/screen/register/reigister_col_widget/w_register_notice.dart';
 
@@ -17,12 +18,18 @@ class _NewResigisterState extends State<NewResigister> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _studentIdController = TextEditingController();
   final TextEditingController _nickNameController = TextEditingController();
+  final TextEditingController _passController = TextEditingController();
+  final TextEditingController _passCheckController = TextEditingController();
 
   String isProfessorText = "교직원_회원가입";
   bool isProfessor = false;
 
   String email = "";
   String academy = "itc.ac.kr";
+
+  bool isNickNameMatch = false;
+  bool isPasswordMatch = false;
+
 
   //textController
 
@@ -31,6 +38,7 @@ class _NewResigisterState extends State<NewResigister> {
     const int nameMaxLength = 5; //이름최대길이
     const int nicknameMaxLength = 7; //닉넴최대길이
     const int passwordMaxLength = 16;
+
     final width = context.screenWidth;
 
     return Scaffold(
@@ -74,6 +82,7 @@ class _NewResigisterState extends State<NewResigister> {
             ),
 
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 /// 회원가입 안내
                 const Padding(
@@ -110,36 +119,49 @@ class _NewResigisterState extends State<NewResigister> {
                 /// 이름 입력 필드
                 CustomInputField(
                   controller: _nameController,
-                  maxLength: nameMaxLength, // 상수로 정의된 최대 길이 사용
+                  maxLength: nameMaxLength,
+                  // 상수로 정의된 최대 길이 사용
                   width: width,
                   fieldType: '이름',
+                  icon: const Icon(Icons.person),
                 ),
 
+                /// 닉네임 확인 변수 리턴해주기
                 CustomInputField(
                   controller: _nickNameController,
-                  maxLength: nameMaxLength, // 상수로 정의된 최대 길이 사용
+                  maxLength: nicknameMaxLength,
                   width: width,
                   fieldType: '닉네임',
+                  icon: const Icon(Icons.perm_identity_rounded),
+                  onNicknameChecked: (isNicknameAvailable) {
+                    print("isNicknameAvailable 클릭 : $isNicknameAvailable");
+                    // 닉네임 확인 결과에 따른 동작 구현
+                    setState(() {
+                      isNickNameMatch = isNicknameAvailable;
+                    });
+                  },
                 ),
 
-
-
-
-
-
-
-
-
-
-
-
-
+                /// 패스워드와 패스워드 확인
+                PasswordInputField(
+                  width: MediaQuery.of(context).size.width,
+                  passController: _passController,
+                  passCheckController: _passCheckController,
+                  onMatchChanged: (isMatch) {
+                    setState(() {
+                      print("비번매치: $isMatch");
+                      isPasswordMatch = isMatch;
+                    });
+                  },
+                ),
 
                 ElevatedButton(
                   onPressed: () {
-                    print("학번: ${_studentIdController.text}");
-                    print("이름: ${_nameController.text+academy}");
+                    print("학번: ${_studentIdController.text + academy}");
+                    print("이름: ${_nameController.text }");
                     print("닉네임: ${_nickNameController.text}");
+                    print("닉네임 체크: $isNickNameMatch");
+                    print("비번 유무: $isPasswordMatch");
                   },
                   child: const Text("값 체크"),
                 ),
