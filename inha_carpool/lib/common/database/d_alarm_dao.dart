@@ -14,6 +14,7 @@ class AlarmDao {
 
   /// 알림 단일 저장
   Future insert(AlarmMessage alarmMessage) async {
+    print("common/database/d_alarm_dao insert");
     await _alarmFolder.add(await _db, alarmMessage.toMap());
   }
 

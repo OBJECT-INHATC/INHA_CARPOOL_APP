@@ -84,6 +84,7 @@ class _NotificationListState extends ConsumerState<NotificationList> {
 
       /// 알림 리스트 그리기
       body: RefreshIndicator(
+        color: context.appColors.logoColor,
         onRefresh: () async {
           setState(() {
             notificationListFuture = AlarmDao().getAllAlarms();

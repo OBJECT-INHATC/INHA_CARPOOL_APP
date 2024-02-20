@@ -100,6 +100,7 @@ dependencies:
   firebase_auth: ^4.7.2 # firebase auth 패키지
   cloud_firestore: ^4.8.4 #firestore 패키지  최신 4.12.2  #카풀 4.8.4
   firebase_messaging: ^14.6.5 # 최신 14.7.3  #카풀 14.6.5
+  firebase_analytics:
   flutter_local_notifications:
 
   #storage

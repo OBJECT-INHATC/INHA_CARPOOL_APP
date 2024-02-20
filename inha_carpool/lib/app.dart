@@ -39,6 +39,8 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
       RemoteNotification? notification = message.notification;
       var nowTime = DateTime.now().millisecondsSinceEpoch;
 
+      print("message.data['groupId'] : ${message.data['groupId']}");
+
       const secureStorage = FlutterSecureStorage();
       String? nickName = await secureStorage.read(key: 'nickName');
 
@@ -156,13 +158,19 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         App.isForeground = true;
         setAlarmBackgroundState();
+
+        print("========= AppLifecycleState.resumed =========");
         break;
       case AppLifecycleState.inactive:
         break;
       case AppLifecycleState.paused:
         App.isForeground = false;
+        print("========= AppLifecycleState.paused =========");
+
         break;
       case AppLifecycleState.detached:
+        print("========= AppLifecycleState.detached =========");
+
         break;
       default:
         // Handle any other states that might be added in the future

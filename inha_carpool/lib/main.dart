@@ -36,6 +36,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       time: nowTime,
     ));
 
+    print("백그라운드에서 알림 수신 : ${message.data['groupId']}");
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool('isCheckAlarm', true);
   }
