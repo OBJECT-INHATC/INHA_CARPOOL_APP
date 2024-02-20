@@ -3,13 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 
 import '../../../../../../common/models/m_carpool.dart';
 import '../../../../../../provider/auth/auth_provider.dart';
 import '../../../../../../provider/current_carpool/carpool_provider.dart';
-import '../../../../../../provider/notification/notification_provider.dart';
 import '../../../../../../service/api/Api_topic.dart';
 import '../../../../../../service/sv_firestore.dart';
 import '../../../../../dialog/d_complainAlert.dart';
@@ -61,9 +60,10 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     final screenWidth = context.width(1);
     final screenHeight = context.height(1);
 
+    // 해당 채팅방 알림 on/off 값을 파베에 있는 값으로 1회 조회하고 상태값으로 들고 있다가 Drawer을 열 때 조회
     final carpoolData = ref.watch(carpoolNotifierProvider).data;
     final matchingCarpool = carpoolData.firstWhere((element) => element.carId == widget.carId, orElse: () => CarpoolModel());
-    bool isChatAlarm = matchingCarpool.isChatAlarmOn ?? false;
+    bool isChatAlarm = matchingCarpool.isChatAlarmOn ?? Prefs.isPushOnRx.get();
 
     return Drawer(
       surfaceTintColor: Colors.transparent,
@@ -110,12 +110,11 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                               /// 알림 상태 변경
                               print("채팅 알림 켜기");
                               /// todo : 만약 구독하는 토픽이 서버에 없으면 저장하기
-                              print(ref.watch(isCheckAlarm) ? "알림 켜져있음" : "알림 꺼져있음");
-                             if(ref.watch(isCheckAlarm)){
+                             if(Prefs.isPushOnRx.get()){
                                setAlarmState(true);
                              }else{
                                /// todo : 스낵바 말고 다이얼로그로 변경
-                               context.showSnackbar("앱내 알림 설정이 꺼져있습니다. 내 정보 페이지에서 채팅 알림을 켜주세요.");
+                               showOpenDialogAlarm(context, "알림 설정은 내 정보에서 바꿀 수 있습니다.", "알림을 켜주세요!");
                              }
                             },
                             icon:  Icon(
@@ -633,4 +632,71 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
       },
     );
   }
+
+  // 알림 on 시 띄울 다이얼로그
+  void showOpenDialogAlarm(BuildContext context, String content, String title) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          surfaceTintColor: Colors.transparent,
+          title: Column(
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+          titleTextStyle: const TextStyle(
+            fontSize: 20,
+            color: Colors.black,
+          ),
+          content: Text(content),
+          actions: [
+            Column(
+              children: [
+                const Line(height: 2),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        '확인',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainScreen(temp: 'MyPage'),
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        '설정 바로가기',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 }

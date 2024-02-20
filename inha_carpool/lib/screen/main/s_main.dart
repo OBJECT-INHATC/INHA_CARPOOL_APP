@@ -210,14 +210,14 @@ class MainScreenState extends ConsumerState<MainScreen>
           leadingWidth: 170,
           actions: [
             Consumer(builder: (context, ref, child) {
-              bool isCheckNewAlarm = ref.watch(isCheckAlarm);
+              bool isCheckNewAlarm = ref.watch(isPushOnAlarm);
               print("s_main 247번줄 isCheckAlarm : $isCheckNewAlarm");
               return Stack(
                 children: [
                   IconButton(
                     onPressed: () async {
                       // 알림 new 표시 제거
-                      ref.read(isCheckAlarm.notifier).state = false;
+                      ref.read(isPushOnAlarm.notifier).state = false;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -232,7 +232,7 @@ class MainScreenState extends ConsumerState<MainScreen>
                     ),
 
                   ),
-                  if (ref.watch(isCheckAlarm))
+                  if (ref.watch(isPushOnAlarm))
                     Positioned(
                       right: 3.5, // "new" 텍스트를 아이콘 오른쪽에 위치
                       top: 2, // "new" 텍스트를 아이콘 위쪽에 위치
@@ -244,7 +244,7 @@ class MainScreenState extends ConsumerState<MainScreen>
                         ),
                         child: GestureDetector(
                           onTap: () async {
-                            ref.read(isCheckAlarm.notifier).state = false;
+                            ref.read(isPushOnAlarm.notifier).state = false;
                             Navigator.push(
                               context,
                               MaterialPageRoute(

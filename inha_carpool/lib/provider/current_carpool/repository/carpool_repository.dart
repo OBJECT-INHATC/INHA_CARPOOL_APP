@@ -29,7 +29,6 @@ class CarpoolRepository {
 
     // 스냅샷을 돌면서 조건에 맞는 카풀을 리스트에 추가
     for (var doc in snapshot.docs) {
-      /// todo : carModel 가져올 떄 data에 isAlarm 추가해주기
       CarpoolModel carModel = CarpoolModel.fromJson(doc.data());
 
       DocumentSnapshot isCheckAlarm =
@@ -53,6 +52,7 @@ class CarpoolRepository {
     if (startTime.isAfter(currentTime.subtract(const Duration(days: 1)))) {
     carpoolList.add(carModel);
     }
+
     }
 
     carpoolList.sort((a, b) {

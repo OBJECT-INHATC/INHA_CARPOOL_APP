@@ -44,7 +44,7 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
 
       if (notification != null && message.data['sender'] != nickName) {
         /// 알림 상태관리 업데이트
-        ref.read(isCheckAlarm.notifier).state = true;
+        ref.read(isPushOnAlarm.notifier).state = true;
 
         if (notification.title == "새로운 채팅이 도착했습니다." &&
             !Prefs.chatRoomOnRx.get() &&
@@ -145,7 +145,7 @@ class AppState extends ConsumerState<App> with Nav, WidgetsBindingObserver {
     prefs.getBool('isCheckAlarm');
 
     if (prefs.getBool('isCheckAlarm') == true) {
-      ref.read(isCheckAlarm.notifier).state = true;
+      ref.read(isPushOnAlarm.notifier).state = true;
     }
   }
 

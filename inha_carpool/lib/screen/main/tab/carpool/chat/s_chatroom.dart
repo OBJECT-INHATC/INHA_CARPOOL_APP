@@ -16,7 +16,6 @@ import 'package:inha_Carpool/service/sv_firestore.dart';
 import '../../../../../provider/auth/auth_provider.dart';
 import 'drawer/f_drawer.dart';
 
-/// todo : 상태관리로 해당 채팅방만 알림 끄기
 class ChatroomPage extends ConsumerStatefulWidget {
   final String carId;
 

@@ -51,7 +51,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   // FCM 푸시 알림 클릭 시 처리 메서드
   void _handleMessage(RemoteMessage message) async {
-    ref.read(isCheckAlarm.notifier).state = true;
+    ref.read(isPushOnAlarm.notifier).state = true;
 
     // 닉네임 가져오기
     String? nickName = await storage.read(key: "nickName");

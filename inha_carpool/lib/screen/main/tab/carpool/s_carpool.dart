@@ -192,7 +192,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                                               icon: const Icon(Icons.circle), isStart: false,),
 
                                           /// 마지막 채팅 메시지 정보
-                                          /// todo : 방 만드는거 메세지 타이밍 잡기
                                           ChatLastInfo(carpool: carpool),
                                         ],
                                       ),
