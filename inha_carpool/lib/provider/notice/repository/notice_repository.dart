@@ -8,16 +8,17 @@ final noticeRepositoryProvider = Provider((ref) => NoticeRepository(ref));
 
 class NoticeRepository {
   final Ref _ref;
-  final _fireStore = FirebaseFirestore.instance;
+  final _fireStore = FirebaseFirestore.instance.collection('admin');
 
   NoticeRepository(this._ref);
 
   Future<NoticeStateModel> getNotice() async {
     DocumentSnapshot carpool =
-        await _fireStore.collection('admin').doc("carpool").get();
+        await _fireStore.doc("carpool").get();
+
 
     DocumentSnapshot main =
-    await _fireStore.collection('admin').doc("main").get();
+    await _fireStore.doc("main").get();
 
     return NoticeStateModel(
       carpoolContext : carpool.get('context'),
