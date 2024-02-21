@@ -47,8 +47,7 @@ class TimeAndMapInfo extends StatelessWidget {
                 Icon(
                   Icons
                       .calendar_today_outlined,
-                  color: context
-                      .appColors.logoColor,
+                  color: colorTemp,
                   size: 18,
                 ),
                 Width(screenWidth * 0.01),

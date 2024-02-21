@@ -222,7 +222,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
       if (difference.inDays < -1) {
         return '${(difference.inDays.abs())}일 후 예정';
       } else if (difference.inDays == -1) {
-        return '하루 전';
+        return '내일 출발';
       } else if (difference.inHours < -1) {
         return '${(difference.inHours.abs())}시간 후 예정';
       } else if (difference.inHours == -1) {
