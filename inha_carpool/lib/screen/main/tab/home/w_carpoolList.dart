@@ -72,12 +72,8 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
   @override
   Widget build(BuildContext context) {
     // 화면의 너비와 높이를 가져 와서 화면 비율 계산함
-    final screenWidth = MediaQuery.of(context).size.width; //360
-    final screenHeight = MediaQuery.of(context).size.height; //727
-
-    // 화면 높이의 75%를 ListView.builder의 높이로 사용
-    double listViewHeight = screenHeight * 0.75;
-
+    final screenWidth = context.screenWidth; //360
+    final screenHeight =context.screenHeight; //360
 
 
     return Container(

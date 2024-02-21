@@ -30,115 +30,121 @@ class _RecordListState extends ConsumerState<HistoryList> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text(
-          '이용내역',
+          '이용기록',
           style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
         ),
         surfaceTintColor: Colors.white,
       ),
-      body: Container(
-        child: (historyState.isEmpty)
-            ? const EmptyCarpoolList(
-                floatingMessage: '아직 이용내역이 없습니다.\n\n카풀을 등록하여\n택시 비용을 줄여 보세요!',
-              )
-            : ListView.builder(
-                itemCount: historyState.length,
-                itemBuilder: (BuildContext context, int index) {
-                  DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
-                      historyState[index].startTime);
-                  String formattedDate =
-                      "${dateTime.month}월 ${dateTime.day}일 ${dateTime.hour}시 ${dateTime.minute}분";
+      body: RefreshIndicator(
+        color: context.appColors.logoColor,
+        onRefresh: () async {
+          await ref.watch(historyProvider.notifier).loadHistoryData();
+        },
+        child: Container(
+          child: (historyState.isEmpty)
+              ? const EmptyCarpoolList(
+                  floatingMessage: '아직 이용내역이 없습니다.\n\n카풀을 등록하여\n택시 비용을 줄여 보세요!',
+                )
+              : ListView.builder(
+                  itemCount: historyState.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(
+                        historyState[index].startTime);
+                    String formattedDate =
+                        "${dateTime.month}월 ${dateTime.day}일 ${dateTime.hour}시 ${dateTime.minute}분";
 
-                  // '함께 한 사람' 정보 리스트를 생성
-                  List<String> members = [
-                    historyState[index].member1,
-                    historyState[index].member2,
-                    historyState[index].member3,
-                    historyState[index].member4
-                  ];
+                    // '함께 한 사람' 정보 리스트를 생성
+                    List<String> members = [
+                      historyState[index].member1,
+                      historyState[index].member2,
+                      historyState[index].member3,
+                      historyState[index].member4
+                    ];
 
-                  // 멤버 리스트에서 현재 유저와 동일한 이름의 멤버를 필터링
-                  List<String> validMembers = members.where((member) {
-                    return member != '' &&
-                        member.split('_')[1] != currentUserState.nickName;
-                  }).toList();
+                    // 멤버 리스트에서 현재 유저와 동일한 이름의 멤버를 필터링
+                    List<String> validMembers = members.where((member) {
+                      return member != '' &&
+                          member.split('_')[1] != currentUserState.nickName;
+                    }).toList();
 
-                  return Card(
-                    color: Colors.white,
-                    surfaceTintColor: Colors.transparent,
-                    elevation: 2,
-                    margin: const EdgeInsets.all(10),
-                    shape: RoundedRectangleBorder(
-                      side: const BorderSide(
-                          color: Colors.indigoAccent, width: 0.7),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Height(screenHeight * 0.01),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              pointCol(historyState[index].startDetailPoint,
-                                  'startMarker', screenWidth),
-                              Icon(
-                                Icons.arrow_forward,
-                                size: screenWidth * 0.06,
-                              ),
-                              pointCol(historyState[index].endDetailPoint,
-                                  'endMarker', screenWidth),
-                            ],
-                          ),
-                          Height(screenHeight * 0.01),
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(8, 14, 8, 8),
-                            child: Line(
-                              color: Colors.black26,
-                              height: 1,
-                            ),
-                          ),
-
-                          /// 이용날짜
-                          historyTime(
-                            screenWidth,
-                            formattedDate,
-                          ),
-                          validMembers.isNotEmpty
-                              ? ExpansionTile(
-
-                                  title: Row(
-                                    children: [
-                                      Icon(
-                                        Icons.people_alt,
-                                        size: screenWidth * 0.06,
-                                        color: Colors.black,
-                                      ),
-                                      SizedBox(width: screenWidth * 0.015),
-                                      '함께 한 사람 ${validMembers.length}명'
-                                          .text
-                                          .size(screenWidth * 0.04)
-                                          .bold
-                                          .make(),
-                                    ],
-                                  ),
-                                  children: [
-                                    for (var member in validMembers)
-                                      buildMemberRow(
-                                          member,
-                                          historyState[index].carPoolId,
-                                          currentUserState.nickName!,
-                                          screenWidth),
-                                  ],
-                                )
-                              : const SizedBox(),
-                        ],
+                    return Card(
+                      color: Colors.white,
+                      surfaceTintColor: Colors.transparent,
+                      elevation: 2,
+                      margin: const EdgeInsets.all(10),
+                      shape: RoundedRectangleBorder(
+                        side: const BorderSide(
+                            color: Colors.indigoAccent, width: 0.7),
+                        borderRadius: BorderRadius.circular(10.0),
                       ),
-                    ),
-                  );
-                },
-              ),
+                      child: Container(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Height(screenHeight * 0.01),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                pointCol(historyState[index].startDetailPoint,
+                                    'startMarker', screenWidth),
+                                Icon(
+                                  Icons.arrow_forward,
+                                  size: screenWidth * 0.06,
+                                ),
+                                pointCol(historyState[index].endDetailPoint,
+                                    'endMarker', screenWidth),
+                              ],
+                            ),
+                            Height(screenHeight * 0.01),
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(8, 14, 8, 8),
+                              child: Line(
+                                color: Colors.black26,
+                                height: 1,
+                              ),
+                            ),
+
+                            /// 이용날짜
+                            historyTime(
+                              screenWidth,
+                              formattedDate,
+                            ),
+                            validMembers.isNotEmpty
+                                ? ExpansionTile(
+
+                                    title: Row(
+                                      children: [
+                                        Icon(
+                                          Icons.people_alt,
+                                          size: screenWidth * 0.06,
+                                          color: Colors.black,
+                                        ),
+                                        SizedBox(width: screenWidth * 0.015),
+                                        '함께 한 사람 ${validMembers.length}명'
+                                            .text
+                                            .size(screenWidth * 0.04)
+                                            .bold
+                                            .make(),
+                                      ],
+                                    ),
+                                    children: [
+                                      for (var member in validMembers)
+                                        buildMemberRow(
+                                            member,
+                                            historyState[index].carPoolId,
+                                            currentUserState.nickName!,
+                                            screenWidth),
+                                    ],
+                                  )
+                                : const SizedBox(),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
       ),
     );
   }
