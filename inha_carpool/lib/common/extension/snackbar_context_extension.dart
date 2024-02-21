@@ -5,9 +5,7 @@ import 'package:inha_Carpool/common/extension/context_extension.dart';
 import '../Colors/app_colors.dart';
 import '../widget/w_tap.dart';
 
-
 extension SnackbarContextExtension on BuildContext {
-
   void showSnackbarMaxmember(BuildContext context) {
     _showSnackBarWithContext(
       context,
@@ -15,14 +13,13 @@ extension SnackbarContextExtension on BuildContext {
     );
   }
 
-  void showSnackbarText(BuildContext context, String message, {Color? bgColor}) {
+  void showSnackbarText(BuildContext context, String message,
+      {Color? bgColor}) {
     _showSnackBarWithContext(
       context,
       _SnackbarFactory.createSnackBar(context, message, bgColor: bgColor),
     );
   }
-
-
 
   ///Scaffold안에 Snackbar를 보여줍니다.
   void showSnackbar(String message, {Widget? extraButton}) {
@@ -81,13 +78,15 @@ class _SnackbarFactory {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
-                    Icon(
-                      snackbarBgColor == Colors.red
-                          ? Icons.error_outline
-                          :  Icons.check_outlined,
-                        color: Colors.white,
-                        size: width * 0.08,
-                      ),
+                Icon(
+                  snackbarBgColor == Colors.red
+                      ? Icons.error_outline
+                      : snackbarBgColor == Colors.green
+                          ? Icons.check_outlined
+                          : Icons.warning_amber_rounded,
+                  color: Colors.white,
+                  size: width * 0.08,
+                ),
                 Width(width * 0.02),
                 Expanded(
                   child: Text(message,
