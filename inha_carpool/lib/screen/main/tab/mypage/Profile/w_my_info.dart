@@ -17,14 +17,12 @@ class AuthInfoRow extends ConsumerStatefulWidget {
 class _AuthInfoState extends ConsumerState<AuthInfoRow> {
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(authProvider);
     final width = context.screenWidth;
     final height = context.screenHeight;
-     final recordState = ref.watch(historyProvider);
 
+    final authState = ref.read(authProvider);
+    final historyState = ref.read(historyProvider);
     final yellowState = ref.read(yellowCountProvider);
-
-
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -46,31 +44,24 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              /// : todo 앱 이용횟수 서버에서 꽃기
-              _buildCountColumn('카풀 이용', recordState.length, width),
-
+              /// 카풀 이용회수
+              _buildCountColumn('카풀 이용', historyState.length, width),
               Column(
                 children: [
                   // 이름
-                  state.userName!.text.size(width * 0.05).bold.make(),
+                  authState.userName!.text.size(width * 0.05).bold.make(),
                   // 닉네임
-                  "# ${state.nickName!}".text.sky900.size(width * 0.04).make(),
+                  "# ${authState.nickName!}".text.sky900.size(width * 0.04).make(),
                 ],
               ),
-
-
-              // todo : 경고 횟수 받아와서 때리기 (지금은 0 고정)
+              /// 경고 누적 수
               _buildCountColumn('경고 누적', yellowState, width),
             ],
           ),
-
-          // 이메일
-          // state.email!.text.size(width * 0.02).make(),
         ],
       ),
     );
   }
-
   _buildCountColumn(String text, int num, double width) {
     return Column(
       children: [

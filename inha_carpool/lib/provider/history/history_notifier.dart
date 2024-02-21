@@ -6,6 +6,7 @@ import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import '../../../../../dto/HistoryRequestDTO.dart';
 import '../../../../../service/api/Api_repot.dart';
 
+/// 이용기록을 관리하는 상태 0221 이상훈
 final historyProvider =
 StateNotifierProvider<HistoryStateNotifier, List<HistoryRequestDTO>>(
       (ref) => HistoryStateNotifier(ref),
