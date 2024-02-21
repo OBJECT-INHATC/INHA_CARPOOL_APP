@@ -9,8 +9,6 @@ import 'package:inha_Carpool/screen/main/map/w_naver_map.dart';
 
 import '../tab/home/enum/mapType.dart';
 
-
-
 class CarpoolMap extends ConsumerStatefulWidget {
   final LatLng startPoint;
   final String startPointName;
