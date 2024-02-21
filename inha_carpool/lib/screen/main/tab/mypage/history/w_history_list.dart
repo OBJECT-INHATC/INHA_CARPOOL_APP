@@ -8,16 +8,15 @@ import 'package:inha_Carpool/service/api/Api_repot.dart';
 
 import '../../../../../common/widget/empty_list.dart';
 import '../../../../../provider/auth/auth_provider.dart';
-import '../../../../../provider/record/record_provider.dart';
 
-class RecordList extends ConsumerStatefulWidget {
-  RecordList({Key? key}) : super(key: key);
+class HistoryList extends ConsumerStatefulWidget {
+  HistoryList({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<RecordList> createState() => _RecordListState();
+  ConsumerState<HistoryList> createState() => _RecordListState();
 }
 
-class _RecordListState extends ConsumerState<RecordList> {
+class _RecordListState extends ConsumerState<HistoryList> {
   final ApiService apiService = ApiService();
   late String uid;
   late String nickName;
@@ -33,7 +32,6 @@ class _RecordListState extends ConsumerState<RecordList> {
           jsonDecode(utf8.decode(response.body.runes.toList()));
 
       /// 이용횟수 상태 업데이트
-      ref.read(recordCountProvider.notifier).state = histories.length;
 
       List<HistoryRequestDTO> historyList =
           histories.map((data) => HistoryRequestDTO.fromJson(data)).toList();

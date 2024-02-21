@@ -18,8 +18,8 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../common/models/m_member.dart';
 import '../../provider/auth/auth_provider.dart';
+import '../../provider/history/history_notifier.dart';
 import '../../provider/notification/notification_provider.dart';
-import '../../provider/record/record_provider.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
 import '../main/tab/carpool/chat/s_chatroom.dart';
@@ -95,7 +95,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       setAuthStateProvider(memberModel);
 
       /// 이용내역 상태관리 초기화
-      setRecordCount(memberModel.uid!);
+      setHistory(memberModel.uid!);
 
       setYellowCardCount(memberModel.nickName!);
 
@@ -109,10 +109,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   /// 참여중인 카풀 수 조회
-  void setRecordCount(String uid) async {
-    final recordCount = await ApiService().selectHistoryCount(uid.toString());
-    print("참가했더 카풀 이용내역 수 : $recordCount");
-    ref.read(recordCountProvider.notifier).state = recordCount;
+  void setHistory(String uid) async {
+    await ref.read(historyProvider.notifier).loadHistoryData();
+    // print("참여중인 카풀 수: ${ref.read(historyProvider).length}");
   }
 
   /// 경고 횟수 초기화
@@ -501,7 +500,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       ));
 
                                       /// 0207 이상훈 이용내역 상태관리 초기화
-                                      setRecordCount(uid);
+                                      setHistory(uid);
 
                                       setYellowCardCount(nickname);
 

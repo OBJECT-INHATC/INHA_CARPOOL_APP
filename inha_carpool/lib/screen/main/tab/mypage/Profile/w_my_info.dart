@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/provider/record/record_provider.dart';
 
 import '../../../../../common/widget/w_custom_png.dart';
 import '../../../../../provider/auth/auth_provider.dart';
+import '../../../../../provider/history/history_notifier.dart';
 import '../../../../../provider/yellow/yellow_provider.dart';
 
 class AuthInfoRow extends ConsumerStatefulWidget {
@@ -20,8 +20,7 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
     final state = ref.watch(authProvider);
     final width = context.screenWidth;
     final height = context.screenHeight;
-
-    final recordState = ref.watch(recordCountProvider);
+     final recordState = ref.watch(historyProvider);
 
     final yellowState = ref.read(yellowCountProvider);
 
@@ -48,7 +47,7 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               /// : todo 앱 이용횟수 서버에서 꽃기
-              _buildCountColumn('카풀 이용', recordState, width),
+              _buildCountColumn('카풀 이용', recordState.length, width),
 
               Column(
                 children: [
