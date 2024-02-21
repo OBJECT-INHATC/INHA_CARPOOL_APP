@@ -21,8 +21,8 @@ class _AuthInfoState extends ConsumerState<AuthInfoRow> {
     final height = context.screenHeight;
 
     final authState = ref.read(authProvider);
-    final historyState = ref.read(historyProvider);
-    final yellowState = ref.read(yellowCountProvider);
+    final historyState = ref.watch(historyProvider);
+    final yellowState = ref.watch(yellowCountProvider);
 
     return Padding(
       padding: EdgeInsets.symmetric(
