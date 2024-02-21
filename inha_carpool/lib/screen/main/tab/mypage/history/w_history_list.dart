@@ -91,36 +91,51 @@ class _RecordListState extends ConsumerState<HistoryList> {
                                   'endMarker', screenWidth),
                             ],
                           ),
-                          Height(screenHeight * 0.02),
-                          validMembers.isNotEmpty
-                              ? Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.people_alt,
-                                      size: screenHeight * 0.03,
-                                      color: Colors.black,
-                                    ),
-                                    Width(screenWidth * 0.02),
-                                    '함께 한 사람'
-                                        .text
-                                        .size(screenWidth * 0.04)
                                         .bold
-                                        .make(),
-                                  ],
-                                )
-                              : const SizedBox(),
+
                           Height(screenHeight * 0.01),
-                          for (var member in validMembers)
-                            buildMemberRow(
-                                member,
-                                historyState[index].carPoolId,
-                                currentUserState.nickName!,
-                                screenWidth),
+
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(8, 14, 8, 8),
+                            child: Line(
+                              color: Colors.black26,
+                              height: 1,
+                            ),
+                          ),
+
+                          /// 이용날짜
                           historyTime(
                             screenWidth,
                             formattedDate,
                           ),
+                          validMembers.isNotEmpty
+                              ? ExpansionTile(
+
+                                  title: Row(
+                                    children: [
+                                      Icon(
+                                        Icons.people_alt,
+                                        size: screenWidth * 0.06,
+                                        color: Colors.black,
+                                      ),
+                                      SizedBox(width: screenWidth * 0.015),
+                                      '함께 한 사람 ${validMembers.length}명'
+                                          .text
+                                          .size(screenWidth * 0.04)
+                                          .bold
+                                          .make(),
+                                    ],
+                                  ),
+                                  children: [
+                                    for (var member in validMembers)
+                                      buildMemberRow(
+                                          member,
+                                          historyState[index].carPoolId,
+                                          currentUserState.nickName!,
+                                          screenWidth),
+                                  ],
+                                )
+                              : const SizedBox(),
                         ],
                       ),
                     ),
@@ -136,10 +151,14 @@ class _RecordListState extends ConsumerState<HistoryList> {
       children: [
         Image(
           image: AssetImage('assets/image/map/$marker.png'),
-          width: screenWidth * 0.17,
-          height: screenWidth * 0.09,
+          width: screenWidth * 0.225,
+          height: screenWidth * 0.2,
         ),
-        point.text.size(screenWidth * 0.04).bold.make(),
+        Text(
+          point.length > 7 ? "${point.substring(0, 7)}.." : point,
+          style: TextStyle(
+              fontSize: screenWidth * 0.043, fontWeight: FontWeight.bold),
+        ),
       ],
     );
   }
@@ -150,15 +169,9 @@ class _RecordListState extends ConsumerState<HistoryList> {
   ) {
     return Column(
       children: [
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Line(
-            color: Colors.black26,
-            height: 1,
-          ),
-        ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(8, 5, 8, 0),
+          padding: EdgeInsets.fromLTRB(screenWidth * 0.04, screenWidth * 0.02,
+              screenWidth * 0.04, screenWidth * 0.02),
           child: Row(
             children: [
               Icon(
@@ -191,9 +204,9 @@ class _RecordListState extends ConsumerState<HistoryList> {
     return Row(
       children: [
         IconButton(
-          icon: const Icon(
+          icon:  Icon(
             Icons.warning_rounded,
-            size: 20,
+            size: screenWidth * 0.06,
             color: Colors.red,
           ),
           onPressed: () {
@@ -207,7 +220,7 @@ class _RecordListState extends ConsumerState<HistoryList> {
             );
           },
         ),
-        friendsNickName.text.size(16).make(),
+        friendsNickName.text.size(screenWidth * 0.04).make(),
       ],
     );
   }
