@@ -91,10 +91,7 @@ class _RecordListState extends ConsumerState<HistoryList> {
                                   'endMarker', screenWidth),
                             ],
                           ),
-                                        .bold
-
                           Height(screenHeight * 0.01),
-
                           const Padding(
                             padding: EdgeInsets.fromLTRB(8, 14, 8, 8),
                             child: Line(
