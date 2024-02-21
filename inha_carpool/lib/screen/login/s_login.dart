@@ -281,17 +281,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                   .color(Colors.grey[500])
                                   .make()
                               : FlutterToggleTab(
-                                  width: 30,
+                                  width: screenWidth * 0.077,
                                   borderRadius: 40,
-                                  height: 30,
-                                  selectedTextStyle: const TextStyle(
+                                  height: screenHeight * 0.047,
+                                  selectedTextStyle:  TextStyle(
                                     color: Colors.white,
-                                    fontSize: 12,
+                                    fontSize: screenHeight * 0.016,
                                     fontWeight: FontWeight.w700,
                                   ),
-                                  unSelectedTextStyle: const TextStyle(
+                                  unSelectedTextStyle:  TextStyle(
                                     color: Colors.white,
-                                    fontSize: 10,
+                                    fontSize: screenHeight * 0.0132,
                                     fontWeight: FontWeight.w500,
                                   ),
                                   labels: const ["인하공전", "인하대"],
