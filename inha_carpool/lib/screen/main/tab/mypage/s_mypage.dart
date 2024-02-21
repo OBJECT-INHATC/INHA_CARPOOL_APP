@@ -75,7 +75,7 @@ class _MyPageState extends ConsumerState<MyPage> {
               title: '비밀번호 변경',
               onTap: () {
                 Navigator.of(Nav.globalContext).push(
-                    MaterialPageRoute(builder: (context) => ChangePasswordPage()));
+                    MaterialPageRoute(builder: (context) => ChangePasswordPage(studentId: email,)));
               },
               color: Colors.black,
             ),

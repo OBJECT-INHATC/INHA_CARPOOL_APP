@@ -7,6 +7,11 @@ import '../../../../login/s_login.dart';
 
 /// 비밀번호 변경 페이지
 class ChangePasswordPage extends StatefulWidget {
+
+  final String? studentId;
+
+  const ChangePasswordPage({super.key, this.studentId});
+
   @override
   State<ChangePasswordPage> createState() => _ChangePasswordPageState();
 }
@@ -52,8 +57,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                       const SizedBox(height: 20),
                       '학번'.text.size(15).make(),
                       TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: '학번 입력',
+                        readOnly: true,
+                        decoration:  InputDecoration(
+                          hintText: widget.studentId,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -120,7 +126,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           setState(() {
                             isLoading = true; // 로딩 시작
                           });
-                          // 비밀번호 변경 로직 구현 예정
+
                           String isValid =
                               await AuthService().validatePassword(oldPassword);
 
@@ -143,7 +149,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             }
                             if (result == 'Success') {
                               if (!mounted) return;
-                              context.showSnackbarText(context, '성공적으로 변경되었습니다.');
+                              context.showSnackbarText(context, '성공적으로 변경되었습니다.', bgColor: Colors.green );
 
                               AuthService().signOut().then((value) {
                                 Navigator.pushAndRemoveUntil(
