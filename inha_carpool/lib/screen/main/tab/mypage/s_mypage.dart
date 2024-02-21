@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,12 +16,11 @@ import '../../../../common/data/preference/prefs.dart';
 import '../../../../fragment/opensource/s_opensource.dart';
 import '../../../../provider/auth/auth_provider.dart';
 import '../../../../provider/current_carpool/carpool_provider.dart';
-import '../../../../provider/notification/notification_provider.dart';
 import '../../../dialog/d_message.dart';
 import 'alarm_switch/w_switch_menu.dart';
 import 'item_page/d_changepassword.dart';
 import 'item_page/d_logout_confirmation.dart';
-import 'item_page/f_secession.dart';
+import 'item_page/secession/f_secession.dart';
 
 class MyPage extends ConsumerStatefulWidget {
   const MyPage({Key? key}) : super(key: key);
@@ -95,11 +93,11 @@ class _MyPageState extends ConsumerState<MyPage> {
               title: '회원탈퇴',
               onTap: () {
                 Navigator.of(Nav.globalContext).push(
-                    MaterialPageRoute(builder: (context) => SecessionPage()));
+                    MaterialPageRoute(builder: (context) =>  SecessionPage(userEmail: email, userNickName: nickName)));
               },
               color: Colors.black,
             ),
-            // 알림 항목
+            /// 알림 항목
             const Category(title: '알림'),
             Obx(
               () => SwitchMenu('채팅 알림', Prefs.isPushOnRx.get(),

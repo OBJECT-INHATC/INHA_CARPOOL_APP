@@ -25,11 +25,19 @@ class _NoticeBoxState extends ConsumerState<NoticeBox> {
     final screenWidth = context.screenWidth;
 
     if(widget.noticeType == "main"){
-      noticeText = noticeNotifier.mainContext;
-      uri = Uri.parse(noticeNotifier.mainUri);
+      if(noticeNotifier.mainContext == "") {
+        noticeText = "인하카풀은 무료이며 재학생을 위한 서비스입니다.";
+      }else{
+        noticeText = noticeNotifier.mainContext;
+        uri = Uri.parse(noticeNotifier.mainUri);
+      }
     }else{
-      noticeText = noticeNotifier.carpoolContext;
-      uri = Uri.parse(noticeNotifier.carpoolUri);
+      if(noticeNotifier.carpoolContext == "") {
+        noticeText = "신입생 여러분들의 입학을 진심으로 환영합니다!";
+      }else{
+        noticeText = noticeNotifier.carpoolContext;
+        uri = Uri.parse(noticeNotifier.carpoolUri);
+      }
     }
 
     return GestureDetector(

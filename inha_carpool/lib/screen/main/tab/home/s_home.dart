@@ -263,6 +263,7 @@ class _HomeState extends ConsumerState<Home> {
           child: Column(
             children: [
               const Height(5),
+              /// 광고 및 공지사항 위젯
               NoticeBox(height * 0.25, "main"),
               Container(
                 color: Colors.white,

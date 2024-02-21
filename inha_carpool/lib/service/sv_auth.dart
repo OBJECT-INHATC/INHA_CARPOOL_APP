@@ -158,18 +158,6 @@ class AuthService {
       return 'Failed  :${e.toString()}';
     }
   }
-///0828 서은율 ,현재 계정 비교
-  Future<bool> validateCredentials(String email, String password) async {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      AuthCredential credential = EmailAuthProvider.credential(email: email, password: password);
-      await user!.reauthenticateWithCredential(credential);
-      return true;
-    } catch (e) {
-      print(e.toString());
-      return false;
-    }
-  }
 
   ///1108 서은율 ,닉네임 중복 확인
   Future<bool> checkNicknameAvailability(String newNickname) async {
