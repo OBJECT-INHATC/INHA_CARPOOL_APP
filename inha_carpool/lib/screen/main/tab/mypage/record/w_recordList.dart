@@ -58,8 +58,8 @@ class _RecordListState extends ConsumerState<RecordList> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width; //360
-    final screenHeight = MediaQuery.of(context).size.height; //727
+    final screenWidth = context.screenWidth;
+    final screenHeight = context.screenHeight;
 
     // 화면 높이의 75%를 ListView.builder의 높이로 사용
     double listViewHeight = screenHeight * 0.75;

@@ -3,9 +3,8 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/screen/main/tab/mypage/item_page/s_feedback.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/Profile/w_profile.dart';
-import 'package:inha_Carpool/screen/main/tab/mypage/item_page/w_recordList.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/record/w_recordList.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_category.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_list_item.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_version_copyRight.dart';
@@ -18,9 +17,10 @@ import '../../../../provider/auth/auth_provider.dart';
 import '../../../../provider/current_carpool/carpool_provider.dart';
 import '../../../dialog/d_message.dart';
 import 'alarm_switch/w_switch_menu.dart';
-import 'item_page/d_changepassword.dart';
-import 'item_page/d_logout_confirmation.dart';
-import 'item_page/secession/f_secession.dart';
+import 'feedback/s_feedback.dart';
+import 'user/d_changepassword.dart';
+import 'user/d_logout_confirmation.dart';
+import 'user/secession/f_secession.dart';
 
 class MyPage extends ConsumerStatefulWidget {
   const MyPage({Key? key}) : super(key: key);
