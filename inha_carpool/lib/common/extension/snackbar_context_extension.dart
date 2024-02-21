@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/context_extension.dart';
 
 import '../Colors/app_colors.dart';
@@ -58,6 +59,8 @@ class _SnackbarFactory {
   static SnackBar createSnackBar(BuildContext context, String message,
       {Color? bgColor, Widget? extraButton}) {
     Color snackbarBgColor = bgColor ?? context.appColors.snackbarBgColor;
+    final width = context.screenWidth;
+
     return SnackBar(
         elevation: 0,
         behavior: SnackBarBehavior.fixed,
@@ -78,6 +81,14 @@ class _SnackbarFactory {
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
+                    Icon(
+                      snackbarBgColor == Colors.red
+                          ? Icons.error_outline
+                          :  Icons.check_outlined,
+                        color: Colors.white,
+                        size: width * 0.08,
+                      ),
+                Width(width * 0.02),
                 Expanded(
                   child: Text(message,
                       style: const TextStyle(
