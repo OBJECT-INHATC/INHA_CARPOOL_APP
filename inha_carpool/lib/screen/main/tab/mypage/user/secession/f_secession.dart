@@ -1,11 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import '../../../../../dialog/d_delete_auth.dart';
 
 const kSecessionTitle = '회원 탈퇴';
@@ -39,7 +36,6 @@ class _SecessionPageState extends ConsumerState<SecessionPage> {
   @override
   Widget build(BuildContext context) {
     final height = context.screenHeight;
-    final width = context.screenWidth;
 
     return Scaffold(
       appBar: AppBar(

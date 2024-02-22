@@ -115,6 +115,10 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     Prefs.chatRoomCarIdRx.set("carId");
+
+    messageController.dispose();
+    _scrollController.dispose();
+
     super.dispose();
   }
 

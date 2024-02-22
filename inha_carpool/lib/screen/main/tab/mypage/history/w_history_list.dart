@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/provider/history/history_notifier.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
-import 'package:inha_Carpool/service/api/Api_repot.dart';
 
 import '../../../../../common/widget/empty_list.dart';
 import '../../../../../provider/auth/auth_provider.dart';
@@ -16,7 +15,6 @@ class HistoryList extends ConsumerStatefulWidget {
 }
 
 class _RecordListState extends ConsumerState<HistoryList> {
-  final ApiService apiService = ApiService();
 
   @override
   Widget build(BuildContext context) {

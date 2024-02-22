@@ -25,13 +25,15 @@ class Home extends ConsumerStatefulWidget {
 }
 
 class _HomeState extends ConsumerState<Home> {
-  // 로그인 정보
 
-  // 내 위치
-  late LatLng myPoint;
+  final ScrollController _scrollController = ScrollController();
 
-  // Declare a StreamController for DateTime
+
+  final TextEditingController _searchKeywordController = TextEditingController();
+  String _searchKeyword = "";
+
   final _timeStreamController = StreamController<DateTime>.broadcast();
+  Stream<DateTime>? _timeStream;
 
   // 현재 시간을 1초마다 스트림에 추가 -> init
   _HomeState() {
@@ -43,7 +45,8 @@ class _HomeState extends ConsumerState<Home> {
     });
   }
 
-  Stream<DateTime>? _timeStream;
+  // 내 위치
+  late LatLng myPoint;
 
   late Future<List<DocumentSnapshot>> carPoolList = Future.value([]);
 
@@ -54,14 +57,11 @@ class _HomeState extends ConsumerState<Home> {
 
   // 페이징 처리를 위한 변수
   int _visibleItemCount = 0;
-  final ScrollController _scrollController = ScrollController();
   final limit = 5; // 한번에 불러올 데이터 갯수
-  bool _isLoading = false; // 추가 데이터 로딩 중을 표시할 변수
+  bool _isLoading = false;
 
   // 검색어 필터링
-  String _searchKeyword = "";
-  final TextEditingController _searchKeywordController =
-      TextEditingController();
+
 
   @override
   void initState() {
@@ -376,6 +376,7 @@ class _HomeState extends ConsumerState<Home> {
     return RefreshIndicator(
       color: context.appColors.logoColor,
       onRefresh: _refreshCarpoolList,
+      /// todo : 퓨처빌더 제거하기
       child: FutureBuilder<List<DocumentSnapshot>>(
         future: carPoolList,
         builder: (context, snapshot) {
@@ -454,8 +455,6 @@ class _HomeState extends ConsumerState<Home> {
     } else {
       carPoolList = _nearByFunction();
     }
-    print('새로고침 완료');
-
     // 새로고침 후 보여지는 리스트 갯수 : 5개 보다 적을시 리스트의 갯수, 이상일 시 5개
     carPoolList.then((list) {
       // setState(() {

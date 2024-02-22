@@ -206,6 +206,13 @@ class _LocationInputState extends State<LocationInput> {
   }
 
   @override
+  void dispose() {
+    _searchController.dispose();
+    mapController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음

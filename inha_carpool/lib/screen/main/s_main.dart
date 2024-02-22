@@ -211,7 +211,6 @@ class MainScreenState extends ConsumerState<MainScreen>
           actions: [
             Consumer(builder: (context, ref, child) {
               bool isCheckNewAlarm = ref.watch(isPushOnAlarm);
-              print("s_main 247번줄 isCheckAlarm : $isCheckNewAlarm");
               return Stack(
                 children: [
                   IconButton(

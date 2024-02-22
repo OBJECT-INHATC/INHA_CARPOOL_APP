@@ -24,7 +24,13 @@ class _FeedBackPageState extends State<FeedBackPage> {
 
   final _items = ['건의', '문의', '신고'];
 
-  final _controller = TextEditingController();
+  final _textController = TextEditingController();
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +112,7 @@ class _FeedBackPageState extends State<FeedBackPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10.0),
                       child: TextFormField(
-                        controller: _controller,
+                        controller: _textController,
                         maxLines: 6, // 크기를 조절하기 위해 maxLines를 3으로 설정
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
@@ -129,9 +135,9 @@ class _FeedBackPageState extends State<FeedBackPage> {
                             ),
                           ),
                           onPressed: () async {
-                            if (_controller.text.isNotEmpty && selectedValue != null) {
+                            if (_textController.text.isNotEmpty && selectedValue != null) {
                               final reportRequestDTO = ReportRequstDTO(
-                                content: _controller.text,
+                                content: _textController.text,
                                 carpoolId: '피드백',
                                 reportedUser:'피드백',
                                 reporter: widget.reporter,

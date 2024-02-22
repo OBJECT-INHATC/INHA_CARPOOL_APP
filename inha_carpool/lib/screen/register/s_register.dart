@@ -20,11 +20,22 @@ class Resigister extends StatefulWidget {
 }
 
 class _ResigisterState extends State<Resigister> {
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _studentIdController = TextEditingController();
   final TextEditingController _nickNameController = TextEditingController();
   final TextEditingController _passController = TextEditingController();
   final TextEditingController _passCheckController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _studentIdController.dispose();
+    _nickNameController.dispose();
+    _passController.dispose();
+    _passCheckController.dispose();
+    super.dispose();
+  }
 
   String isProfessorText = "교직원_회원가입";
   bool isProfessor = false;
@@ -39,6 +50,9 @@ class _ResigisterState extends State<Resigister> {
   bool isPasswordMatch = false;
 
   //textController
+
+
+
 
   @override
   Widget build(BuildContext context) {
