@@ -283,6 +283,7 @@ class _HomeState extends ConsumerState<Home> {
                     Expanded(
                       child: TextField(
                         onSubmitted: (value) {
+                          /// todo  : 검색 기능 구현 필요
                           print("검색어: ${_searchKeywordController.text}");
                         },
                         controller: _searchKeywordController,
@@ -392,23 +393,13 @@ class _HomeState extends ConsumerState<Home> {
     myPoint = (await LocationHandler.getCurrentLatLng(context))!;
   }
 
- /* /// 새로고침 로직
-  Future<void> _refreshCarpoolList() async {
-    if (selectedFilter == FilteringOption.Time) {
-      carPoolList = ref.read(carpoolProvider.notifier).loadCarpoolTimeby() as List<CarpoolState>;
-    } else {
-      carPoolList = _nearByFunction();
-    }
-    // 새로고침 후 보여지는 리스트 갯수 : 5개 보다 적을시 리스트의 갯수, 이상일 시 5개
-    carPoolList.then((list) {
-      // setState(() {
-      _visibleItemCount = list.length < 5 ? list.length : 5;
-    });
-
-    // 로딩과정
-    await Future.delayed(const Duration(seconds: 1));
-    setState(() {});
-  }*/
+  // 새로고침 후 보여지는 리스트 갯수 : 5개 보다 적을시 리스트의 갯수, 이상일 시 5개
+/*  carPoolList.then((list) {
+  // setState(() {
+  _visibleItemCount = list.length < 5 ? list.length : 5;
+  });
+  로딩 때 보여질 창 연결
+  */
 
   /// 필터링 옵션
   void _handleFilterChange(FilteringOption? newValue) async {
@@ -419,15 +410,7 @@ class _HomeState extends ConsumerState<Home> {
           : await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
   }
 
-/*
-  /// 거리순 정렬
-  Future<List<DocumentSnapshot>> _nearByFunction() async {
-    await initMyPoint();
-    List<DocumentSnapshot> carpools = await CarpoolService().nearByCarpool(
-        myPoint.latitude, myPoint.longitude);
-    return carpools;
-  }
-*/
+
 
 /*  /// 스크롤 감지 이벤트
   void _scrollListener() {

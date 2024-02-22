@@ -1,10 +1,8 @@
-import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../service/api/Api_repot.dart';
 import '../../service/sv_carpool.dart';
 import 'state.dart';
 
@@ -33,7 +31,6 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
   Future<void> loadCarpoolNearBy(LatLng myPoint) async {
     print("거리순 조회");
     try {
-      /// todo : 기존 스테이트를 정렬시키기
       List<CarpoolState> carpools = [];
 
       for(int i = 0; i < state.length; i++){
