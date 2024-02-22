@@ -31,23 +31,20 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState extends ConsumerState<Home> {
 
   final ScrollController _scrollController = ScrollController();
-
-
   final TextEditingController _searchKeywordController = TextEditingController();
-  String _searchKeyword = "";
 
-  final _timeStreamController = StreamController<DateTime>.broadcast();
-  Stream<DateTime>? _timeStream;
+/*  final _timeStreamController = StreamController<DateTime>.broadcast();
+  Stream<DateTime>? _timeStream;*/
 
   // 현재 시간을 1초마다 스트림에 추가 -> init
-  _HomeState() {
+/*  _HomeState() {
     Timer.periodic(const Duration(seconds: 1), (timer) {
       //현재시간을 Duration으로 변환해서 add
       if (!_timeStreamController.isClosed) {
         _timeStreamController.sink.add(DateTime.now());
       }
     });
-  }
+  }*/
 
   // 내 위치
   late LatLng myPoint;
@@ -66,8 +63,8 @@ class _HomeState extends ConsumerState<Home> {
   // 검색어 필터링
   late List<CarpoolState> carPoolList = [];
 
-  void carpoolList() async {
-    await ref.read(carpoolProvider.notifier).loadCarpoolTimeby();
+  void getCarpoolList() async {
+    await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
     print("홈에서 조회한 진행중인 카플 리스트 수 : ${carPoolList.length}");
    }
 
@@ -76,44 +73,43 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     initMyPoint(); // 내 위치 받아오기
-    carpoolList(); // 카풀 리스트 불러오기
+    getCarpoolList(); // 카풀 리스트 불러오기
 
 
     _loadUserData(); // 유저 정보 불러오기
-   // _refreshCarpoolList(); // 새로고침
    // _scrollController.addListener(_scrollListener); // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
-    _HomeState(); // 현재 시간을 1초마다 스트림에 추가
-    _subscribeToTimeStream(); // 스트림 구독
+  //  _HomeState(); // 현재 시간을 1초마다 스트림에 추가
+   // _subscribeToTimeStream(); // 스트림 구독
   }
 
+/*
   void _subscribeToTimeStream() {
     print('스트림 구독');
     _timeStream = _timeStreamController.stream;
   }
+*/
 
   @override
   void dispose() {
     // Dispose of the StreamController when no longer needed
-    _timeStreamController.close();
+    //_timeStreamController.close();
     _scrollController.dispose();
     super.dispose();
   }
 
-  Future<DocumentSnapshot?> _loadFirstCarpool() async {
-    String myID = uid;
-    String myNickName = nickName;
-    String myGender = gender;
+/*  Future<DocumentSnapshot?> _loadFirstCarpool() async {
 
     List<DocumentSnapshot> carpools =
-        await CarpoolService().getCarpoolsWithMember(myID, myNickName, myGender);
+        await CarpoolService().getCarpoolsWithMember(uid, nickName, gender);
 
     if (carpools.isNotEmpty) {
       return carpools[0];
     }
 
     return null;
-  }
+  }*/
 
+/*
   void _handleFloatingActionButton() async {
     DocumentSnapshot? firstCarpool = await _loadFirstCarpool();
 
@@ -148,6 +144,7 @@ class _HomeState extends ConsumerState<Home> {
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +155,7 @@ class _HomeState extends ConsumerState<Home> {
       child: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
 
-        floatingActionButton: SizedBox(
+      /*  floatingActionButton: SizedBox(
           width: context.width(0.9),
           height: context.height(0.07),
           child: FutureBuilder<DocumentSnapshot?>(
@@ -213,7 +210,7 @@ class _HomeState extends ConsumerState<Home> {
                           Duration diff = startTime.difference(data!);
                           // diff가 0초일 경우 페이지 새로고침
                           if (diff.inSeconds <= 0) {
-                         /*   _refreshCarpoolList();*/
+                         *//*   _refreshCarpoolList();*//*
                             // return SizedBox.shrink(); // 혹은 다른 UI 요소
                           }
 
@@ -267,7 +264,7 @@ class _HomeState extends ConsumerState<Home> {
               }
             },
           ),
-        ),
+        ),*/
         body: Container(
           decoration: const BoxDecoration(
               color: //Colors.grey[100],
@@ -286,9 +283,7 @@ class _HomeState extends ConsumerState<Home> {
                     Expanded(
                       child: TextField(
                         onSubmitted: (value) {
-                          setState(() {
-                            _searchKeyword = value;
-                          });
+                          print("검색어: ${_searchKeywordController.text}");
                         },
                         controller: _searchKeywordController,
                         decoration: InputDecoration(
@@ -320,13 +315,8 @@ class _HomeState extends ConsumerState<Home> {
                               size: 20,
                             ),
                             onTap: () {
-                              setState(
-                                () {
-                                  _searchKeyword =
-                                      _searchKeywordController.text;
-                                },
-                              );
-                              print("검색어: $_searchKeyword");
+                              ///todo 메소드 구현 필요
+                              print("검색어: ${_searchKeywordController.text}");
                             },
                           ),
                         ),
@@ -336,7 +326,7 @@ class _HomeState extends ConsumerState<Home> {
                     DropdownButton<FilteringOption>(
                       value: selectedFilter,
                       // 아래 함수로 정의 (리팩토링)
-                      onChanged: /*_handleFilterChange*/null,
+                      onChanged: _handleFilterChange,
                       borderRadius: BorderRadius.circular(15),
                       items: FilteringOption.values.map((option) {
                         // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
@@ -356,9 +346,11 @@ class _HomeState extends ConsumerState<Home> {
               Expanded(
                 child: Stack(
                   children: [
-
-                    CarpoolListO(carpoolList: carPoolList, scrollController: _scrollController,), // 카풀 리스트 빌드
-
+                    /// 카풀 리스트 반환
+                    CarpoolListO(
+                      carpoolList: carPoolList,
+                      scrollController: _scrollController,
+                    ), // 카풀 리스트 빌드
                     if (_isLoading) // 인디케이터를 표시하는 조건
                       const Positioned(
                         left: 0,
@@ -418,15 +410,14 @@ class _HomeState extends ConsumerState<Home> {
     setState(() {});
   }*/
 
-/*  /// 필터링 옵션
-  void _handleFilterChange(FilteringOption? newValue) {
-    setState(() {
+  /// 필터링 옵션
+  void _handleFilterChange(FilteringOption? newValue) async {
       selectedFilter = newValue ?? FilteringOption.Time;
-      carPoolList = (selectedFilter == FilteringOption.Time)
-          ? ref.read(carpoolProvider.notifier).loadCarpoolTimeby() as List<CarpoolState>
-          : _nearByFunction();
-    });
-  }*/
+
+          (selectedFilter == FilteringOption.Time)
+          ? await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy()
+          : await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
+  }
 
 /*
   /// 거리순 정렬

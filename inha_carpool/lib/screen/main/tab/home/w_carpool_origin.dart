@@ -69,7 +69,7 @@ class _CarpoolListState extends ConsumerState<CarpoolListO> {
       color: context.appColors.logoColor,
       onRefresh: () async {
         print("새로고침 진행");
-        await ref.read(carpoolProvider.notifier).loadCarpoolTimeby();
+        await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
       },
       child: (widget.carpoolList.isEmpty)
           ? const EmptyCarpoolList(

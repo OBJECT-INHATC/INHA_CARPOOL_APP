@@ -22,7 +22,10 @@ class CarpoolState {
   final String admin;
   final String gender;
 
-   CarpoolState({
+  double? distance;
+
+
+  CarpoolState({
     required this.gender,
     required this.endDetailPoint,
     required this.endPoint,

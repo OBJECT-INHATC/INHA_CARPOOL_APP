@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../service/api/Api_repot.dart';
 import '../../service/sv_carpool.dart';
@@ -17,17 +19,48 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
 
   CarpoolStateNotifier(this._ref) : super([]);
 
-  Future<List<CarpoolState>> loadCarpoolTimeby() async {
+  /// 시간순으로 새로 조회
+  Future<void> loadCarpoolTimeBy() async {
     try {
        state = await apiService.timeByFunction(5, null);
-
-      print("State.lenth : ${state.length}");
-
-      return state;
-
     } catch (error) {
 
       rethrow;
     }
+  }
+
+  /// 거리순으로 새로 조회
+  Future<void> loadCarpoolNearBy(LatLng myPoint) async {
+    print("거리순 조회");
+    try {
+      /// todo : 기존 스테이트를 정렬시키기
+      List<CarpoolState> carpools = [];
+
+      for(int i = 0; i < state.length; i++){
+        state[i].distance = _calculateDistance(myPoint, state[i].startPoint);
+        carpools.add(state[i]);
+      }
+      carpools.sort((a, b) => a.distance!.compareTo(b.distance!));
+
+      state = carpools;
+
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  /// 거리 계산
+  double _calculateDistance(
+      LatLng myLatLng,
+      LatLng startLatLng,
+      ) {
+    double distanceInMeters = Geolocator.distanceBetween(
+        myLatLng.latitude,
+        myLatLng.longitude,
+        startLatLng.latitude,
+        startLatLng.longitude
+    );
+
+    return distanceInMeters / 1000;
   }
 }

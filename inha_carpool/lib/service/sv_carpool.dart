@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -205,65 +207,59 @@ class CarpoolService {
   }
 
   /// 거리순 정렬
-  Future<List<DocumentSnapshot>> nearByCarpool(
-      double myLat, double myLon) async {
+  Future<List<CarpoolState>> nearByCarpool(
+      LatLng myPoint) async {
     QuerySnapshot querySnapshot = await _fireStore
         .collection('carpool')
         .where('startTime',
-            isGreaterThan: DateTime.now().millisecondsSinceEpoch)
+        isGreaterThan: DateTime.now().millisecondsSinceEpoch)
         .get();
 
-    List<Map<String, dynamic>> sortedCarpools = [];
+    List<CarpoolState> carpools = [];
     print("조회된 카풀 총 개수(nearBy): ${querySnapshot.docs.length}");
 
     // 현재 시간을 가져옵니다.
     DateTime currentTime = DateTime.now();
 
     for (var doc in querySnapshot.docs) {
-      DateTime startTime =
-          DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
+      // startTime 및 startPoint null 체크
+      if (doc['startTime'] != null && doc['startPoint'] != null) {
+        DateTime startTime =
+        DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
 
-      // 현재 시간보다 미래의 시간인 경우만 추가
-      if (startTime.isAfter(currentTime)) {
-        double startLat = doc['startPoint'].latitude;
-        double startLon = doc['startPoint'].longitude;
+        // 현재 시간보다 미래의 시간인 경우만 추가
+        if (startTime.isAfter(currentTime)) {
+          double startLat = doc['startPoint'].latitude;
+          double startLon = doc['startPoint'].longitude;
 
-        double distance = calculateDistance(myLat, myLon, startLat, startLon);
-        sortedCarpools.add({
-          'doc': doc,
-          'distance': distance,
-        });
+          CarpoolState carpoolState = CarpoolState.fromJson(
+              doc.data() as Map<String, dynamic>);
+          carpoolState.distance = _calculateDistance(
+              myPoint,
+              LatLng(startLat, startLon));
+          carpools.add(carpoolState);
+        }
       }
     }
 
-    sortedCarpools.sort((a, b) {
-      double distanceA = a['distance'];
-      double distanceB = b['distance'];
-
-      // 거리를 오름차순으로 정렬합니다.
-      return distanceA.compareTo(distanceB);
-    });
+    // 거리 기준 오름차순 정렬
+    carpools.sort((a, b) => a.distance!.compareTo(b.distance!));
 
     // 정렬된 카풀 리스트를 반환합니다.
-    return sortedCarpools.map((entry) {
-      double distance = entry['distance'];
-      print('거리: $distance'); // 거리 출력
-      return entry['doc'] as DocumentSnapshot;
-    }).toList();
+    return carpools;
   }
 
-  // 거리 계산
-  static double calculateDistance(
-    double myLat,
-    double myLon,
-    double startLat,
-    double startLon,
+
+  /// 거리 계산
+   double _calculateDistance(
+  LatLng myLatLng,
+  LatLng startLatLng,
   ) {
     double distanceInMeters = Geolocator.distanceBetween(
-      myLat,
-      myLon,
-      startLat,
-      startLon,
+        myLatLng.latitude,
+        myLatLng.longitude,
+        startLatLng.latitude,
+        startLatLng.longitude
     );
 
     return distanceInMeters / 1000;
