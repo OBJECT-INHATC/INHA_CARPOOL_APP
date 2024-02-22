@@ -20,6 +20,10 @@ class HistoryStateNotifier extends StateNotifier<List<HistoryRequestDTO>> {
 
   HistoryStateNotifier(this._ref) : super([]);
 
+
+
+
+
   Future<void> loadHistoryData() async {
     final uid = _ref.read(authProvider).uid;
     if (uid == null) {
