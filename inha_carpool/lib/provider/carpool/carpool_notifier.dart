@@ -17,19 +17,16 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
 
   CarpoolStateNotifier(this._ref) : super([]);
 
-  Future<void> loadCarpoolTimeby() async {
+  Future<List<CarpoolState>> loadCarpoolTimeby() async {
     try {
-      final response = await apiService.timeByFunction();
+       state = await apiService.timeByFunction(5, null);
 
+      print("State.lenth : ${state.length}");
 
-
-        final List<dynamic> carpoolTimeby =
-            jsonDecode(utf8.decode(response.body.runes.toList()));
-        final carpoolList =
-            carpoolTimeby.map((data) => CarpoolState.fromJson(data)).toList();
-        state = carpoolList;
+      return state;
 
     } catch (error) {
+
       rethrow;
     }
   }

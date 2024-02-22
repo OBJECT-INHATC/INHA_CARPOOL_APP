@@ -1,34 +1,32 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/provider/carpool/state.dart';
+
+import '../../../../common/widget/empty_list.dart';
 import '../../../../provider/auth/auth_provider.dart';
+import '../../../../provider/carpool/carpool_notifier.dart';
 import '../../map/s_carpool_map.dart';
 import '../carpool/chat/s_chatroom.dart';
-import 'enum/mapType.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
+import 'enum/mapType.dart';
 
-class CarpoolListItem extends ConsumerStatefulWidget {
-  final AsyncSnapshot<List<DocumentSnapshot>> snapshot;
+class CarpoolListO extends ConsumerStatefulWidget {
+  const CarpoolListO(
+      {super.key, required this.carpoolList, required this.scrollController});
+
+  final List<CarpoolState> carpoolList;
   final ScrollController scrollController;
-  final int visibleItemCount;
-
-  const CarpoolListItem({
-    super.key,
-    required this.snapshot,
-    required this.scrollController,
-    required this.visibleItemCount,
-  });
 
   @override
-  ConsumerState<CarpoolListItem> createState() => _CarpoolListItemState();
+  ConsumerState<CarpoolListO> createState() => _CarpoolListState();
 }
 
 Color getColorForGender(String gender) {
   if (gender == '남성') {
-    return  Colors.blue;
+    return Colors.blue;
   } else if (gender == '여성') {
     return Colors.pink;
   } else {
@@ -44,16 +42,10 @@ String _truncateText(String text, int maxLength) {
   }
 }
 
-
-
-class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
-
+class _CarpoolListState extends ConsumerState<CarpoolListO> {
   late String nickName = "";
   late String uid = "";
   late String gender = "";
-
-
-
 
   Future<void> _loadUserData() async {
     nickName = ref.read(authProvider).nickName!;
@@ -64,7 +56,6 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
   @override
   void initState() {
     _loadUserData();
-
     super.initState();
   }
 
@@ -72,91 +63,93 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
   Widget build(BuildContext context) {
     // 화면의 너비와 높이를 가져 와서 화면 비율 계산함
     final width = context.screenWidth; //360
-    final height =context.screenHeight; //360
+    final height = context.screenHeight; //360
 
+    return RefreshIndicator(
+      color: context.appColors.logoColor,
+      onRefresh: () async {
+        print("새로고침 진행");
+        await ref.read(carpoolProvider.notifier).loadCarpoolTimeby();
+      },
+      child: (widget.carpoolList.isEmpty)
+          ? const EmptyCarpoolList(
+              floatingMessage: '카풀을 등록하여\n택시 비용을 줄여 보세요!',
+            ) :
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-      ),
-      child: ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        controller: widget.scrollController,
-        itemCount: (widget.snapshot.data?.length ?? 0) ,
-        itemBuilder: (context, index) {
-            // 원래의 리스트 아이템
-            final originalIndex = index;
-            if (widget.snapshot.data != null &&
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+        ),
+        child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: widget.scrollController,
+            itemCount: (widget.carpoolList.length),
+            itemBuilder: (context, index) {
+              // 원래의 리스트 아이템
+              final originalIndex = index;
+/*          if (widget.carpoolList != null &&
                 originalIndex < widget.snapshot.data!.length) {
-              DocumentSnapshot carpool = widget.snapshot.data![originalIndex];
+              DocumentSnapshot carpool = widget.snapshot.data![originalIndex];*/
 
-              Map<String, dynamic> carpoolData =
-                  carpool.data() as Map<String, dynamic>;
+              final carpoolData = widget.carpoolList[index];
 
-              DateTime startTime =
-                  DateTime.fromMillisecondsSinceEpoch(carpoolData['startTime']);
-
+              DateTime startTime = carpoolData.startTime; // Timestamp -> DateTime
               DateTime currentTime = DateTime.now();
+
               Duration difference = startTime.difference(currentTime);
-
-
               String formattedDate = DateFormat('HH:mm').format(startTime);
-
               String formattedTime = getDate(difference);
+
+
+              String currentUser = '${uid}_${nickName}_$gender';
 
               // 각 아이템을 빌드하는 로직
               return GestureDetector(
                 onTap: () {
-                  int nowMember = carpoolData['nowMember'];
-                  int maxMember = carpoolData['maxMember'];
+                  int nowMember = carpoolData.nowMember;
+                  int maxMember = carpoolData.maxMember;
 
-                  String currentUser =
-                      '${uid}_${nickName}_${gender}';
-                  if (carpoolData['members'].contains(currentUser)) {
-                    // 이미 참여한 경우
-                    if (carpoolData['admin'] == currentUser) {
-                      // 방장인 경우
-                      Navigator.push(
-                        Nav.globalContext,
-                        MaterialPageRoute(
-                            builder: (context) => ChatroomPage(
-                                  carId: carpoolData['carId'],
-                                )),
-                      );
-                    } else {
-                      Navigator.push(
-                        Nav.globalContext,
-                        MaterialPageRoute(
-                          builder: (context) => ChatroomPage(
-                            carId: carpoolData['carId'],
-                          ),
-                        ),
-                      );
-                    }
-                  } else {
+                  bool isCheckMember = carpoolData.members.contains(currentUser);
+
+                  /// 참여중일 때
+                  if (currentUser == carpoolData.admin || isCheckMember) {
+                    Nav.push(ChatroomPage(carId: carpoolData.carId));
+                    return;
+                  } else if(nowMember < maxMember) {
                     // 현재 인원이 최대 인원보다 작을 때
-                    if (nowMember < maxMember) {
+                      /// 10분 입장 불가
+                      if (difference.inMinutes <= 10) {
+                        context.showSnackbarText(
+                            context, '카풀 시작 10분 전이므로 불가능합니다.',
+                            bgColor: Colors.red);
+
+                        return;
+                      }
+                      /// 입장 메소드
                       Nav.push(
                         CarpoolMap(
                           mapType: MapCategory.all,
                           isMember: false,
-                          startPoint: LatLng(carpoolData['startPoint'].latitude,
-                              carpoolData['startPoint'].longitude),
-                          startPointName: carpoolData['startPointName'],
-                          endPoint: LatLng(carpoolData['endPoint'].latitude,
-                              carpoolData['endPoint'].longitude),
-                          endPointName: carpoolData['endPointName'],
+                          startPoint: LatLng(carpoolData.startPoint.latitude,
+                              carpoolData.startPoint.longitude),
+                          startPointName: carpoolData.startPointName,
+                          endPoint: LatLng(carpoolData.endPoint.latitude,
+                              carpoolData.endPoint.longitude),
+                          endPointName: carpoolData.endPointName,
                           startTime: formattedTime,
-                          carId: carpoolData['carId'],
-                          admin: carpoolData['admin'],
-                          roomGender: carpoolData['gender'],
+                          carId: carpoolData.carId,
+                          admin: carpoolData.admin,
+                          roomGender: carpoolData.gender,
                         ),
                       );
                     } else {
-                      context.showSnackbarText(context, '카풀 시작 10분 전이므로 불가능합니다.', bgColor: Colors.red );
+                      context.showSnackbarText(context, '인원이 가득 찼습니다.',
+                          bgColor: Colors.red);
                     }
-                  }
+
                 },
+
+                /// 디자인 부분 -------------------------------------------------------
                 child: Card(
                   color: Colors.white,
                   surfaceTintColor: Colors.transparent,
@@ -186,17 +179,16 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                             const Spacer(),
                             Icon(
                               Icons.directions_car_outlined,
-                              color: getColorForGender(carpoolData['gender']),
+                              color: getColorForGender(carpoolData.gender),
                             ),
                             Width(height * 0.01),
-                            '${carpoolData['nowMember']} / ${carpoolData['maxMember']}명'
+                            '${carpoolData.nowMember} / ${carpoolData.maxMember}명'
                                 .text
                                 .bold
                                 .size(16)
                                 .make(),
                             Width(height * 0.01),
-                            '${carpoolData['gender']}'
-                                .text
+                            carpoolData.gender.text
                                 .size(13)
                                 .normal
                                 .color(Colors.grey)
@@ -217,15 +209,14 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // 출발지 요약주소
-                                _truncateText(
-                                    carpoolData['startDetailPoint'], 32)
+                                _truncateText(carpoolData.startDetailPoint, 32)
                                     .text
                                     .color(Colors.black)
                                     .size(15)
                                     .bold
                                     .make(),
                                 // 출발지 풀주소
-                                _truncateText(carpoolData['startPointName'], 30)
+                                _truncateText(carpoolData.startPointName, 30)
                                     .text
                                     .color(Colors.grey[600])
                                     .size(13)
@@ -252,14 +243,14 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // 도착지 요약주소
-                                _truncateText(carpoolData['endDetailPoint'], 32)
+                                _truncateText(carpoolData.endDetailPoint, 32)
                                     .text
                                     .color(Colors.black)
                                     .size(15)
                                     .bold
                                     .make(),
                                 // 도착지 풀주소
-                                _truncateText(carpoolData['endPointName'], 32)
+                                _truncateText(carpoolData.endPointName, 32)
                                     .text
                                     .color(Colors.grey[600])
                                     .size(13)
@@ -303,9 +294,7 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                   ),
                 ),
               );
-            }
-
-        },
+            }),
       ),
     );
   }

@@ -6,14 +6,18 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
+import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
+import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_emptySearchedCarpool.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
 
+import '../../../../provider/carpool/carpool_notifier.dart';
 import '../../../../service/sv_carpool.dart';
 import '../../../../common/widget/empty_list.dart';
 import '../../../recruit/s_recruit.dart';
 import '../carpool/chat/s_chatroom.dart';
+import '../carpool/s_carpool.dart';
 import 'enum/carpoolFilter.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -48,7 +52,6 @@ class _HomeState extends ConsumerState<Home> {
   // 내 위치
   late LatLng myPoint;
 
-  late Future<List<DocumentSnapshot>> carPoolList = Future.value([]);
 
   late String nickName = ""; // 기본값으로 초기화
   late String uid = "";
@@ -61,16 +64,24 @@ class _HomeState extends ConsumerState<Home> {
   bool _isLoading = false;
 
   // 검색어 필터링
+  late List<CarpoolState> carPoolList = [];
+
+  void carpoolList() async {
+    await ref.read(carpoolProvider.notifier).loadCarpoolTimeby();
+    print("홈에서 조회한 진행중인 카플 리스트 수 : ${carPoolList.length}");
+   }
 
 
   @override
   void initState() {
     super.initState();
     initMyPoint(); // 내 위치 받아오기
-    carPoolList = CarpoolService().timeByFunction(limit, null); // 초기에 시간순 정렬
+    carpoolList(); // 카풀 리스트 불러오기
+
+
     _loadUserData(); // 유저 정보 불러오기
-    _refreshCarpoolList(); // 새로고침
-    _scrollController.addListener(_scrollListener); // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
+   // _refreshCarpoolList(); // 새로고침
+   // _scrollController.addListener(_scrollListener); // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
     _HomeState(); // 현재 시간을 1초마다 스트림에 추가
     _subscribeToTimeStream(); // 스트림 구독
   }
@@ -141,6 +152,7 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
     final double height = context.screenHeight;
+    carPoolList = ref.watch(carpoolProvider);
 
     return SafeArea(
       child: Scaffold(
@@ -201,7 +213,7 @@ class _HomeState extends ConsumerState<Home> {
                           Duration diff = startTime.difference(data!);
                           // diff가 0초일 경우 페이지 새로고침
                           if (diff.inSeconds <= 0) {
-                            _refreshCarpoolList();
+                         /*   _refreshCarpoolList();*/
                             // return SizedBox.shrink(); // 혹은 다른 UI 요소
                           }
 
@@ -324,7 +336,7 @@ class _HomeState extends ConsumerState<Home> {
                     DropdownButton<FilteringOption>(
                       value: selectedFilter,
                       // 아래 함수로 정의 (리팩토링)
-                      onChanged: _handleFilterChange,
+                      onChanged: /*_handleFilterChange*/null,
                       borderRadius: BorderRadius.circular(15),
                       items: FilteringOption.values.map((option) {
                         // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
@@ -344,7 +356,9 @@ class _HomeState extends ConsumerState<Home> {
               Expanded(
                 child: Stack(
                   children: [
-                    _buildCarpoolList(), // 카풀 리스트 빌드
+
+                    CarpoolListO(carpoolList: carPoolList, scrollController: _scrollController,), // 카풀 리스트 빌드
+
                     if (_isLoading) // 인디케이터를 표시하는 조건
                       const Positioned(
                         left: 0,
@@ -371,69 +385,7 @@ class _HomeState extends ConsumerState<Home> {
     );
   }
 
-  // 카풀 리스트 불러오기
-  Widget _buildCarpoolList() {
-    return RefreshIndicator(
-      color: context.appColors.logoColor,
-      onRefresh: _refreshCarpoolList,
-      /// todo : 퓨처빌더 제거하기
-      child: FutureBuilder<List<DocumentSnapshot>>(
-        future: carPoolList,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError ||
-              !snapshot.hasData ||
-              snapshot.data!.isEmpty) {
-            // 카풀 에러 or 비었을 시
-            return const EmptyCarpoolList(
-              floatingMessage: '카풀을 등록하여\n택시 비용을 줄여 보세요!',
-            );
-          } else {
-            // 카풀 리스트가 있을 경우 리스트 뷰 빌드 위젯 호출
 
-            // 검색어와 일치하는 항목만 필터링
-            final filteredCarpools = snapshot.data!.where((carpool) {
-              final carpoolData = carpool.data() as Map<String, dynamic>;
-              final startPointName =
-                  carpoolData['startPointName'].toString().toLowerCase();
-              final startDetailPointName =
-                  carpoolData['startDetailPoint'].toString().toLowerCase();
-              final endPointName =
-                  carpoolData['endPointName'].toString().toLowerCase();
-              final endDetailPointName =
-                  carpoolData['endDetailPoint'].toString().toLowerCase();
-              final keyword = _searchKeyword.toLowerCase();
-
-              return startPointName.contains(keyword) ||
-                  startDetailPointName.contains(keyword) ||
-                  endPointName.contains(keyword) ||
-                  endDetailPointName.contains(keyword) ||
-                  endPointName.contains(keyword);
-            }).toList();
-
-            final itemCount = _visibleItemCount <= filteredCarpools.length
-                ? _visibleItemCount
-                : filteredCarpools.length;
-
-            if (filteredCarpools.isEmpty) {
-              return const EmptySearched(); // 검색 결과가 없을 경우 빈 상태 표시
-            }
-
-            return CarpoolListItem(
-              snapshot: AsyncSnapshot<List<DocumentSnapshot>>.withData(
-                ConnectionState.done,
-                filteredCarpools.sublist(0, itemCount),
-              ),
-              // AsyncSnapshot을 CarpoolListWidget에 전달
-              scrollController: _scrollController,
-              visibleItemCount: _visibleItemCount,
-            );
-          }
-        },
-      ),
-    );
-  }
 
   /// 유저 정보 받아오기
   Future<void> _loadUserData() async {
@@ -448,10 +400,10 @@ class _HomeState extends ConsumerState<Home> {
     myPoint = (await LocationHandler.getCurrentLatLng(context))!;
   }
 
-  /// 새로고침 로직
+ /* /// 새로고침 로직
   Future<void> _refreshCarpoolList() async {
     if (selectedFilter == FilteringOption.Time) {
-      carPoolList = CarpoolService().timeByFunction(limit, null);
+      carPoolList = ref.read(carpoolProvider.notifier).loadCarpoolTimeby() as List<CarpoolState>;
     } else {
       carPoolList = _nearByFunction();
     }
@@ -464,18 +416,19 @@ class _HomeState extends ConsumerState<Home> {
     // 로딩과정
     await Future.delayed(const Duration(seconds: 1));
     setState(() {});
-  }
+  }*/
 
-  /// 필터링 옵션
+/*  /// 필터링 옵션
   void _handleFilterChange(FilteringOption? newValue) {
     setState(() {
       selectedFilter = newValue ?? FilteringOption.Time;
       carPoolList = (selectedFilter == FilteringOption.Time)
-          ? CarpoolService().timeByFunction(limit, null)
+          ? ref.read(carpoolProvider.notifier).loadCarpoolTimeby() as List<CarpoolState>
           : _nearByFunction();
     });
-  }
+  }*/
 
+/*
   /// 거리순 정렬
   Future<List<DocumentSnapshot>> _nearByFunction() async {
     await initMyPoint();
@@ -483,8 +436,9 @@ class _HomeState extends ConsumerState<Home> {
         myPoint.latitude, myPoint.longitude);
     return carpools;
   }
+*/
 
-  /// 스크롤 감지 이벤트
+/*  /// 스크롤 감지 이벤트
   void _scrollListener() {
     if (_scrollController.position.atEdge) {
       if (_scrollController.position.pixels == 0) {
@@ -530,7 +484,7 @@ class _HomeState extends ConsumerState<Home> {
         });
       }
     }
-  }
+  }*/
 
   String formatDuration(Duration duration) {
     final hours = duration.inHours.toString().padLeft(2, '0');

@@ -194,8 +194,11 @@ class CarpoolService {
 
       // 현재 시간보다 미래의 시간인 경우만 추가
       if (startTime.isAfter(currentTime)) {
-        sortedCarpools
-            .add(CarpoolState.fromJson(doc.data() as Map<String, dynamic>));
+        final carpoolState = CarpoolState.fromJson(doc.data() as Map<String, dynamic>);
+
+        print('카풀 추가: ${carpoolState.members}');
+
+        sortedCarpools.add(carpoolState);
       }
     }
     return sortedCarpools;

@@ -1,22 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class CarpoolState {
-  final String gender;
+  final String carId;
+
   final String endPointName;
-  final String endPoint;
   final String endDetailPoint;
-  final String startTime;
   final String startPointName;
-  final String startPoint;
   final String startDetailPoint;
+
+  final LatLng startPoint;
+  final LatLng endPoint;
+
+  final DateTime startTime;
+
   final int maxMember;
   final int nowMember;
-  final String member4;
-  final String member3;
-  final String member2;
-  final String member1;
-final String admin;
-final String carPoolId;
 
-  const CarpoolState({
+   List<String> members = [];
+
+  final String admin;
+  final String gender;
+
+   CarpoolState({
     required this.gender,
     required this.endDetailPoint,
     required this.endPoint,
@@ -27,39 +33,41 @@ final String carPoolId;
     required this.startDetailPoint,
     required this.maxMember,
     required this.nowMember,
-    required this.member4,
-    required this.member3,
-    required this.member2,
-    required this.member1,
+
+    required this.members,
+
+
     required this.admin,
-    required this.carPoolId,
+    required this.carId,
   });
 
   //fromJson
-factory CarpoolState.fromJson(Map<String, dynamic> json) {
+  factory CarpoolState.fromJson(Map<String, dynamic> json) {
+
+    final memberList = List<String>.from(json['members']);
+
+
     return CarpoolState(
       gender: json['gender'],
       endDetailPoint: json['endDetailPoint'],
-      endPoint: json['endPoint'],
       endPointName: json['endPointName'],
-      startTime: json['startTime'],
+      endPoint: LatLng(json['endPoint'].latitude, json['endPoint'].longitude),
+      startPoint: LatLng(json['startPoint'].latitude, json['startPoint'].longitude),
       startPointName: json['startPointName'],
-      startPoint: json['startPoint'],
       startDetailPoint: json['startDetailPoint'],
       maxMember: json['maxMember'],
       nowMember: json['nowMember'],
-      member4: json['member4'],
-      member3: json['member3'],
-      member2: json['member2'],
-      member1: json['member1'],
+      members: memberList,
+
+
+
+
+
       admin: json['admin'],
-      carPoolId: json['carPoolId'],
+      carId: json['carId'],
+      startTime: DateTime.fromMillisecondsSinceEpoch(json['startTime']),
     );
-}
-
-
-
+  }
 
 
 }
-
