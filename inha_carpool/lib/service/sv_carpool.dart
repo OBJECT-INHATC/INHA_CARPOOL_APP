@@ -3,16 +3,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../common/util/addMember_Exception.dart';
 
 class CarpoolService {
-   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
+  final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
 
   /// 카풀 저장
-   Future<String> addDataToFireStore({
+  Future<String> addDataToFireStore({
     required DateTime selectedDate,
     required DateTime selectedTime,
     required LatLng startPoint,
@@ -38,46 +39,46 @@ class CarpoolService {
     int dateAsInt = combinedDateTime.millisecondsSinceEpoch;
     String tempCarId = "";
 
-      CollectionReference users = _fireStore.collection('carpool');
-      GeoPoint geoStart = GeoPoint(startPoint.latitude, startPoint.longitude);
-      GeoPoint geoEnd = GeoPoint(endPoint.latitude, endPoint.longitude);
+    CollectionReference users = _fireStore.collection('carpool');
+    GeoPoint geoStart = GeoPoint(startPoint.latitude, startPoint.longitude);
+    GeoPoint geoEnd = GeoPoint(endPoint.latitude, endPoint.longitude);
 
-      // true -> 채팅방 알림 설정
-      List<String> members = ['${memberID}_${memberName}_$memberGender'];
+    // true -> 채팅방 알림 설정
+    List<String> members = ['${memberID}_${memberName}_$memberGender'];
 
-      DocumentReference carpoolDocRef = await users.add({
-        'admin': '${memberID}_${memberName}_$memberGender',
-        'startPointName': startPointName,
-        'startPoint': geoStart,
-        'endPointName': endPointName,
-        'endPoint': geoEnd,
-        'maxMember': int.parse(selectedLimit.replaceAll(RegExp(r'[^\d]'), '')),
-        'gender': selectedRoomGender,
-        'startTime': dateAsInt,
-        'nowMember': 1,
-        'status': false,
-        'recentMessageSender': "service",
-        'recentMessage': "$memberName님이 새로운 카풀을 생성하였습니다.",
-        'members': members,
-        'startDetailPoint': startDetailPoint,
-        'endDetailPoint': endDetailPoint,
-      });
+    DocumentReference carpoolDocRef = await users.add({
+      'admin': '${memberID}_${memberName}_$memberGender',
+      'startPointName': startPointName,
+      'startPoint': geoStart,
+      'endPointName': endPointName,
+      'endPoint': geoEnd,
+      'maxMember': int.parse(selectedLimit.replaceAll(RegExp(r'[^\d]'), '')),
+      'gender': selectedRoomGender,
+      'startTime': dateAsInt,
+      'nowMember': 1,
+      'status': false,
+      'recentMessageSender': "service",
+      'recentMessage': "$memberName님이 새로운 카풀을 생성하였습니다.",
+      'members': members,
+      'startDetailPoint': startDetailPoint,
+      'endDetailPoint': endDetailPoint,
+    });
 
-      await carpoolDocRef.update({'carId': carpoolDocRef.id});
-      tempCarId = carpoolDocRef.id;
+    await carpoolDocRef.update({'carId': carpoolDocRef.id});
+    tempCarId = carpoolDocRef.id;
 
-      // 해당 carid에 message collection 생성
-      await carpoolDocRef.collection("messages").add({
-        'message': "$memberName님이 새로운 카풀을 생성하였습니다.",
-        'sender': 'service',
-        'time': DateTime.now().millisecondsSinceEpoch,
-      });
+    // 해당 carid에 message collection 생성
+    await carpoolDocRef.collection("messages").add({
+      'message': "$memberName님이 새로운 카풀을 생성하였습니다.",
+      'sender': 'service',
+      'time': DateTime.now().millisecondsSinceEpoch,
+    });
 
     await carpoolDocRef.collection("isChatAlarm").doc(memberID).set({
       'isChatAlarmOn': true,
     });
 
-      // 구독
+    // 구독
     await FcmService().subScribeTopic(tempCarId);
 
     // 구독정보 서버에 저장
@@ -101,17 +102,13 @@ class CarpoolService {
   }
 
   /// 카풀 삭제
-   Future<void> deleteCarpoolToFireStore(String carId) async {
+  Future<void> deleteCarpoolToFireStore(String carId) async {
     await _fireStore.collection('carpool').doc(carId).delete();
   }
 
   /// 카풀에 새로운 멤버 추가
-   Future<void> addMemberToCarpool(
-      String carpoolID,
-      String memberID,
-      String memberName,
-      String memberGender,
-      String roomGender) async {
+  Future<void> addMemberToCarpool(String carpoolID, String memberID,
+      String memberName, String memberGender, String roomGender) async {
     CollectionReference carpoolCollection = _fireStore.collection('carpool');
     DocumentReference carpoolDocRef = carpoolCollection.doc(carpoolID);
 
@@ -127,7 +124,6 @@ class CarpoolService {
         await carpoolDocRef.collection("isChatAlarm").doc(memberID).set({
           'isChatAlarmOn': true,
         });
-
 
         int nowMember = carpoolSnapshot['nowMember'];
         int maxMember = carpoolSnapshot['maxMember'];
@@ -168,14 +164,18 @@ class CarpoolService {
   }
 
   /// 시간순으로 조회, 정렬
-   Future<List<DocumentSnapshot>> timeByFunction(
+  Future<List<CarpoolState>> timeByFunction(
       int limit, DocumentSnapshot? startAfter) async {
     CollectionReference carpoolCollection =
         FirebaseFirestore.instance.collection('carpool');
+
+    // 현재 시간 가져옴
+    DateTime currentTime = DateTime.now();
+
     Query query = carpoolCollection
         .where('startTime',
             isGreaterThan:
-                DateTime.now().millisecondsSinceEpoch) // 현재 시간보다 미래의 시간인 경우만 추가
+                currentTime.millisecondsSinceEpoch) // 현재 시간보다 미래의 시간인 경우만 추가
         .orderBy('startTime') // 출발 시간순으로 정렬
         .limit(limit); // limit 만큼만 가져옴
 
@@ -185,11 +185,8 @@ class CarpoolService {
 
     QuerySnapshot querySnapshot = await query.get();
 
-    List<DocumentSnapshot> sortedCarpools = [];
+    List<CarpoolState> sortedCarpools = [];
     print("추가된 카풀 수(시간순): ${querySnapshot.docs.length}");
-
-    // 현재 시간 가져옴
-    DateTime currentTime = DateTime.now();
 
     for (var doc in querySnapshot.docs) {
       DateTime startTime =
@@ -197,15 +194,15 @@ class CarpoolService {
 
       // 현재 시간보다 미래의 시간인 경우만 추가
       if (startTime.isAfter(currentTime)) {
-        sortedCarpools.add(doc);
+        sortedCarpools
+            .add(CarpoolState.fromJson(doc.data() as Map<String, dynamic>));
       }
     }
     return sortedCarpools;
   }
 
-
   /// 거리순 정렬
-   Future<List<DocumentSnapshot>> nearByCarpool(
+  Future<List<DocumentSnapshot>> nearByCarpool(
       double myLat, double myLon) async {
     QuerySnapshot querySnapshot = await _fireStore
         .collection('carpool')
@@ -270,7 +267,7 @@ class CarpoolService {
   }
 
   /// 내가 참여한 카풀 - 메인 플로팅 버튼에 사용
-   Future<List<DocumentSnapshot>> getCarpoolsWithMember(
+  Future<List<DocumentSnapshot>> getCarpoolsWithMember(
       String memberID, String memberName, String memberGender) async {
     QuerySnapshot querySnapshot = await _fireStore
         .collection('carpool')
@@ -302,7 +299,7 @@ class CarpoolService {
   }
 
   /// 내가 참여한 카풀 - 내가 참가한 카풀 리스트에 사용
-   Future<List<DocumentSnapshot>> getCarpoolsRemainingForDay(
+  Future<List<DocumentSnapshot>> getCarpoolsRemainingForDay(
       String memberID, String memberName, String memberGender) async {
     QuerySnapshot querySnapshot = await _fireStore
         .collection('carpool')
@@ -323,8 +320,6 @@ class CarpoolService {
         sortedCarpools.add(doc);
       }
     }
-
-
 
     sortedCarpools.sort((a, b) {
       DateTime startTimeA = DateTime.fromMillisecondsSinceEpoch(a['startTime']);
