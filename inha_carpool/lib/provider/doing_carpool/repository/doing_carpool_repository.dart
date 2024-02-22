@@ -2,15 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/models/m_carpool.dart';
 import 'package:inha_Carpool/common/models/m_member.dart';
-import 'package:inha_Carpool/provider/notification/notification_provider.dart';
 
-final carpoolRepositoryProvider = Provider((ref) => CarpoolRepository(ref));
+final carpoolRepositoryProvider = Provider((ref) => DoingCarpoolRepository(ref));
 
-class CarpoolRepository {
+class DoingCarpoolRepository {
   final Ref _ref;
   final _fireStore = FirebaseFirestore.instance;
 
-  CarpoolRepository(this._ref);
+  DoingCarpoolRepository(this._ref);
 
   Future<List<CarpoolModel>> getCarPoolList(MemberModel memberModel) async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore

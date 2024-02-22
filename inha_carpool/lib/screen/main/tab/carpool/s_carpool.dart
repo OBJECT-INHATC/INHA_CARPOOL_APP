@@ -12,7 +12,7 @@ import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_time_Info.dart';
 
 import '../../../../common/widget/empty_list.dart';
-import '../../../../provider/current_carpool/carpool_provider.dart';
+import '../../../../provider/doing_carpool/doing_carpool_provider.dart';
 import 'cardItem/w_point_row.dart';
 import 'cardItem/w_time_map_row.dart';
 import 'cardItem/w_last_chat_row.dart';
@@ -30,7 +30,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   Future<List<DocumentSnapshot>> _loadCarpools() async {
 
     MemberModel memberModel = ref.read(authProvider);
-    ref.read(carpoolNotifierProvider.notifier).getCarpool(memberModel);
+    ref.read(doingCarpoolNotifierProvider.notifier).getCarpool(memberModel);
 
     List<DocumentSnapshot> carpools =
         await CarpoolService().getCarpoolsRemainingForDay(

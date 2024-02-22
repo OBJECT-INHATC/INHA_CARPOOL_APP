@@ -1,26 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inha_Carpool/provider/current_carpool/repository/carpool_repository.dart';
-import 'package:inha_Carpool/provider/current_carpool/state/carpool_state.dart';
 
 import '../../common/models/m_carpool.dart';
 import '../../common/models/m_member.dart';
 import '../auth/auth_provider.dart';
+import 'repository/doing_carpool_repository.dart';
+import 'state/doing_carpool_state.dart';
 
 ///* 참여중인 카풀의 수를 관리하는 provider 0207 이상훈
 
-final carpoolNotifierProvider =
-    StateNotifierProvider<CarpoolStateNotifier, CarPoolStateModel>(
+final doingCarpoolNotifierProvider =
+    StateNotifierProvider<CarpoolStateNotifier, DoingCarPoolStateModel>(
   (ref) => CarpoolStateNotifier(ref,
       repository: ref.read(carpoolRepositoryProvider)),
 );
 
-class CarpoolStateNotifier extends StateNotifier<CarPoolStateModel> {
+class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   final Ref _ref;
-  final CarpoolRepository repository;
+  final DoingCarpoolRepository repository;
 
   //생성자
   CarpoolStateNotifier(this._ref, {required this.repository})
-      : super(const CarPoolStateModel(data: [])) {
+      : super(const DoingCarPoolStateModel(data: [])) {
     // 생성과 함께 파이어스토어에서 데이터를 가져와서 초기화
     getCarpool(_ref.read(authProvider.notifier).state);
   }

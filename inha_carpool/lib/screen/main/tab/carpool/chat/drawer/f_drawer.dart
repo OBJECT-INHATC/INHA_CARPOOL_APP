@@ -8,7 +8,7 @@ import 'package:inha_Carpool/service/sv_fcm.dart';
 
 import '../../../../../../common/models/m_carpool.dart';
 import '../../../../../../provider/auth/auth_provider.dart';
-import '../../../../../../provider/current_carpool/carpool_provider.dart';
+import '../../../../../../provider/doing_carpool/doing_carpool_provider.dart';
 import '../../../../../../service/api/Api_topic.dart';
 import '../../../../../../service/sv_firestore.dart';
 import '../../../../../dialog/d_complainAlert.dart';
@@ -61,7 +61,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     final screenHeight = context.height(1);
 
     // 해당 채팅방 알림 on/off 값을 파베에 있는 값으로 1회 조회하고 상태값으로 들고 있다가 Drawer을 열 때 조회
-    final carpoolData = ref.watch(carpoolNotifierProvider).data;
+    final carpoolData = ref.watch(doingCarpoolNotifierProvider).data;
     final matchingCarpool = carpoolData.firstWhere((element) => element.carId == widget.carId, orElse: () => CarpoolModel());
     bool isChatAlarm = matchingCarpool.isChatAlarmOn ?? Prefs.isPushOnRx.get();
 
@@ -391,7 +391,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   }
 
   void setAlarmState(bool isAlarm) {
-    ref.read(carpoolNotifierProvider.notifier).setAlarm(widget.carId, isAlarm);
+    ref.read(doingCarpoolNotifierProvider.notifier).setAlarm(widget.carId, isAlarm);
 
     (isAlarm)
         ? FcmService().subScribeOnlyOne(widget.carId)
@@ -571,7 +571,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
 
   // 카풀 삭제 처리 상태관리 (공통)
   void removeProvider(String carId) {
-    ref.read(carpoolNotifierProvider.notifier).removeCarpool(carId);
+    ref.read(doingCarpoolNotifierProvider.notifier).removeCarpool(carId);
   }
 
   /// 에러 다이얼로그 (공통)

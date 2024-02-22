@@ -15,7 +15,7 @@ import 'package:inha_Carpool/screen/recruit/w_select_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
-import '../../provider/current_carpool/carpool_provider.dart';
+import '../../provider/doing_carpool/doing_carpool_provider.dart';
 
 
 
@@ -104,7 +104,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
-    final carpoolProvider = ref.watch(carpoolNotifierProvider.notifier);
+    final carpoolProvider = ref.watch(doingCarpoolNotifierProvider.notifier);
 
 
     return GestureDetector(

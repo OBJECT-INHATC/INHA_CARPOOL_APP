@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
 
-import '../../../../provider/current_carpool/carpool_provider.dart';
+import '../../../../provider/doing_carpool/doing_carpool_provider.dart';
+
 
 class CarpoolTimeInfo extends ConsumerWidget {
   final redText = '10분 전 퇴장 불가';
@@ -43,7 +44,7 @@ class CarpoolTimeInfo extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  '현재 참여 중인 카풀 ${ref.watch(carpoolNotifierProvider).data.length}개'
+                  '현재 참여 중인 카풀 ${ref.watch(doingCarpoolNotifierProvider).data.length}개'
                       .text
                       .size(10)
                       .semiBold
