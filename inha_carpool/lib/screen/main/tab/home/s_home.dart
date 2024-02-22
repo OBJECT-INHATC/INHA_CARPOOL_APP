@@ -415,7 +415,7 @@ class _HomeState extends ConsumerState<Home> {
       selectedFilter = newValue ?? FilteringOption.Time;
 
           (selectedFilter == FilteringOption.Time)
-          ? await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy()
+          ? await ref.read(carpoolProvider.notifier).loadCarpoolStateNearBy()
           : await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
   }
 
