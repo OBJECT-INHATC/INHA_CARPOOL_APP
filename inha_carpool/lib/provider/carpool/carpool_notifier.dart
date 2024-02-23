@@ -47,7 +47,7 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
   }
 
   /// 시간순으로 기존 상태 새로고침
-  Future<void> loadCarpoolStateNearBy() async {
+  Future<void> loadCarpoolStateTimeBy() async {
     try {
       List<CarpoolState> carpools = [];
 

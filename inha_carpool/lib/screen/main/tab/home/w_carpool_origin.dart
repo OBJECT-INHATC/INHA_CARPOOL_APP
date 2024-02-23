@@ -146,7 +146,6 @@ class _CarpoolListState extends ConsumerState<CarpoolListO> {
                       context.showSnackbarText(context, '인원이 가득 찼습니다.',
                           bgColor: Colors.red);
                     }
-
                 },
 
                 /// 디자인 부분 -------------------------------------------------------

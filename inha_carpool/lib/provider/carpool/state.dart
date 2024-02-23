@@ -61,11 +61,6 @@ class CarpoolState {
       maxMember: json['maxMember'],
       nowMember: json['nowMember'],
       members: memberList,
-
-
-
-
-
       admin: json['admin'],
       carId: json['carId'],
       startTime: DateTime.fromMillisecondsSinceEpoch(json['startTime']),
