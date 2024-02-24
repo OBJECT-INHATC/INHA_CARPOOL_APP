@@ -15,6 +15,7 @@ import 'package:inha_Carpool/screen/recruit/w_select_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
+import '../../common/widget/LodingContainer.dart';
 import '../../provider/doing_carpool/doing_carpool_provider.dart';
 
 
@@ -432,23 +433,11 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
               ),
             ),
             isShowingLoader
-                ? Container(
-              color: Colors.black.withOpacity(0.5),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SpinKitThreeBounce(
-                      color: Colors.white,
-                      size: 25.0,
-                    ), // Circular Indicator 추가
-                    const SizedBox(height: 16),
-                    '🚕 카풀 생성 중'.text.size(20).white.make(),
-                  ],
-                ),
-              ),
+                ? const LodingContainer(
+              text: '카풀 생성 중',
             )
                 : Container(),
+
           ],
         ),
       ),

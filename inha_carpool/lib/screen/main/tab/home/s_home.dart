@@ -8,8 +8,11 @@ import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
+import 'package:quiver/time.dart';
 
+import '../../../../common/widget/LodingContainer.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
+import '../../../../provider/loding/loadin_notifier.dart';
 import 'enum/carpoolFilter.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -54,6 +57,9 @@ class _HomeState extends ConsumerState<Home> {
   late String email = "";
 
   final limit = 5; // 한번에 불러올 데이터 갯수
+
+  bool _isLoading = false;
+
 
   void loadCarpoolTimeBy() async {
     await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
@@ -127,6 +133,8 @@ class _HomeState extends ConsumerState<Home> {
   Widget build(BuildContext context) {
     final double height = context.screenHeight;
     final carPoolListState = ref.watch(carpoolProvider);
+
+    bool loadingState = ref.watch(loadingProvider);
 
     return SafeArea(
       child: Scaffold(
@@ -242,133 +250,164 @@ class _HomeState extends ConsumerState<Home> {
             },
           ),
         ),*/
-        body: Container(
-          decoration: const BoxDecoration(
-              color: //Colors.grey[100],
-                  Colors.white),
-          child: Column(
-            children: [
-              const Height(5),
+        body: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                  color: //Colors.grey[100],
+                      Colors.white),
+              child: Column(
+                children: [
+                  const Height(5),
 
-              /// 광고 및 공지사항 위젯
-              NoticeBox(height * 0.25, "main"),
-              Container(
-                color: Colors.white,
-                height: context.height(0.05),
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        onSubmitted: (value) async {
-                          await carpoolSearch(
-                              value, context, carPoolListState);
-                        },
-                        controller: _searchController,
-                        maxLength: 15,
-                        decoration: InputDecoration(
-                          counterText: "",
-                          hintText: '검색어 입력',
-                          fillColor: Colors.grey[200],
-                          // 배경색 설정
-                          contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0, horizontal: 20.0),
-                          border: const OutlineInputBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                          ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.blueAccent, width: 1.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color: Colors.blueAccent, width: 2.0),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
-                          ),
-                          suffixIcon: GestureDetector(
-                            child: const Icon(
-                              Icons.search_rounded,
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                            onTap: () async {
+                  /// 광고 및 공지사항 위젯
+                  NoticeBox(height * 0.25, "main"),
+                  Container(
+                    color: Colors.white,
+                    height: context.height(0.05),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            onSubmitted: (value) async {
+                              print("onSubmitted");
                               await carpoolSearch(
-                                  _searchController.text,
-                                  context,
-                                  carPoolListState);
+                                  value, context, carPoolListState);
                             },
+                            controller: _searchController,
+                            maxLength: 15,
+                            decoration: InputDecoration(
+                              counterText: "",
+                              hintText: '검색어 입력',
+                              fillColor: Colors.grey[200],
+                              // 배경색 설정
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 20.0),
+                              border: const OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                              ),
+                              enabledBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.blueAccent, width: 1.0),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                              ),
+                              focusedBorder: const OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Colors.blueAccent, width: 2.0),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(20.0)),
+                              ),
+                              suffixIcon: GestureDetector(
+                                child: const Icon(
+                                  Icons.search_rounded,
+                                  color: Colors.black,
+                                  size: 20,
+                                ),
+                                onTap: () async {
+                                  print("onTap");
+                                  await carpoolSearch(
+                                      _searchController.text,
+                                      context,
+                                      carPoolListState);
+                                },
+                              ),
+                            ),
                           ),
                         ),
+                        const SizedBox(width: 10),
+                        DropdownButton<CarpoolFilter>(
+                          value: selectedFilter,
+                          // 아래 함수로 정의 (리팩토링)
+                          onChanged: _handleFilterChange,
+                          borderRadius: BorderRadius.circular(15),
+                          items: CarpoolFilter.values.map((option) {
+                            // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
+                            return DropdownMenuItem<CarpoolFilter>(
+                              value: option,
+                              // DropdownMenuItem의 child는 Text 위젯입니다.
+                              child: Text(
+                                  option == CarpoolFilter.Time ? '시간순' : '거리순'),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Height(5),
+                  Line(height: 2, color: context.appColors.divider),
+                  Expanded(
+                    child: RefreshIndicator(
+                      color: context.appColors.logoColor,
+                      onRefresh: () async {
+                        /// 서버에서 최신 리스트를 시간순으로 받아옴
+                        await carpoolReFresh();
+                      },
+                      child: CarpoolList(
+                        carpoolList: carPoolListState
                       ),
                     ),
-                    const SizedBox(width: 10),
-                    DropdownButton<CarpoolFilter>(
-                      value: selectedFilter,
-                      // 아래 함수로 정의 (리팩토링)
-                      onChanged: _handleFilterChange,
-                      borderRadius: BorderRadius.circular(15),
-                      items: CarpoolFilter.values.map((option) {
-                        // FilteringOption.values는 enum의 모든 값들을 리스트로 가지고 있습니다.
-                        return DropdownMenuItem<CarpoolFilter>(
-                          value: option,
-                          // DropdownMenuItem의 child는 Text 위젯입니다.
-                          child: Text(
-                              option == CarpoolFilter.Time ? '시간순' : '거리순'),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-              ),
-              const Height(5),
-              Line(height: 2, color: context.appColors.divider),
-              Expanded(
-                child: RefreshIndicator(
-                  color: context.appColors.logoColor,
-                  onRefresh: () async {
-                    /// 서버에서 최신 리스트를 시간순으로 받아옴
-                    await carpoolReFresh();
-                  },
-                  child: CarpoolList(
-                    carpoolList: carPoolListState
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+            loadingState
+                ? const LodingContainer(
+              text: '카풀을 불러오는 중입니다.',
+            )
+                : Container(),
+          ],
         ),
       ),
     );
   }
 
-  Future<void> carpoolSearch(String value, BuildContext context,
-      List<CarpoolState> carPoolListState) async {
+  Future<void> carpoolSearch(String value, BuildContext context, List<CarpoolState> carPoolListState) async {
     if (value.isEmpty || value == " ") {
       context.showSnackbarText(context, '검색어를 입력해주세요');
-      await carpoolReFresh();
+      await carpoolReFresh(isSearch: true);
     } else {
+      ref.read(loadingProvider.notifier).state = true;
+
       if (carPoolListState.isEmpty) {
         await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
       }
+
       await ref.read(carpoolProvider.notifier).searchCarpool(value.toLowerCase());
-      if(carPoolListState.isEmpty){
-        context.showSnackbarText(context, '검색 결과가 없습니다.', bgColor: Colors.red);
-      }else if(carPoolListState.isNotEmpty){
-        context.showSnackbarText(context, '검색 결과 ${carPoolListState.length}개가 있습니다.', bgColor: Colors.green);
+
+      if (selectedFilter == CarpoolFilter.Distance) {
+        await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
       }
+
+      print("검색 결과 : ${carPoolListState.length}개");
+
+      if (ref.watch(carpoolProvider).isEmpty) {
+        context.showSnackbarText(context, '검색 결과가 없습니다.', bgColor: Colors.red);
+      } else {
+        context.showSnackbarText(context, '검색 결과 ${ref.watch(carpoolProvider).length}개가 있습니다.', bgColor: Colors.green);
+      }
+
+      ref.read(loadingProvider.notifier).state = false;
     }
   }
 
-  Future<void> carpoolReFresh() async {
+
+  Future<void> carpoolReFresh({bool? isSearch}) async {
+    if(isSearch != null && isSearch != true) {
+      ref.read(loadingProvider.notifier).state = true;
+    }
+
     await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
     if (selectedFilter == CarpoolFilter.Distance) {
       /// 거리순 정렬일시 거리순으로 정렬
       await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
     }
+    Future.delayed(const Duration(milliseconds: 500), () {
+      ref.read(loadingProvider.notifier).state = false;
+    });
+
   }
 
   /// 유저 정보 받아오기

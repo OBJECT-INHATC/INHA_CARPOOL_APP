@@ -22,7 +22,7 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
     try {
        state = await apiService.timeByFunction(5, null);
 
-       print("최초 state : ${state.length}개");
+       print("서버에서 최초 state : ${state.length}개");
     } catch (error) {
 
       rethrow;
@@ -72,7 +72,7 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
       carpools.sort((a, b) => a.startTime!.compareTo(b.startTime!));
 
       // state 업데이트
-      state = carpools;
+       state = carpools;
 
     } catch (error) {
       rethrow;

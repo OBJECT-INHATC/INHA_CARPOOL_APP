@@ -60,7 +60,7 @@
 //   // 페이징 처리를 위한 변수
 //   int _visibleItemCount = 0;
 //   final limit = 5; // 한번에 불러올 데이터 갯수
-//   bool _isLoading = false;
+//   bool widget.isLoading = false;
 //
 //   // 검색어 필터링
 //
@@ -348,7 +348,7 @@
 //                 child: Stack(
 //                   children: [
 //                     _buildCarpoolList(), // 카풀 리스트 빌드
-//                     if (_isLoading) // 인디케이터를 표시하는 조건
+//                     if (widget.isLoading) // 인디케이터를 표시하는 조건
 //                       const Positioned(
 //                         left: 0,
 //                         right: 0,
