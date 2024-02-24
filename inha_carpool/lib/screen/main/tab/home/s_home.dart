@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -6,18 +5,10 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
-import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
-import 'package:inha_Carpool/screen/main/tab/home/w_emptySearchedCarpool.dart';
-import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
 
 import '../../../../provider/carpool/carpool_notifier.dart';
-import '../../../../service/sv_carpool.dart';
-import '../../../../common/widget/empty_list.dart';
-import '../../../recruit/s_recruit.dart';
-import '../carpool/chat/s_chatroom.dart';
-import '../carpool/s_carpool.dart';
 import 'enum/carpoolFilter.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -66,7 +57,7 @@ class _HomeState extends ConsumerState<Home> {
   final limit = 5; // 한번에 불러올 데이터 갯수
   bool _isLoading = false;
 
-  late List<CarpoolState> carPoolList = [];
+
 
   void getCarpoolList() async {
     await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
@@ -151,7 +142,7 @@ class _HomeState extends ConsumerState<Home> {
   @override
   Widget build(BuildContext context) {
     final double height = context.screenHeight;
-    carPoolList = ref.watch(carpoolProvider);
+    final carPoolListState = ref.watch(carpoolProvider);
 
     return SafeArea(
       child: Scaffold(
@@ -290,7 +281,7 @@ class _HomeState extends ConsumerState<Home> {
                             context.showSnackbarText(context, '검색어를 입력해주세요');
                             await carpoolReFresh();
                           } else {
-                            if (carPoolList.isEmpty) {
+                            if (carPoolListState.isEmpty) {
                               await ref
                                   .read(carpoolProvider.notifier)
                                   .loadCarpoolTimeBy();
@@ -301,7 +292,9 @@ class _HomeState extends ConsumerState<Home> {
                           }
                         },
                         controller: _searchKeywordController,
+                        maxLength: 15,
                         decoration: InputDecoration(
+                          counterText: "",
                           hintText: '검색어 입력',
                           fillColor: Colors.grey[200],
                           // 배경색 설정
@@ -337,7 +330,7 @@ class _HomeState extends ConsumerState<Home> {
                                     context, '검색어를 입력해주세요');
                                 await carpoolReFresh();
                               } else {
-                                if (carPoolList.isEmpty) {
+                                if (carPoolListState.isEmpty) {
                                   await ref
                                       .read(carpoolProvider.notifier)
                                       .loadCarpoolTimeBy();
@@ -384,7 +377,7 @@ class _HomeState extends ConsumerState<Home> {
                         await carpoolReFresh();
                       },
                       child: CarpoolListO(
-                        carpoolList: carPoolList,
+                        carpoolList: carPoolListState,
                         scrollController: _scrollController,
                       ),
                     ), // 카풀 리스트 빌드

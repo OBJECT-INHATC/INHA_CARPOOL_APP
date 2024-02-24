@@ -87,7 +87,7 @@ class _CarpoolListState extends ConsumerState<CarpoolListO> {
 
             final carpoolData = widget.carpoolList[index];
 
-            DateTime startTime = carpoolData.startTime; // Timestamp -> DateTime
+            DateTime startTime = carpoolData.startTime;
             DateTime currentTime = DateTime.now();
 
             Duration difference = startTime.difference(currentTime);
