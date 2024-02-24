@@ -83,6 +83,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
 
     return (widget.carpoolList.isEmpty)
         ? const EmptyCarpoolList(
+            isSearch: true,
             floatingMessage: '카풀이 없습니다.\n카풀을 등록하여 택시 비용을 줄여 보세요!',
           )
         : Container(
@@ -315,7 +316,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
       if (_scrollController.position.pixels == 0) {
         // 맨 위에 도달했을 경우
       } else if (_scrollController.position.extentAfter == 0 &&
-          !ref.read(loadingProvider)) {
+          !ref.read(loadingProvider) && !ref.read(searchProvider)) {
         setState(() {
           ref.read(loadingProvider.notifier).state =
               true; // 데이터 로드 중에는 인디케이터를 표시

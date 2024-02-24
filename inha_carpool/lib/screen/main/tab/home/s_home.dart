@@ -4,11 +4,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
-import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
-import 'package:quiver/time.dart';
 
 import '../../../../common/widget/LodingContainer.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
@@ -32,8 +30,7 @@ class Home extends ConsumerStatefulWidget {
 
 class _HomeState extends ConsumerState<Home> {
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController _searchController =
-      TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
 /*  final _timeStreamController = StreamController<DateTime>.broadcast();
   Stream<DateTime>? _timeStream;*/
@@ -51,16 +48,6 @@ class _HomeState extends ConsumerState<Home> {
   // 내 위치
   late LatLng myPoint;
 
-  late String nickName = ""; // 기본값으로 초기화
-  late String uid = "";
-  late String gender = "";
-  late String email = "";
-
-  final limit = 5; // 한번에 불러올 데이터 갯수
-
-  bool _isLoading = false;
-
-
   void loadCarpoolTimeBy() async {
     await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
   }
@@ -71,7 +58,6 @@ class _HomeState extends ConsumerState<Home> {
     initMyPoint(); // 내 위치 받아오기
     loadCarpoolTimeBy(); // 카풀 리스트 불러오기
 
-    _loadUserData(); // 유저 정보 불러오기
     //  _HomeState(); // 현재 시간을 1초마다 스트림에 추가
     // _subscribeToTimeStream(); // 스트림 구독
   }
@@ -90,7 +76,6 @@ class _HomeState extends ConsumerState<Home> {
     _scrollController.dispose();
     super.dispose();
   }
-
 
 /*
   void _handleFloatingActionButton() async {
@@ -308,10 +293,8 @@ class _HomeState extends ConsumerState<Home> {
                                 ),
                                 onTap: () async {
                                   print("onTap");
-                                  await carpoolSearch(
-                                      _searchController.text,
-                                      context,
-                                      carPoolListState);
+                                  await carpoolSearch(_searchController.text,
+                                      context, carPoolListState);
                                 },
                               ),
                             ),
@@ -343,11 +326,9 @@ class _HomeState extends ConsumerState<Home> {
                       color: context.appColors.logoColor,
                       onRefresh: () async {
                         /// 서버에서 최신 리스트를 시간순으로 받아옴
-                        await carpoolReFresh();
+                        await carpoolReFresh(isSearch: false);
                       },
-                      child: CarpoolList(
-                        carpoolList: carPoolListState
-                      ),
+                      child: CarpoolList(carpoolList: carPoolListState),
                     ),
                   ),
                 ],
@@ -355,8 +336,8 @@ class _HomeState extends ConsumerState<Home> {
             ),
             loadingState
                 ? const LodingContainer(
-              text: '카풀을 불러오는 중입니다.',
-            )
+                    text: '카풀을 불러오는 중입니다.',
+                  )
                 : Container(),
           ],
         ),
@@ -364,38 +345,53 @@ class _HomeState extends ConsumerState<Home> {
     );
   }
 
-  Future<void> carpoolSearch(String value, BuildContext context, List<CarpoolState> carPoolListState) async {
+  Future<void> carpoolSearch(String value, BuildContext context,
+      List<CarpoolState> carPoolListState) async {
+    // 검색 상태 변경
+    ref.read(searchProvider.notifier).state = true;
+
     if (value.isEmpty || value == " ") {
       context.showSnackbarText(context, '검색어를 입력해주세요');
       await carpoolReFresh(isSearch: true);
     } else {
+      // 로딩 상태 변경
       ref.read(loadingProvider.notifier).state = true;
 
+      // 검색어가 없을 경우 서버에서 최신 리스트를 받아옴
       if (carPoolListState.isEmpty) {
+        ref.read(searchProvider.notifier).state = false;  // 검색 상태 변경
         await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
       }
 
-      await ref.read(carpoolProvider.notifier).searchCarpool(value.toLowerCase());
+      // 검색어가 있을 경우 검색어와 일치하는 카풀만 필터링
+      await ref
+          .read(carpoolProvider.notifier)
+          .searchCarpool(value.toLowerCase());
 
       if (selectedFilter == CarpoolFilter.Distance) {
         await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
       }
 
-      print("검색 결과 : ${carPoolListState.length}개");
-
+      // 검색 결과가 없을 경우
       if (ref.watch(carpoolProvider).isEmpty) {
+        if(!mounted) return;
         context.showSnackbarText(context, '검색 결과가 없습니다.', bgColor: Colors.red);
       } else {
-        context.showSnackbarText(context, '검색 결과 ${ref.watch(carpoolProvider).length}개가 있습니다.', bgColor: Colors.green);
+        if(!mounted) return;
+        context.showSnackbarText(
+            context, '검색 결과 ${ref.watch(carpoolProvider).length}개가 있습니다.',
+            bgColor: Colors.green);
       }
 
       ref.read(loadingProvider.notifier).state = false;
     }
   }
 
-
   Future<void> carpoolReFresh({bool? isSearch}) async {
-    if(isSearch != null && isSearch != true) {
+    // 검색 상태 변경
+    ref.read(searchProvider.notifier).state = false;
+
+    if (isSearch != true) {
       ref.read(loadingProvider.notifier).state = true;
     }
 
@@ -407,20 +403,11 @@ class _HomeState extends ConsumerState<Home> {
     Future.delayed(const Duration(milliseconds: 500), () {
       ref.read(loadingProvider.notifier).state = false;
     });
-
   }
 
-  /// 유저 정보 받아오기
-  Future<void> _loadUserData() async {
-    nickName = ref.read(authProvider).nickName!;
-    uid = ref.read(authProvider).uid!;
-    gender = ref.read(authProvider).gender!;
-    email = ref.read(authProvider).email!;
-  }
-
-  /// 내 위치 받아오기
-     initMyPoint() async {
-    myPoint = (await LocationHandler.getCurrentLatLng(context))!;
+  /// 내 위치 받아오기 없으면 인하대 후문
+  initMyPoint() async {
+    myPoint = (await LocationHandler.getCurrentLatLng(context)) ?? const LatLng(37.4514982, 126.6570261);
   }
 
   // 새로고침 후 보여지는 리스트 갯수 : 5개 보다 적을시 리스트의 갯수, 이상일 시 5개
@@ -436,10 +423,9 @@ class _HomeState extends ConsumerState<Home> {
     selectedFilter = newValue ?? CarpoolFilter.Time;
     (selectedFilter == CarpoolFilter.Time)
         ? await ref.read(carpoolProvider.notifier).loadCarpoolStateTimeBy()
+    /// todo : 위치정보 상태관리
         : await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
   }
-
-
 
   String formatDuration(Duration duration) {
     final hours = duration.inHours.toString().padLeft(2, '0');

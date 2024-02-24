@@ -84,6 +84,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     /// 참가하고 있는 카풀이 없는 경우
                     return const EmptyCarpoolList(
+                      isSearch: false,
                       floatingMessage: '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!',
                     );
                   }

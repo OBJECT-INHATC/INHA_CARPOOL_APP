@@ -38,7 +38,6 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
   String textContent= "";
 
 
-  // bool isGestureEnabled = true;
 
   @override
   void initState() {
