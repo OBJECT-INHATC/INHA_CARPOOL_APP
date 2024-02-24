@@ -358,8 +358,10 @@ class _HomeState extends ConsumerState<Home> {
                     RefreshIndicator(
                       color: context.appColors.logoColor,
                       onRefresh: () async {
+                        /// 서버에서 최신 리스트를 시간순으로 받아옴
                         await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
                         if(selectedFilter == FilteringOption.Distance) {
+                          /// 거리순 정렬일시 거리순으로 정렬
                           await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
                         }
                       },

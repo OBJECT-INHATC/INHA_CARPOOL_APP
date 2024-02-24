@@ -397,9 +397,10 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                               builder: (context) => const MainScreen()),
                         );
                         if (carId == "") {
-                          context.showErrorSnackbar("카풀 생성에 실패했습니다.");
-                        } else {
-                          context.showSnackbar("카풀 생성 성공! 채팅방으로 이동합니다");
+                          context.showSnackbarText(context, '카풀 생성에 실패했습니다.', bgColor: Colors.red);
+                              } else {
+                          context.showSnackbarText(context, "카풀 생성 성공! 채팅방으로 이동합니다.",
+                              bgColor: Colors.green);
                           carpoolProvider.addCarpool(CarpoolModel(
                             isChatAlarmOn: true,
                             carId: carId,
