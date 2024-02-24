@@ -29,7 +29,8 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
 
   /// 거리순으로 기존 상태 새로고침
   Future<void> loadCarpoolNearBy(LatLng myPoint) async {
-    print("거리순 조회");
+    print("기존 데이터 거리순 정렬");
+
     try {
       List<CarpoolState> carpools = [];
 
@@ -48,6 +49,7 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
 
   /// 시간순으로 기존 상태 새로고침
   Future<void> loadCarpoolStateTimeBy() async {
+    print("기존 데이터 시간순 정렬");
     try {
       List<CarpoolState> carpools = [];
 

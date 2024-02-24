@@ -113,7 +113,6 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                              if(Prefs.isPushOnRx.get()){
                                setAlarmState(true);
                              }else{
-                               /// todo : 스낵바 말고 다이얼로그로 변경
                                showOpenDialogAlarm(context, "알림 설정은 내 정보에서 바꿀 수 있습니다.", "알림을 켜주세요!");
                              }
                             },

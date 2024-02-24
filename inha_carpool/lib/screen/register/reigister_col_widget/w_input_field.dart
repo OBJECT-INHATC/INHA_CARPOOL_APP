@@ -47,7 +47,6 @@ class _CustomInputFieldState extends State<CustomInputField> {
         child: Stack(
           children: [
             TextFormField(
-              /// todo : 텍스트 필드 위젯 높이 수정
               controller: widget.controller,
               inputFormatters: [
                 FilteringTextInputFormatter(

@@ -355,9 +355,18 @@ class _HomeState extends ConsumerState<Home> {
                 child: Stack(
                   children: [
                     /// 카풀 리스트 반환
-                    CarpoolListO(
-                      carpoolList: carPoolList,
-                      scrollController: _scrollController,
+                    RefreshIndicator(
+                      color: context.appColors.logoColor,
+                      onRefresh: () async {
+                        await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
+                        if(selectedFilter == FilteringOption.Distance) {
+                          await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
+                        }
+                      },
+                      child: CarpoolListO(
+                        carpoolList: carPoolList,
+                        scrollController: _scrollController,
+                      ),
                     ), // 카풀 리스트 빌드
                     if (_isLoading) // 인디케이터를 표시하는 조건
                       const Positioned(

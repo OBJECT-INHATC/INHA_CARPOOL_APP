@@ -186,7 +186,6 @@ class CarpoolService {
     QuerySnapshot querySnapshot = await query.get();
 
     List<CarpoolState> sortedCarpools = [];
-    print("추가된 카풀 수(시간순): ${querySnapshot.docs.length}");
 
     for (var doc in querySnapshot.docs) {
       DateTime startTime =
@@ -195,8 +194,6 @@ class CarpoolService {
       // 현재 시간보다 미래의 시간인 경우만 추가
       if (startTime.isAfter(currentTime)) {
         final carpoolState = CarpoolState.fromJson(doc.data() as Map<String, dynamic>);
-
-        print('카풀 추가: ${carpoolState.members}');
 
         sortedCarpools.add(carpoolState);
       }
