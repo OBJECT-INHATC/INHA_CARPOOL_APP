@@ -27,6 +27,32 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
     }
   }
 
+  /// 검색 기능
+  Future<void> searchCarpool(String search) async {
+    try {
+      // 검색어와 일치하는 카풀만 필터링
+      List<CarpoolState> carpools = state.where((carpool) =>
+      carpool.startPointName!.contains(search) ||
+          carpool.startDetailPoint!.contains(search) ||
+          carpool.endPointName!.contains(search) ||
+          carpool.endDetailPoint!.contains(search)
+      ).toList();
+
+      // 중복 제거 (Set 사용)
+      carpools = carpools.toSet().toList();
+
+      // 필요한 경우 시간순 정렬
+      carpools.sort((a, b) => a.startTime!.compareTo(b.startTime!));
+
+      // state 업데이트
+      state = carpools;
+
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+
   /// 거리순으로 기존 상태 새로고침
   Future<void> loadCarpoolNearBy(LatLng myPoint) async {
     print("기존 데이터 거리순 정렬");

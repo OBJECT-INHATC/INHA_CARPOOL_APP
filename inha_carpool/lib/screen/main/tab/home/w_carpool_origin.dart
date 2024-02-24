@@ -67,7 +67,7 @@ class _CarpoolListState extends ConsumerState<CarpoolListO> {
 
     return (widget.carpoolList.isEmpty)
         ? const EmptyCarpoolList(
-            floatingMessage: '카풀을 등록하여\n택시 비용을 줄여 보세요!',
+            floatingMessage: '카풀이 없습니다.\n카풀을 등록하여 택시 비용을 줄여 보세요!',
           ) :
 
     Container(
