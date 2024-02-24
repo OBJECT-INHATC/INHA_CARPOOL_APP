@@ -396,7 +396,7 @@
 //             // 카풀 에러 or 비었을 시
 //             return const
 //           } else {
-//             // 카풀 리스트가 있을 경우 리스트 뷰 빌드 위젯 호출
+//             // 카풀 리스트가 있을 경_scrollController우 리스트 뷰 빌드 위젯 호출
 //
 //             // 검색어와 일치하는 항목만 필터링
 //             final filteredCarpools = snapshot.data!.where((carpool) {
