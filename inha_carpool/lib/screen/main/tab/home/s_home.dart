@@ -5,6 +5,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/provider/auth/auth_provider.dart';
+import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
 
@@ -56,8 +57,6 @@ class _HomeState extends ConsumerState<Home> {
   int _visibleItemCount = 0;
   final limit = 5; // 한번에 불러올 데이터 갯수
   bool _isLoading = false;
-
-
 
   void getCarpoolList() async {
     await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
@@ -277,19 +276,8 @@ class _HomeState extends ConsumerState<Home> {
                     Expanded(
                       child: TextField(
                         onSubmitted: (value) async {
-                          if (value.isEmpty || value == " ") {
-                            context.showSnackbarText(context, '검색어를 입력해주세요');
-                            await carpoolReFresh();
-                          } else {
-                            if (carPoolListState.isEmpty) {
-                              await ref
-                                  .read(carpoolProvider.notifier)
-                                  .loadCarpoolTimeBy();
-                            }
-                            ref
-                                .read(carpoolProvider.notifier)
-                                .searchCarpool(value.toLowerCase());
-                          }
+                          await carpoolSearch(
+                              value, context, carPoolListState);
                         },
                         controller: _searchKeywordController,
                         maxLength: 15,
@@ -323,23 +311,10 @@ class _HomeState extends ConsumerState<Home> {
                               size: 20,
                             ),
                             onTap: () async {
-                              print("onTap : ${_searchKeywordController.text}");
-                              if (_searchKeywordController.text.isEmpty ||
-                                  _searchKeywordController.text == " ") {
-                                context.showSnackbarText(
-                                    context, '검색어를 입력해주세요');
-                                await carpoolReFresh();
-                              } else {
-                                if (carPoolListState.isEmpty) {
-                                  await ref
-                                      .read(carpoolProvider.notifier)
-                                      .loadCarpoolTimeBy();
-                                }
-                                ref
-                                    .read(carpoolProvider.notifier)
-                                    .searchCarpool(_searchKeywordController.text
-                                        .toLowerCase());
-                              }
+                              await carpoolSearch(
+                                  _searchKeywordController.text,
+                                  context,
+                                  carPoolListState);
                             },
                           ),
                         ),
@@ -405,6 +380,24 @@ class _HomeState extends ConsumerState<Home> {
         ),
       ),
     );
+  }
+
+  Future<void> carpoolSearch(String value, BuildContext context,
+      List<CarpoolState> carPoolListState) async {
+    if (value.isEmpty || value == " ") {
+      context.showSnackbarText(context, '검색어를 입력해주세요');
+      await carpoolReFresh();
+    } else {
+      if (carPoolListState.isEmpty) {
+        await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
+      }
+      await ref.read(carpoolProvider.notifier).searchCarpool(value.toLowerCase());
+      if(carPoolListState.isEmpty){
+        context.showSnackbarText(context, '검색 결과가 없습니다.', bgColor: Colors.red);
+      }else if(carPoolListState.isNotEmpty){
+        context.showSnackbarText(context, '검색 결과 ${carPoolListState.length}개가 있습니다.', bgColor: Colors.green);
+      }
+    }
   }
 
   Future<void> carpoolReFresh() async {
