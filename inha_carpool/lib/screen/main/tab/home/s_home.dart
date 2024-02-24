@@ -21,12 +21,9 @@ class Home extends ConsumerStatefulWidget {
   ConsumerState<Home> createState() => _HomeState();
 }
 
-/// 1. todo : 스크롤 감지로 상태관리 변경
-/// 2. todo : 필터링 기능 추가
-/// 3. todo : 검색 기능 추가
-/// 4. todo : 새로고침시 필터링값 연결
 /// 5. todo : 지도 검색기능 향상
 /// 6. todo : 알림 이동 페이지 추가하기  Ex 이용기록 페이지 이동
+/// 7 stream 관련
 
 class _HomeState extends ConsumerState<Home> {
   final ScrollController _scrollController = ScrollController();

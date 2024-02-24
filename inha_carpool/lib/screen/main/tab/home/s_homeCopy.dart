@@ -384,7 +384,6 @@
 //     return RefreshIndicator(
 //       color: context.appColors.logoColor,
 //       onRefresh: _refreshCarpoolList,
-//       /// todo : 퓨처빌더 제거하기
 //       child: FutureBuilder<List<DocumentSnapshot>>(
 //         future: carPoolList,
 //         builder: (context, snapshot) {

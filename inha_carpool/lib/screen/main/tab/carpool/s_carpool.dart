@@ -72,6 +72,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                   _loadCarpools();
                 });
               },
+              /// 이 퓨처 빌더 제거하자~ 
               child: FutureBuilder<List<DocumentSnapshot>>(
                 future: _loadCarpools(),
                 builder: (context, snapshot) {
