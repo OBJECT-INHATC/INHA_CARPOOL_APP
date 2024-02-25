@@ -132,6 +132,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                         /// 입장 메소드
                         Nav.push(
                           CarpoolMap(
+                            startTime: startTime.millisecondsSinceEpoch,
                             mapType: MapCategory.all,
                             isMember: false,
                             startPoint: LatLng(carpoolData.startPoint.latitude,
@@ -140,7 +141,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                             endPoint: LatLng(carpoolData.endPoint.latitude,
                                 carpoolData.endPoint.longitude),
                             endPointName: carpoolData.endPointName,
-                            startTime: formattedTime,
+                            startTimeString: formattedTime,
                             carId: carpoolData.carId,
                             admin: carpoolData.admin,
                             roomGender: carpoolData.gender,
@@ -324,7 +325,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
             .read(carpoolProvider.notifier)
             .loadCarpoolScrollBy(scrollLimit);
 
-        print("_isLoading : ${ref.read(loadingProvider)}");
 
         if (selectedFilter == CarpoolFilter.Distance) {
           await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(ref.read(positionProvider));

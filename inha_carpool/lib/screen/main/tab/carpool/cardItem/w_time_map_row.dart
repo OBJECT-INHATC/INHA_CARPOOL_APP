@@ -91,7 +91,7 @@ class TimeAndMapInfo extends StatelessWidget {
                               .longitude),
                       endPointName: carpoolData[
                       'endPointName'],
-                      startTime:
+                      startTimeString:
                       formattedForMap,
                       carId: carpoolData['carId'],
                       admin: carpoolData['admin'],

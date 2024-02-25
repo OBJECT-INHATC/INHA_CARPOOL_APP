@@ -66,7 +66,7 @@ class ChatLocation extends StatelessWidget {
                       Nav.globalContext,
                       MaterialPageRoute(
                           builder: (context) => CarpoolMap(
-                                mapType: mapCategory,
+                            mapType: mapCategory,
                                 isMember: true,
                                 startPoint: LatLng(
                                   point.latitude,

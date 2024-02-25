@@ -14,14 +14,15 @@ class CarpoolMap extends ConsumerStatefulWidget {
   final String startPointName;
   final LatLng endPoint;
   final String endPointName;
-  final String? startTime;
+  final String? startTimeString;
+  final int? startTime;
   final String? carId;
   final String? admin;
   final String? roomGender;
   final bool isMember;
   final MapCategory mapType;
 
-  const CarpoolMap({
+  const CarpoolMap( {
     super.key,
     required this.startPoint,
     required this.mapType,
@@ -29,10 +30,11 @@ class CarpoolMap extends ConsumerStatefulWidget {
     required this.endPoint,
     required this.endPointName,
     required this.isMember,
-    this.startTime,
+    this.startTimeString,
     this.carId,
     this.admin,
     this.roomGender,
+    this.startTime,
   });
 
   @override
@@ -40,8 +42,13 @@ class CarpoolMap extends ConsumerStatefulWidget {
 }
 
 class _CarpoolMapState extends ConsumerState<CarpoolMap> {
+
+
+
   @override
   Widget build(BuildContext context) {
+
+
     MapCategory mapCategory = widget.mapType;
 
     final height = context.screenHeight;
@@ -104,7 +111,7 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                             endInfo,
                             MapInfo(
                               title: '출발 시간',
-                              content: widget.startTime!,
+                              content: widget.startTimeString!,
                               icon: const Icon(
                                 Icons.access_time,
                                 color: Colors.black,
@@ -113,6 +120,8 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                             ),
                             !(widget.isMember)
                                 ? EnterButton(
+                              /// todo : 0말고 startTime으로 변경
+                              startTime: widget.startTime!,
                                     carId: widget.carId!,
                                     roomGender: widget.roomGender!,
                                     startPointName: widget.startPointName,

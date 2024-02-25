@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 
 import '../../common/models/m_carpool.dart';
 import '../stateProvider/auth_provider.dart';
@@ -8,8 +7,7 @@ import 'state/doing_carpool_state.dart';
 
 ///* 참여중인 카풀의 수를 관리하는 provider 0207 이상훈///
 
-final doingFirstStateProvider = StateProvider((ref) => CarpoolModel(
-));
+final doingFirstStateProvider = StateProvider((ref) => CarpoolModel());
 
 /// todo : 값이 있을땐 잘 되나 없을 땐 에러가 난다!
 final doingCarpoolNotifierProvider =
@@ -29,13 +27,16 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   // 내가 참여중인 카풀리스트 상태관리로 가져오기
   Future getCarpool() async {
     try {
-      List<CarpoolModel> carpoolList = await repository
-          .getCarPoolList(_ref.read(authProvider));
+      print("GetCarpool 실행 --------");
+      List<CarpoolModel> carpoolList =
+          await repository.getCarPoolList(_ref.read(authProvider));
       state = state.copyWith(data: carpoolList);
 
-      /// 첫번째 값 별도 저장
-      _ref.read(doingFirstStateProvider.notifier).state = await getNearestCarpool();
-
+      if (state.data.isNotEmpty) {
+        /// 첫번째 값 별도 저장
+        _ref.read(doingFirstStateProvider.notifier).state =
+            await getNearestCarpool();
+      }
     } catch (e) {
       print("CarpoolProvider [getCarpool] 에러: $e");
     }
@@ -44,17 +45,22 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   Future<CarpoolModel> getNearestCarpool() async {
     try {
       final now = DateTime.now();
-      final carpoolList = state.data;
+      final List<CarpoolModel> carpoolList = state.data;
+      if (carpoolList.length == 1) {
+        return carpoolList.first;
+      }
 
       if (carpoolList.isNotEmpty) {
         return carpoolList.reduce((a, b) {
-          final aDiff = now.difference(DateTime.fromMillisecondsSinceEpoch(a.startTime!));
-          final bDiff = now.difference(DateTime.fromMillisecondsSinceEpoch(b.startTime!));
+          final aDiff =
+              now.difference(DateTime.fromMillisecondsSinceEpoch(a.startTime!));
+          final bDiff =
+              now.difference(DateTime.fromMillisecondsSinceEpoch(b.startTime!));
 
           return aDiff.abs() < bDiff.abs() ? a : b;
         });
       } else {
-        print("GetNearestCarpool 에러: 참여중인 카풀이 없습니다.");
+        print("GetNearestCarpool : 참여중인 카풀이 없습니다.");
         return CarpoolModel();
       }
     } catch (e) {
@@ -62,9 +68,6 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
       return CarpoolModel();
     }
   }
-
-
-
 
   // 들고있는 카풀리스트에서 isChatAlarmOn을 carId로 읽어옴
   Future getAlarm(String carId) async {
@@ -95,32 +98,26 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   // 생성하거나 참여한 카풀리스트를 상태관리에 추가
   Future addCarpool(CarpoolModel carpoolModel) async {
     try {
-      print("addCarpool: 이전 ${state.data.length}개");
-      print("addCarpool: 이전 ${_ref.read(doingFirstStateProvider).carId}");
-
       state = state.copyWith(data: [...state.data, carpoolModel]);
-
-      _ref.read(doingFirstStateProvider.notifier).state = await getNearestCarpool();
-
-
-      print("addCarpool: 변경 ${_ref.read(doingFirstStateProvider).carId}개");
-
-
+      if (state.data.length == 1) {
+        _ref.read(doingFirstStateProvider.notifier).state = carpoolModel;
+      } else {
+        _ref.read(doingFirstStateProvider.notifier).state =
+            await getNearestCarpool();
+      }
     } catch (e) {
       print("CarpoolProvider [addCarpool] 에러: $e");
     }
   }
+
   // 방에서 나간 카풀을 상태관리에서 제거
   Future removeCarpool(String carId) async {
     try {
-      print("addCarpool: 이전 ${_ref.read(doingFirstStateProvider).carId}");
-
       state = state.copyWith(
           data: state.data.where((element) => element.carId != carId).toList());
 
-      _ref.read(doingFirstStateProvider.notifier).state = await getNearestCarpool();
-      print("addCarpool: 변경 ${_ref.read(doingFirstStateProvider).carId}개");
-
+      _ref.read(doingFirstStateProvider.notifier).state =
+          await getNearestCarpool();
 
     } catch (e) {
       print("CarpoolProvider [removeCarpool] 에러: $e");

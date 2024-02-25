@@ -138,6 +138,7 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                     if (nowMember < maxMember) {
                       Nav.push(
                         CarpoolMap(
+                          startTime: startTime.millisecondsSinceEpoch,
                           mapType: MapCategory.all,
                           isMember: false,
                           startPoint: LatLng(carpoolData['startPoint'].latitude,
@@ -146,7 +147,7 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                           endPoint: LatLng(carpoolData['endPoint'].latitude,
                               carpoolData['endPoint'].longitude),
                           endPointName: carpoolData['endPointName'],
-                          startTime: formattedTime,
+                          startTimeString: formattedTime,
                           carId: carpoolData['carId'],
                           admin: carpoolData['admin'],
                           roomGender: carpoolData['gender'],

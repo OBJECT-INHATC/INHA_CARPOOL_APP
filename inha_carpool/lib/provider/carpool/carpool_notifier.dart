@@ -21,8 +21,6 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
   Future<void> loadCarpoolTimeBy() async {
     try {
        state = await apiService.timeByFunction(5, null);
-
-       print("서버에서 최초 state : ${state.length}개");
     } catch (error) {
 
       rethrow;
@@ -35,18 +33,11 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
       /// Todo : 스크롤을 계속 내리면 limit도 동적으로 늘려줘야함 (현재는 10개로 고정)
       List<CarpoolState> newList = await apiService.timeByFunction(limit, null);
 
-      print("기존 state : ${state.length}개");
-      print("스크롤로 가져온 전체 데이터 : ${newList.length}개");
-
-
       // 새로 받아온 데이터 중 이미 state에 존재하는 데이터 제거
       newList.removeWhere((newCarpool) => state.any((oldCarpool) => oldCarpool.carId == newCarpool.carId));
 
       // 중복 제거 후 state에 추가
       state = [...state, ...newList];
-
-      print("중복 제거 후 데이터 : ${newList.length}개");
-      print("기존 state와 중복 제거 후 데이터 합친 결과물  state : ${state.length}개");
 
     } catch (error) {
       rethrow;
@@ -82,8 +73,6 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
 
   /// 거리순으로 기존 상태 새로고침
   Future<void> loadCarpoolNearBy(LatLng myPoint) async {
-    print("기존 데이터 거리순 정렬");
-
     try {
       List<CarpoolState> carpools = [];
 
@@ -102,7 +91,6 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
 
   /// 시간순으로 기존 상태 새로고침
   Future<void> loadCarpoolStateTimeBy() async {
-    print("기존 데이터 시간순 정렬");
     try {
       List<CarpoolState> carpools = [];
 

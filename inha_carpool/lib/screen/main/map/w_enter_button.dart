@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:inha_Carpool/common/extension/num_duration_extension.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 import 'package:nav/nav.dart';
@@ -20,11 +21,12 @@ import '../tab/carpool/chat/s_chatroom.dart';
 final enterProvider = StateProvider<bool>((ref) => false);
 
 class EnterButton extends ConsumerStatefulWidget {
-  const EnterButton({super.key, required this.carId, required this.roomGender, required this.startPointName, required this.endPointName });
+  const EnterButton({super.key, required this.carId, required this.roomGender,  required this.startTime,required this.startPointName, required this.endPointName });
   final String carId;
   final String roomGender;
   final String startPointName;
   final String endPointName;
+  final int startTime;
 
   @override
   ConsumerState<EnterButton> createState() => _MapButtonState();
@@ -84,7 +86,7 @@ class _MapButtonState extends ConsumerState<EnterButton> {
                     endPointName: widget.endPointName,
                     startPointName: widget.startPointName,
                     startDetailPoint: widget.startPointName,
-                    startTime: 0,
+                    startTime: widget.startTime,
                     recentMessageSender: "service",
                     recentMessage: "$nickName님이 입장하였습니다."));
                 if (!mounted) return;

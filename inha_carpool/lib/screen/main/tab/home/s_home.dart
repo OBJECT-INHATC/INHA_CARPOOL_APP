@@ -32,19 +32,6 @@ class _HomeState extends ConsumerState<Home> {
   final TextEditingController _searchController = TextEditingController();
   late LatLng myPosition;
 
-/*  final _timeStreamController = StreamController<DateTime>.broadcast();
-  Stream<DateTime>? _timeStream;*/
-
-  // 현재 시간을 1초마다 스트림에 추가 -> init
-/*  _HomeState() {
-    Timer.periodic(const Duration(seconds: 1), (timer) {
-      //현재시간을 Duration으로 변환해서 add
-      if (!_timeStreamController.isClosed) {
-        _timeStreamController.sink.add(DateTime.now());
-      }
-    });
-  }*/
-
   void loadCarpoolTimeBy() async {
     await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
     myPosition = ref.read(positionProvider);
@@ -54,62 +41,13 @@ class _HomeState extends ConsumerState<Home> {
   void initState() {
     super.initState();
     loadCarpoolTimeBy(); // 카풀 리스트 불러오기
-
-    //  _HomeState(); // 현재 시간을 1초마다 스트림에 추가
-    // _subscribeToTimeStream(); // 스트림 구독
   }
-
-/*
-  void _subscribeToTimeStream() {
-    print('스트림 구독');
-    _timeStream = _timeStreamController.stream;
-  }
-*/
 
   @override
   void dispose() {
-    // Dispose of the StreamController when no longer needed
-    //_timeStreamController.close();
     _scrollController.dispose();
     super.dispose();
   }
-
-/*
-  void _handleFloatingActionButton() async {
-    DocumentSnapshot? firstCarpool = await _loadFirstCarpool();
-
-    if (firstCarpool != null) {
-      Map<String, dynamic> carpoolData =
-          firstCarpool.data() as Map<String, dynamic>;
-      if (!mounted) return;
-      Navigator.push(
-        Nav.globalContext,
-        MaterialPageRoute(
-          builder: (context) => ChatroomPage(
-            carId: carpoolData['carId'],
-          ),
-        ),
-      );
-    } else {
-      SnackBar snackBar = SnackBar(
-        content: const Text('아직 카풀이 없습니다.'),
-        action: SnackBarAction(
-          label: '카풀 생성',
-          onPressed: () {
-            Navigator.push(
-              Nav.globalContext,
-              MaterialPageRoute(
-                builder: (context) => const RecruitPage(),
-              ),
-            );
-          },
-        ),
-      );
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    }
-  }
-*/
 
   @override
   Widget build(BuildContext context) {
@@ -117,18 +55,11 @@ class _HomeState extends ConsumerState<Home> {
     final carPoolListState = ref.watch(carpoolProvider);
 
     bool loadingState = ref.watch(loadingProvider);
-    final firstState = ref.watch(doingFirstStateProvider);
-    bool floatingState = firstState.startTime != null;
 
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
-
-        floatingActionButton:
-        floatingState
-                ? StreamFloating()
-                : Container(),
-
+        floatingActionButton: const StreamFloating(),
         body: Stack(
           children: [
             Container(
@@ -150,7 +81,6 @@ class _HomeState extends ConsumerState<Home> {
                         Expanded(
                           child: TextField(
                             onSubmitted: (value) async {
-                              print("onSubmitted");
                               await carpoolSearch(
                                   value, context, carPoolListState);
                             },
@@ -186,7 +116,6 @@ class _HomeState extends ConsumerState<Home> {
                                   size: 20,
                                 ),
                                 onTap: () async {
-                                  print("onTap");
                                   await carpoolSearch(_searchController.text,
                                       context, carPoolListState);
                                 },

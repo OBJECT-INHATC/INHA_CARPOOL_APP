@@ -24,98 +24,95 @@ class _State extends ConsumerState<StreamFloating> {
 
     final carPoolListState = ref.watch(doingFirstStateProvider);
 
-
-    /// todo : 초기화 이후 참여중인 카풀의 상태가 바뀌었을 때
-    /// 비동기 작업으로 동기화가 적절하지 않음 0225 이상훈 -> 카풀 나가기 및 추가할때 동기화가 필요함
-
-    print(
-        "carpoolData : ${carPoolListState.startDetailPoint} - ${carPoolListState.endDetailPoint}}");
-
-    return
-            is24Hours(carPoolListState.startTime!)
-        ? SizedBox(
-            height: height * 0.14,
-            width: width * 0.9,
-            child: FloatingActionButton(
-              elevation: 3,
-              mini: false,
-              backgroundColor: Colors.grey[800],
-              splashColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-                side: const BorderSide(color: Colors.black38, width: 1),
-              ),
-              onPressed: () {
-                Nav.push(ChatroomPage(carId: carPoolListState.carId!));
-              },
-              child: StreamBuilder<DateTime>(
-                stream: _timeStream,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting ||
-                      carPoolListState.startTime == null) {
-                    return const Text('Loading...');
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    final data = snapshot.data;
-                    final startTime = DateTime.fromMillisecondsSinceEpoch(
-                        carPoolListState.startTime!);
-
-                    Duration diff = startTime.difference(data!);
-                    // 시간이 지나면 새로고침
-                    if (diff.inSeconds == 0) {
-                      print('  if (diff.inSeconds == 0) { 카풀 시간이 지났습니다.');
-                      ref
-                          .read(doingCarpoolNotifierProvider.notifier)
-                          .getCarpool();
-                    }
-
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Width(width * 0.05),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '🚕 카풀이 ${formatDuration(diff)} 후에 출발 예정이에요',
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                            Text(
-                              '${carPoolListState.startDetailPoint} - ${carPoolListState.endDetailPoint}',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        const Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: Colors.white,
-                              size: 25,
-                            ),
-                          ],
-                        ),
-                        Width(width * 0.05),
-                      ],
-                    );
-                  }
-                },
-              ),
+    if (carPoolListState != CarpoolModel() &&  carPoolListState.startTime != null) {
+      if (is24Hours(carPoolListState.startTime!)) {
+        return SizedBox(
+          height: height * 0.14,
+          width: width * 0.9,
+          child: FloatingActionButton(
+            elevation: 3,
+            mini: false,
+            backgroundColor: Colors.grey[800],
+            splashColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+              side: const BorderSide(color: Colors.black38, width: 1),
             ),
-          )
-        : Container();
+            onPressed: () {
+              Nav.push(ChatroomPage(carId: carPoolListState.carId!));
+            },
+            child: StreamBuilder<DateTime>(
+              stream: _timeStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting ||
+                    carPoolListState.startTime == null) {
+                  return const Text('Loading...');
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  final data = snapshot.data;
+                  final startTime = DateTime.fromMillisecondsSinceEpoch(
+                      carPoolListState.startTime!);
+
+                  Duration diff = startTime.difference(data!);
+                  // 시간이 지나면 새로고침
+                  if (diff.inSeconds == 0) {
+                    ref
+                        .read(doingCarpoolNotifierProvider.notifier)
+                        .getCarpool();
+                  }
+
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Width(width * 0.05),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '🚕 카풀이 ${formatDuration(diff)} 후에 출발 예정이에요',
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            '${carPoolListState.startPointName} - ${carPoolListState.endPointName}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: Colors.white,
+                            size: 25,
+                          ),
+                        ],
+                      ),
+                      Width(width * 0.05),
+                    ],
+                  );
+                }
+              },
+            ),
+          ),
+        );
+      } else {
+        return const SizedBox();
+      }
+    } else {
+      return const SizedBox();
+    }
   }
 
   String formatDuration(Duration duration) {
