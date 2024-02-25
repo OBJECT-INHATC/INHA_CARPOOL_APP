@@ -126,7 +126,7 @@ class _HomeState extends ConsumerState<Home> {
 
         floatingActionButton:
         floatingState
-                ? StreamFloating(ref.watch(doingFirstStateProvider))
+                ? StreamFloating()
                 : Container(),
 
         body: Stack(

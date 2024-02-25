@@ -7,8 +7,7 @@ import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import '../../../../../provider/doing_carpool/doing_carpool_provider.dart';
 
 class StreamFloating extends ConsumerStatefulWidget {
-  const StreamFloating(this.carpoolModel, {Key? key}) : super(key: key);
-  final CarpoolModel carpoolModel;
+  const StreamFloating({Key? key}) : super(key: key);
 
   @override
   ConsumerState<StreamFloating> createState() => _State();
@@ -23,14 +22,17 @@ class _State extends ConsumerState<StreamFloating> {
     final width = context.screenWidth;
     final height = context.screenWidth;
 
+    final carPoolListState = ref.watch(doingFirstStateProvider);
+
+
     /// todo : 초기화 이후 참여중인 카풀의 상태가 바뀌었을 때
     /// 비동기 작업으로 동기화가 적절하지 않음 0225 이상훈 -> 카풀 나가기 및 추가할때 동기화가 필요함
 
     print(
-        "carpoolData : ${widget.carpoolModel.startDetailPoint} - ${widget.carpoolModel.endDetailPoint}}");
+        "carpoolData : ${carPoolListState.startDetailPoint} - ${carPoolListState.endDetailPoint}}");
 
     return
-            is24Hours(widget.carpoolModel.startTime!)
+            is24Hours(carPoolListState.startTime!)
         ? SizedBox(
             height: height * 0.14,
             width: width * 0.9,
@@ -44,20 +46,20 @@ class _State extends ConsumerState<StreamFloating> {
                 side: const BorderSide(color: Colors.black38, width: 1),
               ),
               onPressed: () {
-                Nav.push(ChatroomPage(carId: widget.carpoolModel.carId!));
+                Nav.push(ChatroomPage(carId: carPoolListState.carId!));
               },
               child: StreamBuilder<DateTime>(
                 stream: _timeStream,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting ||
-                      widget.carpoolModel.startTime == null) {
+                      carPoolListState.startTime == null) {
                     return const Text('Loading...');
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
                     final data = snapshot.data;
                     final startTime = DateTime.fromMillisecondsSinceEpoch(
-                        widget.carpoolModel.startTime!);
+                        carPoolListState.startTime!);
 
                     Duration diff = startTime.difference(data!);
                     // 시간이 지나면 새로고침
@@ -85,7 +87,7 @@ class _State extends ConsumerState<StreamFloating> {
                               ),
                             ),
                             Text(
-                              '${widget.carpoolModel.startDetailPoint} - ${widget.carpoolModel.endDetailPoint}',
+                              '${carPoolListState.startDetailPoint} - ${carPoolListState.endDetailPoint}',
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w700,
