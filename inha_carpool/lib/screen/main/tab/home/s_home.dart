@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
+import 'package:inha_Carpool/provider/LatLng/LatLng_notifier.dart';
 import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
@@ -28,6 +29,7 @@ class Home extends ConsumerStatefulWidget {
 class _HomeState extends ConsumerState<Home> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
+  late LatLng myPosition;
 
 /*  final _timeStreamController = StreamController<DateTime>.broadcast();
   Stream<DateTime>? _timeStream;*/
@@ -42,17 +44,15 @@ class _HomeState extends ConsumerState<Home> {
     });
   }*/
 
-  // 내 위치
-  late LatLng myPoint;
 
   void loadCarpoolTimeBy() async {
     await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
+    myPosition = ref.read(positionProvider);
   }
 
   @override
   void initState() {
     super.initState();
-    initMyPoint(); // 내 위치 받아오기
     loadCarpoolTimeBy(); // 카풀 리스트 불러오기
 
     //  _HomeState(); // 현재 시간을 1초마다 스트림에 추가
@@ -366,7 +366,7 @@ class _HomeState extends ConsumerState<Home> {
           .searchCarpool(value.toLowerCase());
 
       if (selectedFilter == CarpoolFilter.Distance) {
-        await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
+        await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPosition);
       }
 
       // 검색 결과가 없을 경우
@@ -395,17 +395,13 @@ class _HomeState extends ConsumerState<Home> {
     await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
     if (selectedFilter == CarpoolFilter.Distance) {
       /// 거리순 정렬일시 거리순으로 정렬
-      await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
+      await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPosition);
     }
     Future.delayed(const Duration(milliseconds: 500), () {
       ref.read(loadingProvider.notifier).state = false;
     });
   }
 
-  /// 내 위치 받아오기 없으면 인하대 후문
-  initMyPoint() async {
-    myPoint = (await LocationHandler.getCurrentLocationTest(context)) ?? const LatLng(37.4503, 126.6533);
-  }
 
   // 새로고침 후 보여지는 리스트 갯수 : 5개 보다 적을시 리스트의 갯수, 이상일 시 5개
 /*  carPoolList.then((list) {
@@ -421,7 +417,7 @@ class _HomeState extends ConsumerState<Home> {
     (selectedFilter == CarpoolFilter.Time)
         ? await ref.read(carpoolProvider.notifier).loadCarpoolStateTimeBy()
     /// todo : 위치정보 상태관리
-        : await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
+        : await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPosition);
   }
 
   String formatDuration(Duration duration) {

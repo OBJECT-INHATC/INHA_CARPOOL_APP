@@ -74,7 +74,7 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             if (result != null) {
               setState(() {
                 selectedLocation =
-                    LocationHandler.getStringBetweenUnderscores(result);
+                    LocationHandler().getStringBetweenUnderscores(result);
                 // isGestureEnabled = false; // Tap 이벤트 비활성화
               });
               widget.onLocationSelected(result);

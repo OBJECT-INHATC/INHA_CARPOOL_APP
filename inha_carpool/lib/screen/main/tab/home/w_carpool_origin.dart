@@ -11,6 +11,7 @@ import 'package:inha_Carpool/provider/loding/loadin_notifier.dart';
 import '../../../../common/util/location_handler.dart';
 import '../../../../common/widget/LodingContainer.dart';
 import '../../../../common/widget/empty_list.dart';
+import '../../../../provider/LatLng/LatLng_notifier.dart';
 import '../../../../provider/auth/auth_provider.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
 import '../../map/s_carpool_map.dart';
@@ -54,11 +55,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
 
   int scrollLimit = 10;
 
-  late LatLng myPoint;
 
-  initMyPoint() async {
-    myPoint = (await LocationHandler.getCurrentLatLng(context))!;
-  }
 
   Future<void> _loadUserData() async {
     nickName = ref.read(authProvider).nickName!;
@@ -69,7 +66,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   @override
   void initState() {
     _loadUserData();
-    initMyPoint();
     _scrollController.addListener(_scrollListener); // 스크롤 컨트롤러에 스크롤 감지 이벤트 추가
 
     super.initState();
@@ -331,7 +327,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
         print("_isLoading : ${ref.read(loadingProvider)}");
 
         if (selectedFilter == CarpoolFilter.Distance) {
-          await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPoint);
+          await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(ref.read(positionProvider));
         }
 
         Future.delayed(const Duration(milliseconds: 500), () {

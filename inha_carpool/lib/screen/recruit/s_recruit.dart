@@ -147,12 +147,12 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                       onLocationSelected: (String value) {
                         setState(() {
                           startPointName =
-                              LocationHandler.getStringBetweenUnderscores(value)
+                              LocationHandler().getStringBetweenUnderscores(value)
                                   .trim();
                           startPoint = LatLng(
-                              LocationHandler.parseDoubleBeforeUnderscore(
+                              LocationHandler().parseDoubleBeforeUnderscore(
                                   value),
-                              LocationHandler.getDoubleAfterSecondUnderscore(
+                              LocationHandler().getDoubleAfterSecondUnderscore(
                                   value));
                         });
                       },
@@ -205,12 +205,12 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                       onLocationSelected: (String value) {
                         setState(() {
                           endPointName =
-                              LocationHandler.getStringBetweenUnderscores(value)
+                              LocationHandler().getStringBetweenUnderscores(value)
                                   .trim();
                           endPoint = LatLng(
-                              LocationHandler.parseDoubleBeforeUnderscore(
+                              LocationHandler().parseDoubleBeforeUnderscore(
                                   value),
-                              LocationHandler.getDoubleAfterSecondUnderscore(
+                              LocationHandler().getDoubleAfterSecondUnderscore(
                                   value));
                         });
                       },

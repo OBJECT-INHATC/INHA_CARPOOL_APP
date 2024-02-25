@@ -6,8 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
 import 'package:inha_Carpool/provider/yellow/yellow_provider.dart';
 import 'package:inha_Carpool/screen/register/agreement/s_agreement.dart';
@@ -17,6 +19,7 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 
 import '../../common/data/preference/prefs.dart';
 import '../../common/models/m_member.dart';
+import '../../provider/LatLng/LatLng_notifier.dart';
 import '../../provider/auth/auth_provider.dart';
 import '../../provider/history/history_notifier.dart';
 import '../../provider/notification/notification_provider.dart';
@@ -91,13 +94,18 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
 
 
+
       /// 로그인 정보 상태관리 초기화
       setAuthStateProvider(memberModel);
 
       /// 이용내역 상태관리 초기화
       setHistory(memberModel.uid!);
 
+      /// 경고횟수 상태관리 초기화
       setYellowCardCount(memberModel.nickName!);
+
+      ///자신 위치 상태관리 초기화
+      setPositionState();
 
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MainScreen()));
@@ -118,6 +126,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   void setYellowCardCount(String nickName) async {
     final yellowCardCount = await ApiService().selectYellowCount(nickName);
     ref.read(yellowCountProvider.notifier).state = yellowCardCount;
+  }
+
+  void setPositionState() async {
+    LatLng position  = await LocationHandler().getCurrentLatLng(context) ?? const LatLng(37.450, 126.650);
+    ref.read(positionProvider.notifier).state = position;
+    print("가져온 위도경도 : ${position.latitude}, ${position.longitude}");
   }
 
   // 버튼 활성화 여부
