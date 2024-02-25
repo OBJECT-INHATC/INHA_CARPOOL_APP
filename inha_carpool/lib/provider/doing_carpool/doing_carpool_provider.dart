@@ -5,7 +5,10 @@ import '../stateProvider/auth_provider.dart';
 import 'repository/doing_carpool_repository.dart';
 import 'state/doing_carpool_state.dart';
 
-///* 참여중인 카풀의 수를 관리하는 provider 0207 이상훈
+///* 참여중인 카풀의 수를 관리하는 provider 0207 이상훈///
+
+final doingFirstStateProvider = StateProvider((ref) => CarpoolModel());
+
 
 final doingCarpoolNotifierProvider =
     StateNotifierProvider<CarpoolStateNotifier, DoingCarPoolStateModel>(
@@ -27,10 +30,42 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
       List<CarpoolModel> carpoolList = await repository
           .getCarPoolList(_ref.read(authProvider));
       state = state.copyWith(data: carpoolList);
+
+      /// 첫번째 값 별도 저장
+      _ref.read(doingFirstStateProvider.notifier).state = await getNearestCarpool();
+
     } catch (e) {
       print("CarpoolProvider [getCarpool] 에러: $e");
     }
   }
+
+  Future<CarpoolModel> getNearestCarpool() async {
+    try {
+      print("getNearestCarpool 실행");
+      final now = DateTime.now();
+      final carpoolList = state.data;
+
+      if (carpoolList.isNotEmpty) {
+        print("carpoolList 수: ${carpoolList.length}");
+        return carpoolList.reduce((a, b) {
+          print("a: ${a.startTime}");
+          print("b: ${b.startTime}");
+          final aDiff = now.difference(DateTime.fromMillisecondsSinceEpoch(a.startTime!));
+          final bDiff = now.difference(DateTime.fromMillisecondsSinceEpoch(b.startTime!));
+
+          return aDiff.abs() < bDiff.abs() ? a : b;
+        });
+      } else {
+        return CarpoolModel();
+      }
+    } catch (e) {
+      print("CarpoolProvider [getNearestCarpool] 에러: $e");
+      return CarpoolModel();
+    }
+  }
+
+
+
 
   // 들고있는 카풀리스트에서 isChatAlarmOn을 carId로 읽어옴
   Future getAlarm(String carId) async {
@@ -62,6 +97,10 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   Future addCarpool(CarpoolModel carpoolModel) async {
     try {
       state = state.copyWith(data: [...state.data, carpoolModel]);
+
+      /// 첫번째 값 별도 저장
+      _ref.read(doingFirstStateProvider.notifier).state = await getNearestCarpool();
+
     } catch (e) {
       print("CarpoolProvider [addCarpool] 에러: $e");
     }
@@ -72,6 +111,9 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
     try {
       state = state.copyWith(
           data: state.data.where((element) => element.carId != carId).toList());
+
+      /// 첫번째 값 별도 저장
+      _ref.read(doingFirstStateProvider.notifier).state = await getNearestCarpool();
     } catch (e) {
       print("CarpoolProvider [removeCarpool] 에러: $e");
     }

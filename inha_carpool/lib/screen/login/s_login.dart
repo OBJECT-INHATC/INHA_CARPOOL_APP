@@ -139,6 +139,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   }
 
   void setDoingCarPoolState() async {
+    /// 참여중인 카풀 리스트와 그 중 가장 출발시간이 가장 빠른 카풀을 상태관리에 저장
     ref.read(doingCarpoolNotifierProvider.notifier).getCarpool();
   }
 
