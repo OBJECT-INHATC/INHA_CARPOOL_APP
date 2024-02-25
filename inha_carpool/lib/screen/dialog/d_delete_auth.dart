@@ -75,7 +75,7 @@ class _DeleteAuthDialogState extends State<DeleteAuthDialog> {
                           reportType: "탈퇴",
                           reportDate: DateTime.now().toString());
 
-                      // todo : 신고가 잘 되는지 추후 report값으로 tdd로 확인 필요 (지금은 저장만 하고 저장 상태 확인은안함)
+                      // todo : 신고가 잘 되는지 추후 report값으로 tdd로 확인 필요 0225 이상훈 (지금은 저장만 하고 저장 상태 확인은안함)
                      bool report = await  ApiService().saveReport(reportDto);
 
                       String realDelete = await AuthService().deleteAccount(widget.email, widget.password);

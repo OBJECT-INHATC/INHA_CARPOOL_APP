@@ -404,7 +404,7 @@ class _HomeState extends ConsumerState<Home> {
 
   /// 내 위치 받아오기 없으면 인하대 후문
   initMyPoint() async {
-    myPoint = (await LocationHandler.getCurrentLatLng(context)) ?? const LatLng(37.4514982, 126.6570261);
+    myPoint = (await LocationHandler.getCurrentLocationTest(context)) ?? const LatLng(37.4503, 126.6533);
   }
 
   // 새로고침 후 보여지는 리스트 갯수 : 5개 보다 적을시 리스트의 갯수, 이상일 시 5개
