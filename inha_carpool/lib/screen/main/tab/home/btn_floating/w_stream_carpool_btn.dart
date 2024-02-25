@@ -29,8 +29,8 @@ class _State extends ConsumerState<StreamFloating> {
     print(
         "carpoolData : ${carpoolData.startDetailPoint} - ${carpoolData.endDetailPoint}}");
 
-    return ref.watch(doingFirstStateProvider) != CarpoolModel() &&
-            !is24Hours(carpoolData.startTime ?? 0)
+    return ref.watch(doingFirstStateProvider).startTime != null &&
+            is24Hours(carpoolData.startTime!)
         ? SizedBox(
             height: height * 0.14,
             width: width * 0.9,
