@@ -6,7 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class LocationHandler {
 
   // 위치 받아오는 함수
-   Future<LatLng?> getCurrentLatLng(BuildContext context) async {
+  Future<LatLng?> getCurrentLatLng(BuildContext context) async {
     LocationPermission permission = await Geolocator.requestPermission();
 
     if (permission == LocationPermission.denied ||
@@ -24,7 +24,7 @@ class LocationHandler {
 
 
 
-   void showLocationPermissionSnackBar(BuildContext context) {
+  void showLocationPermissionSnackBar(BuildContext context) {
     SnackBar snackBar = SnackBar(
       content: const Text("위치 권한이 필요한 서비스입니다."),
       action: SnackBarAction(

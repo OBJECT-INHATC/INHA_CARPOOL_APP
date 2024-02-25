@@ -11,7 +11,7 @@ import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
 import '../../common/common.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../fragment/f_notification.dart';
-import '../../provider/notification/notification_provider.dart';
+import '../../provider/stateProvider/notification_provider.dart';
 import '../../service/sv_firestore.dart';
 
 class MainScreen extends ConsumerStatefulWidget {

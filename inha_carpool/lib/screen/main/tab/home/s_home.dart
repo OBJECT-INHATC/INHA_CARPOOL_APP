@@ -3,15 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/common/util/location_handler.dart';
-import 'package:inha_Carpool/provider/LatLng/LatLng_notifier.dart';
+import 'package:inha_Carpool/provider/stateProvider/LatLng_notifier.dart';
 import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
 
 import '../../../../common/widget/LodingContainer.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
-import '../../../../provider/loding/loadin_notifier.dart';
+import '../../../../provider/stateProvider/loading_notifier.dart';
 import 'enum/carpoolFilter.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -31,8 +30,8 @@ class _HomeState extends ConsumerState<Home> {
   final TextEditingController _searchController = TextEditingController();
   late LatLng myPosition;
 
-/*  final _timeStreamController = StreamController<DateTime>.broadcast();
-  Stream<DateTime>? _timeStream;*/
+  final _timeStreamController = StreamController<DateTime>.broadcast();
+  Stream<DateTime>? _timeStream;
 
   // 현재 시간을 1초마다 스트림에 추가 -> init
 /*  _HomeState() {
@@ -416,7 +415,6 @@ class _HomeState extends ConsumerState<Home> {
     selectedFilter = newValue ?? CarpoolFilter.Time;
     (selectedFilter == CarpoolFilter.Time)
         ? await ref.read(carpoolProvider.notifier).loadCarpoolStateTimeBy()
-    /// todo : 위치정보 상태관리
         : await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPosition);
   }
 

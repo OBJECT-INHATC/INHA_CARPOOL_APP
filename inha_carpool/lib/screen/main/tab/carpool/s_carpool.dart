@@ -5,7 +5,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/models/m_member.dart';
 
 import 'package:inha_Carpool/service/sv_carpool.dart';
-import 'package:inha_Carpool/provider/auth/auth_provider.dart';
+import 'package:inha_Carpool/provider/stateProvider/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_floating_btn.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
