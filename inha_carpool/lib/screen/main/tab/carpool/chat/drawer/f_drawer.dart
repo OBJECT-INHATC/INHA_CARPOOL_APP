@@ -443,8 +443,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                   children: [
                     TextButton(
                       onPressed: () async {
+                         _exitCarpoolLoding(context, isAlone, isAdmin);
                         Navigator.pop(context);
-                        _exitCarpoolLoding(context, isAlone, isAdmin);
                       },
                       child: const Text('나가기'),
                     ),
@@ -465,7 +465,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   }
 
   // 나가기 처리 메소드
-  void _exitCarpoolLoding(
+   _exitCarpoolLoding(
       BuildContext contextm, bool isAlone, bool isAdmin) async {
     showDialog(
       context: context,

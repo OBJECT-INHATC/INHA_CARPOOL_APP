@@ -11,7 +11,7 @@ import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
 import '../../../../common/widget/LodingContainer.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
 import '../../../../provider/stateProvider/loading_notifier.dart';
-import 'btn_floating/StreamCarpoolBtn.dart';
+import 'btn_floating/w_stream_carpool_btn.dart';
 import 'enum/carpoolFilter.dart';
 
 class Home extends ConsumerStatefulWidget {

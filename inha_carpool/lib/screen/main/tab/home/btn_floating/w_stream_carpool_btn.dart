@@ -23,21 +23,15 @@ class _State extends ConsumerState<StreamFloating> {
     final height = context.screenWidth;
     final carpoolData = ref.watch(doingFirstStateProvider);
 
-    bool isWithin24Hours = false;
+    /// todo : 초기화 이후 참여중인 카풀의 상태가 바뀌었을 때
+    /// 비동기 작업으로 동기화가 적절하지 않음 0225 이상훈 -> 카풀 나가기 및 추가할때 동기화가 필요함
 
-    if(carpoolData != CarpoolModel() && carpoolData.startTime != null){
-      final now = DateTime.now();
-      final diff = DateTime.fromMicrosecondsSinceEpoch(carpoolData.startTime!).difference(now);
-       isWithin24Hours = diff.inHours <= 24;
-    }
+    print(
+        "carpoolData : ${carpoolData.startDetailPoint} - ${carpoolData.endDetailPoint}}");
 
-    print("isWithin24Hours : $isWithin24Hours");
-
-    print("carpoolData : ${carpoolData.startDetailPoint} - ${carpoolData.endDetailPoint}}");
-
-    return carpoolData.carId == null || carpoolData == CarpoolModel() || isWithin24Hours
-        ? Container()
-        : SizedBox(
+    return ref.watch(doingFirstStateProvider) != CarpoolModel() &&
+            !is24Hours(carpoolData.startTime ?? 0)
+        ? SizedBox(
             height: height * 0.14,
             width: width * 0.9,
             child: FloatingActionButton(
@@ -50,19 +44,13 @@ class _State extends ConsumerState<StreamFloating> {
                 side: const BorderSide(color: Colors.black38, width: 1),
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ChatroomPage(
-                      carId: carpoolData.carId!,
-                    ),
-                  ),
-                );
+                Nav.push(ChatroomPage(carId: carpoolData.carId!));
               },
               child: StreamBuilder<DateTime>(
                 stream: _timeStream,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      carpoolData.startTime == null) {
                     return const Text('Loading...');
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
@@ -73,7 +61,8 @@ class _State extends ConsumerState<StreamFloating> {
 
                     Duration diff = startTime.difference(data!);
                     // 시간이 지나면 새로고침
-                    if (diff.inSeconds <= 0) {
+                    if (diff.inSeconds == 0) {
+                      print('  if (diff.inSeconds == 0) { 카풀 시간이 지났습니다.');
                       ref
                           .read(doingCarpoolNotifierProvider.notifier)
                           .getCarpool();
@@ -123,7 +112,8 @@ class _State extends ConsumerState<StreamFloating> {
                 },
               ),
             ),
-          );
+          )
+        : Container();
   }
 
   String formatDuration(Duration duration) {
@@ -131,5 +121,15 @@ class _State extends ConsumerState<StreamFloating> {
     final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
     final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
     return '$hours:$minutes:$seconds';
+  }
+
+  // 현재시간보다 startTime이 24시간 이내인지 판별 하는 함수
+  bool is24Hours(int startTime) {
+    if (startTime == null || startTime == 0) return false;
+
+    final currentTime = DateTime.now();
+    final diff =
+        currentTime.difference(DateTime.fromMillisecondsSinceEpoch(startTime));
+    return diff.inHours < 24;
   }
 }

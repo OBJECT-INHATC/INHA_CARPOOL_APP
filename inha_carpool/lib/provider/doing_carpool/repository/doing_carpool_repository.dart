@@ -37,11 +37,9 @@ class DoingCarpoolRepository {
           .doc(memberModel.uid)
           .get();
 
-      bool isChatAlarm = (isCheckAlarm.data() as Map<String, dynamic>)?['isChatAlarmOn'] ?? true;
+      bool isChatAlarm = (isCheckAlarm.data() as Map<String, dynamic>?)?['isChatAlarmOn'] ?? true;
 
       carModel.isChatAlarmOn = isChatAlarm;
-
-
 
     // 가져온 데이터의 출발시간을 DateTime으로 변환
     DateTime startTime =
