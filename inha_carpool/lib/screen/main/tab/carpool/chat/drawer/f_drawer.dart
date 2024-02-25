@@ -443,8 +443,8 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                   children: [
                     TextButton(
                       onPressed: () async {
+                        print("나가기 버튼 클릭");
                          _exitCarpoolLoding(context, isAlone, isAdmin);
-                        Navigator.pop(context);
                       },
                       child: const Text('나가기'),
                     ),
@@ -475,6 +475,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
           // 나가기 처리를 수행하는 비동기 함수
           future: _exitCarpoolFuture(isAlone, isAdmin),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
+            print("빌더 시작");
             if (snapshot.connectionState == ConnectionState.waiting) {
               return AlertDialog(
                 backgroundColor: Colors.black.withOpacity(0.5),
@@ -535,6 +536,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
 
   /// 나가기 처리를 수행하는 비동기 함수 (공통)
   Future<void> _exitCarpoolFuture(bool isAlone, bool isAdmin) async {
+    print("나가기 처리 시작");
     //서버에서 토픽 삭제
     bool isOpen = await ApiTopic().deleteTopic(uid, widget.carId);
 
