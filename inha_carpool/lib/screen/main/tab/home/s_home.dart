@@ -10,6 +10,7 @@ import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
 
 import '../../../../common/widget/LodingContainer.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
+import '../../../../provider/doing_carpool/doing_carpool_provider.dart';
 import '../../../../provider/stateProvider/loading_notifier.dart';
 import 'btn_floating/w_stream_carpool_btn.dart';
 import 'enum/carpoolFilter.dart';
@@ -43,7 +44,6 @@ class _HomeState extends ConsumerState<Home> {
       }
     });
   }*/
-
 
   void loadCarpoolTimeBy() async {
     await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
@@ -117,12 +117,18 @@ class _HomeState extends ConsumerState<Home> {
     final carPoolListState = ref.watch(carpoolProvider);
 
     bool loadingState = ref.watch(loadingProvider);
+    final firstState = ref.watch(doingFirstStateProvider);
+    bool floatingState = firstState.startTime != null;
 
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
 
-  floatingActionButton: const StreamFloating(),
+        floatingActionButton:
+        floatingState
+                ? StreamFloating(ref.watch(doingFirstStateProvider))
+                : Container(),
+
         body: Stack(
           children: [
             Container(
@@ -247,7 +253,7 @@ class _HomeState extends ConsumerState<Home> {
 
       // 검색어가 없을 경우 서버에서 최신 리스트를 받아옴
       if (carPoolListState.isEmpty) {
-        ref.read(searchProvider.notifier).state = false;  // 검색 상태 변경
+        ref.read(searchProvider.notifier).state = false; // 검색 상태 변경
         await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
       }
 
@@ -262,10 +268,10 @@ class _HomeState extends ConsumerState<Home> {
 
       // 검색 결과가 없을 경우
       if (ref.watch(carpoolProvider).isEmpty) {
-        if(!mounted) return;
+        if (!mounted) return;
         context.showSnackbarText(context, '검색 결과가 없습니다.', bgColor: Colors.red);
       } else {
-        if(!mounted) return;
+        if (!mounted) return;
         context.showSnackbarText(
             context, '검색 결과 ${ref.watch(carpoolProvider).length}개가 있습니다.',
             bgColor: Colors.green);
@@ -293,7 +299,6 @@ class _HomeState extends ConsumerState<Home> {
     });
   }
 
-
   // 새로고침 후 보여지는 리스트 갯수 : 5개 보다 적을시 리스트의 갯수, 이상일 시 5개
 /*  carPoolList.then((list) {
   // setState(() {
@@ -307,7 +312,9 @@ class _HomeState extends ConsumerState<Home> {
     selectedFilter = newValue ?? CarpoolFilter.Time;
     (selectedFilter == CarpoolFilter.Time)
         ? await ref.read(carpoolProvider.notifier).loadCarpoolStateTimeBy()
-        : await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPosition);
+        : await ref
+            .read(carpoolProvider.notifier)
+            .loadCarpoolNearBy(myPosition);
   }
 
   String formatDuration(Duration duration) {

@@ -8,9 +8,10 @@ import 'state/doing_carpool_state.dart';
 
 ///* 참여중인 카풀의 수를 관리하는 provider 0207 이상훈///
 
-final doingFirstStateProvider = StateProvider((ref) => CarpoolModel());
+final doingFirstStateProvider = StateProvider((ref) => CarpoolModel(
+));
 
-
+/// todo : 값이 있을땐 잘 되나 없을 땐 에러가 난다!
 final doingCarpoolNotifierProvider =
     StateNotifierProvider<CarpoolStateNotifier, DoingCarPoolStateModel>(
   (ref) => CarpoolStateNotifier(ref,
@@ -95,26 +96,32 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   Future addCarpool(CarpoolModel carpoolModel) async {
     try {
       print("addCarpool: 이전 ${state.data.length}개");
+      print("addCarpool: 이전 ${_ref.read(doingFirstStateProvider).carId}");
+
       state = state.copyWith(data: [...state.data, carpoolModel]);
 
-      /// 첫번째 값 별도 저장
       _ref.read(doingFirstStateProvider.notifier).state = await getNearestCarpool();
 
-      print("addCarpool 이후 : ${state.data.length}개");
+
+      print("addCarpool: 변경 ${_ref.read(doingFirstStateProvider).carId}개");
+
 
     } catch (e) {
       print("CarpoolProvider [addCarpool] 에러: $e");
     }
   }
-
   // 방에서 나간 카풀을 상태관리에서 제거
   Future removeCarpool(String carId) async {
     try {
+      print("addCarpool: 이전 ${_ref.read(doingFirstStateProvider).carId}");
+
       state = state.copyWith(
           data: state.data.where((element) => element.carId != carId).toList());
 
-      /// 첫번째 값 별도 저장
       _ref.read(doingFirstStateProvider.notifier).state = await getNearestCarpool();
+      print("addCarpool: 변경 ${_ref.read(doingFirstStateProvider).carId}개");
+
+
     } catch (e) {
       print("CarpoolProvider [removeCarpool] 에러: $e");
     }
