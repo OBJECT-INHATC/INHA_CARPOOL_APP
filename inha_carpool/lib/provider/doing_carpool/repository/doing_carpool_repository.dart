@@ -12,6 +12,7 @@ class DoingCarpoolRepository {
   DoingCarpoolRepository(this._ref);
 
   Future<List<CarpoolModel>> getCarPoolList(MemberModel memberModel) async {
+    print("getCarPoolList");
     QuerySnapshot<Map<String, dynamic>> snapshot = await _fireStore
         .collection('carpool')
         .where('members',

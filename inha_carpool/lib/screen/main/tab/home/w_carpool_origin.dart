@@ -6,13 +6,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/provider/carpool/state.dart';
-import 'package:inha_Carpool/provider/loding/loadin_notifier.dart';
+import 'package:inha_Carpool/provider/stateProvider/loading_notifier.dart';
 
 import '../../../../common/util/location_handler.dart';
 import '../../../../common/widget/LodingContainer.dart';
 import '../../../../common/widget/empty_list.dart';
-import '../../../../provider/LatLng/LatLng_notifier.dart';
-import '../../../../provider/auth/auth_provider.dart';
+import '../../../../provider/stateProvider/LatLng_notifier.dart';
+import '../../../../provider/stateProvider/auth_provider.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
 import '../../map/s_carpool_map.dart';
 import '../carpool/chat/s_chatroom.dart';

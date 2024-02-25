@@ -30,8 +30,8 @@ class _HomeState extends ConsumerState<Home> {
   final TextEditingController _searchController = TextEditingController();
   late LatLng myPosition;
 
-  final _timeStreamController = StreamController<DateTime>.broadcast();
-  Stream<DateTime>? _timeStream;
+/*  final _timeStreamController = StreamController<DateTime>.broadcast();
+  Stream<DateTime>? _timeStream;*/
 
   // 현재 시간을 1초마다 스트림에 추가 -> init
 /*  _HomeState() {
@@ -121,116 +121,7 @@ class _HomeState extends ConsumerState<Home> {
       child: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
 
-        /*  floatingActionButton: SizedBox(
-          width: context.width(0.9),
-          height: context.height(0.07),
-          child: FutureBuilder<DocumentSnapshot?>(
-            future: _loadFirstCarpool(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                // 데이터 로딩 중
-                return const SizedBox.shrink(); // 아무 것도 표시 하지 않음
-              } else if (snapshot.hasError) {
-                // 에러가 발생한 경우 에러 메시지 표시
-                return Text('Error: ${snapshot.error}');
-              } else if (!snapshot.hasData || snapshot.data == null) {
-                // 데이터가 없는 경우 혹은 null인 경우 로딩 중으로 표시
-                return const SizedBox.shrink();
-              } else {
-                Map<String, dynamic> carpoolData =
-                    snapshot.data!.data() as Map<String, dynamic>;
-                DateTime startTime = DateTime.fromMillisecondsSinceEpoch(
-                    carpoolData['startTime']);
-                // 해당 startTime을 몇월 몇일 몇시로 변경
-                // 데이터가 있는 경우 플로팅 액션 버튼 생성
 
-                // 오늘 날짜가 아닐 경우 플로팅 액션 버튼 생성하지 않음
-                if (startTime.year != DateTime.now().year ||
-                    startTime.month != DateTime.now().month) {
-                  return const SizedBox.shrink();
-                } else if (startTime.day - DateTime.now().day < 2) {
-                  return FloatingActionButton(
-                    elevation: 3,
-                    mini: false,
-                    backgroundColor: Colors.grey[800],
-                    splashColor: Colors.transparent,
-                    // 클릭 모션 효과 삭제
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      side: const BorderSide(color: Colors.black38, width: 1),
-                    ),
-                    onPressed: () {
-                      // Handle button press here and update the stream data
-                      _handleFloatingActionButton();
-                    },
-                    child: StreamBuilder<DateTime>(
-                      stream: _timeStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Text('Loading...');
-                        } else if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          final data = snapshot.data;
-                          Duration diff = startTime.difference(data!);
-                          // diff가 0초일 경우 페이지 새로고침
-                          if (diff.inSeconds <= 0) {
-                         */ /*   _refreshCarpoolList();*/ /*
-                            // return SizedBox.shrink(); // 혹은 다른 UI 요소
-                          }
-
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(width: context.width(0.05)),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '🚕 카풀이 ${formatDuration(diff)} 후에 출발 예정이에요',
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${carpoolData['startDetailPoint']} - ${carpoolData['endDetailPoint']}',
-                                    style: const TextStyle(
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Spacer(),
-                              const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: Colors.white,
-                                    size: 25,
-                                  ),
-                                ],
-                              ),
-                              SizedBox(width: context.width(0.05)),
-                            ],
-                          );
-                        }
-                      },
-                    ),
-                  );
-                } else {
-                  return const SizedBox.shrink();
-                }
-              }
-            },
-          ),
-        ),*/
         body: Stack(
           children: [
             Container(

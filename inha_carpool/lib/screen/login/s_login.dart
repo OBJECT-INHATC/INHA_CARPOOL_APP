@@ -11,7 +11,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/dto/UserDTO.dart';
-import 'package:inha_Carpool/provider/yellow/yellow_provider.dart';
+import 'package:inha_Carpool/provider/stateProvider/yellow_provider.dart';
 import 'package:inha_Carpool/screen/register/agreement/s_agreement.dart';
 import 'package:inha_Carpool/service/api/Api_repot.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
@@ -19,10 +19,11 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 
 import '../../common/data/preference/prefs.dart';
 import '../../common/models/m_member.dart';
-import '../../provider/LatLng/LatLng_notifier.dart';
-import '../../provider/auth/auth_provider.dart';
+import '../../provider/doing_carpool/doing_carpool_provider.dart';
+import '../../provider/stateProvider/LatLng_notifier.dart';
+import '../../provider/stateProvider/auth_provider.dart';
 import '../../provider/history/history_notifier.dart';
-import '../../provider/notification/notification_provider.dart';
+import '../../provider/stateProvider/notification_provider.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
 import '../main/tab/carpool/chat/s_chatroom.dart';
@@ -107,6 +108,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       ///자신 위치 상태관리 초기화
       setPositionState();
 
+      /// 참여중인 카풀 초기화
+      setDoingCarPoolState();
+
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const MainScreen()));
       await setupInteractedMessage();
@@ -132,6 +136,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     LatLng position  = await LocationHandler().getCurrentLatLng(context) ?? const LatLng(37.450, 126.650);
     ref.read(positionProvider.notifier).state = position;
     print("가져온 위도경도 : ${position.latitude}, ${position.longitude}");
+  }
+
+  void setDoingCarPoolState() async {
+    ref.read(doingCarpoolNotifierProvider.notifier).getCarpool();
   }
 
   // 버튼 활성화 여부

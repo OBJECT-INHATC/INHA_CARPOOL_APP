@@ -12,7 +12,7 @@ import 'package:inha_Carpool/common/widget/w_messagetile.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_splash_Img_opacity.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
-import '../../../../../provider/auth/auth_provider.dart';
+import '../../../../../provider/stateProvider/auth_provider.dart';
 import 'drawer/f_drawer.dart';
 
 class ChatroomPage extends ConsumerStatefulWidget {

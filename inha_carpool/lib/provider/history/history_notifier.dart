@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:inha_Carpool/provider/auth/auth_provider.dart';
+import 'package:inha_Carpool/provider/stateProvider/auth_provider.dart';
 
 import '../../../../../dto/HistoryRequestDTO.dart';
 import '../../../../../service/api/Api_repot.dart';

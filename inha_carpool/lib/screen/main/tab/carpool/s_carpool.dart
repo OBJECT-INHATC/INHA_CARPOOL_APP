@@ -29,14 +29,11 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   /// 카풀 조회 메서드
   Future<List<DocumentSnapshot>> _loadCarpools() async {
 
-    MemberModel memberModel = ref.read(authProvider);
-    ref.read(doingCarpoolNotifierProvider.notifier).getCarpool(memberModel);
-
     List<DocumentSnapshot> carpools =
         await CarpoolService().getCarpoolsRemainingForDay(
-            memberModel.uid!,
-            memberModel.nickName!,
-            memberModel.gender!);
+            ref.read(authProvider).uid!,
+            ref.read(authProvider).nickName!,
+            ref.read(authProvider).gender!);
 
     return carpools;
   }

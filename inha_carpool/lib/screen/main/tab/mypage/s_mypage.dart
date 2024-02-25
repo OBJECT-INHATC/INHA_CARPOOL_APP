@@ -12,7 +12,7 @@ import 'package:inha_Carpool/service/sv_fcm.dart';
 
 import '../../../../common/data/preference/prefs.dart';
 import '../../../../fragment/opensource/s_opensource.dart';
-import '../../../../provider/auth/auth_provider.dart';
+import '../../../../provider/stateProvider/auth_provider.dart';
 import '../../../../provider/doing_carpool/doing_carpool_provider.dart';
 import '../../../dialog/d_message.dart';
 import 'alarm_switch/w_switch_menu.dart';

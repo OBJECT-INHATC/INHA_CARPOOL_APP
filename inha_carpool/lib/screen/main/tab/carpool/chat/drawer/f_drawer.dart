@@ -7,7 +7,7 @@ import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 
 import '../../../../../../common/models/m_carpool.dart';
-import '../../../../../../provider/auth/auth_provider.dart';
+import '../../../../../../provider/stateProvider/auth_provider.dart';
 import '../../../../../../provider/doing_carpool/doing_carpool_provider.dart';
 import '../../../../../../service/api/Api_topic.dart';
 import '../../../../../../service/sv_firestore.dart';

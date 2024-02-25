@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
 
 import '../../../../../common/widget/w_custom_png.dart';
-import '../../../../../provider/auth/auth_provider.dart';
+import '../../../../../provider/stateProvider/auth_provider.dart';
 import '../../../../../provider/history/history_notifier.dart';
-import '../../../../../provider/yellow/yellow_provider.dart';
+import '../../../../../provider/stateProvider/yellow_provider.dart';
 
 class AuthInfoRow extends ConsumerStatefulWidget {
   const AuthInfoRow({super.key});

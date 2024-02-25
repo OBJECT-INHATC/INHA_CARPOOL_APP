@@ -1,8 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../common/models/m_carpool.dart';
-import '../../common/models/m_member.dart';
-import '../auth/auth_provider.dart';
+import '../stateProvider/auth_provider.dart';
 import 'repository/doing_carpool_repository.dart';
 import 'state/doing_carpool_state.dart';
 
@@ -20,16 +19,13 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
 
   //생성자
   CarpoolStateNotifier(this._ref, {required this.repository})
-      : super(const DoingCarPoolStateModel(data: [])) {
-    // 생성과 함께 파이어스토어에서 데이터를 가져와서 초기화
-    getCarpool(_ref.read(authProvider.notifier).state);
-  }
+      : super(const DoingCarPoolStateModel(data: []));
 
   // 내가 참여중인 카풀리스트 상태관리로 가져오기
-  Future getCarpool(MemberModel memberModel) async {
+  Future getCarpool() async {
     try {
-      List<CarpoolModel> carpoolList =
-          await repository.getCarPoolList(memberModel);
+      List<CarpoolModel> carpoolList = await repository
+          .getCarPoolList(_ref.read(authProvider));
       state = state.copyWith(data: carpoolList);
     } catch (e) {
       print("CarpoolProvider [getCarpool] 에러: $e");
@@ -39,8 +35,11 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   // 들고있는 카풀리스트에서 isChatAlarmOn을 carId로 읽어옴
   Future getAlarm(String carId) async {
     try {
-      if(state.data.where((element) => element.carId == carId).isNotEmpty){
-        return state.data.where((element) => element.carId == carId).first.isChatAlarmOn;
+      if (state.data.where((element) => element.carId == carId).isNotEmpty) {
+        return state.data
+            .where((element) => element.carId == carId)
+            .first
+            .isChatAlarmOn;
       } else {
         return false;
       }
@@ -50,17 +49,14 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
     }
   }
 
-
-
-
   Future updateAlarm(String carId, bool isAlarm) async {
     try {
-      await repository.updateIsChatAlarm(carId, _ref.read(authProvider).uid!, isAlarm);
+      await repository.updateIsChatAlarm(
+          carId, _ref.read(authProvider).uid!, isAlarm);
     } catch (e) {
       print("CarpoolProvider [updateAlarm] 에러: $e");
     }
   }
-
 
   // 생성하거나 참여한 카풀리스트를 상태관리에 추가
   Future addCarpool(CarpoolModel carpoolModel) async {
@@ -81,8 +77,6 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
     }
   }
 
-
-
   void setAlarm(String carId, bool bool) async {
     try {
       final updatedData = state.data.map((e) {
@@ -94,7 +88,6 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
       }).toList();
 
       state = state.copyWith(data: updatedData);
-
 
       await updateAlarm(carId, bool);
     } catch (e) {

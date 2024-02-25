@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import '../../../../provider/auth/auth_provider.dart';
+import '../../../../provider/stateProvider/auth_provider.dart';
 import '../../map/s_carpool_map.dart';
 import '../carpool/chat/s_chatroom.dart';
 import 'enum/mapType.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지

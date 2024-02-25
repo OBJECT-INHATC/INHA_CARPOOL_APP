@@ -5,7 +5,7 @@ import 'package:inha_Carpool/provider/history/history_notifier.dart';
 import 'package:inha_Carpool/screen/dialog/d_complainAlert.dart';
 
 import '../../../../../common/widget/empty_list.dart';
-import '../../../../../provider/auth/auth_provider.dart';
+import '../../../../../provider/stateProvider/auth_provider.dart';
 
 class HistoryList extends ConsumerStatefulWidget {
   HistoryList({Key? key}) : super(key: key);
