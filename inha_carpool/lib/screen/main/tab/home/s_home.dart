@@ -11,6 +11,7 @@ import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
 import '../../../../common/widget/LodingContainer.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
 import '../../../../provider/stateProvider/loading_notifier.dart';
+import 'btn_floating/StreamCarpoolBtn.dart';
 import 'enum/carpoolFilter.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -121,7 +122,7 @@ class _HomeState extends ConsumerState<Home> {
       child: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
 
-
+  floatingActionButton: const StreamFloating(),
         body: Stack(
           children: [
             Container(

@@ -48,8 +48,6 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
       if (carpoolList.isNotEmpty) {
         print("carpoolList 수: ${carpoolList.length}");
         return carpoolList.reduce((a, b) {
-          print("a: ${a.startTime}");
-          print("b: ${b.startTime}");
           final aDiff = now.difference(DateTime.fromMillisecondsSinceEpoch(a.startTime!));
           final bDiff = now.difference(DateTime.fromMillisecondsSinceEpoch(b.startTime!));
 
