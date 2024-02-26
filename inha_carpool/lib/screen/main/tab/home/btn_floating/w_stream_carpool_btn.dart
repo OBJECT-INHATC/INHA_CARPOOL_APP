@@ -23,8 +23,7 @@ class _State extends ConsumerState<StreamFloating> {
 
     final carPoolListState = ref.watch(doingFirstStateProvider);
 
-    if (carPoolListState.startTime != null ) {
-      if (is24Hours(carPoolListState.startTime!)) {
+    if (carPoolListState.startTime != null && is24Hours(carPoolListState.startTime!)) {
         return SizedBox(
           height: height * 0.14,
           width: width * 0.9,
@@ -109,8 +108,6 @@ class _State extends ConsumerState<StreamFloating> {
       } else {
         return const SizedBox();
       }
-    } else {
-      return const SizedBox();
     }
   }
 
@@ -134,4 +131,4 @@ class _State extends ConsumerState<StreamFloating> {
 
 
 
-}
+
