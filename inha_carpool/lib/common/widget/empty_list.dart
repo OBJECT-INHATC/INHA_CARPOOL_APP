@@ -21,7 +21,11 @@ class EmptyCarpoolList extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
 
     final isSearchState = ref.watch(searchProvider);
+    final carpoolCount = ref.watch(carpoolProvider);
+
+    print('carpoolCount.isEmpty : ${carpoolCount.isEmpty}');
     final height = context.screenHeight;
+
     return ListView(
       children: [
         Column(
@@ -35,9 +39,10 @@ class EmptyCarpoolList extends ConsumerWidget {
                 .align(TextAlign.center)
                 .make(),
             Height(height * 0.025),
-            (!isSearchState && !isSearch)
-                ? RecruitFloatingBtn(floatingMessage: floatingMessage)
-                : IconButton(
+            // 검색으로 열었고, 진행중인 카풀이 없어야만 리프레쉬 버튼이 보임
+            (isSearchState && !isSearch || carpoolCount.isNotEmpty)
+            /// 검색으로 리스트가 없는 경우
+                ? IconButton(
                     onPressed: () {
                       ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
                       ref.read(searchProvider.notifier).state = false;
@@ -46,7 +51,8 @@ class EmptyCarpoolList extends ConsumerWidget {
                       Icons.refresh_rounded,
                       size: 40,
                       color: context.appColors.logoColor,
-                    )),
+                    ))
+                : RecruitFloatingBtn(floatingMessage: floatingMessage),
           ],
         ),
       ],

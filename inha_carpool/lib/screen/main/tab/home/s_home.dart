@@ -170,19 +170,23 @@ class _HomeState extends ConsumerState<Home> {
 
   Future<void> carpoolSearch(String value, BuildContext context,
       List<CarpoolState> carPoolListState) async {
+
+    print("검색전 searchProvider : ${ref.read(searchProvider)}");
+
     // 검색 상태 변경
     ref.read(searchProvider.notifier).state = true;
+    ref.read(loadingProvider.notifier).state = true;
+
 
     if (value.isEmpty || value == " ") {
       context.showSnackbarText(context, '검색어를 입력해주세요');
       await carpoolReFresh(isSearch: true);
     } else {
       // 로딩 상태 변경
-      ref.read(loadingProvider.notifier).state = true;
 
       // 검색어가 없을 경우 서버에서 최신 리스트를 받아옴
       if (carPoolListState.isEmpty) {
-        ref.read(searchProvider.notifier).state = false; // 검색 상태 변경
+      //  ref.read(searchProvider.notifier).state = false; // 검색 상태 변경
         await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
       }
 
@@ -208,6 +212,8 @@ class _HomeState extends ConsumerState<Home> {
 
       ref.read(loadingProvider.notifier).state = false;
     }
+    print("검색후 searchProvider : ${ref.read(searchProvider)}");
+
   }
 
   Future<void> carpoolReFresh({bool? isSearch}) async {
