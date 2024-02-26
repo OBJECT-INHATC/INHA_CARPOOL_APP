@@ -24,7 +24,7 @@ class _State extends ConsumerState<StreamFloating> {
 
     final carPoolListState = ref.watch(doingFirstStateProvider);
 
-    if (carPoolListState != CarpoolModel() &&  carPoolListState.startTime != null) {
+    if (carPoolListState.startTime != null ) {
       if (is24Hours(carPoolListState.startTime!)) {
         return SizedBox(
           height: height * 0.14,
