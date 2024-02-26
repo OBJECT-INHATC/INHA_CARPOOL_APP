@@ -20,9 +20,10 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../common/models/m_member.dart';
 import '../../provider/doing_carpool/doing_carpool_provider.dart';
-import '../../provider/stateProvider/LatLng_notifier.dart';
+import '../../provider/stateProvider/LatLng_provider.dart';
 import '../../provider/stateProvider/auth_provider.dart';
 import '../../provider/history/history_notifier.dart';
+import '../../provider/stateProvider/jusogiban_api_provider.dart';
 import '../../provider/stateProvider/notification_provider.dart';
 import '../../service/sv_firestore.dart';
 import '../main/s_main.dart';
@@ -94,8 +95,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       );
 
 
-
-
       /// 로그인 정보 상태관리 초기화
       setAuthStateProvider(memberModel);
 
@@ -107,6 +106,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
       ///자신 위치 상태관리 초기화
       setPositionState();
+
+      /// 주소기반 키 상태관리 초기화
+      setJusoKey();
 
       /// 참여중인 카풀 초기화
       setDoingCarPoolState();
@@ -123,7 +125,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   /// 참여중인 카풀 수 조회
   void setHistory(String uid) async {
     await ref.read(historyProvider.notifier).loadHistoryData();
-    // print("참여중인 카풀 수: ${ref.read(historyProvider).length}");
   }
 
   /// 경고 횟수 초기화
@@ -132,10 +133,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     ref.read(yellowCountProvider.notifier).state = yellowCardCount;
   }
 
+  /// 주소기반 키 상태관리 초기화
+  void setJusoKey() async {
+    final jusoKey = await FireStoreService().getJusoKey();
+    ref.read(jusoKeyProvider.notifier).state = jusoKey;
+  }
+
+  /// 현재 위치 상태관리 초기화
   void setPositionState() async {
     LatLng position  = await LocationHandler().getCurrentLatLng(context) ?? const LatLng(37.450, 126.650);
     ref.read(positionProvider.notifier).state = position;
-    print("가져온 위도경도 : ${position.latitude}, ${position.longitude}");
   }
 
   void setDoingCarPoolState() async {
@@ -514,18 +521,35 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                       print("memberUser: $memberUser");
 
                                       ///  0207 이상훈 로그인 정보 상태관리 초기화
-                                      setAuthStateProvider(MemberModel(
+
+                                      MemberModel memberModel = MemberModel(
                                         uid: uid,
                                         nickName: nickname,
                                         gender: gender,
                                         email: email,
                                         userName: userName,
-                                      ));
+                                      );
+
+                                      setAuthStateProvider(memberModel);
 
                                       /// 0207 이상훈 이용내역 상태관리 초기화
-                                      setHistory(uid);
+                                      /// 로그인 정보 상태관리 초기화
+                                      setAuthStateProvider(memberModel);
 
-                                      setYellowCardCount(nickname);
+                                      /// 이용내역 상태관리 초기화
+                                      setHistory(memberModel.uid!);
+
+                                      /// 경고횟수 상태관리 초기화
+                                      setYellowCardCount(memberModel.nickName!);
+
+                                      ///자신 위치 상태관리 초기화
+                                      setPositionState();
+
+                                      /// 주소기반 키 상태관리 초기화
+                                      setJusoKey();
+
+                                      /// 참여중인 카풀 초기화
+                                      setDoingCarPoolState();
 
                                       // Firestore에서 해당 사용자가 속한 모든 carId를 가져옵니다.
                                       FirebaseFirestore.instance

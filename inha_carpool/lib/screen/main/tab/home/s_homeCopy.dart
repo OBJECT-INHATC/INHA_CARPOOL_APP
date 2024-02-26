@@ -8,7 +8,6 @@
 // import 'package:inha_Carpool/provider/auth/auth_provider.dart';
 // import 'package:inha_Carpool/provider/carpool/state.dart';
 // import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
-// import 'package:inha_Carpool/screen/main/tab/home/w_emptySearchedCarpool.dart';
 // import 'package:inha_Carpool/screen/main/tab/home/w_carpoolList.dart';
 //
 // import '../../../../provider/carpool/carpool_notifier.dart';

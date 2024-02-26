@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/models/m_carpool.dart';
+import 'package:inha_Carpool/provider/stateProvider/jusogiban_api_provider.dart';
 import 'package:inha_Carpool/service/sv_carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/provider/stateProvider/auth_provider.dart';
@@ -33,8 +33,6 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
 
   Key key1 = UniqueKey();
   Key key2 = UniqueKey();
-
-  final appBarTitle = "모집하기";
 
   var _selectedDate = DateTime.now(); // 날짜 값 초기화
   var _selectedTime =
@@ -127,7 +125,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
               width: context.width(0.001),
             ),
           ),
-          title: appBarTitle.text.make(),
+          title: '모집하기'.text.make(),
         ),
         body: Stack(
           children: [

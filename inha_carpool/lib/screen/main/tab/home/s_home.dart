@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/provider/stateProvider/LatLng_notifier.dart';
+import 'package:inha_Carpool/provider/stateProvider/LatLng_provider.dart';
 import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
@@ -11,7 +11,7 @@ import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
 import '../../../../common/widget/LodingContainer.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
 import '../../../../provider/doing_carpool/doing_carpool_provider.dart';
-import '../../../../provider/stateProvider/loading_notifier.dart';
+import '../../../../provider/stateProvider/loading_provider.dart';
 import 'btn_floating/w_stream_carpool_btn.dart';
 import 'enum/carpoolFilter.dart';
 

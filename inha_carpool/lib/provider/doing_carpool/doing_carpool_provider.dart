@@ -22,11 +22,11 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   //생성자
   CarpoolStateNotifier(this._ref, {required this.repository})
       : super(const DoingCarPoolStateModel(data: []));
+  
 
   // 내가 참여중인 카풀리스트 상태관리로 가져오기
   Future getCarpool() async {
     try {
-      print("GetCarpool 실행 --------");
       List<CarpoolModel> carpoolList =
           await repository.getCarPoolList(_ref.read(authProvider));
       state = state.copyWith(data: carpoolList);

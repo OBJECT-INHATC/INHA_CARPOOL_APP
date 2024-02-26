@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/models/m_carpool.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 
 import '../../../../../provider/doing_carpool/doing_carpool_provider.dart';
@@ -129,7 +128,6 @@ class _State extends ConsumerState<StreamFloating> {
     final currentTime = DateTime.now();
     final diff =
         currentTime.difference(DateTime.fromMillisecondsSinceEpoch(startTime));
-    print("is24Hours : ${diff.inHours < 24}");
     return diff.inHours < 24;
   }
 }

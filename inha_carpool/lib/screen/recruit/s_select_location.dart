@@ -5,22 +5,24 @@ import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/provider/stateProvider/jusogiban_api_provider.dart';
 
 /// 출-목적지의 위치 선택 페이지
-class LocationInput extends StatefulWidget {
+class LocationInput extends ConsumerStatefulWidget {
   final LatLng point;
 
   const LocationInput(this.point, {super.key});
 
   @override
-  State<LocationInput> createState() => _LocationInputState();
+  ConsumerState<LocationInput> createState() => _LocationInputState();
 }
 
-class _LocationInputState extends State<LocationInput> {
+class _LocationInputState extends ConsumerState<LocationInput> {
   int flex = 50;
 
   // 네이버 지도 API 호출을 위한 URL
@@ -47,7 +49,7 @@ class _LocationInputState extends State<LocationInput> {
 
   /// 지정한 위치의 지명을 가져오는 메서드 (검색기능)
   Future<void> selectNearLocation(String juso) async {
-    String? josuUrl = dotenv.env['JUSO_API_KEY'];
+    String? josuUrl = ref.read(jusoKeyProvider);
     String query = juso;
     if (query.isNotEmpty) {
       try {

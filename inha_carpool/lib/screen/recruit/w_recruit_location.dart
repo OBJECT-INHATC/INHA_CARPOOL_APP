@@ -68,7 +68,8 @@ class _LocationInputWidgetState extends State<LocationInputWidget> {
             final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => LocationInput(widget.point)),
+                  builder: (context) => LocationInput(
+                      widget.point)),
             );
             // result가 null이 아니면 setState로 selectedLocation을 변경
             if (result != null) {

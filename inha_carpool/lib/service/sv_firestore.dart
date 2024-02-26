@@ -21,6 +21,9 @@ class FireStoreService {
   final CollectionReference carpoolCollection =
       FirebaseFirestore.instance.collection("carpool");
 
+  final CollectionReference adminCollection =
+  FirebaseFirestore.instance.collection("admin");
+
   final User? user = FirebaseAuth.instance.currentUser;
 
   /// 사용자 정보 저장
@@ -36,6 +39,8 @@ class FireStoreService {
       "gender": gender,
     });
   }
+
+
 
 /*  /// 파이어베이스에서 해당 데이터가 있는지 확인하는 함수
   Future<bool> isDataExist(String carId, String adminId) async {
@@ -138,6 +143,12 @@ class FireStoreService {
     await carpoolDocRef.update({
       'unreadCount': 0,
     });
+  }
+
+  /// 주소 기반 API 초기화
+  Future<String> getJusoKey() async {
+     DocumentSnapshot snapShot = await adminCollection.doc('jusoKey').get();
+    return snapShot['apiKey'];
   }
 
   ///카풀 참가시 유저 입장 메시지 전송 + 로컬 DB에 저장

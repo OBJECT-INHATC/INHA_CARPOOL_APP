@@ -11,7 +11,6 @@ import '../dto/TopicDTO.dart';
 
 enum NotificationType { chat, status }
 
-/// 0829 한승완 - FCM 서비스 클래스
 class FcmService {
   final String _serverKey = dotenv.env['FCM_SERVER_KEY'] ?? "";
 

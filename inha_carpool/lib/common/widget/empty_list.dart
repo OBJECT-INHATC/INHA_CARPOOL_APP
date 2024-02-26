@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/provider/carpool/carpool_notifier.dart';
-import 'package:inha_Carpool/provider/stateProvider/loading_notifier.dart';
+import 'package:inha_Carpool/provider/stateProvider/loading_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../screen/main/tab/carpool/w_floating_btn.dart';
@@ -23,7 +23,8 @@ class EmptyCarpoolList extends ConsumerWidget {
     final isSearchState = ref.watch(searchProvider);
     final carpoolCount = ref.watch(carpoolProvider);
 
-    print('carpoolCount.isEmpty : ${carpoolCount.isEmpty}');
+    /// todo : 최적화 필요 3번씩 빌드됨
+    print('EmptyCarpoolList파일 27번 줄 carpoolCount.isEmpty : ${carpoolCount.isEmpty}');
     final height = context.screenHeight;
 
     return ListView(
