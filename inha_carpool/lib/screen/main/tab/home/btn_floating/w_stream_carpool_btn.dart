@@ -1,11 +1,12 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/provider/carpool/carpool_notifier.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 
 import '../../../../../provider/doing_carpool/doing_carpool_provider.dart';
+
+
+/// todo : 타이머기능으로 시간 표시하기 
 
 class StreamFloating extends ConsumerStatefulWidget {
   const StreamFloating({Key? key}) : super(key: key);
@@ -21,12 +22,15 @@ class _State extends ConsumerState<StreamFloating> {
     final height = context.screenWidth;
 
     final carPoolListState = ref.watch(doingFirstStateProvider);
+    final startTime = carPoolListState.startTime;
+
 
     print("startDetailPoint : ${carPoolListState.startDetailPoint}");
 
     if (carPoolListState.startTime != null &&
         is24Hours(carPoolListState.startTime!)) {
-      print("carPoolListState.carId : ${carPoolListState.carId}");
+      print("조건 만족");
+
       return SizedBox(
         height: height * 0.14,
         width: width * 0.9,
@@ -52,7 +56,7 @@ class _State extends ConsumerState<StreamFloating> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '🚕 카풀이 ${carPoolListState.startTime!} 후에 출발 예정이에요',
+                    '🚕 카풀이 ${fomattedTime(startTime)} 후에 출발 예정이에요',
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
@@ -90,6 +94,14 @@ class _State extends ConsumerState<StreamFloating> {
       return const SizedBox();
     }
   }
+
+  String fomattedTime(int? startTime) {
+    final now = DateTime.now();
+    final startTimeDate = DateTime.fromMillisecondsSinceEpoch(startTime!);
+    final remainingTime = startTimeDate.difference(now);
+    final formattedTime = formatDuration(remainingTime);
+    return formattedTime;
+  }
 }
 
   String formatDuration(Duration duration) {
@@ -105,12 +117,6 @@ class _State extends ConsumerState<StreamFloating> {
     final currentTime = DateTime.now();
     final startTimeDate = DateTime.fromMillisecondsSinceEpoch(startTime);
     final diff = currentTime.difference(startTimeDate);
-
-    print('inSeconds : ${diff.inSeconds}');
-    print('inMinutes : ${diff.inMinutes}');
-
-
-
     // 값이 음수여야 미래임 
     return diff.inSeconds <= 0;
   }
