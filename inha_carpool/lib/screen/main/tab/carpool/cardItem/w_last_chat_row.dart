@@ -38,6 +38,7 @@ class ChatLastInfo extends StatelessWidget {
                 } else {
                   DocumentSnapshot? lastMessage = snapshot.data;
                   if (lastMessage == null) {
+                    /// 여기 const 주면 에러 빡!
                     return  Text(
                       emptyChat,
                       style: TextStyle(color: Colors.grey),

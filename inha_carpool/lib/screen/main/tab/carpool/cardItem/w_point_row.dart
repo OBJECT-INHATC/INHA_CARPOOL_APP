@@ -4,7 +4,7 @@ import 'package:inha_Carpool/common/common.dart';
 class PointInfo extends StatelessWidget {
 
   final detailPoint;
-  final pointName;
+  final  pointName;
 
   final bool isStart;
   final Icon icon;

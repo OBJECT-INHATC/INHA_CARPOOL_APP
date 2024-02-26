@@ -56,7 +56,6 @@ class DoingCarpoolRepository {
         // 최대 하루 전 과거 카풀
         oldCarpoolList.add(carModel);
       }
-
     }
 
     print("currentCarpoolList : $currentCarpoolList");
@@ -80,7 +79,7 @@ class DoingCarpoolRepository {
       return startTimeB.compareTo(startTimeA);
     });
 
-    return oldCarpoolList+currentCarpoolList;
+    return currentCarpoolList + oldCarpoolList;
   }
 
   // carId와 isChatAlarmOn을 업데이트
