@@ -126,8 +126,12 @@ class _State extends ConsumerState<StreamFloating> {
     if (startTime == null || startTime == 0) return false;
 
     final currentTime = DateTime.now();
-    final diff =
-        currentTime.difference(DateTime.fromMillisecondsSinceEpoch(startTime));
-    return diff.inHours < 24;
+    final startTimeDate = DateTime.fromMillisecondsSinceEpoch(startTime);
+    final diff = startTimeDate.difference(currentTime);
+
+    return diff.inHours >= 0;
   }
+
+
+
 }
