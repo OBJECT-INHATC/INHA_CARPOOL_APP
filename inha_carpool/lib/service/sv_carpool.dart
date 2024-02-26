@@ -243,10 +243,13 @@ class CarpoolService {
             arrayContains: '${memberID}_${memberName}_$memberGender')
         .get();
 
-    List<DocumentSnapshot> sortedCarpools = [];
+    List<DocumentSnapshot> currentCarpools = [];
+    List<DocumentSnapshot> oldCarpools = [];
 
     // 해당 도큐먼트의 출발시간을 기준으로 계산하니 필요없을 것 같아 주석처리함
     DateTime currentTime = DateTime.now();
+    DateTime oneDayAgo = currentTime.subtract(const Duration(days: 1));
+
     for (var doc in querySnapshot.docs) {
       DateTime startTime =
           DateTime.fromMillisecondsSinceEpoch(doc['startTime']);

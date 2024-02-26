@@ -1,27 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class CarpoolState {
   final String carId;
-
   final String endPointName;
   final String endDetailPoint;
   final String startPointName;
   final String startDetailPoint;
-
   final LatLng startPoint;
   final LatLng endPoint;
-
   final DateTime startTime;
-
   final int maxMember;
   final int nowMember;
-
    List<String> members = [];
-
   final String admin;
   final String gender;
-
   double? distance;
 
 
@@ -36,10 +28,7 @@ class CarpoolState {
     required this.startDetailPoint,
     required this.maxMember,
     required this.nowMember,
-
     required this.members,
-
-
     required this.admin,
     required this.carId,
   });
@@ -48,7 +37,6 @@ class CarpoolState {
   factory CarpoolState.fromJson(Map<String, dynamic> json) {
 
     final memberList = List<String>.from(json['members']);
-
 
     return CarpoolState(
       gender: json['gender'],

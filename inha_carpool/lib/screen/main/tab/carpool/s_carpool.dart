@@ -98,7 +98,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                         children: [
                           Expanded(
                             child: ListView.builder(
-                              /// 정렬 뒤로인데 이거 뺴고 서버에서 정렬하자
                               reverse: true,
                               itemCount: myCarpools.length,
                               itemBuilder: (context, i) {

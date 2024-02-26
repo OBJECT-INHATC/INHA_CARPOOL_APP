@@ -21,10 +21,13 @@ class DoingCarpoolRepository {
         .get();
 
     // 리턴을 담아줄 리스트
-    List<CarpoolModel> carpoolList = [];
+    List<CarpoolModel> currentCarpoolList = [];
+    List<CarpoolModel> oldCarpoolList = [];
 
     // 현재 시간과 출발시간을 비교할 변수
     DateTime currentTime = DateTime.now();
+    DateTime oneDayAgo = currentTime.subtract(const Duration(days: 1));
+
 
     // 스냅샷을 돌면서 조건에 맞는 카풀을 리스트에 추가
     for (var doc in snapshot.docs) {
@@ -46,13 +49,20 @@ class DoingCarpoolRepository {
     DateTime.fromMillisecondsSinceEpoch(doc['startTime']);
 
     // 하루가 지나기 전까지의 카풀만 리스트에 추가하기 위한 비교 작업
-    if (startTime.isAfter(currentTime.subtract(const Duration(days: 1)))) {
-    carpoolList.add(carModel);
-    }
+      if (startTime.isAfter(currentTime)) {
+        // 미래 카풀
+        currentCarpoolList.add(carModel);
+      } else if (startTime.isAfter(oneDayAgo)) {
+        // 최대 하루 전 과거 카풀
+        oldCarpoolList.add(carModel);
+      }
 
     }
 
-    carpoolList.sort((a, b) {
+    print("currentCarpoolList : $currentCarpoolList");
+    print("oldCarpoolList : $oldCarpoolList");
+
+    currentCarpoolList.sort((a, b) {
     DateTime startTimeA =
     DateTime.fromMillisecondsSinceEpoch(a.startTime!.toInt());
     DateTime startTimeB =
@@ -61,8 +71,16 @@ class DoingCarpoolRepository {
     return startTimeA.compareTo(startTimeB);
     });
 
-    return
-    carpoolList;
+    oldCarpoolList.sort((a, b) {
+      DateTime startTimeA =
+      DateTime.fromMillisecondsSinceEpoch(a.startTime!.toInt());
+      DateTime startTimeB =
+      DateTime.fromMillisecondsSinceEpoch(b.startTime!.toInt());
+
+      return startTimeB.compareTo(startTimeA);
+    });
+
+    return oldCarpoolList+currentCarpoolList;
   }
 
   // carId와 isChatAlarmOn을 업데이트
