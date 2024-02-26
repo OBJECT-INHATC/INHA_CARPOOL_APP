@@ -45,29 +45,43 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
   Future<CarpoolModel> getNearestCarpool() async {
     try {
       final now = DateTime.now();
-       List<CarpoolModel> carpoolList = state;
+      List<CarpoolModel> carpoolList = state;
+
+      // Check for single element and return directly
       if (carpoolList.length == 1) {
         return carpoolList.first;
       }
 
       if (carpoolList.isNotEmpty) {
-        return carpoolList.reduce((a, b) {
-          final aDiff =
-              now.difference(DateTime.fromMillisecondsSinceEpoch(a.startTime!));
-          final bDiff =
-              now.difference(DateTime.fromMillisecondsSinceEpoch(b.startTime!));
+        // Find the nearest carpool among the top 2 (if applicable)
+        final top2Carpools = carpoolList.sublist(0, 2);
+        CarpoolModel? nearestCarpool;
+        Duration? minDiff;
 
-          return aDiff.abs() < bDiff.abs() ? a : b;
-        });
+        for (var carpool in top2Carpools) {
+          try {
+            final startTime = DateTime.fromMillisecondsSinceEpoch(carpool.startTime!);
+            final diff = now.difference(startTime);
+            if (minDiff == null || diff.abs() < minDiff.abs()) {
+              minDiff = diff;
+              nearestCarpool = carpool;
+            }
+          } catch (e) {
+            print("Error converting startTime for carpool: $e");
+          }
+        }
+
+        return nearestCarpool ?? CarpoolModel();
       } else {
-        print("GetNearestCarpool : 참여중인 카풀이 없습니다.");
+        print("GetNearestCarpool: No active carpools found.");
         return CarpoolModel();
       }
     } catch (e) {
-      print("CarpoolProvider [getNearestCarpool] 에러: $e");
+      print("CarpoolProvider [getNearestCarpool] error: $e");
       return CarpoolModel();
     }
   }
+
 
   // 들고있는 카풀리스트에서 isChatAlarmOn을 carId로 읽어옴
   Future getAlarm(String carId) async {
@@ -96,7 +110,7 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
   // 생성하거나 참여한 카풀리스트를 상태관리에 추가
   Future addCarpool(CarpoolModel carpoolModel) async {
     try {
-      // 새로운 carpoolModel을 맨 앞에 추가
+      // 새로운 carpoolModel을 맨 앞에 추가 -> 상태를 잃으면 새로고침되기 때문에 가장 최근에 참여한 카풀이 상단에 일시적 위치
       state.insert(0, carpoolModel);
       if (state.length == 1) {
         _ref.read(doingFirstStateProvider.notifier).state = carpoolModel;
