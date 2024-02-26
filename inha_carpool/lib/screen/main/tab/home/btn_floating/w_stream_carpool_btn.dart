@@ -11,7 +11,7 @@ class StreamFloating extends ConsumerStatefulWidget {
   @override
   ConsumerState<StreamFloating> createState() => _State();
 }
-
+/// todo : 스트림 에러났을 떄 Bad state: Stream has already been listened to. 처리
 class _State extends ConsumerState<StreamFloating> {
   final _timeStream =
       Stream.periodic(const Duration(seconds: 1), (_) => DateTime.now());
@@ -47,7 +47,7 @@ class _State extends ConsumerState<StreamFloating> {
                     carPoolListState.startTime == null) {
                   return const Text('Loading...');
                 } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
+                  return SizedBox();
                 } else {
                   final data = snapshot.data;
                   final startTime = DateTime.fromMillisecondsSinceEpoch(
