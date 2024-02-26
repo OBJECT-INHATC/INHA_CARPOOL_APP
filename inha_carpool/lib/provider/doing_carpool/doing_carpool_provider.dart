@@ -96,7 +96,8 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
   // 생성하거나 참여한 카풀리스트를 상태관리에 추가
   Future addCarpool(CarpoolModel carpoolModel) async {
     try {
-      state = [...state, carpoolModel];
+      // 새로운 carpoolModel을 맨 앞에 추가
+      state.insert(0, carpoolModel);
       if (state.length == 1) {
         _ref.read(doingFirstStateProvider.notifier).state = carpoolModel;
       } else {
