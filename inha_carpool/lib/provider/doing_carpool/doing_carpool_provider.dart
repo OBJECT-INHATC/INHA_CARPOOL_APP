@@ -9,7 +9,6 @@ import 'state/doing_carpool_state.dart';
 
 final doingFirstStateProvider = StateProvider((ref) => CarpoolModel());
 
-/// todo : 값이 있을땐 잘 되나 없을 땐 에러가 난다!
 final doingCarpoolNotifierProvider =
     StateNotifierProvider<CarpoolStateNotifier, DoingCarPoolStateModel>(
   (ref) => CarpoolStateNotifier(ref,

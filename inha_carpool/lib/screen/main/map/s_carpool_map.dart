@@ -120,7 +120,6 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
                             ),
                             !(widget.isMember)
                                 ? EnterButton(
-                              /// todo : 0말고 startTime으로 변경
                               startTime: widget.startTime!,
                                     carId: widget.carId!,
                                     roomGender: widget.roomGender!,

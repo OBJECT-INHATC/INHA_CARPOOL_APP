@@ -25,7 +25,7 @@ class Home extends ConsumerStatefulWidget {
 
 /// 5. todo : 지도 검색기능 향상
 /// 6. todo : 알림 이동 페이지 추가하기  Ex 이용기록 페이지 이동
-/// 7 stream 관련
+/// 7. 퓨처빌더 다 없애자!
 
 class _HomeState extends ConsumerState<Home> {
   final ScrollController _scrollController = ScrollController();
