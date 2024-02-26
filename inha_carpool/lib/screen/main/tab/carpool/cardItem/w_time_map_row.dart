@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/models/m_carpool.dart';
 
 import '../../../map/s_carpool_map.dart';
 import '../../home/enum/mapType.dart';
@@ -16,7 +17,7 @@ class TimeAndMapInfo extends StatelessWidget {
   });
   final Color colorTemp;
   final String formattedStartTime;
-  final Map<String, dynamic> carpoolData;
+  final CarpoolModel carpoolData;
   final String formattedForMap;
 
    String getImagePath(Color color) {
@@ -75,28 +76,16 @@ class TimeAndMapInfo extends StatelessWidget {
                     CarpoolMap(
                       mapType: MapCategory.all,
                       isMember: true,
-                      startPoint: LatLng(
-                          carpoolData[
-                          'startPoint']
-                              .latitude,
-                          carpoolData[
-                          'startPoint']
-                              .longitude),
-                      startPointName: carpoolData[
-                      'startPointName'],
-                      endPoint: LatLng(
-                          carpoolData['endPoint']
-                              .latitude,
-                          carpoolData['endPoint']
-                              .longitude),
-                      endPointName: carpoolData[
-                      'endPointName'],
+                      startPoint: carpoolData.startPoint!,
+                      startPointName: carpoolData.startPointName!,
+                      endPoint: carpoolData.endPoint!,
+                      endPointName: carpoolData.endPointName!,
                       startTimeString:
                       formattedForMap,
-                      carId: carpoolData['carId'],
-                      admin: carpoolData['admin'],
+                      carId: carpoolData.carId!,
+                      admin: carpoolData.admin!,
                       roomGender:
-                      carpoolData['gender'],
+                      carpoolData.gender!,
                     ),
                 transitionsBuilder: (context,
                     animation,

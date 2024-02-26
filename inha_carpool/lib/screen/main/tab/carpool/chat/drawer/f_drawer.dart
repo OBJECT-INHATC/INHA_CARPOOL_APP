@@ -61,7 +61,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     final screenHeight = context.height(1);
 
     // 해당 채팅방 알림 on/off 값을 파베에 있는 값으로 1회 조회하고 상태값으로 들고 있다가 Drawer을 열 때 조회
-    final carpoolData = ref.watch(doingCarpoolNotifierProvider).data;
+    final carpoolData = ref.watch(doingCarpoolNotifierProvider);
     final matchingCarpool = carpoolData.firstWhere((element) => element.carId == widget.carId, orElse: () => CarpoolModel());
     bool isChatAlarm = matchingCarpool.isChatAlarmOn ?? Prefs.isPushOnRx.get();
 

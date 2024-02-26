@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 /// 참여중인 카풀 정보를 담는 모델
 class CarpoolModel {
@@ -18,17 +18,28 @@ class CarpoolModel {
   final String? recentMessageSender;
   final String? recentMessage;
 
+  final LatLng? startPoint;
+  final LatLng? endPoint;
+
+  final String? gender;
+  final String? admin;
+
+
 
   CarpoolModel(
       {this.endDetailPoint,
       this.endPointName,
       this.carId,
+        this.gender,
+        this.admin,
       this.isChatAlarmOn,
       this.startPointName,
       this.startDetailPoint,
       this.startTime,
       this.recentMessageSender,
       this.recentMessage,
+        this.startPoint,
+        this.endPoint,
      });
 
 
@@ -45,6 +56,10 @@ class CarpoolModel {
       recentMessageSender: json['recentMessageSender'] as String,
       recentMessage: json['recentMessage'] as String,
       isChatAlarmOn: json['isChatAlarmOn'] == null ? true : json['isChatAlarmOn'] as bool,
+      startPoint: LatLng(json['startPoint'].latitude, json['startPoint'].longitude),
+      endPoint: LatLng(json['endPoint'].latitude, json['endPoint'].longitude),
+      gender: json['admin'] as String,
+      admin: json['admin'] as String,
     );
   }
 
@@ -63,6 +78,10 @@ class CarpoolModel {
       recentMessageSender: recentMessageSender,
       recentMessage: recentMessage,
       isChatAlarmOn: alarm ?? isChatAlarmOn,
+      startPoint: startPoint,
+      endPoint: endPoint,
+      gender: gender,
+      admin: admin,
     );
   }
 

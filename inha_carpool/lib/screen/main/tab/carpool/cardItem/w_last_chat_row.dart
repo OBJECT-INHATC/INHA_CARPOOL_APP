@@ -10,10 +10,10 @@ class ChatLastInfo extends StatelessWidget {
 
   const ChatLastInfo({
     super.key,
-    required this.carpool,
+    required this.carId,
   });
 
-  final DocumentSnapshot<Object?> carpool;
+  final String carId;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ChatLastInfo extends StatelessWidget {
           children: [
             Width(screenWidth * 0.045),
             StreamBuilder<DocumentSnapshot?>(
-              stream: FireStoreService().getLatestMessageStream(carpool['carId']),
+              stream: FireStoreService().getLatestMessageStream(carId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -38,9 +38,9 @@ class ChatLastInfo extends StatelessWidget {
                 } else {
                   DocumentSnapshot? lastMessage = snapshot.data;
                   if (lastMessage == null) {
-                    return Text(
+                    return  Text(
                       emptyChat,
-                      style: const TextStyle(color: Colors.grey),
+                      style: TextStyle(color: Colors.grey),
                     );
                   } else {
                     String content = lastMessage['message'];

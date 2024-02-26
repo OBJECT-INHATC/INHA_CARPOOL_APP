@@ -10,19 +10,19 @@ import 'state/doing_carpool_state.dart';
 final doingFirstStateProvider = StateProvider((ref) => CarpoolModel());
 
 final doingCarpoolNotifierProvider =
-    StateNotifierProvider<CarpoolStateNotifier, DoingCarPoolStateModel>(
+    StateNotifierProvider<CarpoolStateNotifier, List<CarpoolModel>>(
   (ref) => CarpoolStateNotifier(ref,
       repository: ref.read(carpoolRepositoryProvider)),
 );
 
-class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
+class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
   final Ref _ref;
   final DoingCarpoolRepository repository;
 
   //생성자
   CarpoolStateNotifier(this._ref, {required this.repository})
-      : super(const DoingCarPoolStateModel(data: []));
-  
+      : super(<CarpoolModel>[]);
+
 
   // 내가 참여중인 카풀리스트 상태관리로 가져오기
   Future getCarpool() async {
@@ -30,9 +30,9 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
       print("getCarpool");
       List<CarpoolModel> carpoolList =
           await repository.getCarPoolList(_ref.read(authProvider));
-      state = state.copyWith(data: carpoolList);
+      state = carpoolList;
 
-      if (state.data.isNotEmpty) {
+      if (state.isNotEmpty) {
         /// 첫번째 값 별도 저장
         _ref.read(doingFirstStateProvider.notifier).state =
             await getNearestCarpool();
@@ -45,7 +45,7 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   Future<CarpoolModel> getNearestCarpool() async {
     try {
       final now = DateTime.now();
-      final List<CarpoolModel> carpoolList = state.data;
+       List<CarpoolModel> carpoolList = state;
       if (carpoolList.length == 1) {
         return carpoolList.first;
       }
@@ -72,11 +72,9 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   // 들고있는 카풀리스트에서 isChatAlarmOn을 carId로 읽어옴
   Future getAlarm(String carId) async {
     try {
-      if (state.data.where((element) => element.carId == carId).isNotEmpty) {
-        return state.data
-            .where((element) => element.carId == carId)
-            .first
-            .isChatAlarmOn;
+      if (state.where((element) => element.carId == carId).isNotEmpty) {
+        return state.where((element) => element.carId == carId).first.isChatAlarmOn;
+
       } else {
         return false;
       }
@@ -98,8 +96,8 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   // 생성하거나 참여한 카풀리스트를 상태관리에 추가
   Future addCarpool(CarpoolModel carpoolModel) async {
     try {
-      state = state.copyWith(data: [...state.data, carpoolModel]);
-      if (state.data.length == 1) {
+      state = [...state, carpoolModel];
+      if (state.length == 1) {
         _ref.read(doingFirstStateProvider.notifier).state = carpoolModel;
       } else {
         _ref.read(doingFirstStateProvider.notifier).state =
@@ -113,8 +111,7 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
   // 방에서 나간 카풀을 상태관리에서 제거
   Future removeCarpool(String carId) async {
     try {
-      state = state.copyWith(
-          data: state.data.where((element) => element.carId != carId).toList());
+      state = state.where((element) => element.carId != carId).toList();
 
       _ref.read(doingFirstStateProvider.notifier).state =
           await getNearestCarpool();
@@ -126,7 +123,7 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
 
   void setAlarm(String carId, bool bool) async {
     try {
-      final updatedData = state.data.map((e) {
+      final updatedData = state.map((e) {
         if (e.carId == carId) {
           return e.copyWith(alarm: bool);
         } else {
@@ -134,7 +131,7 @@ class CarpoolStateNotifier extends StateNotifier<DoingCarPoolStateModel> {
         }
       }).toList();
 
-      state = state.copyWith(data: updatedData);
+      state = updatedData;
 
       await updateAlarm(carId, bool);
     } catch (e) {
