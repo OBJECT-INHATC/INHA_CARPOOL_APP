@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
@@ -121,13 +122,14 @@ class _State extends ConsumerState<StreamFloating> {
   // 현재시간보다 startTime이 24시간 이내인지 판별 하는 함수
   bool is24Hours(int startTime) {
     if (startTime == null || startTime == 0) return false;
-
     final currentTime = DateTime.now();
     final startTimeDate = DateTime.fromMillisecondsSinceEpoch(startTime);
-    final diff = startTimeDate.difference(currentTime);
+    final diff = currentTime.difference(startTimeDate);
 
-    return diff.inHours >= 0;
+    // 값이 음수여야 미래임 
+    return diff.inSeconds <= 0 ;
   }
+
 
 
 
