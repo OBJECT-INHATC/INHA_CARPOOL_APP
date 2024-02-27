@@ -100,6 +100,7 @@ class _State extends ConsumerState<StreamFloating> {
     final formattedTime = formatDuration(remainingTime);
     return formattedTime;
   }
+
 }
 
   String formatDuration(Duration duration) {
@@ -115,7 +116,7 @@ class _State extends ConsumerState<StreamFloating> {
     final currentTime = DateTime.now();
     final startTimeDate = DateTime.fromMillisecondsSinceEpoch(startTime);
     final diff = currentTime.difference(startTimeDate);
-    // 값이 음수여야 미래임 
+    // 값이 음수여야 미래임
     return diff.inSeconds <= 0;
   }
 

@@ -35,9 +35,30 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
         /// 첫번째 값 별도 저장
         _ref.read(doingFirstStateProvider.notifier).state =
             await getNearestCarpool();
+      }else{
+        _ref.read(doingFirstStateProvider.notifier).state = CarpoolModel();
       }
     } catch (e) {
       print("CarpoolProvider [getCarpool] 에러: $e");
+    }
+  }
+
+  // 생성하거나 참여한 카풀리스트를 상태관리에 추가
+  Future addCarpool(CarpoolModel carpoolModel) async {
+
+    try {
+      // 새로운 carpoolModel을 맨 앞에 추가 -> 상태를 잃으면 새로고침되기 때문에 가장 최근에 참여한 카풀이 상단에 일시적 위치
+      state.insert(0, carpoolModel);
+
+      if (state.length == 1) {
+        _ref.read(doingFirstStateProvider.notifier).state = carpoolModel;
+      } else {
+
+        _ref.read(doingFirstStateProvider.notifier).state =
+        await getNearestCarpool();
+      }
+    } catch (e) {
+      print("CarpoolProvider [addCarpool] 에러: $e");
     }
   }
 
@@ -53,24 +74,33 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
 
       if (carpoolList.isNotEmpty) {
         // Find the nearest carpool among the top 2 (if applicable)
-        final top2Carpools = carpoolList.sublist(0, 2);
+
         CarpoolModel? nearestCarpool;
         Duration? minDiff;
 
-        for (var carpool in top2Carpools) {
+        for (var carpool in carpoolList) {
           try {
             final startTime = DateTime.fromMillisecondsSinceEpoch(carpool.startTime!);
-            final diff = now.difference(startTime);
-            if (minDiff == null || diff.abs() < minDiff.abs()) {
-              minDiff = diff;
-              nearestCarpool = carpool;
+            // 현재 시간보다 미래인 경우만 처리
+            if (startTime.isAfter(now)) {
+              final diff = startTime.difference(now);
+              if (minDiff == null || diff.inSeconds < minDiff.inSeconds) {
+                minDiff = diff;
+                nearestCarpool = carpool;
+              }
             }
           } catch (e) {
             print("Error converting startTime for carpool: $e");
           }
         }
 
-        return nearestCarpool ?? CarpoolModel();
+        if (nearestCarpool == null) {
+          return CarpoolModel();
+        }
+
+
+        print("변경된 nearestCarpool: ${nearestCarpool?.startDetailPoint}");
+        return nearestCarpool;
       } else {
         print("GetNearestCarpool: No active carpools found.");
         return CarpoolModel();
@@ -80,6 +110,8 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
       return CarpoolModel();
     }
   }
+
+
 
 
   // 들고있는 카풀리스트에서 isChatAlarmOn을 carId로 읽어옴
@@ -106,21 +138,6 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
     }
   }
 
-  // 생성하거나 참여한 카풀리스트를 상태관리에 추가
-  Future addCarpool(CarpoolModel carpoolModel) async {
-    try {
-      // 새로운 carpoolModel을 맨 앞에 추가 -> 상태를 잃으면 새로고침되기 때문에 가장 최근에 참여한 카풀이 상단에 일시적 위치
-      state.insert(0, carpoolModel);
-      if (state.length == 1) {
-        _ref.read(doingFirstStateProvider.notifier).state = carpoolModel;
-      } else {
-        _ref.read(doingFirstStateProvider.notifier).state =
-            await getNearestCarpool();
-      }
-    } catch (e) {
-      print("CarpoolProvider [addCarpool] 에러: $e");
-    }
-  }
 
   // 방에서 나간 카풀을 상태관리에서 제거
   Future removeCarpool(String carId) async {

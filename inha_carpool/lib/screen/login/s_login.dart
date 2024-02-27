@@ -19,6 +19,7 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 
 import '../../common/data/preference/prefs.dart';
 import '../../common/models/m_member.dart';
+import '../../provider/carpool/carpool_notifier.dart';
 import '../../provider/doing_carpool/doing_carpool_provider.dart';
 import '../../provider/stateProvider/LatLng_provider.dart';
 import '../../provider/stateProvider/auth_provider.dart';
@@ -101,6 +102,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       /// 이용내역 상태관리 초기화
       setHistory(memberModel.uid!);
 
+
+
       /// 경고횟수 상태관리 초기화
       setYellowCardCount(memberModel.nickName!);
 
@@ -126,6 +129,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   void setHistory(String uid) async {
     await ref.read(historyProvider.notifier).loadHistoryData();
   }
+
+
 
   /// 경고 횟수 초기화
   void setYellowCardCount(String nickName) async {
@@ -537,6 +542,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
                                       /// 이용내역 상태관리 초기화
                                       setHistory(memberModel.uid!);
+
 
                                       /// 경고횟수 상태관리 초기화
                                       setYellowCardCount(memberModel.nickName!);

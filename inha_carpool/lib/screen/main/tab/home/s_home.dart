@@ -1,8 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
+import 'package:inha_Carpool/common/models/m_carpool.dart';
 import 'package:inha_Carpool/provider/stateProvider/LatLng_provider.dart';
 import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
@@ -13,6 +16,7 @@ import '../../../../provider/carpool/carpool_notifier.dart';
 import '../../../../provider/doing_carpool/doing_carpool_provider.dart';
 import '../../../../provider/stateProvider/loading_provider.dart';
 import 'btn_floating/w_stream_carpool_btn.dart';
+import 'btn_floating/w_timer.dart';
 import 'enum/carpoolFilter.dart';
 
 class Home extends ConsumerStatefulWidget {
@@ -32,15 +36,16 @@ class _HomeState extends ConsumerState<Home> {
   final TextEditingController _searchController = TextEditingController();
   late LatLng myPosition;
 
-  void loadCarpoolTimeBy() async {
-    await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
+  void loadPoint() async {
     myPosition = ref.read(positionProvider);
+    /// 조회를 줄일순 없나?
+    await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
   }
 
   @override
   void initState() {
     super.initState();
-    loadCarpoolTimeBy(); // 카풀 리스트 불러오기
+    loadPoint(); // 카풀 리스트 불러오기
   }
 
   @override
@@ -53,13 +58,26 @@ class _HomeState extends ConsumerState<Home> {
   Widget build(BuildContext context) {
     final double height = context.screenHeight;
     final carPoolListState = ref.watch(carpoolProvider);
-
     bool loadingState = ref.watch(loadingProvider);
+
+/*
+    CarpoolModel doingCarpool = ref.watch(doingFirstStateProvider);
+    if(doingCarpool.startTime == null) {
+      print("doingCarpool.startTime : ${doingCarpool.startTime}");
+      return const LodingContainer(text: '카풀을 불러오는 중입니다.');
+    }
+    final dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
+    final String startTimeStr =
+    dateFormat.format(DateTime.fromMillisecondsSinceEpoch(doingCarpool.startTime!));
+
+    print("doingCarpool : ${doingCarpool.startDetailPoint} - ${doingCarpool.startTime} - ${doingCarpool.endDetailPoint}");
+
+*/
 
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
-        floatingActionButton: const StreamFloating(),
+        floatingActionButton:  CarpoolCountDown(),
         body: Stack(
           children: [
             Container(
