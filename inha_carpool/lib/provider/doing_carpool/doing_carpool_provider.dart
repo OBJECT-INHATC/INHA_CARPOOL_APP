@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../common/models/m_carpool.dart';
 import '../stateProvider/auth_provider.dart';
 import 'repository/doing_carpool_repository.dart';
-import 'state/doing_carpool_state.dart';
 
 ///* 참여중인 카풀의 수를 관리하는 provider 0207 이상훈///
 
@@ -99,7 +98,7 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
         }
 
 
-        print("변경된 nearestCarpool: ${nearestCarpool?.startDetailPoint}");
+        print("변경된 nearestCarpool: ${nearestCarpool.startDetailPoint}");
         return nearestCarpool;
       } else {
         print("GetNearestCarpool: No active carpools found.");

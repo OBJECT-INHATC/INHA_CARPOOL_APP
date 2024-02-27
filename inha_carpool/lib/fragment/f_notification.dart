@@ -117,12 +117,10 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                       setState(() {
                         // 알림 리스트 해당 알림 삭제
                         final deletedItem = notificationList.removeAt(i);
-                        if (deletedItem != null) {
                           // 알림 제거
                           AlarmDao().deleteById(deletedItem.title! +
                               deletedItem.body! +
                               deletedItem.time.toString());
-                        }
                       });
                     },
                     background: Container(
@@ -248,13 +246,11 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                                         // 알림 리스트 해당 알림 삭제
                                         final deletedItem =
                                             notificationList.removeAt(i);
-                                        if (deletedItem != null) {
                                           // 알림 제거
                                           AlarmDao().deleteById(
                                               deletedItem.title! +
                                                   deletedItem.body! +
                                                   deletedItem.time.toString());
-                                        }
                                       });
                                     },
                                   ),

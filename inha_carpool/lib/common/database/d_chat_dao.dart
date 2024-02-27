@@ -71,13 +71,9 @@ class ChatDao {
     for (var snapshot in recordSnapshots) {
       final chatMessage = ChatMessage.fromMap(snapshot.value, carId);
       chatMessage.id = snapshot.key;
-
       // 각 ChatMessage의 필드를 프린트합니다.
-      // 각 항목의 인덱스를 프린트합니다 (0부터 시작)
-      print("R--------------${i}번째---------------ㄱ");
       print('Message: ${chatMessage.message}');
       i++;
-
     }
   }
 

@@ -1,15 +1,12 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/provider/stateProvider/loading_provider.dart';
 
-import '../../../../common/util/location_handler.dart';
-import '../../../../common/widget/LodingContainer.dart';
 import '../../../../common/widget/empty_list.dart';
 import '../../../../provider/stateProvider/LatLng_provider.dart';
 import '../../../../provider/stateProvider/auth_provider.dart';

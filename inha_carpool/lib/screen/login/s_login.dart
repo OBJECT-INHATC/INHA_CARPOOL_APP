@@ -19,7 +19,6 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 
 import '../../common/data/preference/prefs.dart';
 import '../../common/models/m_member.dart';
-import '../../provider/carpool/carpool_notifier.dart';
 import '../../provider/doing_carpool/doing_carpool_provider.dart';
 import '../../provider/stateProvider/LatLng_provider.dart';
 import '../../provider/stateProvider/auth_provider.dart';
@@ -243,7 +242,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           MaterialPageRoute(
                               builder: (context) => const LoginPage()));
                     },
-                    child: Text("확인")),
+                    child: const Text("확인")),
               ],
             );
           });
@@ -563,7 +562,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                               arrayContains: memberUser)
                                           .get()
                                           .then((QuerySnapshot querySnapshot) {
-                                        querySnapshot.docs.forEach((doc) {
+                                        for (var doc in querySnapshot.docs) {
                                           // 각 carId에 대해 푸시 알림을 구독합니다.
                                           String carId = doc.id;
                                           print(
@@ -575,7 +574,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                           FirebaseMessaging.instance
                                               .subscribeToTopic(
                                                   "${carId}_info");
-                                        });
+                                        }
                                       });
 
                                       // 토픽 저장 전 - IOS APNS 권한 요청

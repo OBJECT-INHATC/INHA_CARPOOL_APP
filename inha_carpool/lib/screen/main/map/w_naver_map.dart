@@ -8,8 +8,8 @@ import 'package:inha_Carpool/screen/main/map/w_icon_button.dart';
 import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
 
 /// 초기 zoom 값은 직선거리를 기준으로 계산하여 설정함 변수 -> zoomLevel (0212 이상훈)
-class NaeverMap extends StatefulWidget {
-  const NaeverMap({
+class CustomMap extends StatefulWidget {
+  const CustomMap({
     Key? key,
     required this.startPoint,
     required this.endPoint,
@@ -21,10 +21,10 @@ class NaeverMap extends StatefulWidget {
   final MapCategory mapCategory;
 
   @override
-  State<NaeverMap> createState() => _naeverMapState();
+  State<CustomMap> createState() => _CustomMapState();
 }
 
-class _naeverMapState extends State<NaeverMap> {
+class _CustomMapState extends State<CustomMap> {
   late NaverMapController mapController;
 
   // 지도 준비 여부

@@ -360,7 +360,7 @@ class FireStoreService {
     if (carId == '' || carId == null) return 0;
     DocumentSnapshot carpool =
         await FirebaseFirestore.instance.collection('carpool').doc(carId).get();
-    if (carpool == null) return 0;
+
     int startTime = carpool.get('startTime');
     return startTime;
   }

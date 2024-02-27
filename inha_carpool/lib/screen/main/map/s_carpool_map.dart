@@ -95,7 +95,7 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
           Column(
             children: [
               Expanded(
-                child: NaeverMap(
+                child: CustomMap(
                   startPoint: widget.startPoint,
                   endPoint: widget.endPoint,
                   mapCategory: mapCategory,

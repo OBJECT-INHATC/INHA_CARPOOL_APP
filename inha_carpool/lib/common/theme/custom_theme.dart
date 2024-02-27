@@ -5,7 +5,6 @@ import 'package:inha_Carpool/common/theme/shadows/dart_app_shadows.dart';
 import 'package:inha_Carpool/common/theme/shadows/light_app_shadows.dart';
 import 'package:flutter/material.dart';
 
-import '../Colors/app_colors.dart';
 
 enum CustomTheme {
   dark(
@@ -43,7 +42,7 @@ ThemeData lightTheme = ThemeData(
     // textTheme: GoogleFonts.singleDayTextTheme(
     //   ThemeData(brightness: Brightness.light).textTheme,
     // ),
-    colorScheme: ColorScheme.light().copyWith(
+    colorScheme: const ColorScheme.light().copyWith(
       primary: Colors.black, // 이 부분이 primary color에 해당합니다.
       secondary: Colors.transparent, // 이 부분이 tint color에 해당합니다.
     )

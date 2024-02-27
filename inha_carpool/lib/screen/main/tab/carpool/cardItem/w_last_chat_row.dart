@@ -41,7 +41,7 @@ class ChatLastInfo extends StatelessWidget {
                     /// 여기 const 주면 에러 빡!
                     return  Text(
                       emptyChat,
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                     );
                   } else {
                     String content = lastMessage['message'];

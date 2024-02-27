@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/context_extension.dart';
 
-import '../Colors/app_colors.dart';
-import '../widget/w_tap.dart';
 
 extension SnackbarContextExtension on BuildContext {
   void showSnackbarMaxmember(BuildContext context) {

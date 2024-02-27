@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/models/m_carpool.dart';
-import 'package:inha_Carpool/provider/stateProvider/jusogiban_api_provider.dart';
 import 'package:inha_Carpool/service/sv_carpool.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/provider/stateProvider/auth_provider.dart';
