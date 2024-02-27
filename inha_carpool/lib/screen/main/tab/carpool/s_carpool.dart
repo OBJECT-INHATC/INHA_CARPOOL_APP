@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/models/m_carpool.dart';
+import 'package:inha_Carpool/common/widget/empty_doing.dart';
 
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_floating_btn.dart';
@@ -69,13 +70,10 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                 });
               },
               child: Scaffold(
-                floatingActionButton: const RecruitFloatingBtn(
+                floatingActionButton: (carpoolList.isEmpty) ? null : const RecruitFloatingBtn(
                     floatingMessage: '카풀 등록하기'),
                 body: (carpoolList.isEmpty)
-                    ? const EmptyCarpoolList(
-                  isSearch: false,
-                  floatingMessage: '참가하고 계신 카풀이 없습니다. \n카풀을 등록해 보세요!',
-                )
+                    ? const EmptyDoing(floatingMessage: '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!')
                     : Column(
                         children: [
                           Expanded(

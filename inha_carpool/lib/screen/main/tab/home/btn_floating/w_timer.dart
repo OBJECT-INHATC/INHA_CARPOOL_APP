@@ -104,7 +104,7 @@ class _TimerCountdownState extends ConsumerState<CarpoolCountDown> {
                           ],
                         ),
                         Text(
-                          '${state.startDetailPoint} - ${state.endDetailPoint}',
+                          '${state.startDetailPoint} ➡️ ${state.endDetailPoint}',
                           style: TextStyle(
                             fontSize: textSize + width * 0.008,
                             fontWeight: FontWeight.w700,

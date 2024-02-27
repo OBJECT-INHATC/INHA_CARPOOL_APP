@@ -41,7 +41,7 @@ class _RecordListState extends ConsumerState<HistoryList> {
         child: Container(
           child: (historyState.isEmpty)
               ? const EmptyCarpoolList(
-                  isSearch: false,
+                  isSearch: true,
                   floatingMessage: '아직 이용내역이 없습니다.\n\n카풀을 등록하여\n택시 비용을 줄여 보세요!',
                 )
               : ListView.builder(
