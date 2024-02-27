@@ -40,15 +40,6 @@ class FireStoreService {
     });
   }
 
-
-
-/*  /// 파이어베이스에서 해당 데이터가 있는지 확인하는 함수
-  Future<bool> isDataExist(String carId, String adminId) async {
-    final snapshot =
-        await carpoolCollection.doc(carId).collection("messages").where();
-    return snapshot.exists;
-  }*/
-
   //isCHatAlarmOn을 파베에서 삭제
   Future<void> deleteIsChatAlarm(String carId, String uid) async {
     await carpoolCollection
