@@ -123,6 +123,9 @@ dependencies:
   # 상태 관리 (riverpod) 상훈 24.01.30
   flutter_riverpod: ^2.4.0
 
+  # 카풀 타이머 플로팅버튼
+  flutter_countdown_timer: ^4.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

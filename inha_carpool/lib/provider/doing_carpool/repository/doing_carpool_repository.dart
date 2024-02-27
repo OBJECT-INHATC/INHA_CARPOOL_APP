@@ -58,9 +58,6 @@ class DoingCarpoolRepository {
       }
     }
 
-    print("currentCarpoolList : $currentCarpoolList");
-    print("oldCarpoolList : $oldCarpoolList");
-
     currentCarpoolList.sort((a, b) {
     DateTime startTimeA =
     DateTime.fromMillisecondsSinceEpoch(a.startTime!.toInt());

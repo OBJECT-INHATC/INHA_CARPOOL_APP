@@ -25,11 +25,9 @@ class _State extends ConsumerState<StreamFloating> {
     final startTime = carPoolListState.startTime;
 
 
-    print("startDetailPoint : ${carPoolListState.startDetailPoint}");
-
     if (carPoolListState.startTime != null &&
         is24Hours(carPoolListState.startTime!)) {
-      print("조건 만족");
+      print(" 플러팅 버튼 조건 만족");
 
       return SizedBox(
         height: height * 0.14,

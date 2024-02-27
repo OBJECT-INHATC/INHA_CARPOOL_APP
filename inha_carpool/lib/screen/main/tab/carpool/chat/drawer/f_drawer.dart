@@ -109,7 +109,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                             onPressed: () {
                               /// 알림 상태 변경
                               print("채팅 알림 켜기");
-                              /// todo : 만약 구독하는 토픽이 서버에 없으면 저장하기
+                              /// todo : 만약 구독하는 토픽이 서버에 없으면 저장하기 ->
                              if(Prefs.isPushOnRx.get()){
                                setAlarmState(true);
                              }else{

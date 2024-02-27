@@ -257,7 +257,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       print("상태관리 로그인 이메일 :  ${ref.read(authProvider).email}");
       print("상태관리 로그인 유저아이디 :  ${ref.read(authProvider).uid}");
       print("상태관리 로그인 유저이름 :  ${ref.read(authProvider).userName}");
-      print("==========================================");
     }
   }
 

@@ -27,7 +27,6 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
   // 내가 참여중인 카풀리스트 상태관리로 가져오기
   Future getCarpool() async {
     try {
-      print("getCarpool");
       List<CarpoolModel> carpoolList =
           await repository.getCarPoolList(_ref.read(authProvider));
       state = carpoolList;
