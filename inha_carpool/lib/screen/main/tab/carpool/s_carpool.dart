@@ -8,6 +8,7 @@ import 'package:inha_Carpool/screen/main/tab/carpool/w_floating_btn.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_time_Info.dart';
 
+import '../../../../common/widget/empty_list.dart';
 import '../../../../provider/doing_carpool/doing_carpool_provider.dart';
 import 'cardItem/w_point_row.dart';
 import 'cardItem/w_time_map_row.dart';
@@ -69,24 +70,10 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
               },
               child: Scaffold(
                 body: (carpoolList.isEmpty)
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: context.appColors.text,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const RecruitFloatingBtn(
-                                floatingMessage: '카풀 등록하기'),
-                          ],
-                        ),
-                      )
+                    ? const EmptyCarpoolList(
+                  isSearch: false,
+                  floatingMessage: '참가하고 계신 카풀이 없습니다. \n카풀을 등록해 보세요!',
+                )
                     : Column(
                         children: [
                           Expanded(

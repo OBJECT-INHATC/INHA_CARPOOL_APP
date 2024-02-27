@@ -60,24 +60,11 @@ class _HomeState extends ConsumerState<Home> {
     final carPoolListState = ref.watch(carpoolProvider);
     bool loadingState = ref.watch(loadingProvider);
 
-/*
-    CarpoolModel doingCarpool = ref.watch(doingFirstStateProvider);
-    if(doingCarpool.startTime == null) {
-      print("doingCarpool.startTime : ${doingCarpool.startTime}");
-      return const LodingContainer(text: '카풀을 불러오는 중입니다.');
-    }
-    final dateFormat = DateFormat('yyyy-MM-dd HH:mm:ss');
-    final String startTimeStr =
-    dateFormat.format(DateTime.fromMillisecondsSinceEpoch(doingCarpool.startTime!));
-
-    print("doingCarpool : ${doingCarpool.startDetailPoint} - ${doingCarpool.startTime} - ${doingCarpool.endDetailPoint}");
-
-*/
 
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
-        floatingActionButton:  CarpoolCountDown(),
+        floatingActionButton:  const CarpoolCountDown(),
         body: Stack(
           children: [
             Container(
@@ -87,7 +74,6 @@ class _HomeState extends ConsumerState<Home> {
               child: Column(
                 children: [
                   const Height(5),
-
                   /// 광고 및 공지사항 위젯
                   NoticeBox(height * 0.25, "main"),
                   Container(
