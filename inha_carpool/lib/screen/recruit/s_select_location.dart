@@ -10,6 +10,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
+import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/provider/stateProvider/jusogiban_api_provider.dart';
 
 /// 출-목적지의 위치 선택 페이지
@@ -237,83 +238,66 @@ class _LocationInputState extends ConsumerState<LocationInput> {
           Container(
             height: context.height(0.05),
             margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Stack(children: [
-                    TextField(
-                      onSubmitted: (value) async {
-                        // getAddressFromQuery(value);
-                        selectNearLocation(value);
-                      },
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        hintText: '장소 검색',
-                        fillColor: Colors.grey[300],
-                        // 배경색 설정
-                        filled: true,
-                        // 배경색을 활성화
-                        border: const OutlineInputBorder(
-                          borderSide: BorderSide.none, // 외곽선 없음
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                        ),
-                        // 글씨의 위치를 가운데 정렬
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 0),
-                      ),
-                      style: const TextStyle(color: Colors.black, fontSize: 11),
-                    ),
-                    Positioned(
-                      // 텍스트필드에 맞춰서 위치 정렬
-                      right: 0,
-                      top: 0,
-                      bottom: 0,
-                      child: IconButton(
-                        onPressed: () async {
-                          setState(() {
-                            selectNearLocation(_searchController.text)
-                                .then((_) {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: (context) => Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white, // 원하는 색상 설정
-                                    borderRadius: BorderRadius.vertical(
-                                        top:
-                                            Radius.circular(15.0)), // 원하는 모양 설정
-                                  ),
-                                  constraints: BoxConstraints(
-                                    maxHeight:
-                                        MediaQuery.of(context).size.height *
-                                            0.4,
-                                  ),
-                                  child: FutureBuilder<Widget>(
-                                    future: _buildSearchResultList(),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.hasData) {
-                                        return snapshot.data!;
-                                      } else if (snapshot.hasError) {
-                                        return const Center(
-                                          child: Text('오류가 발생했습니다.'),
-                                        );
-                                      } else {
-                                        return const Center(
-                                          child: CircularProgressIndicator(),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ),
-                              );
-                            });
-                          });
-                        },
-                        icon: const Icon(Icons.search),
-                      ),
-                    ),
-                  ]),
+            child:  TextField(
+              onSubmitted: (value) async {
+                selectNearLocation(value);
+              },
+              controller: _searchController,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      selectNearLocation(_searchController.text)
+                          .then((_) {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => Container(
+                            decoration: const BoxDecoration(
+                              color: Colors.white, // 원하는 색상 설정
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(15.0)), // 원하는 모양 설정
+                            ),
+                            constraints: BoxConstraints(
+                              maxHeight:
+                              MediaQuery.of(context).size.height * 0.4,
+                            ),
+                            child: FutureBuilder<Widget>(
+                              future: _buildSearchResultList(),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return snapshot.data!;
+                                } else if (snapshot.hasError) {
+                                  return const Center(
+                                    child: Text('오류가 발생했습니다.'),
+                                  );
+                                } else {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        );
+                      });
+                    });
+                  },
+                  icon: const Icon(Icons.search),
                 ),
-              ],
+                hintText: '장소 검색',
+                fillColor: Colors.grey[300],
+                // 배경색 설정
+                filled: true,
+                // 배경색을 활성화
+                border: const OutlineInputBorder(
+                  borderSide: BorderSide.none, // 외곽선 없음
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                // 글씨의 위치를 가운데 정렬
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 0),
+              ),
+              style: const TextStyle(color: Colors.black, fontSize: 11),
             ),
           ),
           const SizedBox(
@@ -378,10 +362,8 @@ class _LocationInputState extends ConsumerState<LocationInput> {
                           if (_address == null) {
                             ScaffoldMessenger.of(context)
                                 .removeCurrentSnackBar();
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                              content: Text('주소를 입력해주세요.'),
-                            ));
+                            context.showSnackbarText(context, '주소를 선택해주세요.');
+
                             return; // 주소가 비어있으므로 메서드 종료
                           }
 
@@ -418,11 +400,8 @@ class _LocationInputState extends ConsumerState<LocationInput> {
                             ],
                           ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   const Text(
                                     '이 위치 선택',
@@ -442,7 +421,7 @@ class _LocationInputState extends ConsumerState<LocationInput> {
                                 ],
                               ),
                               Text(
-                                _address ?? ' 화면을 이동해서 위치를 선택해주세요.',
+                                _address ?? ' 화면을 이동해서 주소가 나오면 위치를 선택해주세요.',
                                 style: const TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.normal,
@@ -536,9 +515,7 @@ class _LocationInputState extends ConsumerState<LocationInput> {
 
   // 스낵바 알림 후 리스트 비우기
   void showSnackBarAndClearList(BuildContext context, String text) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(text)),
-    );
+    context.showSnackbarText(context, text);
     _addressList.clear();
   }
 

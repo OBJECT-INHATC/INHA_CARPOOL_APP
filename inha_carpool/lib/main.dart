@@ -15,6 +15,7 @@ import 'app.dart';
 import 'common/data/preference/app_preferences.dart';
 
 /// todo : 알림을 클릭했을 때 알림 new는 잘 들어오나 알림을 받은 후 그냥 앱을 실행하면 new의 상태과 불명확함 해결 필요 0216 이상훈
+/// 이해 안되면 적극적으로 물어보자 0216 이상훈
 
 /// 백그라운드 메시지 수신 호출 콜백 함수
 @pragma('vm:entry-point')
