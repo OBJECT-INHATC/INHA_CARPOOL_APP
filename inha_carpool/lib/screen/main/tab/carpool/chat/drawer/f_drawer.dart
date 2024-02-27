@@ -61,7 +61,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
     final screenHeight = context.height(1);
 
     // 해당 채팅방 알림 on/off 값을 파베에 있는 값으로 1회 조회하고 상태값으로 들고 있다가 Drawer을 열 때 조회
-    final carpoolData = ref.watch(doingCarpoolNotifierProvider);
+    final carpoolData = ref.watch(doingProvider);
     final matchingCarpool = carpoolData.firstWhere((element) => element.carId == widget.carId, orElse: () => CarpoolModel());
     bool isChatAlarm = matchingCarpool.isChatAlarmOn ?? Prefs.isPushOnRx.get();
 
@@ -390,7 +390,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
   }
 
   void setAlarmState(bool isAlarm) {
-    ref.read(doingCarpoolNotifierProvider.notifier).setAlarm(widget.carId, isAlarm);
+    ref.read(doingProvider.notifier).setAlarm(widget.carId, isAlarm);
 
     (isAlarm)
         ? FcmService().subScribeOnlyOne(widget.carId)
@@ -572,7 +572,7 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
 
   // 카풀 삭제 처리 상태관리 (공통)
   void removeProvider(String carId) {
-    ref.read(doingCarpoolNotifierProvider.notifier).removeCarpool(carId);
+    ref.read(doingProvider.notifier).removeCarpool(carId);
   }
 
   /// 에러 다이얼로그 (공통)

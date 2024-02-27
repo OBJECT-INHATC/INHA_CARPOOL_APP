@@ -110,7 +110,7 @@ class _MyPageState extends ConsumerState<MyPage> {
                 // 가져온 토픽을 알림 허용 유무에 따라 구독하거나 해제
                 for(String carId in topicList) {
                   if(isOn) {
-                    bool isCheckAlarm = await ref.read(doingCarpoolNotifierProvider.notifier).getAlarm(carId);
+                    bool isCheckAlarm = await ref.read(doingProvider.notifier).getAlarm(carId);
                   if (isCheckAlarm){
                     FcmService().subScribeTopic(carId);
                   }

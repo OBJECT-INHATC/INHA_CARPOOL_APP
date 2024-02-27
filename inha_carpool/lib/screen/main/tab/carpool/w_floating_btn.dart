@@ -4,8 +4,8 @@ import 'package:inha_Carpool/common/common.dart';
 import '../../../recruit/s_recruit.dart';
 
 class RecruitFloatingBtn extends StatelessWidget {
-  const RecruitFloatingBtn({super.key, this.floatingMessage});
-  final floatingMessage;
+  const RecruitFloatingBtn({super.key, required this.floatingMessage});
+  final String floatingMessage;
 
   @override
   Widget build(BuildContext context) {

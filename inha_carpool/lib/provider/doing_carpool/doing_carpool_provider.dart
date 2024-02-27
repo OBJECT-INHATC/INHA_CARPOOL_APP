@@ -7,9 +7,9 @@ import 'state/doing_carpool_state.dart';
 
 ///* 참여중인 카풀의 수를 관리하는 provider 0207 이상훈///
 
-final doingFirstStateProvider = StateProvider((ref) => CarpoolModel());
+final floatingProvider = StateProvider((ref) => CarpoolModel());
 
-final doingCarpoolNotifierProvider =
+final doingProvider =
     StateNotifierProvider<CarpoolStateNotifier, List<CarpoolModel>>(
   (ref) => CarpoolStateNotifier(ref,
       repository: ref.read(carpoolRepositoryProvider)),
@@ -33,10 +33,10 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
 
       if (state.isNotEmpty) {
         /// 첫번째 값 별도 저장
-        _ref.read(doingFirstStateProvider.notifier).state =
-            await getNearestCarpool();
+        _ref.read(floatingProvider.notifier).state =
+            await getNearest();
       }else{
-        _ref.read(doingFirstStateProvider.notifier).state = CarpoolModel();
+        _ref.read(floatingProvider.notifier).state = CarpoolModel();
       }
     } catch (e) {
       print("CarpoolProvider [getCarpool] 에러: $e");
@@ -51,18 +51,18 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
       state.insert(0, carpoolModel);
 
       if (state.length == 1) {
-        _ref.read(doingFirstStateProvider.notifier).state = carpoolModel;
+        _ref.read(floatingProvider.notifier).state = carpoolModel;
       } else {
 
-        _ref.read(doingFirstStateProvider.notifier).state =
-        await getNearestCarpool();
+        _ref.read(floatingProvider.notifier).state =
+        await getNearest();
       }
     } catch (e) {
       print("CarpoolProvider [addCarpool] 에러: $e");
     }
   }
 
-  Future<CarpoolModel> getNearestCarpool() async {
+  Future<CarpoolModel> getNearest() async {
     try {
       final now = DateTime.now();
       List<CarpoolModel> carpoolList = state;
@@ -144,8 +144,8 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolModel>> {
     try {
       state = state.where((element) => element.carId != carId).toList();
 
-      _ref.read(doingFirstStateProvider.notifier).state =
-          await getNearestCarpool();
+      _ref.read(floatingProvider.notifier).state =
+          await getNearest();
 
     } catch (e) {
       print("CarpoolProvider [removeCarpool] 에러: $e");

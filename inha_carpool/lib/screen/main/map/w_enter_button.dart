@@ -36,7 +36,7 @@ class _MapButtonState extends ConsumerState<EnterButton> {
   @override
   Widget build(BuildContext context) {
 
-    final carpoolProvider = ref.watch(doingCarpoolNotifierProvider.notifier);
+    final carpoolProvider = ref.watch(doingProvider.notifier);
 
     final enterState = ref.watch(enterProvider.notifier);
 

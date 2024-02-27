@@ -44,7 +44,7 @@ class CarpoolTimeInfo extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  '현재 참여 중인 카풀 ${ref.watch(doingCarpoolNotifierProvider).length}개'
+                  '현재 참여 중인 카풀 ${ref.watch(doingProvider).length}개'
                       .text
                       .size(10)
                       .semiBold

@@ -21,7 +21,7 @@ class _State extends ConsumerState<StreamFloating> {
     final width = context.screenWidth;
     final height = context.screenWidth;
 
-    final carPoolListState = ref.watch(doingFirstStateProvider);
+    final carPoolListState = ref.watch(floatingProvider);
     final startTime = carPoolListState.startTime;
 
 
