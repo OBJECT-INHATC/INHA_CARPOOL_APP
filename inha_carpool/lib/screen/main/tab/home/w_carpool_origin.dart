@@ -88,11 +88,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                 controller: _scrollController,
                 itemCount: (widget.carpoolList.length),
                 itemBuilder: (context, index) {
-                  // 원래의 리스트 아이템
-                  /*       final originalIndex = index;
-         if (widget.carpoolList != null &&
-            originalIndex < widget.snapshot.data!.length) {
-          DocumentSnapshot carpool = widget.snapshot.data![originalIndex];*/
 
                   final carpoolData = widget.carpoolList[index];
 
@@ -307,21 +302,23 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
   /// 스크롤 감지 이벤트
   void _scrollListener() async {
     if (_scrollController.position.atEdge) {
-      if (_scrollController.position.pixels == 0) {
-        // 맨 위에 도달했을 경우
-      } else if (_scrollController.position.extentAfter == 0 &&
+      if (_scrollController.position.extentAfter == 0 &&
           !ref.read(loadingProvider) && !ref.read(searchProvider)) {
+        print("도달");
         setState(() {
           ref.read(loadingProvider.notifier).state =
               true; // 데이터 로드 중에는 인디케이터를 표시
-          scrollLimit + 3;
         });
+
+        print("scrollLimit : $scrollLimit");
 
         // 추가 데이터를 로드할 조건: 맨 아래에 도달하고 로딩 중이 아닐 때
         await ref
             .read(carpoolProvider.notifier)
             .loadCarpoolScrollBy(scrollLimit);
 
+        ///제한 수 3개씩 증가
+        scrollLimit += 3;
 
         if (selectedFilter == CarpoolFilter.Distance) {
           await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(ref.read(positionProvider));

@@ -4,7 +4,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
+import 'package:inha_Carpool/dto/TopicDTO.dart';
+import 'package:inha_Carpool/service/api/Api_repot.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
+import 'package:quiver/time.dart';
 
 import '../../../../../../common/models/m_carpool.dart';
 import '../../../../../../provider/stateProvider/auth_provider.dart';
@@ -106,11 +109,12 @@ class _ChatDrawerState extends ConsumerState<ChatDrawer> {
                             ),
                           )
                         : IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               /// 알림 상태 변경
                               print("채팅 알림 켜기");
-                              /// todo : 만약 구독하는 토픽이 서버에 없으면 저장하기 ->
                              if(Prefs.isPushOnRx.get()){
+                               await ApiTopic().saveTopoic(TopicRequstDTO(uid: uid, carId: widget.carId));
+
                                setAlarmState(true);
                              }else{
                                showOpenDialogAlarm(context, "알림 설정은 내 정보에서 바꿀 수 있습니다.", "알림을 켜주세요!");

@@ -16,14 +16,13 @@ class EmptyCarpoolList extends ConsumerWidget {
   final String floatingMessage;
   final bool isSearch;
 
+  /// todo : 해당 페이지 리빌드 보고 최적화 필요 0227 by.상훈
   @override
   Widget build(BuildContext context, ref) {
 
     final isSearchState = ref.watch(searchProvider);
     final carpoolCount = ref.watch(carpoolProvider);
 
-    /// todo : 최적화 필요 3번씩 빌드됨
-    print('EmptyCarpoolList파일 27번 줄 carpoolCount.isEmpty : ${carpoolCount.isEmpty}');
     final height = context.screenHeight;
 
     return ListView(

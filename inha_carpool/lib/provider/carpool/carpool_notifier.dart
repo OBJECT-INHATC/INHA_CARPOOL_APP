@@ -30,7 +30,6 @@ class CarpoolStateNotifier extends StateNotifier<List<CarpoolState>> {
   /// 기존 state는 냅두고 새로 가져온 값들만 추가
   Future<void> loadCarpoolScrollBy(int limit) async {
     try {
-      /// Todo : 스크롤을 계속 내리면 limit도 동적으로 늘려줘야함 (현재는 10개로 고정)
       List<CarpoolState> newList = await apiService.timeByFunction(limit, null);
 
       // 새로 받아온 데이터 중 이미 state에 존재하는 데이터 제거
