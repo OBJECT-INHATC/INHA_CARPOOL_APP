@@ -69,6 +69,8 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                 });
               },
               child: Scaffold(
+                floatingActionButton: const RecruitFloatingBtn(
+                    floatingMessage: '카풀 등록하기'),
                 body: (carpoolList.isEmpty)
                     ? const EmptyCarpoolList(
                   isSearch: false,

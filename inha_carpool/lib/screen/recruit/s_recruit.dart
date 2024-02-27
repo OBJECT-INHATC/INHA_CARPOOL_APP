@@ -345,7 +345,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                           return;
                         }
 
-          /*              /// 시간 입력 오류 알림창
+          /*   todo : 고쳐라 시간 다시            /// 시간 입력 오류 알림창
                         if (!isTimeValid(difference)) {
                           _showTimeAlertDialog(context);
                           setState(() {

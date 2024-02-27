@@ -30,11 +30,6 @@ class _TimerCountdownState extends ConsumerState<CarpoolCountDown> {
       final width = context.screenWidth;
       final height = context.screenHeight;
 
-      final timerController = CountdownTimerController(
-          endTime: state.startTime! );
-
-          /// 시간이 끝나면 호출되는 콜백함수
-
       final textSize = width * 0.03;
 
       return Padding(
@@ -89,7 +84,7 @@ class _TimerCountdownState extends ConsumerState<CarpoolCountDown> {
                                     fontSize: textSize + 2,
                                     fontWeight: FontWeight.bold),
                           ),
-                          controller: timerController,
+                          endTime: state.startTime!,
                           textStyle: TextStyle(
                               fontSize: textSize + width * 0.008,
                               fontWeight: FontWeight.bold),
