@@ -16,6 +16,7 @@ import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
 import '../../common/widget/LodingContainer.dart';
 import '../../provider/doing_carpool/doing_carpool_provider.dart';
+import 's_test.dart';
 
 
 
@@ -133,6 +134,25 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
               child:
               Column(
                 children: [
+
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>  const test(LatLng(37.4650414, 126.6807024)),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      '카풀 모집하기',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+
                   Height(screenHeight * 0.05),
                   // 출발지 입력 위젯
                   SizedBox(
