@@ -16,7 +16,6 @@ import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
 import '../../common/widget/LodingContainer.dart';
 import '../../provider/doing_carpool/doing_carpool_provider.dart';
-import 's_test.dart';
 
 
 
@@ -135,7 +134,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
               Column(
                 children: [
 
-                  GestureDetector(
+            /*      GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
@@ -151,7 +150,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ),
+                  ),*/
 
                   Height(screenHeight * 0.05),
                   // 출발지 입력 위젯
@@ -381,11 +380,9 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
                           isShowingLoader = false;
                           return;
                         }
-
                         context.showSnackbar(
                           "카풀을 생성하는 중입니다. 잠시만 기다려주세요.",
                         );
-
                         /// 조건 충족 시 파이어베이스에 카풀 정보 저장
                         String carId =
                         await CarpoolService().addDataToFireStore(

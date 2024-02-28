@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
@@ -10,7 +9,6 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/provider/stateProvider/jusogiban_api_provider.dart';
 
 /// 출-목적지의 위치 선택 페이지
@@ -43,11 +41,15 @@ class _LocationInputState extends ConsumerState<LocationInput> {
   // 실제 주소 정보를 저장할 변수
   String? _address;
 
+  String infoText = '지도를 스크롤하여 위치를 선택할 수 있습니다.';
+
   // 주소 검색 결과를 저장할 리스트
   final List<String> _addressList = [];
 
   // 카메라 이동 여부를 저장할 변수
   bool isMove = false;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -55,21 +57,16 @@ class _LocationInputState extends ConsumerState<LocationInput> {
     final width = context.screenWidth;
 
     return Scaffold(
-      resizeToAvoidBottomInset: false, // 키보드가 올라와도 화면이 줄어들지 않음
       appBar: AppBar(
-        // 앱바 타이틀 중앙에 배치
-        centerTitle: true,
-        title: const Text(
-          '위치 선택',
-          style: TextStyle(
-              color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
-        ),
-        toolbarHeight: 45,
-        // 해당 선을 내릴때만 나오게 해줘
-        elevation: 0,
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-      ),
+          centerTitle: true,
+          title: const Text(
+            '위치 선택',
+            style: TextStyle(
+                color: Colors.black, fontSize: 17, fontWeight: FontWeight.bold),
+          ),
+          toolbarHeight: 45,
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white),
       body: Column(
         children: [
           /// 검색창
@@ -77,53 +74,15 @@ class _LocationInputState extends ConsumerState<LocationInput> {
             height: height * 0.05,
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
-              onSubmitted: (value)  {
-
-                print("@@@vlaue.length : ${value.length}");
-                if(value.length < 2){
-                  context.showSnackbarText(context, '2글자 이상 입력해주세요.');
-                  return;
-                }
-                selectNearLocation(value);
-
-              },              controller: _searchController,
+              /// 여긴 갤ㄹㄹ럭시로 테스트
+              onSubmitted: (value) async {
+                await selectNearLocation(value);
+              },
+              controller: _searchController,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                   onPressed: () async {
-                    setState(() {
-                      selectNearLocation(_searchController.text).then((_) {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) => Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.white, // 원하는 색상 설정
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(15.0)), // 원하는 모양 설정
-                            ),
-                            constraints: BoxConstraints(
-                              maxHeight:
-                                  MediaQuery.of(context).size.height * 0.4,
-                            ),
-                            child: FutureBuilder<Widget>(
-                              future: _buildSearchResultList(),
-                              builder: (context, snapshot) {
-                                if (snapshot.hasData) {
-                                  return snapshot.data!;
-                                } else if (snapshot.hasError) {
-                                  return const Center(
-                                    child: Text('오류가 발생했습니다.'),
-                                  );
-                                } else {
-                                  return const Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        );
-                      });
-                    });
+                    await selectNearLocation(_searchController.text);
                   },
                   icon: const Icon(Icons.search),
                 ),
@@ -152,18 +111,23 @@ class _LocationInputState extends ConsumerState<LocationInput> {
                 // 네이버 지도
                 NaverMap(
                   options: NaverMapViewOptions(
+                    //실내지도가 표시
                     indoorEnable: true,
+                    // 위치 버튼 표시
                     locationButtonEnable: true,
+
                     /// info : 네이버 로고 클릭했을 때 정보 뜨게해주는거 false 하면 정책 위반임
                     initialCameraPosition: NCameraPosition(
                       target: NLatLng(
                           widget.point.latitude, widget.point.longitude),
-                      zoom: 13.5,
+                      zoom: 15.5,
                     ),
                   ),
                   onMapReady: (controller) async {
                     mapController = controller;
                   },
+
+                  /// 카메라가 이동할 때
                   onCameraChange: (reason, animated) {
                     if (animated) {
                       mapController.getCameraPosition().then((cameraPosition) {
@@ -177,8 +141,10 @@ class _LocationInputState extends ConsumerState<LocationInput> {
                       });
                     }
                   },
+
+                  /// 카메라가 멈췄을 때
                   onCameraIdle: () {
-                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    //    ScaffoldMessenger.of(context).removeCurrentSnackBar();
                     setState(() {
                       // 카메라가 멈추면서 저장된 좌표로 주소를 가져옴
                       if (isMove == true && searchedPosition != null) {
@@ -191,25 +157,30 @@ class _LocationInputState extends ConsumerState<LocationInput> {
                 ),
                 Positioned(
                   // 해당 위젯을 스택 중간에 위치 시켜줘
-                  top: MediaQuery.of(context).size.height / 3.4,
+                  top: height / 4,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      /// 주소 설정 버튼 (선택한 주소를 반환)
                       GestureDetector(
                         onTap: () {
                           print('위치 선택 버튼 클릭 _address : $_address');
+
                           /// 주소가 없는 경우
                           if (_address == null) {
-                            ScaffoldMessenger.of(context)
-                                .removeCurrentSnackBar();
-                            context.showSnackbarText(context, '주소를 선택해주세요.');
+                            setState(() {
+                              infoText = '선택된 주소가 없습니다.';
+                            });
+
                             return; // 주소가 비어있으므로 메서드 종료
                           }
 
                           /// 입력된 주소가 위, 경도 값이 없을 경우 ( ex. '지하'를 포함한 주소 )
                           else if (searchedPosition == null) {
-                            context.showSnackbarText(context, '선택할 수 없는 주소 입니다.\n다른 주소를 선택해주세요.');
+                            setState(() {
+                              _addressList.clear();
+                              infoText = '선택할 수 없는 주소 입니다.\n다른 주소를 선택해주세요.';
+                            });
+
                             _searchController.clear(); // 검색창 비우기
                             return; // 주소에 대한 좌표가 없으므로 메서드 종료
                           }
@@ -220,6 +191,8 @@ class _LocationInputState extends ConsumerState<LocationInput> {
                                 "${searchedPosition!.latitude}_${_address}_${searchedPosition!.longitude}");
                           }
                         },
+
+                        ///가운대 좌표 컨테이너
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 8),
@@ -240,8 +213,8 @@ class _LocationInputState extends ConsumerState<LocationInput> {
                             children: [
                               Row(
                                 children: [
-                                   const Text(
-                                     '이 위치 선택',
+                                  const Text(
+                                    '이 위치 선택',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
@@ -277,6 +250,106 @@ class _LocationInputState extends ConsumerState<LocationInput> {
               ],
             ),
           ),
+
+          /// 검색 결과 리스트
+          const Line(),
+          Container(
+            height: _addressList.isNotEmpty ? height * 0.4 : height * 0.1,
+            decoration: const BoxDecoration(
+              color: Colors.white, // 원하는 색상 설정
+              borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(15.0)), // 원하는 모양 설정
+            ),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.4,
+            ),
+            child: (_addressList.isNotEmpty)
+                ? ListView.builder(
+                    itemCount: _addressList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Column(
+                                  children: [
+                                    SizedBox(
+                                      width: width * 0.7,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Flexible(
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 3,
+                                              text: TextSpan(
+                                                text: _addressList[index],
+                                                style: TextStyle(
+                                                  color: Colors.black,
+                                                  height: height * 0.0017,
+                                                  fontSize: height * 0.018,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    _searchController.text = _addressList[index];
+                                    setState(() {
+                                      _searchLocation(
+                                          _addressList[index].split(',')[0]);
+                                      _address = _addressList[index];
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: context.appColors
+                                        .logoColor, // Set your desired color here
+                                  ),
+                                  child: Text(
+                                    '선택',
+                                    style: TextStyle(
+                                      fontSize: width * 0.035,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                      /*      const Line(
+                              color: Colors.grey,
+                            ),*/
+                          ],
+                        ),
+                      );
+                    },
+                  )
+                : Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.search,
+                          size: width * 0.07,
+                        ),
+                        Text(
+                          ': '+infoText,
+                          style: TextStyle(
+                            fontSize: width * 0.04,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          ),
         ],
       ),
     );
@@ -284,6 +357,23 @@ class _LocationInputState extends ConsumerState<LocationInput> {
 
   /// 지정한 위치의 지명을 가져오는 메서드 (검색기능)
   Future<void> selectNearLocation(String juso) async {
+    juso = juso.trim();
+
+    print("-=-------------------------------------");
+    print("selectNearLocation 실행 juso : $juso");
+    print("-=-------------------------------------");
+
+    if (_searchController.text.length < 2 || juso.isEmpty) {
+      print('2글자 이상 입력해주세요.');
+      setState(() {
+        infoText = '2글자 이상 입력해주세요.';
+        _addressList.clear();
+      });
+      // context.showSnackbarText(context, '2글자 이상 입력해주세요.');
+
+      return;
+    }
+
     String? josuUrl = ref.read(jusoKeyProvider);
     String query = juso;
     if (query.isNotEmpty) {
@@ -313,17 +403,31 @@ class _LocationInputState extends ConsumerState<LocationInput> {
               _addressList.add(tempAddress);
             }
             setState(() {}); // _addressList 상태 업데이트
+          } else {
+            infoText = '검색 결과가 없습니다.';
           }
+
+          setState(() {});
         }).catchError((a, stackTrace) {
           log(a.toString()); // 로그찍기
+          setState(() {
+            _addressList.clear();
+            infoText = '검색 결과가 없습니다.';
+          });
           print('&& 주소 검색 오류 : $a'); // 에러 출력
         });
       } catch (e) {
         print("검색 중 오류 발생: $e");
-        showSnackBarAndClearList(context, "상세 주소를 입력해 주세요");
+        setState(() {
+          _addressList.clear();
+          infoText = '상세 주소를 입력해 주세요.';
+        });
       }
     } else {
-      showSnackBarAndClearList(context, "주소를 입력해 주세요");
+      setState(() {
+        _addressList.clear();
+        infoText = '주소를 입력해 주세요.';
+      });
     }
   }
 
@@ -449,47 +553,6 @@ class _LocationInputState extends ConsumerState<LocationInput> {
     super.dispose();
   }
 
-  // 검색 결과 리스트를 반환하는 위젯
-  Future<Widget> _buildSearchResultList() async {
-    if (_addressList.isEmpty) {
-      return const Center(
-        child: Text('검색 결과가 없습니다.'),
-      );
-    }
-    return ListView.builder(
-      itemCount: _addressList.length,
-      itemBuilder: (context, index) {
-        // print('위젯에서 받는 주소 리스트 : $_addressList');
-        return Column(
-          children: [
-            ListTile(
-              title: Text(_addressList[index]),
-              onTap: () {
-                _searchController.text = _addressList[index];
-                Navigator.of(context).pop();
-                setState(() {
-                  _searchLocation(
-                      // 검색할 때 빌딩이름을 뒤에 추가하여 리스트에 추가하였음
-                      // 사용자가 주소를 알아보기 쉽게하려고 추가해서 넣은 것
-                      // 빌딩이름까지 넣으면 검색기능이 안되길래 이렇게 하였고
-                      // 다시 _address에 대입할 때는 빌딩이름을 제외한 앞의 값만 대입
-                      _addressList[index].split(',')[0]); // ',' 이전의 부분만 선택
-                  _address = _addressList[index];
-                  _addressList.clear();
-                });
-              },
-            ),
-            Divider(
-              height: 1,
-              thickness: 1,
-              color: Colors.grey[300],
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   // 검색한 주소로 카메라를 이동시키는 메서드
   void _searchLocation(String query) async {
     if (query.isNotEmpty) {
@@ -513,25 +576,5 @@ class _LocationInputState extends ConsumerState<LocationInput> {
         zoom: 15,
       ),
     ));
-  }
-
-  // 스낵바 알림 후 리스트 비우기
-  void showSnackBarAndClearList(BuildContext context, String text) {
-    context.showSnackbarText(context, text);
-    _addressList.clear();
-  }
-
-  // 위치 권한이 없을 때 스낵바를 띄워주는 메서드
-  void _showLocationPermissionSnackBar() {
-    SnackBar snackBar = SnackBar(
-      content: const Text("위치 권한이 필요한 서비스입니다."),
-      action: SnackBarAction(
-        label: "설정으로 이동",
-        onPressed: () {
-          AppSettings.openAppSettings();
-        },
-      ),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
