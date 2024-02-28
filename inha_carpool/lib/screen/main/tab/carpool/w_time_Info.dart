@@ -4,7 +4,6 @@ import 'package:inha_Carpool/common/common.dart';
 
 import '../../../../provider/doing_carpool/doing_carpool_provider.dart';
 
-
 class CarpoolTimeInfo extends ConsumerWidget {
   final redText = '10분 전 퇴장 불가';
   final blueText = '24시간 이내 출발';
@@ -13,86 +12,99 @@ class CarpoolTimeInfo extends ConsumerWidget {
 
   const CarpoolTimeInfo({super.key});
 
+
+
   @override
   Widget build(BuildContext context, ref) {
 
+    String title = '카풀 시간 안내';
+
     final width = context.screenWidth;
 
-    return SizedBox(
-      height: 90,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return ExpansionTile(
+      title: title.text.size(width * 0.05).bold.make(),
+      children: [
+        SizedBox(
+          height: 90,
+          child: Column(
             children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      '출발 예정 카풀'
+                      Row(
+                        children: [
+                          '출발 예정 카풀'
+                              .text
+                              .size(width * 0.05)
+                              .bold
+                              .color(context.appColors.text)
+                              .make(),
+                          Icon(
+                            Icons.local_taxi_rounded,
+                            color: context.appColors.logoColor,
+                            size: width * 0.07,
+                          ),
+                        ],
+                      ),
+                      '현재 참여 중인 카풀 ${ref.watch(doingProvider).length}개'
                           .text
-                          .size(20)
-                          .bold
+                          .size(width * 0.009)
+                          .semiBold
                           .color(context.appColors.text)
                           .make(),
-                      Icon(
-                        Icons.local_taxi_rounded,
-                        color: context.appColors.logoColor,
-                        size: 23,
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_rounded,
+                            color: context.appColors.logoColor,
+                            size: width * 0.043,
+                          ),
+                          '위치 아이콘을 눌러 카풀 위치를 확인하세요!'
+                              .text
+                              .size(width * 0.009)
+                              .color(context.appColors.text)
+                              .make(),
+
+                        ],
                       ),
                     ],
                   ),
-                  '현재 참여 중인 카풀 ${ref.watch(doingProvider).length}개'
-                      .text
-                      .size(10)
-                      .semiBold
-                      .color(context.appColors.text)
-                      .make(),
-                  '위치 아이콘을 눌러주세요!'
-                      .text
-                      .size(10)
-                      .color(context.appColors.text)
-                      .make(),
-                ],
-              ),
 
-
-              /// 우축 상단 색갈별 시간 안내 위젯
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  colorTimeNotice(redText, Colors.red, context),
-                  colorTimeNotice(blueText, Colors.blue,context),
-                  colorTimeNotice(greyText, Colors.grey,context),
-                  colorTimeNotice(blackText, Colors.black,context),
+                  /// 우축 상단 색갈별 시간 안내 위젯
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      colorTimeNotice(redText, Colors.red, context, width),
+                      colorTimeNotice(blueText, Colors.blue, context, width),
+                      colorTimeNotice(greyText, Colors.grey, context, width),
+                      colorTimeNotice(blackText, Colors.black, context, width),
+                    ],
+                  )
                 ],
-              )
+              ).pOnly(left: width * 0.03, right: width * 0.03),
+
             ],
-          ).pOnly(left: width * 0.03, right: width * 0.03),
-          Line(
-            height: 1,
-            margin: const EdgeInsets.all(5),
-            color: context.appColors.logoColor,
           ),
-
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget colorTimeNotice(String text, Color color,BuildContext context) {
+  Widget colorTimeNotice(String text, Color color, BuildContext context, double width) {
     return Row(
       children: [
         Icon(
           Icons.circle,
           color: color,
-          size: 10,
+          size: width * 0.028,
         ),
-        const Width(5),
-        text.text.size(10).color(context.appColors.text).make(),
+         Width(width * 0.01),
+        text.text.size(width * 0.0075).color(context.appColors.text).make(),
       ],
     );
   }
