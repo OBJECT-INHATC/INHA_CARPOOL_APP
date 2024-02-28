@@ -88,6 +88,7 @@ class _CarpoolMapState extends ConsumerState<CarpoolMap> {
             .text
             .black
             .make(),
+        centerTitle: true,
         toolbarHeight: 45,
       ),
       body: Stack(

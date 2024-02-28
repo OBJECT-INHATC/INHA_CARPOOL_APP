@@ -42,9 +42,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
   /// 스크롤 컨트롤러
   late ScrollController _scrollController;
 
-  /// 로컬 저장소 SS
-  final storage = const FlutterSecureStorage();
-
   /// 관리자 이름, 토큰, 사용자 Auth 정보
   String admin = "";
   String token = "";
@@ -160,6 +157,7 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
           surfaceTintColor: Colors.transparent,
           toolbarHeight: 65,
           title: "$admin의 카풀".text.size(20).make(),
+          centerTitle: true,
         ),
 
         //----------------------------------------------drawer 대화상대

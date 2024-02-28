@@ -16,13 +16,10 @@ class CarpoolTimeInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-
-    String title = '카풀 시간 안내';
-
     final width = context.screenWidth;
 
     return ExpansionTile(
-      title: title.text.size(width * 0.05).bold.make(),
+      title:'카풀 시간 안내'.text.size(width * 0.05).bold.make(),
       children: [
         SizedBox(
           height: 90,
