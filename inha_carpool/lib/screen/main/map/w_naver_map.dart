@@ -90,7 +90,6 @@ class _CustomMapState extends State<CustomMap> {
     midPoint = NLatLng(midLat, midLng);
 
     zoomLevel = calculateDistance(widget.startPoint, widget.endPoint);
-
   }
 
   @override
@@ -112,9 +111,6 @@ class _CustomMapState extends State<CustomMap> {
       position:
           NLatLng(widget.startPoint.latitude, widget.startPoint.longitude),
     );
-
-
-
 
     NMarker endMarker = NMarker(
       icon: const NOverlayImage.fromAssetImage('assets/image/map/endMarker.png'),
@@ -190,8 +186,6 @@ class _CustomMapState extends State<CustomMap> {
                       ],
                     ),
         ],
-
-        // Positioned(child: PositionIcon(point: widget.startPoint, controller: mapController)),
       ],
     );
   }

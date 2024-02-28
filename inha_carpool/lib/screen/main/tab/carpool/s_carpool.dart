@@ -9,7 +9,6 @@ import 'package:inha_Carpool/screen/main/tab/carpool/w_floating_btn.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_time_Info.dart';
 
-import '../../../../common/widget/empty_list.dart';
 import '../../../../provider/doing_carpool/doing_carpool_provider.dart';
 import 'cardItem/w_point_row.dart';
 import 'cardItem/w_time_map_row.dart';
@@ -29,11 +28,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     await ref.read(doingProvider.notifier).getCarpool();
   }
 
-/*   EmptyCarpoolList(
-   isSearch: false,
-   floatingMessage: '참가하고 계신 카풀이 없습니다.\n카풀을 등록해 보세요!',
-   );*/
-
   @override
   Widget build(BuildContext context) {
     // 화면의 너비와 높이를 가져 와서 화면 비율 계산함
@@ -47,15 +41,13 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
     // 각 카드의 높이
     double cardHeight = listViewHeight * 0.3; //1101
 
-    //RecruitFloatingBtn(floatingMessage: '카풀 등록하기'),
-
     return Column(
       children: [
         /// 공지사항 위젯 호출
         NoticeBox(cardHeight, "carpool"),
 
         /// 상단에 참여중인 카풀 수와 안내문구 위젯 호출
-        const CarpoolTimeInfo(),
+         CarpoolTimeInfo(),
 
         Expanded(
           child: Container(

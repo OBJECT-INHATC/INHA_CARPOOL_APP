@@ -123,7 +123,6 @@ class _AgreementState extends State<Agreement> {
                           checkColor: const Color.fromARGB(255, 70, 100, 192),
                           // 클릭 시 체크표시 색상
                           activeColor: Colors.white,
-                          // 클릭 시 체크박스 색상
                           // 테두리
                           side: const BorderSide(
                             width: 1,

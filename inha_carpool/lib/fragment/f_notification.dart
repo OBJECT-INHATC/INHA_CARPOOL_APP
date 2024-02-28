@@ -66,6 +66,7 @@ class _NotificationListState extends ConsumerState<NotificationList> {
           height: width * 0.1,
           fit: BoxFit.contain,
         ),
+        centerTitle: true,
         actions: [
           TextButton(
             child: const Text(
