@@ -57,6 +57,7 @@ class _LocationInputState extends ConsumerState<LocationInput> {
     final width = context.screenWidth;
 
     return Scaffold(
+      resizeToAvoidBottomInset: (_addressList.isEmpty) ? true : false,
       appBar: AppBar(
           centerTitle: true,
           title: const Text(
@@ -264,73 +265,99 @@ class _LocationInputState extends ConsumerState<LocationInput> {
               maxHeight: MediaQuery.of(context).size.height * 0.4,
             ),
             child: (_addressList.isNotEmpty)
-                ? ListView.builder(
-                    itemCount: _addressList.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Column(
-                                  children: [
-                                    SizedBox(
-                                      width: width * 0.7,
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
+                ? Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _addressList.clear();
+                          infoText = '지도를 스크롤하여 위치를 선택할 수 있습니다.';
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: context.appColors
+                            .logoColor, // Set your desired color here
+                      ),
+                      child: Text(
+                        '리스트 내리기',
+                        style: TextStyle(
+                          fontSize: width * 0.035,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: _addressList.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Column(
                                         children: [
-                                          Flexible(
-                                            child: RichText(
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines: 3,
-                                              text: TextSpan(
-                                                text: _addressList[index],
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  height: height * 0.0017,
-                                                  fontSize: height * 0.018,
+                                          SizedBox(
+                                            width: width * 0.7,
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                Flexible(
+                                                  child: RichText(
+                                                    overflow: TextOverflow.ellipsis,
+                                                    maxLines: 3,
+                                                    text: TextSpan(
+                                                      text: _addressList[index],
+                                                      style: TextStyle(
+                                                        color: Colors.black,
+                                                        height: height * 0.0017,
+                                                        fontSize: height * 0.018,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-                                              ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    _searchController.text = _addressList[index];
-                                    setState(() {
-                                      _searchLocation(
-                                          _addressList[index].split(',')[0]);
-                                      _address = _addressList[index];
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: context.appColors
-                                        .logoColor, // Set your desired color here
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          _searchController.text = _addressList[index];
+                                          setState(() {
+                                            _searchLocation(
+                                                _addressList[index].split(',')[0]);
+                                            _address = _addressList[index];
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: context.appColors
+                                              .logoColor, // Set your desired color here
+                                        ),
+                                        child: Text(
+                                          '선택',
+                                          style: TextStyle(
+                                            fontSize: width * 0.035,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  child: Text(
-                                    '선택',
-                                    style: TextStyle(
-                                      fontSize: width * 0.035,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                      /*      const Line(
-                              color: Colors.grey,
-                            ),*/
-                          ],
+                            /*      const Line(
+                                    color: Colors.grey,
+                                  ),*/
+                                ],
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  )
+                    ),
+                  ],
+                )
                 : Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -340,7 +367,7 @@ class _LocationInputState extends ConsumerState<LocationInput> {
                           size: width * 0.07,
                         ),
                         Text(
-                          ': '+infoText,
+                          infoText,
                           style: TextStyle(
                             fontSize: width * 0.04,
                             fontWeight: FontWeight.bold,
@@ -412,7 +439,7 @@ class _LocationInputState extends ConsumerState<LocationInput> {
           log(a.toString()); // 로그찍기
           setState(() {
             _addressList.clear();
-            infoText = '검색 결과가 없습니다.';
+            infoText = '검색 결과가 없거나 상세 주소가 필요합니다.';
           });
           print('&& 주소 검색 오류 : $a'); // 에러 출력
         });
@@ -420,7 +447,7 @@ class _LocationInputState extends ConsumerState<LocationInput> {
         print("검색 중 오류 발생: $e");
         setState(() {
           _addressList.clear();
-          infoText = '상세 주소를 입력해 주세요.';
+          infoText = '검색 결과가 없습니다.';
         });
       }
     } else {
