@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
@@ -139,10 +138,6 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
-
-    String formattedDate = DateFormat('HH:mm').format(startTime);
 
     return GestureDetector(
       onTap: () {
@@ -156,7 +151,24 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
           backgroundColor: context.appColors.logoColor,
           surfaceTintColor: Colors.transparent,
           toolbarHeight: 65,
-          title: "$admin의 카풀".text.size(20).make(),
+          title: Column(
+            children: [
+              "$admin의 카풀".text.size(20).make(),
+              CountdownTimer(
+                endWidget: const Text(
+                  '카풀이 시작되었습니다!',
+                  style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold),
+                ),
+                endTime: startTime.millisecondsSinceEpoch,
+                textStyle: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold),
+                onEnd: () {},
+              ),
+            ],
+          ),
           centerTitle: true,
         ),
 
@@ -197,11 +209,9 @@ class _ChatroomPageState extends ConsumerState<ChatroomPage>
                           Height(3),
                         ],
                       ),
-                      '${startTime.month}월 ${startTime.day}일 $formattedDate 출발'
-                          .text
-                          .medium
-                          .size(13)
-                          .make(),
+
+
+
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 10, vertical: 10),
