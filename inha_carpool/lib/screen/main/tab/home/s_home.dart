@@ -22,7 +22,6 @@ class Home extends ConsumerStatefulWidget {
   ConsumerState<Home> createState() => _HomeState();
 }
 
-/// 6. todo : 알림 이동 페이지 추가하기  Ex 이용기록 페이지 이동
 
 class _HomeState extends ConsumerState<Home> {
   final ScrollController _scrollController = ScrollController();

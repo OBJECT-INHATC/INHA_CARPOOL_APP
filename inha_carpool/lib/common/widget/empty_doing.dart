@@ -15,7 +15,6 @@ class EmptyDoing extends ConsumerWidget {
 
   final String floatingMessage;
 
-  /// todo : 해당 페이지 리빌드 보고 최적화 필요 0227 by.상훈
   @override
   Widget build(BuildContext context, ref) {
     final height = context.screenHeight;

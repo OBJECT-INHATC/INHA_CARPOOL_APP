@@ -11,7 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../service/sv_firestore.dart';
 
 
-
+/// todo : 알림 퓨처빌더 빼자, 아니다 내가 퓨처빌더 뺸거 보고 누군가 연습용으로 뺴보삼
+///  todo : 알림 이동 페이지 추가하기  Ex 이용기록 페이지 이동
 class NotificationList extends ConsumerStatefulWidget {
   const NotificationList({Key? key}) : super(key: key);
 

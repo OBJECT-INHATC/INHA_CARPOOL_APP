@@ -12,7 +12,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/provider/stateProvider/jusogiban_api_provider.dart';
 
 /// 출-목적지의 위치 선택 페이지
-/// todo : 지도 검색 기능 파악 및 리팩토링하기 -> 모달창 ui, 성능개선 집가서 ㄱㄱ
+/// todo : 검색 하단 굉장히 조잡함.. 리팩토링 필수 (2028.02.28)
 class LocationInput extends ConsumerStatefulWidget {
   final LatLng point;
 
