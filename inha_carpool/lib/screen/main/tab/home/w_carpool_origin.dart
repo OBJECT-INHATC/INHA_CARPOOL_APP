@@ -8,13 +8,13 @@ import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/provider/stateProvider/loading_provider.dart';
 
 import '../../../../common/widget/empty_list.dart';
-import '../../../../provider/stateProvider/LatLng_provider.dart';
+import '../../../../provider/stateProvider/latlng_provider.dart';
 import '../../../../provider/stateProvider/auth_provider.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
 import '../../map/s_carpool_map.dart';
 import '../carpool/chat/s_chatroom.dart';
-import 'enum/carpoolFilter.dart';
-import 'enum/mapType.dart';
+import 'enum/carpool_filter.dart';
+import 'enum/map_type.dart';
 
 class CarpoolList extends ConsumerStatefulWidget {
   const CarpoolList({super.key, required this.carpoolList});
@@ -320,7 +320,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
         ///제한 수 3개씩 증가
         scrollLimit += 3;
 
-        if (selectedFilter == CarpoolFilter.Distance) {
+        if (selectedFilter == CarpoolFilter.distance) {
           await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(ref.read(positionProvider));
         }
 

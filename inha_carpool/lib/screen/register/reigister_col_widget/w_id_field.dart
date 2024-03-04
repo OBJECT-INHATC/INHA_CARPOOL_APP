@@ -19,10 +19,10 @@ class StudentIdInputField extends StatefulWidget {
   });
 
   @override
-  _StudentIdInputFieldState createState() => _StudentIdInputFieldState();
+  StudentIdInputFieldState createState() => StudentIdInputFieldState();
 }
 
-class _StudentIdInputFieldState extends State<StudentIdInputField> {
+class StudentIdInputFieldState extends State<StudentIdInputField> {
   int selectedIndex = 0;
   late String academy;
 

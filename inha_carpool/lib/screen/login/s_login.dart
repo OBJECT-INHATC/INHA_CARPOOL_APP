@@ -10,7 +10,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/common/util/location_handler.dart';
-import 'package:inha_Carpool/dto/UserDTO.dart';
+import 'package:inha_Carpool/dto/user_dtd.dart';
 import 'package:inha_Carpool/provider/stateProvider/yellow_provider.dart';
 import 'package:inha_Carpool/screen/register/agreement/s_agreement.dart';
 import 'package:inha_Carpool/service/api/Api_repot.dart';
@@ -20,7 +20,7 @@ import 'package:inha_Carpool/service/sv_auth.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../common/models/m_member.dart';
 import '../../provider/doing_carpool/doing_carpool_provider.dart';
-import '../../provider/stateProvider/LatLng_provider.dart';
+import '../../provider/stateProvider/latlng_provider.dart';
 import '../../provider/stateProvider/auth_provider.dart';
 import '../../provider/history/history_notifier.dart';
 import '../../provider/stateProvider/jusogiban_api_provider.dart';
@@ -101,8 +101,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       /// 이용내역 상태관리 초기화
       setHistory(memberModel.uid!);
 
-
-
       /// 경고횟수 상태관리 초기화
       setYellowCardCount(memberModel.nickName!);
 
@@ -115,9 +113,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       /// 참여중인 카풀 초기화
       setDoingCarPoolState();
 
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const MainScreen()));
       await setupInteractedMessage();
+
+      if(mounted){
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const MainScreen()));
+      }
+
     } else {
       print("로그인 안됨 + 스플래시 제거");
       FlutterNativeSplash.remove();
@@ -128,7 +130,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   void setHistory(String uid) async {
     await ref.read(historyProvider.notifier).loadHistoryData();
   }
-
 
 
   /// 경고 횟수 초기화
@@ -259,7 +260,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       print("상태관리 로그인 성별 :  ${ref.read(authProvider).gender}");
       print("상태관리 로그인 닉네임 :  ${ref.read(authProvider).nickName}");
       print("상태관리 로그인 이메일 :  ${ref.read(authProvider).email}");
-      print("상태관리 로그인 유저아이디 :  ${ref.read(authProvider).uid}");
+      print("상태관리 로그인 UID :  ${ref.read(authProvider).uid}");
       print("상태관리 로그인 유저이름 :  ${ref.read(authProvider).userName}");
     }
   }
@@ -269,10 +270,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     // 화면의 너비와 높이를 가져와서 화면 비율 계산함
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
-    // 화면 비율에 따라 폰트 크기 조정
-    // final titleFontSize = screenWidth * 0.1;
-    // final subTitleFontSize = screenWidth * 0.04;
 
     return Stack(
       children: [
@@ -519,9 +516,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
                                       String memberUser =
                                           "${uid}_${nickname}_${snapshot.docs[0].get('gender')}";
-                                      print(
-                                          "----------------------------------");
-                                      print("memberUser: $memberUser");
+                                      print("------------memberUser: $memberUser-----------------");
 
                                       ///  0207 이상훈 로그인 정보 상태관리 초기화
 
@@ -565,9 +560,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         for (var doc in querySnapshot.docs) {
                                           // 각 carId에 대해 푸시 알림을 구독합니다.
                                           String carId = doc.id;
-                                          print(
-                                              "----------------------------------");
-                                          print("carId: $carId");
+
+                                          print("---------carId: $carId------------");
 
                                           FirebaseMessaging.instance
                                               .subscribeToTopic(carId);

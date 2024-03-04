@@ -22,9 +22,9 @@ class AuthService {
           email: email, password: password))
           .user!;
 
-      if (user != null && user.emailVerified) {
+      if (user.emailVerified) {
         return true;
-      } else if (user != null && !user.emailVerified) {
+      } else if (!user.emailVerified) {
         return "이메일 인증이 완료되지 않은 사용자 입니다.";
       }
     } on FirebaseAuthException catch (e) {
@@ -43,11 +43,10 @@ class AuthService {
 
       print("유저 데이터 저장");
 
-      if (user != null) {
-        /// Fire Store 사용자 정보 저장
-        await FireStoreService(uid: user.uid).savingUserData(userName,nickName, email, "dummy", gender);
-        return true;
-      }
+      /// Fire Store 사용자 정보 저장
+      await FireStoreService(uid: user.uid).savingUserData(userName,nickName, email, "dummy", gender);
+      return true;
+
     } on FirebaseAuthException catch (e) {
       return e.message;
     }

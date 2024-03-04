@@ -16,10 +16,10 @@ class DateTimePickerWidget extends StatefulWidget {
   });
 
   @override
-  _DateTimePickerWidgetState createState() => _DateTimePickerWidgetState();
+  DateTimePickerWidgetState createState() => DateTimePickerWidgetState();
 }
 
-class _DateTimePickerWidgetState extends State<DateTimePickerWidget> {
+class DateTimePickerWidgetState extends State<DateTimePickerWidget> {
   bool _isTimePicker = false;
 
   @override

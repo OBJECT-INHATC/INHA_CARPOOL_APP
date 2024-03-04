@@ -6,7 +6,7 @@ import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/service/api/Api_topic.dart';
 
 import '../common/data/preference/prefs.dart';
-import '../dto/TopicDTO.dart';
+import '../dto/topic_dto.dart';
 
 enum NotificationType { chat, status }
 

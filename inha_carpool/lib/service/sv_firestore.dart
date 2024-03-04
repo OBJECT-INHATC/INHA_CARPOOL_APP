@@ -248,9 +248,7 @@ class FireStoreService {
   exitCarpool(String carId, String nickName, String uid, String gender) async {
     DocumentReference carpoolDocRef = carpoolCollection.doc(carId);
 
-    print("${uid}_${nickName}_$gender");
-
-    /// 0902 김영재. 마지막 사람이 방을 나가면 status를 true로 변경
+    /// 마지막 사람이 방을 나가면 status를 true로 변경
     await carpoolDocRef.update({
       'members': FieldValue.arrayRemove(['${uid}_${nickName}_$gender']),
       'nowMember': FieldValue.increment(-1),
@@ -320,7 +318,7 @@ class FireStoreService {
   }
 
   ///  사용자가 현재 참가한 카풀이 존재하는지 확인하는 메서드
-  Future<bool> StartTimeInCarpool(
+  Future<bool> startTimeInCarpool(
       String uid, String nickName, String gender) async {
     DateTime currentTime = DateTime.now();
     int currentTimeMillis = currentTime.millisecondsSinceEpoch;
@@ -348,7 +346,7 @@ class FireStoreService {
   }
 
   Future<int> getCarpoolStartTime(String carId) async {
-    if (carId == '' || carId == null) return 0;
+    if (carId == '') return 0;
     DocumentSnapshot carpool =
         await FirebaseFirestore.instance.collection('carpool').doc(carId).get();
 

@@ -3,13 +3,13 @@ import 'package:inha_Carpool/common/common.dart';
 
 class PointInfo extends StatelessWidget {
 
-  final detailPoint;
-  final  pointName;
+  final String detailPoint;
+  final String pointName;
 
   final bool isStart;
   final Icon icon;
 
-  const PointInfo({super.key, this.detailPoint, this.pointName, required this.icon, required this.isStart});
+  const PointInfo({super.key, required this.detailPoint, required this.pointName, required this.icon, required this.isStart});
 
   @override
   Widget build(BuildContext context) {

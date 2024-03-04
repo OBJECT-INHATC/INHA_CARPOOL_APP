@@ -5,7 +5,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/main/map/w_icon_button.dart';
-import 'package:inha_Carpool/screen/main/tab/home/enum/mapType.dart';
+import 'package:inha_Carpool/screen/main/tab/home/enum/map_type.dart';
 
 /// 초기 zoom 값은 직선거리를 기준으로 계산하여 설정함 변수 -> zoomLevel (0212 이상훈)
 class CustomMap extends StatefulWidget {

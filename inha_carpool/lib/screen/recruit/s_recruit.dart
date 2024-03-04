@@ -9,12 +9,12 @@ import 'package:inha_Carpool/common/util/location_handler.dart';
 import 'package:inha_Carpool/provider/stateProvider/auth_provider.dart';
 import 'package:inha_Carpool/screen/main/s_main.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
-import 'package:inha_Carpool/screen/recruit/w_select_dateTime.dart';
+import 'package:inha_Carpool/screen/recruit/w_select_datetime.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_gender.dart';
 import 'package:inha_Carpool/screen/recruit/w_recruit_location.dart';
 import 'package:inha_Carpool/screen/recruit/w_select_memebers_count.dart';
 
-import '../../common/widget/LodingContainer.dart';
+import '../../common/widget/loding_container.dart';
 import '../../provider/doing_carpool/doing_carpool_provider.dart';
 
 
@@ -99,8 +99,7 @@ class _RecruitPageState extends ConsumerState<RecruitPage> {
     LocationInputWidget startPointInput;
     LocationInputWidget endPointInput;
 
-    final screenWidth = MediaQuery.of(context).size.width;
-    final screenHeight = MediaQuery.of(context).size.height;
+    final screenHeight = context.screenHeight;
 
     final carpoolProvider = ref.watch(doingProvider.notifier);
 

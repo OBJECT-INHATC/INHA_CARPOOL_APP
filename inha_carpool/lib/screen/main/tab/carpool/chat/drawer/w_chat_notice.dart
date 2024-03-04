@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
 
 class ChatNotice extends StatelessWidget {
-  const ChatNotice({Key? key});
+  const ChatNotice({super.key});
 
   @override
   Widget build(BuildContext context) {

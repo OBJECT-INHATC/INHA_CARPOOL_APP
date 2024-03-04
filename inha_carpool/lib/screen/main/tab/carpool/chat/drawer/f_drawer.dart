@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/data/preference/prefs.dart';
-import 'package:inha_Carpool/dto/TopicDTO.dart';
+import 'package:inha_Carpool/dto/topic_dto.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 
 import '../../../../../../common/models/m_carpool.dart';
@@ -12,7 +12,7 @@ import '../../../../../../provider/stateProvider/auth_provider.dart';
 import '../../../../../../provider/doing_carpool/doing_carpool_provider.dart';
 import '../../../../../../service/api/Api_topic.dart';
 import '../../../../../../service/sv_firestore.dart';
-import '../../../../../dialog/d_complainAlert.dart';
+import '../../../../../dialog/d_complain_alert.dart';
 import '../../../../s_main.dart';
 import 'w_chat_notice.dart';
 import 'w_location_align.dart';

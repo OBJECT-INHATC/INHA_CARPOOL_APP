@@ -26,10 +26,10 @@ class LocationInputWidget extends StatefulWidget {
       required this.detailController});
 
   @override
-  _LocationInputWidgetState createState() => _LocationInputWidgetState();
+  LocationInputWidgetState createState() => LocationInputWidgetState();
 }
 
-class _LocationInputWidgetState extends State<LocationInputWidget> {
+class LocationInputWidgetState extends State<LocationInputWidget> {
   String get detailControllerText =>
       widget.detailController.text;
 

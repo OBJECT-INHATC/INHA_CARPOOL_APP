@@ -8,7 +8,7 @@ import 'package:inha_Carpool/common/data/preference/prefs.dart';
 import 'package:inha_Carpool/common/database/d_chat_dao.dart';
 import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:inha_Carpool/common/widget/w_messagetile.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_splash_Img_opacity.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/chat/w_splash_img_opacity.dart';
 import 'package:inha_Carpool/service/sv_firestore.dart';
 
 import '../../../../../provider/stateProvider/auth_provider.dart';

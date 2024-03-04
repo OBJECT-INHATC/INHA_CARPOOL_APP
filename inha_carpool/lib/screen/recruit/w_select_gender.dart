@@ -17,10 +17,10 @@ class GenderSelectorWidget extends StatefulWidget {
   });
 
   @override
-  _GenderSelectorWidgetState createState() => _GenderSelectorWidgetState();
+  GenderSelectorWidgetState createState() => GenderSelectorWidgetState();
 }
 
-class _GenderSelectorWidgetState extends State<GenderSelectorWidget> {
+class GenderSelectorWidgetState extends State<GenderSelectorWidget> {
 
   final String anyone = '무관';
 

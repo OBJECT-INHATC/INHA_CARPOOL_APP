@@ -10,10 +10,10 @@ class Agreement extends StatefulWidget {
   const Agreement({Key? key}) : super(key: key);
 
   @override
-  _AgreementState createState() => _AgreementState();
+  AgreementState createState() => AgreementState();
 }
 
-class _AgreementState extends State<Agreement> {
+class AgreementState extends State<Agreement> {
   bool isAllAgreed = false; // "전체 동의" 상태를 저장 변수
 
   // 약관 동의 목록 리스트
@@ -292,8 +292,8 @@ class _AgreementState extends State<Agreement> {
   }
 }
 
-class agreementRow extends StatelessWidget {
-  const agreementRow({
+class AgreementRow extends StatelessWidget {
+  const AgreementRow({
     super.key,
     required List<Map<String, dynamic>> agreementList,
     required this.width,

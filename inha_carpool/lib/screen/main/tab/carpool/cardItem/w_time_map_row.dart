@@ -3,7 +3,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/models/m_carpool.dart';
 
 import '../../../map/s_carpool_map.dart';
-import '../../home/enum/mapType.dart';
+import '../../home/enum/map_type.dart';
 
 class TimeAndMapInfo extends StatelessWidget {
    const TimeAndMapInfo({

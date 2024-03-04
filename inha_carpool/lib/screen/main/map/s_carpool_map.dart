@@ -7,7 +7,7 @@ import 'package:inha_Carpool/screen/main/map/w_enter_button.dart';
 import 'package:inha_Carpool/screen/main/map/w_map_info.dart';
 import 'package:inha_Carpool/screen/main/map/w_naver_map.dart';
 
-import '../tab/home/enum/mapType.dart';
+import '../tab/home/enum/map_type.dart';
 
 class CarpoolMap extends ConsumerStatefulWidget {
   final LatLng startPoint;

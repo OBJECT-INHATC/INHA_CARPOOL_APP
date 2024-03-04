@@ -6,7 +6,7 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/Profile/w_profile.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_category.dart';
 import 'package:inha_Carpool/screen/main/tab/mypage/w_list_item.dart';
-import 'package:inha_Carpool/screen/main/tab/mypage/w_version_copyRight.dart';
+import 'package:inha_Carpool/screen/main/tab/mypage/w_version_copyright.dart';
 import 'package:inha_Carpool/service/api/Api_user.dart';
 import 'package:inha_Carpool/service/sv_fcm.dart';
 

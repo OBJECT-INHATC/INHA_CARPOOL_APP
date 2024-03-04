@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/screen/dialog/d_complain_show.dart';
 
-import '../../dto/ReportRequstDTO.dart';
+import '../../dto/report_requst_dto.dart';
 import '../../service/api/Api_repot.dart';
 import 'd_complain_complete.dart';
 

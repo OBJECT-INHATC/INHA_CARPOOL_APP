@@ -2,7 +2,6 @@ import 'package:inha_Carpool/common/models/m_chat.dart';
 import 'package:sembast/sembast.dart';
 import 'd_database.dart';
 
-/// 0828 서은율, 한승완
 /// Local Chat DataBase DAO - Sembast
 class ChatDao {
   static const String folderName = "chat";
@@ -66,14 +65,11 @@ class ChatDao {
 
     print(recordSnapshots.length);
 
-    int i =1;
-
     for (var snapshot in recordSnapshots) {
       final chatMessage = ChatMessage.fromMap(snapshot.value, carId);
       chatMessage.id = snapshot.key;
       // 각 ChatMessage의 필드를 프린트합니다.
       print('Message: ${chatMessage.message}');
-      i++;
     }
   }
 

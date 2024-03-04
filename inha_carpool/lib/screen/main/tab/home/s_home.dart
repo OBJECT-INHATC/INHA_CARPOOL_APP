@@ -3,16 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/provider/stateProvider/LatLng_provider.dart';
+import 'package:inha_Carpool/provider/stateProvider/latlng_provider.dart';
 import 'package:inha_Carpool/provider/carpool/state.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
 import 'package:inha_Carpool/screen/main/tab/home/w_carpool_origin.dart';
 
-import '../../../../common/widget/LodingContainer.dart';
+import '../../../../common/widget/loding_container.dart';
 import '../../../../provider/carpool/carpool_notifier.dart';
 import '../../../../provider/stateProvider/loading_provider.dart';
-import 'btn_floating/w_timer.dart';
-import 'enum/carpoolFilter.dart';
+import 'enum/carpool_filter.dart';
+import 'timer/w_timer.dart';
 
 class Home extends ConsumerStatefulWidget {
   //내 정보
@@ -131,7 +131,7 @@ class _HomeState extends ConsumerState<Home> {
                               value: option,
                               // DropdownMenuItem의 child는 Text 위젯입니다.
                               child: Text(
-                                  option == CarpoolFilter.Time ? '시간순' : '거리순'),
+                                  option == CarpoolFilter.time ? '시간순' : '거리순'),
                             );
                           }).toList(),
                         ),
@@ -191,7 +191,7 @@ class _HomeState extends ConsumerState<Home> {
           .read(carpoolProvider.notifier)
           .searchCarpool(value.toLowerCase());
 
-      if (selectedFilter == CarpoolFilter.Distance) {
+      if (selectedFilter == CarpoolFilter.distance) {
         await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPosition);
       }
 
@@ -221,7 +221,7 @@ class _HomeState extends ConsumerState<Home> {
     }
 
     await ref.read(carpoolProvider.notifier).loadCarpoolTimeBy();
-    if (selectedFilter == CarpoolFilter.Distance) {
+    if (selectedFilter == CarpoolFilter.distance) {
       /// 거리순 정렬일시 거리순으로 정렬
       await ref.read(carpoolProvider.notifier).loadCarpoolNearBy(myPosition);
     }
@@ -240,8 +240,8 @@ class _HomeState extends ConsumerState<Home> {
 
   /// 필터링 옵션
   void _handleFilterChange(CarpoolFilter? newValue) async {
-    selectedFilter = newValue ?? CarpoolFilter.Time;
-    (selectedFilter == CarpoolFilter.Time)
+    selectedFilter = newValue ?? CarpoolFilter.time;
+    (selectedFilter == CarpoolFilter.time)
         ? await ref.read(carpoolProvider.notifier).loadCarpoolStateTimeBy()
         : await ref
             .read(carpoolProvider.notifier)

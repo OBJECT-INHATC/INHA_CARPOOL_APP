@@ -2,7 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/common/common.dart';
 
-import '../../../../../dto/ReportRequstDTO.dart';
+import '../../../../../dto/report_requst_dto.dart';
 import '../../../../../service/api/Api_repot.dart';
 import '../../../../dialog/d_complain_complete.dart';
 import '../../../../dialog/d_complain_show.dart';
@@ -33,7 +33,6 @@ class _FeedBackPageState extends State<FeedBackPage> {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
     return GestureDetector(

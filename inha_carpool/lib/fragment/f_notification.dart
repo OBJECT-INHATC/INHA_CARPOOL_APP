@@ -11,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../service/sv_firestore.dart';
 
 
-/// todo : 알림 퓨처빌더 빼자, 아니다 내가 퓨처빌더 뺸거 보고 누군가 연습용으로 뺴보삼
-///  todo : 알림 이동 페이지 추가하기  Ex 이용기록 페이지 이동
+/// todo : 알림 퓨처빌더 빼자, 다른 곳에서 퓨처빌더 뺸거 보고 누군가 연습용으로 뺴보삼 0216 이상훈
+///  todo : 알림받고서 이동할 수 있는 페이지 추가하기  Ex 이용기록 페이지 이동
 class NotificationList extends ConsumerStatefulWidget {
   const NotificationList({Key? key}) : super(key: key);
 
@@ -110,8 +110,8 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                 itemBuilder: (c, i) {
                   /// 알림 클릭 이벤트
                   return Dismissible(
-                    key: Key(notificationList![i].title! +
-                        notificationList[i].body! +
+                    key: Key(notificationList![i].title +
+                        notificationList[i].body +
                         notificationList[i].time.toString()),
                     //오른쪽으로만 스와이프 가능
                     direction: DismissDirection.endToStart,
@@ -120,8 +120,8 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                         // 알림 리스트 해당 알림 삭제
                         final deletedItem = notificationList.removeAt(i);
                           // 알림 제거
-                          AlarmDao().deleteById(deletedItem.title! +
-                              deletedItem.body! +
+                          AlarmDao().deleteById(deletedItem.title +
+                              deletedItem.body +
                               deletedItem.time.toString());
                       });
                     },
@@ -139,16 +139,16 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                       splashColor: Colors.blue.withOpacity(0.5),
                       onTap: () async {
                         // 알림 타입이 1이면 해당 채팅방 이동
-                        if (notificationList![i].type == "chat" ||
+                        if (notificationList[i].type == "chat" ||
                             notificationList[i].type == "status") {
                           AlarmDao().deleteById(
-                            notificationList[i].title! +
-                                notificationList[i].body! +
+                            notificationList[i].title +
+                                notificationList[i].body +
                                 notificationList[i].time.toString(),
                           );
                           // 해당 카풀방의 startTime 정보를 불러옵니다.
                           var carpoolStartTime = await FireStoreService()
-                              .getCarpoolStartTime(notificationList[i].carId!);
+                              .getCarpoolStartTime(notificationList[i].carId);
 
                           // 현재 시간을 밀리초 단위의 epoch time으로 변환합니다.
                           var currentTime = DateTime.now().millisecondsSinceEpoch;
@@ -167,7 +167,7 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ChatroomPage(
-                                  carId: notificationList[i].carId!,
+                                  carId: notificationList[i].carId,
                                 ),
                               ),
                             );
@@ -175,8 +175,8 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                           // 알람 타입이 카풀 완료 알람일 시
                         } else if (notificationList[i].type == "carpoolDone") {
                           AlarmDao().deleteById(
-                            notificationList[i].title! +
-                                notificationList[i].body! +
+                            notificationList[i].title +
+                                notificationList[i].body +
                                 notificationList[i].time.toString(),
                           );
                           // 알림 리스트 스택 제거
@@ -211,7 +211,7 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                                   ),
                                   tileColor: Colors.white,
                                   // 알림 타입이 1이면 채팅 아이콘, 나머지 차량 아이콘
-                                  leading: notificationList![i].type == "chat"
+                                  leading: notificationList[i].type == "chat"
                                       ? const Icon(Icons.chat, color: Colors.blue)
                                       : const Icon(Icons.notifications,
                                           color: Colors.blue),
@@ -230,7 +230,7 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                                           DateFormat('yyyy-MM-dd HH:mm')
                                               .format(DateTime
                                                   .fromMillisecondsSinceEpoch(
-                                                      notificationList[i].time!))
+                                                      notificationList[i].time))
                                               .toString(),
                                           style: const TextStyle(
                                               fontSize: 12, color: Colors.grey),
@@ -250,8 +250,8 @@ class _NotificationListState extends ConsumerState<NotificationList> {
                                             notificationList.removeAt(i);
                                           // 알림 제거
                                           AlarmDao().deleteById(
-                                              deletedItem.title! +
-                                                  deletedItem.body! +
+                                              deletedItem.title +
+                                                  deletedItem.body +
                                                   deletedItem.time.toString());
                                       });
                                     },

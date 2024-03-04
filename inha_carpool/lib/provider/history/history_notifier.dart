@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/provider/stateProvider/auth_provider.dart';
 
-import '../../../../../dto/HistoryRequestDTO.dart';
+import '../../../../../dto/history_request_dto.dart';
 import '../../../../../service/api/Api_repot.dart';
 
 /// 이용기록을 관리하는 상태 0221 이상훈
@@ -40,6 +40,8 @@ class HistoryStateNotifier extends StateNotifier<List<HistoryRequestDTO>> {
         final historyList = histories
             .map((data) => HistoryRequestDTO.fromJson(data))
             .toList();
+
+        print("카풀 이용 내역 횟수 : ${historyList.length}");
 
         historyList.sort((a, b) => b.startTime.compareTo(a.startTime));
 

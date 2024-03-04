@@ -7,7 +7,7 @@ import 'package:inha_Carpool/common/widget/empty_doing.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_floating_btn.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/w_notice.dart';
-import 'package:inha_Carpool/screen/main/tab/carpool/w_time_Info.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/w_time_info.dart';
 
 import '../../../../provider/doing_carpool/doing_carpool_provider.dart';
 import 'cardItem/w_point_row.dart';
@@ -143,10 +143,11 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
 
                                           // 출발지 정보
                                           PointInfo(
+
                                             pointName:
-                                                carpoolList[i].startPointName,
+                                                carpoolList[i].startPointName!,
                                             detailPoint:
-                                                carpoolList[i].startDetailPoint,
+                                                carpoolList[i].startDetailPoint!,
                                             icon: const Icon(
                                                 Icons.circle_outlined),
                                             isStart: true,
@@ -155,9 +156,9 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
                                           // /도착지 정보
                                           PointInfo(
                                             pointName:
-                                                carpoolList[i].endPointName,
+                                                carpoolList[i].endPointName!,
                                             detailPoint:
-                                                carpoolList[i].endDetailPoint,
+                                                carpoolList[i].endDetailPoint!,
                                             icon: const Icon(Icons.circle),
                                             isStart: false,
                                           ),

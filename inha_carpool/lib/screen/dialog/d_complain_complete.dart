@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ComplainComplete extends StatefulWidget {
   final bool isReport;
 
-  const ComplainComplete({required this.isReport, Key? key});
+  const ComplainComplete({super.key, required this.isReport});
 
   @override
   State<ComplainComplete> createState() => _ComplainCompleteState();

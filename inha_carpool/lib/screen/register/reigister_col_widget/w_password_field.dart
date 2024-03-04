@@ -16,10 +16,10 @@ class PasswordInputField extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _PasswordInputFieldState createState() => _PasswordInputFieldState();
+  PasswordInputFieldState createState() => PasswordInputFieldState();
 }
 
-class _PasswordInputFieldState extends State<PasswordInputField> {
+class PasswordInputFieldState extends State<PasswordInputField> {
   late String password = '';
   late String checkPassword = '';
   late bool isPasswordMatch;

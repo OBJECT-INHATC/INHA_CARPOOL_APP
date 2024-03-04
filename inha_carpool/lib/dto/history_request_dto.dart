@@ -1,5 +1,5 @@
-class HistoryRequestDTO {
 
+class HistoryRequestDTO {
   final String carPoolId;
   final String admin;
   final String member1;

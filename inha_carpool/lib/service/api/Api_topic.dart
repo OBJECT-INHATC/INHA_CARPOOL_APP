@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:inha_Carpool/dto/TopicDTO.dart';
+import 'package:inha_Carpool/dto/topic_dto.dart';
 
 import '../../common/constants.dart';
 

@@ -13,6 +13,7 @@ class TabNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Navigator(
         key: navigatorKey,
         onGenerateRoute: (routeSettings) {

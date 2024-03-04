@@ -8,7 +8,7 @@ import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import '../../../../provider/stateProvider/auth_provider.dart';
 import '../../map/s_carpool_map.dart';
 import '../carpool/chat/s_chatroom.dart';
-import 'enum/mapType.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
+import 'enum/map_type.dart'; // DocumentSnapshot를 사용하기 위해 필요한 패키지
 
 class CarpoolListItem extends ConsumerStatefulWidget {
   final AsyncSnapshot<List<DocumentSnapshot>> snapshot;
@@ -111,7 +111,7 @@ class _CarpoolListItemState extends ConsumerState<CarpoolListItem> {
                   int maxMember = carpoolData['maxMember'];
 
                   String currentUser =
-                      '${uid}_${nickName}_${gender}';
+                      '${uid}_${nickName}_$gender';
                   if (carpoolData['members'].contains(currentUser)) {
                     // 이미 참여한 경우
                     if (carpoolData['admin'] == currentUser) {

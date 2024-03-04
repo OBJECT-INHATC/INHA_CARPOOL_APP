@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/provider/carpool/carpool_notifier.dart';
-import 'package:inha_Carpool/provider/doing_carpool/doing_carpool_provider.dart';
 import 'package:inha_Carpool/provider/stateProvider/loading_provider.dart';
 
 import '../../screen/main/tab/carpool/w_floating_btn.dart';
@@ -23,7 +22,6 @@ class EmptyCarpoolList extends ConsumerWidget {
 
     final isSearchState = ref.watch(searchProvider);
     final carpoolState = ref.watch(carpoolProvider);
-    final doingCarpoolState = ref.watch(doingProvider);
 
     final height = context.screenHeight;
 

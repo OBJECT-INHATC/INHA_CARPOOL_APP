@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nav/dialog/dialog.dart';
 
 import '../../common/common.dart';
-import '../../screen/dialog/simple_result.dart';
+import '../../screen/dialog/d_simple_result.dart';
 
 
 class MessageDialog extends DialogWidget<SimpleResult> {

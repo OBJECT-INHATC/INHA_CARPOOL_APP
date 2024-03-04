@@ -9,10 +9,10 @@ class ProFile extends ConsumerStatefulWidget {
   const ProFile({Key? key}) : super(key: key);
 
   @override
-  _ProFileState createState() => _ProFileState();
+  ProFileState createState() => ProFileState();
 }
 
-class _ProFileState extends ConsumerState<ProFile> {
+class ProFileState extends ConsumerState<ProFile> {
 
 
   @override
@@ -59,5 +59,5 @@ class _ProFileState extends ConsumerState<ProFile> {
     );
   }
 
-  _ProFileState();
+  ProFileState();
 }

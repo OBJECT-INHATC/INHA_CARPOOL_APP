@@ -3,7 +3,6 @@ import 'package:inha_Carpool/common/models/m_alarm.dart';
 import 'package:sembast/sembast.dart';
 import 'd_database.dart';
 
-/// 0831 한승완
 /// Local Alarm DataBase DAO - Sembast
 class AlarmDao {
   static const String folderName = "alarm";

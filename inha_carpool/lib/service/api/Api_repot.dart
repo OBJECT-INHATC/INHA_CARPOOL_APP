@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:inha_Carpool/common/common.dart';
-import 'package:inha_Carpool/dto/HistoryRequestDTO.dart';
+import 'package:inha_Carpool/dto/history_request_dto.dart';
 
-import '../../dto/ReportRequstDTO.dart';
+import '../../dto/report_requst_dto.dart';
 
 class ApiService {
   final String baseUrl = dotenv.env['BASE_URL']!; // API 서버의 URL
@@ -51,34 +51,7 @@ class ApiService {
     }
   }
 
-  // 건의사항 저장
-  // Future<bool> saveSuggest(ReportRequstDTO reportRequstDTO) async {
-  //   const String apiUrl = '$baseUrl/report/saveSuggestion';
-  //
-  //   // ReportRequstDTO 객체를 JSON 문자열로 변환
-  //   final String requestBody = jsonEncode(reportRequstDTO);
-  //
-  //   try {
-  //     final response = await http.post(
-  //       Uri.parse(apiUrl),
-  //       headers: <String, String>{
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //       },
-  //       body: requestBody,
-  //     );
-  //     // 성공적으로 API 요청을 보냈을 때 처리할 코드
-  //
-  //     print('API Response: ${utf8.decode(response.body.runes.toList())}');
-  //     if (response.statusCode == 200) {
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   }catch(e){
-  //     print(e);
-  //     return false;
-  //   }
-  // }
+
 
 
   /// 이용 내역 (저장)

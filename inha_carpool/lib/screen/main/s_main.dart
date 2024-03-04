@@ -175,7 +175,7 @@ class MainScreenState extends ConsumerState<MainScreen>
   @override
   Widget build(BuildContext context) {
 
-    final width = MediaQuery.of(context).size.width;
+    final width = context.screenWidth;
 
 
     // WillPopScope : 뒤로가기 버튼을 눌렀을 때의 동작을 정의
@@ -210,7 +210,6 @@ class MainScreenState extends ConsumerState<MainScreen>
           leadingWidth: 170,
           actions: [
             Consumer(builder: (context, ref, child) {
-              bool isCheckNewAlarm = ref.watch(isPushOnAlarm);
               return Stack(
                 children: [
                   IconButton(

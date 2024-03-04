@@ -10,7 +10,7 @@ import '../../../../../common/models/m_carpool.dart';
 import '../../../../../common/util/addMember_Exception.dart';
 import '../../../provider/doing_carpool/doing_carpool_provider.dart';
 import '../../../service/sv_carpool.dart';
-import '../../../../../dto/TopicDTO.dart';
+import '../../../../../dto/topic_dto.dart';
 import '../../../provider/stateProvider/auth_provider.dart';
 import '../../../../../service/api/Api_topic.dart';
 import '../../../../../service/sv_firestore.dart';

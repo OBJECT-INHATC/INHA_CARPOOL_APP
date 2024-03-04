@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:inha_Carpool/service/api/Api_repot.dart';
 
-import '../../dto/ReportRequstDTO.dart';
+import '../../dto/report_requst_dto.dart';
 import '../../service/sv_auth.dart';
 import '../login/s_login.dart';
 
@@ -16,7 +16,7 @@ class DeleteAuthDialog extends StatefulWidget {
 }
 
 class _DeleteAuthDialogState extends State<DeleteAuthDialog> {
-  TextEditingController _reasonController = TextEditingController();
+  final TextEditingController _reasonController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

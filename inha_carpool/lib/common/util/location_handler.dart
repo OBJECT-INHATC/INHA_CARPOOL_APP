@@ -11,7 +11,8 @@ class LocationHandler {
 
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
-      showLocationPermissionSnackBar(context);
+
+        showLocationPermissionSnackBar(context);
       return null;
     }
 
