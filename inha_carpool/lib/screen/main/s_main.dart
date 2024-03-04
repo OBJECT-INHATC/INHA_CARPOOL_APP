@@ -4,7 +4,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:inha_Carpool/provider/carpool/carpool_notifier.dart';
+import 'package:inha_Carpool/provider/doing_carpool/doing_carpool_provider.dart';
 import 'package:inha_Carpool/screen/main/tab/carpool/chat/s_chatroom.dart';
+import 'package:inha_Carpool/screen/main/tab/carpool/w_floating_btn.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_item.dart';
 import 'package:inha_Carpool/screen/main/tab/tab_navigator.dart';
 
@@ -13,6 +16,7 @@ import '../../common/data/preference/prefs.dart';
 import '../../fragment/f_notification.dart';
 import '../../provider/stateProvider/notification_provider.dart';
 import '../../service/sv_firestore.dart';
+import '../recruit/s_recruit.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   // 마이페이지 이동 변수
@@ -177,6 +181,9 @@ class MainScreenState extends ConsumerState<MainScreen>
 
     final width = context.screenWidth;
 
+    final carpool = ref.read(carpoolProvider);
+    final isDoingCarpool = ref.read(doingProvider);
+
 
     // WillPopScope : 뒤로가기 버튼을 눌렀을 때의 동작을 정의
     return WillPopScope(
@@ -266,6 +273,9 @@ class MainScreenState extends ConsumerState<MainScreen>
             }),
           ],
         ),
+        floatingActionButton: _currentTab == TabItem.home && carpool.isNotEmpty && isDoingCarpool.isEmpty
+            ? const RecruitFloatingBtn(floatingMessage: "카풀 찾기")
+            : null,
         extendBody: extendBody,
         body: Padding(
           padding: EdgeInsets.only(
