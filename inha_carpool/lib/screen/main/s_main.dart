@@ -30,7 +30,6 @@ class MainScreen extends ConsumerStatefulWidget {
 
 class MainScreenState extends ConsumerState<MainScreen>
     with SingleTickerProviderStateMixin {
-
   late TabItem _currentTab;
 
   //시작 화면 지정
@@ -86,9 +85,6 @@ class MainScreenState extends ConsumerState<MainScreen>
     }
   }
 
-
-
-
   /// 앱 실행 시 초기화 - 알림 설정
   void initializeNotification(BuildContext context) async {
     final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -96,15 +92,15 @@ class MainScreenState extends ConsumerState<MainScreen>
     // Android용 알림 채널 생성
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(const AndroidNotificationChannel(
-      'high_importance_channel',
-      'high_importance_notification',
-      importance: Importance.max,
-    ));
+          'high_importance_channel',
+          'high_importance_notification',
+          importance: Importance.max,
+        ));
 
     DarwinInitializationSettings iosInitializationSettings =
-    const DarwinInitializationSettings(
+        const DarwinInitializationSettings(
       requestAlertPermission: true, // 알림 권한 요청: Alert
       requestBadgePermission: true, // 알림 권한 요청: Badge
       requestSoundPermission: true, // 알림 권한 요청: Sound
@@ -122,20 +118,20 @@ class MainScreenState extends ConsumerState<MainScreen>
         // 알림을 클릭하면 해당 알림의 페이로드를 출력
         /// 페이로드는 송신측에서 추가로 담아주는데 내가 이번에 추가함 깃 커밋 내역 보셈 24.01.30 이상훈
         final carId = notification.payload;
-        if(carId == null) return;
-        var carpoolStartTime = await FireStoreService()
-            .getCarpoolStartTime(carId);
+        if (carId == null) return;
+        var carpoolStartTime =
+            await FireStoreService().getCarpoolStartTime(carId);
 
         // 현재 시간을 밀리초 단위의 epoch time으로 변환합니다.
         var currentTime = DateTime.now().millisecondsSinceEpoch;
         if (currentTime > carpoolStartTime) {
           // 현재 시간이 carpoolStartTime을 넘었다면, 카풀이 이미 시작되었으므로 접근을 막습니다.
-          if(!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('이미 끝난 카풀입니다.')));
+          if (!mounted) return;
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('이미 끝난 카풀입니다.')));
           Navigator.pop(context);
         } else {
-          if(!mounted) return;
+          if (!mounted) return;
           // 특정 채팅방 이동
           Navigator.push(
             context,
@@ -150,24 +146,21 @@ class MainScreenState extends ConsumerState<MainScreen>
     );
   }
 
-
-
   @override
   void initState() {
     super.initState();
+
     /// 앱 알림 설정 초기화
     initializeNotification(context);
 
     Prefs.chatRoomOnRx.set(true);
     Prefs.chatRoomCarIdRx.set("");
 
-
     print("=========메인====================");
     initNavigatorKeys();
     removeSplash();
 
     // 각 텝의 네비게이터 초기화
-
   }
 
   void removeSplash() async {
@@ -178,12 +171,10 @@ class MainScreenState extends ConsumerState<MainScreen>
 
   @override
   Widget build(BuildContext context) {
-
     final width = context.screenWidth;
 
     final carpool = ref.read(carpoolProvider);
     final isDoingCarpool = ref.read(doingProvider);
-
 
     // WillPopScope : 뒤로가기 버튼을 눌렀을 때의 동작을 정의
     return WillPopScope(
@@ -230,12 +221,11 @@ class MainScreenState extends ConsumerState<MainScreen>
                         ),
                       );
                     },
-                    icon:  const Icon(
+                    icon: const Icon(
                       Icons.notifications_outlined,
                       size: 30,
                       color: Colors.black,
                     ),
-
                   ),
                   if (ref.watch(isPushOnAlarm))
                     Positioned(
@@ -257,7 +247,7 @@ class MainScreenState extends ConsumerState<MainScreen>
                               ),
                             );
                           },
-                          child:  Text(
+                          child: Text(
                             'new',
                             style: TextStyle(
                               color: Colors.white,
@@ -273,8 +263,11 @@ class MainScreenState extends ConsumerState<MainScreen>
             }),
           ],
         ),
-        floatingActionButton: _currentTab == TabItem.home && carpool.isNotEmpty && isDoingCarpool.isEmpty
-            ? const RecruitFloatingBtn(floatingMessage: "카풀 찾기")
+             floatingActionButton: _currentTab == TabItem.home &&
+                 carpool.isNotEmpty &&
+                 isDoingCarpool.isEmpty
+                 ?
+            const RecruitFloatingBtn(floatingMessage: "카풀 찾기")
             : null,
         extendBody: extendBody,
         body: Padding(
