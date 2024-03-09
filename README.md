@@ -8,8 +8,10 @@
 # <img src="https://github.com/yeong0jae/Algorithm/assets/83624600/9c8db1b8-5ff5-478d-9d53-61a1f4848960" width="30"> 인하 카풀
 
 > 이 프로젝트는 우리 대학교 커뮤니티를 위한 카풀(택시 공유) 시스템 어플리케이션입니다. 사용자들은 카풀을 통해 편리하게 대학교 내에서 이동할 수 있습니다. 어플은 파이어베이스 파이어스토어를 통해 실시간 채팅 및 데이터 관리를 하며, 스프링 부트 서버를 통해 API 요청 및 응답을 처리합니다.
+### 상태관리 : Riverpod 
 
 <img src="https://github.com/yeong0jae/Algorithm/assets/83624600/c298b38c-0dad-47f5-ae47-874b5c4b79c5" width="210">
+
 
 <br>
 
