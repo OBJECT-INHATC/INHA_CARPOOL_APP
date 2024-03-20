@@ -16,7 +16,6 @@ import '../../common/data/preference/prefs.dart';
 import '../../fragment/f_notification.dart';
 import '../../provider/stateProvider/notification_provider.dart';
 import '../../service/sv_firestore.dart';
-import '../recruit/s_recruit.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   // 마이페이지 이동 변수

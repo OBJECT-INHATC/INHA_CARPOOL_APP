@@ -100,7 +100,6 @@ class _DeleteAuthDialogState extends State<DeleteAuthDialog> {
                       ),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 90, vertical: 10),
-                      primary: Colors.grey[300],
                     ),
                     child: const Text('정말 탈퇴하기'),
                   ),
