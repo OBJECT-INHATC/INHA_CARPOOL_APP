@@ -36,6 +36,7 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
 
     List<CarpoolModel> carpoolList = ref.watch(doingProvider);
 
+
     // 화면 높이의 70%를 ListView.builder의 높이로 사용
     double listViewHeight = screenHeight * 0.7;
     // 각 카드의 높이
@@ -45,7 +46,6 @@ class _CarpoolListState extends ConsumerState<CarpoolList> {
       children: [
         /// 공지사항 위젯 호출
         NoticeBox(cardHeight, "carpool"),
-
         /// 상단에 참여중인 카풀 수와 안내문구 위젯 호출
          CarpoolTimeInfo(),
 

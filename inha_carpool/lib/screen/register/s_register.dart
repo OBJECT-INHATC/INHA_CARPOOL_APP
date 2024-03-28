@@ -19,7 +19,6 @@ class Resigister extends StatefulWidget {
 }
 
 class _ResigisterState extends State<Resigister> {
-
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _studentIdController = TextEditingController();
   final TextEditingController _nickNameController = TextEditingController();
@@ -43,15 +42,12 @@ class _ResigisterState extends State<Resigister> {
   String groupName = '무관';
 
   String email = "";
-  String academy = "itc.ac.kr";
+  String academy = "@itc.ac.kr";
 
   bool isNickNameMatch = false;
   bool isPasswordMatch = false;
 
   //textController
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -211,14 +207,16 @@ class _ResigisterState extends State<Resigister> {
                 // 가운대 정렬 파란색 배경 흰색 텍스트 가입하기 버튼
                 TextButton(
                   onPressed: () {
+
                     (isProfessor)
-                        ?   print("이메일: ${_studentIdController.text}")
-                        :   print("학번: ${_studentIdController.text + academy}");
+                        ? print("이메일: ${_studentIdController.text}")
+                        : print("학번: ${_studentIdController.text + academy}");
                     print("이름: ${_nameController.text}");
                     print("닉네임: ${_nickNameController.text}");
                     print("닉네임 체크: $isNickNameMatch");
                     print("비번 유무: $isPasswordMatch");
                     print("성별: $gender");
+                    print("학생/교수 구분 (flase면 학생) : $isProfessor");
 
                     if (isProfessor) {
                       if (!checkInhaMail(email)) {
@@ -255,13 +253,14 @@ class _ResigisterState extends State<Resigister> {
 
                       AuthService()
                           .registerUserWithEmailandPassword(
-                              _nameController.text,
-                              _nickNameController.text,
-                          (isProfessor) ?
-                              _studentIdController.text : _studentIdController.text + academy,
-                              _passController.text,
-                              "dummy",
-                              gender)
+                              userName: _nameController.text,
+                              nickName: _nickNameController.text,
+                              gender: gender,
+                              email: (isProfessor)
+                                  ? _studentIdController.text
+                                  : _studentIdController.text + academy,
+                              password: _passController.text,
+                              fcmToken: 'dummy',)
                           .then(
                         (value) async {
                           print("value ================> : $value");

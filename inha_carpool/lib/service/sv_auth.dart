@@ -33,9 +33,8 @@ class AuthService {
   }
 
   /// 회원 가입 메서드
-  /// 0824 서은율 한승완
-  Future registerUserWithEmailandPassword(
-  String userName ,String nickName, String email, String password, String fcmToken, String gender,) async {
+  Future registerUserWithEmailandPassword({required String userName, required String nickName,
+  required String email, required String password, required String fcmToken, required String gender}) async {
     try {
       User user = (await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password))
