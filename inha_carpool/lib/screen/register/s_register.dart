@@ -283,11 +283,15 @@ class _ResigisterState extends State<Resigister> {
                                 Nav.push(const VerifiedRegisterPage());
 
                                 setState(() {
-                                  isLoading = false; // 로그인 로딩 시작
+                                  isLoading = false; // 로그인 로딩 끝
                                 });
                               }else{
                                 context.showSnackbarText(
                                   context, "가입 실패! 이미 있는 학번(메일)입니다.", bgColor: Colors.red,);
+
+                                setState(() {
+                                  isLoading = false;
+                                });
                               }
                             },
                           );
