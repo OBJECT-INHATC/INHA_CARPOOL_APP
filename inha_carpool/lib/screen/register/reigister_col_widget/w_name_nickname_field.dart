@@ -28,6 +28,8 @@ class CustomInputField extends StatefulWidget {
 
 class _CustomInputFieldState extends State<CustomInputField> {
   bool nickNameCheck = false;
+  String inputText = "";
+
 
   @override
   Widget build(BuildContext context) {
@@ -73,13 +75,14 @@ class _CustomInputFieldState extends State<CustomInputField> {
                   color: Colors.grey,
                 ),
               ),
-              maxLength: 5,
+              maxLength: (widget.fieldType == "닉네임") ? 7 : 5,
               onChanged: (text) {
                 (widget.fieldType == "닉네임") ?  widget.onNicknameChecked!(false) : null;
 
+                print("fdf");
                 setState(() {
                   nickNameCheck = false;
-                  widget.controller.text = text;
+                  inputText = widget.controller.text;
                 });
               },
               /*   validator: (val) {
@@ -98,8 +101,9 @@ class _CustomInputFieldState extends State<CustomInputField> {
                         String sampleText = await readTextFromFile();
                         // 닉네임은 2글자에서 7글자 사이여야 함
                         if (!mounted) return;
-                        if (widget.controller.text.length < 2 ||
-                            widget.controller.text.length > 7) {
+                        if (inputText.length < 2 ||
+                            inputText.length > 7) {
+                          print(inputText.length);
                           context.showSnackbarText(
                               context, "닉네임은 2글자에서 7글자 사이여야 합니다.",
                               bgColor: Colors.red);
@@ -140,6 +144,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
                     ),
                   )
                 : Container(),
+
           ],
         ),
       ),
@@ -149,7 +154,7 @@ class _CustomInputFieldState extends State<CustomInputField> {
   /// 중복 확인
   Future<void> nicknameAvailability() async {
     // 입력한 닉네임을 가져옴
-    String newNickname = widget.controller.text;
+    String newNickname = inputText;
 
     bool result = await AuthService().checkNicknameAvailability(newNickname);
 
