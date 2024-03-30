@@ -61,12 +61,12 @@ class _CustomInputFieldState extends State<CustomInputField> {
                 suffix: widget.fieldType == "닉네임"
                     ? null
                     : Text(
-                        "${widget.controller.text.length}/5",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: widget.width * 0.033,
-                        ),
-                      ).pOnly(right: widget.width * 0.03),
+                  "${widget.controller.text.length}/5",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: widget.width * 0.033,
+                  ),
+                ).pOnly(right: widget.width * 0.03),
                 counterText: "",
                 hintText: widget.fieldType,
                 border: InputBorder.none,
@@ -95,54 +95,54 @@ class _CustomInputFieldState extends State<CustomInputField> {
             ),
             (widget.fieldType == "닉네임")
                 ? Positioned(
-                    right: 5, // 버튼을 오른쪽에 배치
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        String sampleText = await readTextFromFile();
-                        // 닉네임은 2글자에서 7글자 사이여야 함
-                        if (!mounted) return;
-                        if (inputText.length < 2 ||
-                            inputText.length > 7) {
-                          print(inputText.length);
-                          context.showSnackbarText(
-                              context, "닉네임은 2글자에서 7글자 사이여야 합니다.",
-                              bgColor: Colors.red);
-                          return;
-                        }
+              right: 5, // 버튼을 오른쪽에 배치
+              child: ElevatedButton(
+                onPressed: () async {
+                  String sampleText = await readTextFromFile();
+                  // 닉네임은 2글자에서 7글자 사이여야 함
+                  if (!mounted) return;
+                  if (inputText.length < 2 ||
+                      inputText.length > 7) {
+                    print(inputText.length);
+                    context.showSnackbarText(
+                        context, "닉네임은 2글자에서 7글자 사이여야 합니다.",
+                        bgColor: Colors.red);
+                    return;
+                  }
 
-                        if (containsProfanity(widget.controller.text,
-                            splitStringBySpace(sampleText))) {
-                          if (!mounted) return;
+                  if (containsProfanity(widget.controller.text,
+                      splitStringBySpace(sampleText))) {
+                    if (!mounted) return;
 
-                          context.showSnackbarText(context, "금지어가 포함되어 있습니다.",
-                              bgColor: Colors.red);
-                        } else {
-                          nicknameAvailability();
-                        }
-                        // 중복확인 로직 추가해주세요구르트
-                      },
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: nickNameCheck
-                            ? context.appColors.logoColor
-                            : Colors.red,
-                        // 글자 색상
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // 여기에서 모양을 조절합니다.
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
-                      ),
-                      child: const Text(
-                        '확인',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  )
+                    context.showSnackbarText(context, "금지어가 포함되어 있습니다.",
+                        bgColor: Colors.red);
+                  } else {
+                    nicknameAvailability();
+                  }
+                  // 중복확인 로직 추가해주세요구르트
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: nickNameCheck
+                      ? context.appColors.logoColor
+                      : Colors.red,
+                  // 글자 색상
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                    BorderRadius.circular(10), // 여기에서 모양을 조절합니다.
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 10),
+                ),
+                child: const Text(
+                  '확인',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            )
                 : Container(),
 
           ],

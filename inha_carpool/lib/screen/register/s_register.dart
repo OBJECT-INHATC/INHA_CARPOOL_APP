@@ -213,11 +213,6 @@ class _ResigisterState extends State<Resigister> {
                     // 가운대 정렬 파란색 배경 흰색 텍스트 가입하기 버튼
                     TextButton(
                       onPressed: () {
-
-                        setState(() {
-                          isLoading = true; // 로그인 로딩 시작
-                        });
-
                         (isProfessor)
                             ? print("이메일: ${_studentIdController.text}")
                             : print("학번: ${_studentIdController.text + academy}");
@@ -259,18 +254,21 @@ class _ResigisterState extends State<Resigister> {
                               bgColor: Colors.red);
                           return;
                         } else {
+                          setState(() {
+                            isLoading = true; // 로그인 로딩 시작
+                          });
                           AuthService()
                               .registerUserWithEmailandPassword(
-                                  userName: _nameController.text,
-                                  nickName: _nickNameController.text,
-                                  gender: gender,
-                                  email: (isProfessor)
-                                      ? _studentIdController.text
-                                      : _studentIdController.text + academy,
-                                  password: _passController.text,
-                                  fcmToken: 'dummy',)
+                            userName: _nameController.text,
+                            nickName: _nickNameController.text,
+                            gender: gender,
+                            email: (isProfessor)
+                                ? _studentIdController.text
+                                : _studentIdController.text + academy,
+                            password: _passController.text,
+                            fcmToken: 'dummy',)
                               .then(
-                            (value) async {
+                                (value) async {
                               print("value ================> : $value");
                               if (value == true) {
 
@@ -287,7 +285,7 @@ class _ResigisterState extends State<Resigister> {
                                 });
                               }else{
                                 context.showSnackbarText(
-                                  context, "가입 실패! 이미 있는 학번(메일)입니다.", bgColor: Colors.red,);
+                                  context, "가입 실패! 이미 있는 학번(메일)입니다. 메일 인증을 완료해 주세요.", bgColor: Colors.red,);
 
                                 setState(() {
                                   isLoading = false;
@@ -313,7 +311,7 @@ class _ResigisterState extends State<Resigister> {
                       ),
                     ),
 
-          /*                TextButton(onPressed: () {
+                    /*                TextButton(onPressed: () {
                       (isProfessor)
                           ?   print("학번: ${_studentIdController.text}")
                           :   print("학번: ${_studentIdController.text + academy}");
@@ -355,7 +353,7 @@ class _ResigisterState extends State<Resigister> {
 
   bool checkInhaMail(String userMail) {
     RegExp emailRegex =
-        RegExp(r'^[\w-]+(\.[\w-]+)*@inhatc\.ac\.kr|inha\.ac\.kr$');
+    RegExp(r'^[\w-]+(\.[\w-]+)*@inhatc\.ac\.kr|inha\.ac\.kr$');
     return emailRegex.hasMatch(userMail);
   }
 }
