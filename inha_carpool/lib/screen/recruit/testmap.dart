@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
 import 'package:inha_Carpool/service/api/Api_juso.dart';
+import 'package:quiver/time.dart';
 
 import '../../provider/stateProvider/jusogiban_api_provider.dart';
 
@@ -26,6 +29,15 @@ class TestMap extends ConsumerStatefulWidget {
 class _TestMapState extends ConsumerState<TestMap> {
   // 검색창 컨트롤러
   late final TextEditingController _searchController;
+  late NaverMapController mapController;
+
+  // 카메라 이동 여부를 저장할 변수
+  bool isMove = false;
+
+  // 검색한 주소의 좌표를 저장할 변수
+  LatLng? searchedPosition;
+  String? address;
+
 
   // 주소 검색 결과를 저장할 리스트
   List<String> _addressList = [];
@@ -54,8 +66,12 @@ class _TestMapState extends ConsumerState<TestMap> {
           surfaceTintColor: Colors.white),
       body: Column(
         children: [
+
           /// 검색창
           searchContainer(height),
+
+          /// 지도
+          buildMapContatiner(height, context),
 
         ],
       ),
@@ -104,19 +120,148 @@ class _TestMapState extends ConsumerState<TestMap> {
     if (_searchController.text.length < 2 || jusoTrim.isEmpty) {
       context.showSnackbarText(context, '2글자 이상 입력해주세요.', bgColor: Colors.red);
       setState(() {
-    //    infoText = '2글자 이상 입력해주세요.';/**/
+        //    infoText = '2글자 이상 입력해주세요.';/**/
         _addressList.clear();
       });
       return;
     }
-    _addressList = await ApiJuso().getAddresses(jusoTrim, ref.read(jusoKeyProvider));
+    _addressList =
+    await ApiJuso().getAddresses(jusoTrim, ref.read(jusoKeyProvider));
     print("--------------------------------------");
     print("selectNearLocation 실행 juso : $jusoTrim");
     print("--------------------------------------");
     print("주소 리스트 : $_addressList");
     print("--------------------------------------");
+  }
 
+
+  Expanded buildMapContatiner(double height, BuildContext context) {
+
+    final width = context.screenWidth;
+
+    return Expanded(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // 네이버 지도
+          NaverMap(
+            options: NaverMapViewOptions(
+              //실내지도가 표시
+              indoorEnable: true,
+              // 위치 버튼 표시
+              locationButtonEnable: true,
+              /// info : 네이버 로고 클릭했을 때 정보 뜨게해주는거 false 하면 정책 위반임
+              initialCameraPosition: NCameraPosition(
+                target: NLatLng(widget.point.latitude, widget.point.longitude),
+                zoom: 15.5,
+              ),
+            ),
+            onMapReady: (controller) async {
+              mapController = controller;
+            },
+
+            /// 카메라가 멈췄을 때
+            onCameraIdle: () {
+                mapController.getCameraPosition().then((cameraPosition) async {
+                  setState(() {
+                    isMove = true;
+                  });
+                  // 카메라가 이동하면서 좌표를 저장
+                  searchedPosition = LatLng(cameraPosition.target.latitude,
+                      cameraPosition.target.longitude);
+                  if (isMove == true && searchedPosition != null) {
+                    _addressList = await ApiJuso().getAddressesByLatLon(
+                        searchedPosition!.latitude, searchedPosition!.longitude);
+                    if(_addressList.isNotEmpty){
+                      address = _addressList[0];
+                    }else{
+                      address = null;
+                    }
+                  }
+                  setState(() {
+                    isMove = false;
+                  });
+                });
+
+                print("onCameraIdle 실행");
+                print('searchedPosition : $searchedPosition');
+            },
+          ),
+          Positioned(
+            top: height / 4,
+            child: Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    /// 입력된 주소가 위, 경도 값이 없을 경우 ( ex. '지하'를 포함한 주소 )
+                    if (searchedPosition == null || _addressList.isEmpty) {
+                      context.showSnackbarText(context, '위치를 선택해주세요.', bgColor: Colors.red);
+                      return; // 주소에 대한 좌표가 없으므로 메서드 종료
+                    }
+                  },
+
+                  ///가운대 좌표 컨테이너
+                  child: Container(
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 10,
+                          offset:
+                          const Offset(0, 5), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                             Text(
+                              (searchedPosition == null || _addressList.isEmpty)
+                                  ? '위치를 선택해주세요.'
+                                  : '$address',
+                              style: TextStyle(
+                                fontSize: width * 0.035,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: Colors.grey[500],
+                              size: 17,
+                            ),
+                          ],
+                        ),
+                        Text(
+                          (searchedPosition == null || _addressList.isEmpty)
+                              ? '위치를 선택해주세요.'
+                              : '위치 선택',
+                          style:  TextStyle(
+                            fontSize: width * 0.028,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const Icon(
+                  Icons.location_on_sharp,
+                  size: 44,
+                  color: Colors.blue,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
-
 
