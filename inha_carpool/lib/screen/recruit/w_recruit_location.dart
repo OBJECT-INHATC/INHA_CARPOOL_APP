@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/screen/recruit/s_select_location.dart';
-import 'package:inha_Carpool/screen/recruit/testmap.dart';
 
 import '../../common/util/location_handler.dart';
 
@@ -69,7 +68,7 @@ class LocationInputWidgetState extends State<LocationInputWidget> {
             final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => TestMap(
+                  builder: (context) => LocationInput(
                       widget.point)),
             );
             // result가 null이 아니면 setState로 selectedLocation을 변경

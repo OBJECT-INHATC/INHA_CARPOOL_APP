@@ -5,8 +5,6 @@ import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/dto/history_request_dto.dart';
 
 import '../../dto/report_requst_dto.dart';
-//객체를 만든다는건 같은 형태의 다른 값들을 쓴다는거 ㅇㅋ?
-//싱글톤 ? 같은 형태이고 다른 값도 필요없음 다 같은 값임
 
 class ApiService {
   final String baseUrl = dotenv.env['BASE_URL']!; // API 서버의 URL
