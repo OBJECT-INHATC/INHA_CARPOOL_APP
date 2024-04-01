@@ -25,7 +25,6 @@ class ApiJuso {
       });
 
       if (response.statusCode == 200) {
-        print("getAddresses response = 200");
         final json = jsonDecode(response.body);
         final jusoList = json['results']['juso'] as List;
 
@@ -106,13 +105,9 @@ class ApiJuso {
         addressList.add(addressInfo);
       }
 
-      // 주소 정보 리스트 출력
-      print('주소 리스트 : $addressList');
 
       /// 첫 번째 결과를 사용하여 _address 변수에 상세 주소 설정
       if (addressList.isNotEmpty) {
-        print('주소 정보가 있습니다. addressList.isNotEmpty ');
-        print(addressList.length);
         String address =
             '${addressList[0]['area1']} ${addressList[0]['area2']}';
 
@@ -136,7 +131,7 @@ class ApiJuso {
         }
 
         print('--------------------------------------');
-        print("주소 : $address");
+        print("API 호출로 리턴하는 주소 : $address");
         print('--------------------------------------');
         return [address];
 
@@ -144,10 +139,8 @@ class ApiJuso {
       } else {
         return [];
       }
-
       /// 주소 정보가 없을 때
     } else {
-      print('주소 정보가 없습니다.');
       return [];
     }
   }

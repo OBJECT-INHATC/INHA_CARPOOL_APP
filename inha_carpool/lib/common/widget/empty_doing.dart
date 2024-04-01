@@ -16,8 +16,6 @@ class EmptyDoing extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     final height = context.screenHeight;
 
-    print("gfsdgd");
-
     return ListView(
       children: [
         Column(

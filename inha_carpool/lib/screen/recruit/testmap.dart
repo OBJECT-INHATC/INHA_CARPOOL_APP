@@ -66,7 +66,6 @@ class _TestMapState extends ConsumerState<TestMap> {
         children: [
           /// 검색창
           searchContainer(height),
-
           /// 지도
           buildMapContatiner(height, context),
         ],
@@ -140,9 +139,7 @@ class _TestMapState extends ConsumerState<TestMap> {
     });
 
     print("--------------------------------------");
-    print("selectNearLocation 실행 juso : $jusoTrim");
-    print("--------------------------------------");
-    print("주소 리스트 : $_addressList");
+    print("selectNearLocation 주소 리스트 : $_addressList");
     print("--------------------------------------");
   }
 
@@ -171,36 +168,37 @@ class _TestMapState extends ConsumerState<TestMap> {
               mapController = controller;
             },
 
-            /// 카메라가 멈췄을 때
-            onCameraIdle: () {
-              mapController.getCameraPosition().then((cameraPosition) async {
-                setState(() {
-                  isMove = true;
-                });
-                // 카메라가 이동하면서 좌표를 저장
-                searchedPosition = LatLng(cameraPosition.target.latitude,
-                    cameraPosition.target.longitude);
 
-                if (isMove == true && searchedPosition != null) {
-                  if (isListSelect == false) {
-                    _addressList = await ApiJuso().getAddressesByLatLon(
-                        searchedPosition!.latitude,
-                        searchedPosition!.longitude);
-                    if (_addressList.isNotEmpty) {
-                      print('주소 리스트가 차있음 : $_addressList');
-                      address = _addressList[0];
-                    } else {
-                      print('주소 리스트가 비어있음 : $_addressList');
-                      address = null;
+            /// 카메라가 이동할 때
+            onCameraChange: (reason, animated) {
+              if (animated) {
+                mapController.getCameraPosition().then((cameraPosition) async {
+                  setState(() {
+                    isMove = true;
+                  });
+                  // 카메라가 이동하면서 좌표를 저장
+                  searchedPosition = LatLng(cameraPosition.target.latitude,
+                      cameraPosition.target.longitude);
+
+                  if (isMove == true && searchedPosition != null) {
+                    if (isListSelect == false) {
+                      _addressList = await ApiJuso().getAddressesByLatLon(
+                          searchedPosition!.latitude,
+                          searchedPosition!.longitude);
+                      if (_addressList.isNotEmpty) {
+                        address = _addressList[0];
+                      } else {
+                        address = null;
+                      }
                     }
                   }
-                }
-                setState(() {
-                  isMove = false;
-                  isListSelect = false;
+                  setState(() {
+                    isMove = false;
+                  });
                 });
-              });
+              }
             },
+            
           ),
           Positioned(
             top: height / 4,
@@ -282,22 +280,29 @@ class _TestMapState extends ConsumerState<TestMap> {
   }
 
   buildBottomSheet(BuildContext context) {
+
+    final height = context.screenHeight;
+
     showModalBottomSheet(
         context: context,
         builder: (context) {
           return SizedBox(
-            height: MediaQuery.of(context).size.height * 3 / 5,
+            height: height * 3 / 5,
             child: Column(
               children: [
                 // **닫기 버튼**
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
-                    ),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('검색 결과 수 : ${_addressList.length}', style: TextStyle(fontSize: height * 0.02),),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon:  Icon(Icons.close, size: height * 0.03 ,),
+                      ),
+                    ],
+                  ),
                 ),
                 const Divider(),
                 // **검색 결과 리스트**
@@ -305,7 +310,6 @@ class _TestMapState extends ConsumerState<TestMap> {
                   child: ListView.builder(
                     itemCount: _addressList.length,
                     itemBuilder: (context, index) {
-                      print('주소 갯수 ' + _addressList.length.toString());
                       return ListTile(
                         title: Text(_addressList[index]),
                         onTap: () {
@@ -329,16 +333,16 @@ class _TestMapState extends ConsumerState<TestMap> {
               ],
             ),
           );
-        });
+        }).whenComplete(() => setState(() {
+          isListSelect = false;
+        }));
   }
 
   // 검색한 주소로 카메라를 이동시키는 메서드
   void _searchLocation(String query) async {
-    print('query : $query');
     if (query.isNotEmpty) {
       List<Location> locations =
           await locationFromAddress(cutStringToFirstComma(query));
-      print('locations : $locations');
       if (locations.isNotEmpty) {
         // firstStep = true;
         Location location = locations.first;
