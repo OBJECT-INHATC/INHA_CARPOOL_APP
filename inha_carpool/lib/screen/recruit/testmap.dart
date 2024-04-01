@@ -66,6 +66,7 @@ class _TestMapState extends ConsumerState<TestMap> {
         children: [
           /// 검색창
           searchContainer(height),
+
           /// 지도
           buildMapContatiner(height, context),
         ],
@@ -168,7 +169,6 @@ class _TestMapState extends ConsumerState<TestMap> {
               mapController = controller;
             },
 
-
             /// 카메라가 이동할 때
             onCameraChange: (reason, animated) {
               if (animated) {
@@ -181,6 +181,7 @@ class _TestMapState extends ConsumerState<TestMap> {
                       cameraPosition.target.longitude);
 
                   if (isMove == true && searchedPosition != null) {
+                    // 바텀 모달로 선택시 API호출 하지 않음 (isListSelect == true)
                     if (isListSelect == false) {
                       _addressList = await ApiJuso().getAddressesByLatLon(
                           searchedPosition!.latitude,
@@ -198,7 +199,6 @@ class _TestMapState extends ConsumerState<TestMap> {
                 });
               }
             },
-            
           ),
           Positioned(
             top: height / 4,
@@ -215,6 +215,7 @@ class _TestMapState extends ConsumerState<TestMap> {
                           "${searchedPosition!.latitude}_${address}_${searchedPosition!.longitude}");
                     }
                   },
+
                   ///가운대 좌표 컨테이너
                   child: Container(
                     padding:
@@ -280,14 +281,27 @@ class _TestMapState extends ConsumerState<TestMap> {
   }
 
   buildBottomSheet(BuildContext context) {
-
     final height = context.screenHeight;
 
     showModalBottomSheet(
         context: context,
+        isScrollControlled: true,
+        barrierColor: Colors.transparent,
         builder: (context) {
-          return SizedBox(
-            height: height * 3 / 5,
+          return Container(
+            // 모서리 색
+            decoration:  BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+              ),
+              border: Border.all(
+                color: Colors.black,
+                width: 0.7,
+              ),
+            ),
+            height:  height * 0.4,
             child: Column(
               children: [
                 // **닫기 버튼**
@@ -296,22 +310,39 @@ class _TestMapState extends ConsumerState<TestMap> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('검색 결과 수 : ${_addressList.length}', style: TextStyle(fontSize: height * 0.02),),
+                      Text(
+                        '검색 결과 수 : ${_addressList.length}',
+                        style: TextStyle(fontSize: height * 0.02),
+                      ),
                       IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon:  Icon(Icons.close, size: height * 0.03 ,),
+                        icon: Icon(
+                          Icons.close,
+                          size: height * 0.03,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const Divider(),
+                const Line(color: Colors.black, height: 0.5),
                 // **검색 결과 리스트**
                 Expanded(
                   child: ListView.builder(
                     itemCount: _addressList.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(_addressList[index]),
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _addressList[index],
+                              style: TextStyle(
+                                fontSize: height * 0.017,
+                              ),
+                            ),
+                            Line(),
+                          ],
+                        ),
                         onTap: () {
                           // 선택한 주소를 _address 변수에 저장
                           setState(() {
