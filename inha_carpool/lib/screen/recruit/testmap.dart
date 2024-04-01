@@ -118,7 +118,7 @@ class _TestMapState extends ConsumerState<TestMap> {
           ),
           // 글씨의 위치를 가운데 정렬
           contentPadding:
-          const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
         ),
         style: const TextStyle(color: Colors.black, fontSize: 11),
       ),
@@ -129,9 +129,9 @@ class _TestMapState extends ConsumerState<TestMap> {
   Future<void> selectNearLocation(String jusoTrim) async {
     jusoTrim = jusoTrim.trim();
     _addressList =
-    await ApiJuso().getAddresses(jusoTrim, ref.read(jusoKeyProvider));
+        await ApiJuso().getAddresses(jusoTrim, ref.read(jusoKeyProvider));
 
-    setState(()  {
+    setState(() {
       if (_addressList.isEmpty) {
         address = null;
       } else {
@@ -182,10 +182,10 @@ class _TestMapState extends ConsumerState<TestMap> {
                     cameraPosition.target.longitude);
 
                 if (isMove == true && searchedPosition != null) {
-
-                  if(isListSelect == false){
+                  if (isListSelect == false) {
                     _addressList = await ApiJuso().getAddressesByLatLon(
-                        searchedPosition!.latitude, searchedPosition!.longitude);
+                        searchedPosition!.latitude,
+                        searchedPosition!.longitude);
                     if (_addressList.isNotEmpty) {
                       print('주소 리스트가 차있음 : $_addressList');
                       address = _addressList[0];
@@ -194,16 +194,12 @@ class _TestMapState extends ConsumerState<TestMap> {
                       address = null;
                     }
                   }
-
                 }
                 setState(() {
                   isMove = false;
                   isListSelect = false;
                 });
               });
-
-              print("onCameraIdle 실행");
-              print('searchedPosition : $searchedPosition');
             },
           ),
           Positioned(
@@ -212,18 +208,19 @@ class _TestMapState extends ConsumerState<TestMap> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    /// 입력된 주소가 위, 경도 값이 없을 경우 ( ex. '지하'를 포함한 주소 )
-                    if (searchedPosition == null || _addressList.isEmpty) {
-                      context.showSnackbarText(context, '위치를 선택해주세요.',
+                    if (searchedPosition == null || address == null) {
+                      context.showSnackbarText(
+                          context, '선택할 수 없는 주소 입니다.\n다른 주소를 선택해주세요.',
                           bgColor: Colors.red);
-                      return; // 주소에 대한 좌표가 없으므로 메서드 종료
+                    } else {
+                      Navigator.pop(context,
+                          "${searchedPosition!.latitude}_${address}_${searchedPosition!.longitude}");
                     }
                   },
-
                   ///가운대 좌표 컨테이너
                   child: Container(
                     padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
@@ -233,7 +230,7 @@ class _TestMapState extends ConsumerState<TestMap> {
                           spreadRadius: 1,
                           blurRadius: 10,
                           offset:
-                          const Offset(0, 5), // changes position of shadow
+                              const Offset(0, 5), // changes position of shadow
                         ),
                       ],
                     ),
@@ -339,7 +336,8 @@ class _TestMapState extends ConsumerState<TestMap> {
   void _searchLocation(String query) async {
     print('query : $query');
     if (query.isNotEmpty) {
-      List<Location> locations = await locationFromAddress(cutStringToFirstComma(query));
+      List<Location> locations =
+          await locationFromAddress(cutStringToFirstComma(query));
       print('locations : $locations');
       if (locations.isNotEmpty) {
         // firstStep = true;
@@ -358,7 +356,6 @@ class _TestMapState extends ConsumerState<TestMap> {
       return input.substring(0, index);
     }
   }
-
 
   // 카메라를 이동시키는 메서드
   void _moveCameraTo(NLatLng target) {

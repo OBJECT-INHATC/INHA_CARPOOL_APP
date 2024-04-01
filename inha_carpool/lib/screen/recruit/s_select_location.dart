@@ -296,7 +296,7 @@ class _LocationInputState extends ConsumerState<LocationInput> {
                     }
                   },
 
-                  ///가운대 좌표 컨테이너
+    ///가운대 좌표 컨테이너
                   child: Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
