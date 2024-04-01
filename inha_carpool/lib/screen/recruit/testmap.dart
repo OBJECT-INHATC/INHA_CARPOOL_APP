@@ -1,19 +1,15 @@
-import 'dart:convert';
-import 'dart:developer';
-
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:inha_Carpool/common/common.dart';
 import 'package:inha_Carpool/common/extension/snackbar_context_extension.dart';
-import 'package:inha_Carpool/service/api/Api_juso.dart';
 import 'package:quiver/time.dart';
 
 import '../../provider/stateProvider/jusogiban_api_provider.dart';
+import '../../service/api/Api_juso.dart';
 
 class TestMap extends ConsumerStatefulWidget {
   final LatLng point;
@@ -33,11 +29,13 @@ class _TestMapState extends ConsumerState<TestMap> {
 
   // 카메라 이동 여부를 저장할 변수
   bool isMove = false;
+  bool isListSelect = false;
 
   // 검색한 주소의 좌표를 저장할 변수
   LatLng? searchedPosition;
-  String? address;
 
+  // 검색한 주소를 저장할 변수
+  String? address;
 
   // 주소 검색 결과를 저장할 리스트
   List<String> _addressList = [];
@@ -66,13 +64,11 @@ class _TestMapState extends ConsumerState<TestMap> {
           surfaceTintColor: Colors.white),
       body: Column(
         children: [
-
           /// 검색창
           searchContainer(height),
 
           /// 지도
           buildMapContatiner(height, context),
-
         ],
       ),
     );
@@ -85,13 +81,29 @@ class _TestMapState extends ConsumerState<TestMap> {
       margin: const EdgeInsets.symmetric(horizontal: 10),
       child: TextField(
         onSubmitted: (value) async {
-          await selectNearLocation(value);
+          selectNearLocation(value).then((value) {
+            if (_addressList.isEmpty) {
+              context.showSnackbarText(context, '검색 결과가 없습니다.',
+                  bgColor: Colors.red);
+              return;
+            } else {
+              buildBottomSheet(context);
+            }
+          });
         },
         controller: _searchController,
         decoration: InputDecoration(
           suffixIcon: IconButton(
-            onPressed: () async {
-              await selectNearLocation(_searchController.text);
+            onPressed: () {
+              selectNearLocation(_searchController.text).then((value) {
+                if (_addressList.isEmpty) {
+                  context.showSnackbarText(context, '검색 결과가 없습니다.',
+                      bgColor: Colors.red);
+                  return;
+                } else {
+                  buildBottomSheet(context);
+                }
+              });
             },
             icon: const Icon(Icons.search),
           ),
@@ -113,20 +125,20 @@ class _TestMapState extends ConsumerState<TestMap> {
     );
   }
 
-
   /// 지정한 위치의 지명을 가져오는 메서드 (검색기능)
   Future<void> selectNearLocation(String jusoTrim) async {
     jusoTrim = jusoTrim.trim();
-    if (_searchController.text.length < 2 || jusoTrim.isEmpty) {
-      context.showSnackbarText(context, '2글자 이상 입력해주세요.', bgColor: Colors.red);
-      setState(() {
-        //    infoText = '2글자 이상 입력해주세요.';/**/
-        _addressList.clear();
-      });
-      return;
-    }
     _addressList =
     await ApiJuso().getAddresses(jusoTrim, ref.read(jusoKeyProvider));
+
+    setState(()  {
+      if (_addressList.isEmpty) {
+        address = null;
+      } else {
+        address = _addressList[0];
+      }
+    });
+
     print("--------------------------------------");
     print("selectNearLocation 실행 juso : $jusoTrim");
     print("--------------------------------------");
@@ -134,9 +146,7 @@ class _TestMapState extends ConsumerState<TestMap> {
     print("--------------------------------------");
   }
 
-
   Expanded buildMapContatiner(double height, BuildContext context) {
-
     final width = context.screenWidth;
 
     return Expanded(
@@ -150,6 +160,7 @@ class _TestMapState extends ConsumerState<TestMap> {
               indoorEnable: true,
               // 위치 버튼 표시
               locationButtonEnable: true,
+
               /// info : 네이버 로고 클릭했을 때 정보 뜨게해주는거 false 하면 정책 위반임
               initialCameraPosition: NCameraPosition(
                 target: NLatLng(widget.point.latitude, widget.point.longitude),
@@ -162,29 +173,37 @@ class _TestMapState extends ConsumerState<TestMap> {
 
             /// 카메라가 멈췄을 때
             onCameraIdle: () {
-                mapController.getCameraPosition().then((cameraPosition) async {
-                  setState(() {
-                    isMove = true;
-                  });
-                  // 카메라가 이동하면서 좌표를 저장
-                  searchedPosition = LatLng(cameraPosition.target.latitude,
-                      cameraPosition.target.longitude);
-                  if (isMove == true && searchedPosition != null) {
+              mapController.getCameraPosition().then((cameraPosition) async {
+                setState(() {
+                  isMove = true;
+                });
+                // 카메라가 이동하면서 좌표를 저장
+                searchedPosition = LatLng(cameraPosition.target.latitude,
+                    cameraPosition.target.longitude);
+
+                if (isMove == true && searchedPosition != null) {
+
+                  if(isListSelect == false){
                     _addressList = await ApiJuso().getAddressesByLatLon(
                         searchedPosition!.latitude, searchedPosition!.longitude);
-                    if(_addressList.isNotEmpty){
+                    if (_addressList.isNotEmpty) {
+                      print('주소 리스트가 차있음 : $_addressList');
                       address = _addressList[0];
-                    }else{
+                    } else {
+                      print('주소 리스트가 비어있음 : $_addressList');
                       address = null;
                     }
                   }
-                  setState(() {
-                    isMove = false;
-                  });
-                });
 
-                print("onCameraIdle 실행");
-                print('searchedPosition : $searchedPosition');
+                }
+                setState(() {
+                  isMove = false;
+                  isListSelect = false;
+                });
+              });
+
+              print("onCameraIdle 실행");
+              print('searchedPosition : $searchedPosition');
             },
           ),
           Positioned(
@@ -195,7 +214,8 @@ class _TestMapState extends ConsumerState<TestMap> {
                   onTap: () {
                     /// 입력된 주소가 위, 경도 값이 없을 경우 ( ex. '지하'를 포함한 주소 )
                     if (searchedPosition == null || _addressList.isEmpty) {
-                      context.showSnackbarText(context, '위치를 선택해주세요.', bgColor: Colors.red);
+                      context.showSnackbarText(context, '위치를 선택해주세요.',
+                          bgColor: Colors.red);
                       return; // 주소에 대한 좌표가 없으므로 메서드 종료
                     }
                   },
@@ -221,7 +241,7 @@ class _TestMapState extends ConsumerState<TestMap> {
                       children: [
                         Row(
                           children: [
-                             Text(
+                            Text(
                               (searchedPosition == null || _addressList.isEmpty)
                                   ? '위치를 선택해주세요.'
                                   : '$address',
@@ -242,7 +262,7 @@ class _TestMapState extends ConsumerState<TestMap> {
                           (searchedPosition == null || _addressList.isEmpty)
                               ? '위치를 선택해주세요.'
                               : '위치 선택',
-                          style:  TextStyle(
+                          style: TextStyle(
                             fontSize: width * 0.028,
                             fontWeight: FontWeight.normal,
                           ),
@@ -263,5 +283,91 @@ class _TestMapState extends ConsumerState<TestMap> {
       ),
     );
   }
-}
 
+  buildBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return SizedBox(
+            height: MediaQuery.of(context).size.height * 3 / 5,
+            child: Column(
+              children: [
+                // **닫기 버튼**
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.pop(context),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                // **검색 결과 리스트**
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _addressList.length,
+                    itemBuilder: (context, index) {
+                      print('주소 갯수 ' + _addressList.length.toString());
+                      return ListTile(
+                        title: Text(_addressList[index]),
+                        onTap: () {
+                          // 선택한 주소를 _address 변수에 저장
+                          setState(() {
+                            isListSelect = true;
+                            address = _addressList[index];
+                          });
+                          _searchLocation(_addressList[index]);
+
+                          print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+                          print('최 종 선 택 은? ');
+                          print(address);
+                          print(searchedPosition);
+                          print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@');
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  // 검색한 주소로 카메라를 이동시키는 메서드
+  void _searchLocation(String query) async {
+    print('query : $query');
+    if (query.isNotEmpty) {
+      List<Location> locations = await locationFromAddress(cutStringToFirstComma(query));
+      print('locations : $locations');
+      if (locations.isNotEmpty) {
+        // firstStep = true;
+        Location location = locations.first;
+        searchedPosition = LatLng(location.latitude, location.longitude);
+        _moveCameraTo(NLatLng(location.latitude, location.longitude));
+      }
+    }
+  }
+
+  String cutStringToFirstComma(String input) {
+    int index = input.indexOf(',');
+    if (index == -1) {
+      return input;
+    } else {
+      return input.substring(0, index);
+    }
+  }
+
+
+  // 카메라를 이동시키는 메서드
+  void _moveCameraTo(NLatLng target) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    mapController.updateCamera(NCameraUpdate.fromCameraPosition(
+      NCameraPosition(
+        target: target,
+        zoom: 15,
+      ),
+    ));
+  }
+}

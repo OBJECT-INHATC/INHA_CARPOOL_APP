@@ -25,6 +25,7 @@ class ApiJuso {
       });
 
       if (response.statusCode == 200) {
+        print("getAddresses response = 200");
         final json = jsonDecode(response.body);
         final jusoList = json['results']['juso'] as List;
 
