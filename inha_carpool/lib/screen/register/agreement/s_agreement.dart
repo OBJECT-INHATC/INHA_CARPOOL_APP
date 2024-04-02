@@ -53,10 +53,10 @@ class AgreementState extends State<Agreement> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Image(
-                image: AssetImage('$basePath/splash/logo.png'),
-                width: 100,
-                height: 70,
+              Image(
+                image: const AssetImage('$basePath/splash/logo.png'),
+                width: height * 0.1,
+                height: height * 0.09,
               ),
               const SizedBox(height: 10),
               const Padding(
@@ -147,7 +147,7 @@ class AgreementState extends State<Agreement> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              AgreeMentRow(
+                              AgreementRow(
                                   agreeTitle: _agreementList[0]['label']),
                               Transform.scale(
                                 scale: 1.2,
@@ -173,7 +173,7 @@ class AgreementState extends State<Agreement> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              AgreeMentRow(
+                              AgreementRow(
                                   agreeTitle: _agreementList[1]['label']),
                               Transform.scale(
                                 scale: 1.2,
@@ -196,7 +196,7 @@ class AgreementState extends State<Agreement> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              AgreeMentRow(
+                              AgreementRow(
                                   agreeTitle: _agreementList[2]['label']),
                               Transform.scale(
                                 scale: 1.2,
@@ -292,35 +292,3 @@ class AgreementState extends State<Agreement> {
   }
 }
 
-class AgreementRow extends StatelessWidget {
-  const AgreementRow({
-    super.key,
-    required List<Map<String, dynamic>> agreementList,
-    required this.width,
-  }) : _agreementList = agreementList;
-
-  final List<Map<String, dynamic>> _agreementList;
-  final double width;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          _agreementList[2]['label'],
-          style: TextStyle(
-            fontSize: width > 380 ? 16 : 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-        const SizedBox(width: 10),
-        const Icon(
-          Icons.arrow_forward_ios,
-          size: 15,
-          color: Colors.grey,
-        ),
-      ],
-    );
-  }
-}
