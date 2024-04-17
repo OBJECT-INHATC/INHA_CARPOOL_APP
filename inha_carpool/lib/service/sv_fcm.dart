@@ -99,6 +99,8 @@ class FcmService {
         print("토픽 추가");
         /// 해당 카풀 알림 토픽 추가
         await FirebaseMessaging.instance.subscribeToTopic(carId);
+        print("구독 성공! $carId ");
+
 
         /// 카풀 정보 토픽 추가
         await FirebaseMessaging.instance.subscribeToTopic("${carId}_info");

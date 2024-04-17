@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -78,6 +79,7 @@ void initializeNotification() async {
     // 임시 알림 허용 여부 (사용자가 앱을 열 때까지 임시로 알림 보류)
     sound: true, // 소리 효과 표시 여부
   );
+
 }
 
 void main() async {
